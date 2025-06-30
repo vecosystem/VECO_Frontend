@@ -1,69 +1,62 @@
-# React + TypeScript + Vite
+# VECO Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+VECO는 **AI를 활용해 분산된 정보를 한곳에 모으고, 목표를 명확히 추적하며 협업을 효율화하는 시스템**입니다.  
+이 저장소는 VECO의 **프론트엔드 개발을 담당하는 레포지토리**입니다.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📦 기술 스택
 
-## Expanding the ESLint configuration
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- ESLint (Flat Config)
+- Prettier
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🚀 설치 및 실행
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+```bash
+# 의존성 설치
+npm install
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# 개발 서버 실행
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🔧 작업 전 공통 절차: develop 브랜치 최신화
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# 1. develop 브랜치로 이동
+git checkout develop
+
+# 2. 원격 저장소에서 최신 코드 가져오기
+git pull origin develop
+```
+
+## 🛠 브랜치 생성
+
+```bash
+# develop 최신화 후 작업 브랜치 생성
+git checkout -b feature/#이슈번호-스크린ID-작업명
+```
+
+## 🚀 PR 전 점검 및 병합
+
+```bash
+# develop 최신화 (생략 가능하지만 권장)
+git checkout develop
+git pull origin develop
+
+# 작업 브랜치로 이동
+git checkout feature/#...
+
+# 최신 develop을 작업 브랜치에 병합
+git merge develop
+
+# 충돌 해결 후 커밋
 ```
