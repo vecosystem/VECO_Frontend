@@ -28,7 +28,7 @@ jobs:
           destination-repository-name: VECO_Frontend
           user-email: ${{ secrets.GAEULZZANG_EMAIL_ACCOUNT }}
           commit-message: ${{ github.event.commits[0].message }}
-          target-branch: main
+          target-branch: develop
 
       - name: Test get variable exported by push-to-another-repository
         run: echo $DESTINATION_CLONED_DIRECTORY
