@@ -1,1 +1,118 @@
 @import 'tailwindcss';
+
+@layer utilities {
+  /* Big Title (32px, SemiBold) */
+  .font-bigtitle-sb {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 3.2rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: normal;
+  }
+
+  /* Big Title (32px, Regular) */
+  .font-bigtitle-r {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 3.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: normal;
+  }
+
+  /* Title (24px, SemiBold) */
+  .font-title-sb {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 2.4rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: normal;
+  }
+
+  /* Title (24px, Regular) */
+  .font-title-r {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: normal;
+  }
+
+  /* Title/Sub (20px, SemiBold) */
+  .font-title-sub-sb {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: normal;
+  }
+
+  /* Title/Sub (20px, Regular) */
+  .font-title-sub-r {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: normal;
+  }
+
+  /* Body (16px, SemiBold) */
+  .font-body-sb {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: normal;
+  }
+
+  /* Body (16px, Regular) */
+  .font-body-r {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: normal;
+  }
+
+  /* Small (14px, SemiBold) */
+  .font-small-sb {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: normal;
+  }
+
+  /* Small (14px, Regular) */
+  .font-small-r {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: normal;
+  }
+
+  /* XSmall (12px, SemiBold) */
+  .font-xsmall-sb {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: normal;
+  }
+
+  /* XSmall (12px, Regular) */
+  .font-xsmall-r {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: normal;
+  }
+}
+
+html {
+  font-size: 62.5%; /* 1rem = 10px */
+}
+body {
+  font-family: 'Poppins', Arial, sans-serif;
+}
