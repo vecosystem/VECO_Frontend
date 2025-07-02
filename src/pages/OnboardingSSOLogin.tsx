@@ -70,6 +70,7 @@ const OnboardingSSOLogin = () => {
         >
           이용약관 & 데이터 처리 동의
         </p>
+        <hr className="w-[186px] h-[1px] bg-[#AEAEAE] border-none mt-[-0.1rem] mx-auto" />
       </div>
     </div>
   );
