@@ -1,5 +1,7 @@
+import OnboardingSSOLogin from './pages/OnboardingSSOLogin';
+
 function App() {
-  return <></>;
+  return <OnboardingSSOLogin />;
 }
 
 export default App;
