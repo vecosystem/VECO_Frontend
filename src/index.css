@@ -1,5 +1,19 @@
 @import 'tailwindcss';
 
+@theme {
+  /* Gray Scale */
+  --color-gray-100: #ffffff;
+  --color-gray-200: #f3f3f3;
+  --color-gray-300: #dcdcdc;
+  --color-gray-400: #aeaeae;
+  --color-gray-500: #777777;
+  --color-gray-600: #111111;
+
+  /* Primary Color */
+  --color-primary-blue: #132650;
+  --color-primary-variant-blue: #2e4475;
+}
+
 @layer utilities {
   /* Big Title (32px, SemiBold) */
   .font-bigtitle-sb {
@@ -115,4 +129,5 @@ html {
 }
 body {
   font-family: 'Poppins', Arial, sans-serif;
+  background-color: var(--color-gray-100);
 }
