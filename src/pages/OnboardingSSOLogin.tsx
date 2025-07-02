@@ -1,7 +1,6 @@
 import vecologo from '../assets/vecologo.svg';
 import googlelogo from '../assets/googlelogo.svg';
 import kakaologo from '../assets/kakaologo.svg';
-import bottomline from '../assets/bottomline.svg';
 
 const OnboardingSSOLogin = () => {
   return (
@@ -71,7 +70,6 @@ const OnboardingSSOLogin = () => {
         >
           이용약관 & 데이터 처리 동의
         </p>
-        <img src={bottomline} alt="BottomLine" className="w-[186px] h-[2px] mt-[-2px]" />
       </div>
     </div>
   );
