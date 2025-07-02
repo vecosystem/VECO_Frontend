@@ -21,7 +21,7 @@
     font-size: 3.2rem;
     font-weight: 600;
     letter-spacing: -0.02em;
-    line-height: normal;
+    line-height: 150%;
   }
 
   /* Big Title (32px, Regular) */
@@ -30,7 +30,7 @@
     font-size: 3.2rem;
     font-weight: 400;
     letter-spacing: -0.02em;
-    line-height: normal;
+    line-height: 150%;
   }
 
   /* Title (24px, SemiBold) */
@@ -39,7 +39,7 @@
     font-size: 2.4rem;
     font-weight: 600;
     letter-spacing: -0.02em;
-    line-height: normal;
+    line-height: 150%;
   }
 
   /* Title (24px, Regular) */
@@ -48,7 +48,7 @@
     font-size: 2.4rem;
     font-weight: 400;
     letter-spacing: -0.02em;
-    line-height: normal;
+    line-height: 140%;
   }
 
   /* Title/Sub (20px, SemiBold) */
@@ -57,7 +57,7 @@
     font-size: 2rem;
     font-weight: 600;
     letter-spacing: -0.02em;
-    line-height: normal;
+    line-height: 140%;
   }
 
   /* Title/Sub (20px, Regular) */
@@ -66,7 +66,7 @@
     font-size: 2rem;
     font-weight: 400;
     letter-spacing: -0.02em;
-    line-height: normal;
+    line-height: 140%;
   }
 
   /* Body (16px, SemiBold) */
@@ -75,7 +75,7 @@
     font-size: 1.6rem;
     font-weight: 600;
     letter-spacing: -0.02em;
-    line-height: normal;
+    line-height: 140%;
   }
 
   /* Body (16px, Regular) */
@@ -84,7 +84,7 @@
     font-size: 1.6rem;
     font-weight: 400;
     letter-spacing: -0.02em;
-    line-height: normal;
+    line-height: 140%;
   }
 
   /* Small (14px, SemiBold) */
@@ -93,7 +93,7 @@
     font-size: 1.4rem;
     font-weight: 600;
     letter-spacing: -0.02em;
-    line-height: normal;
+    line-height: 140%;
   }
 
   /* Small (14px, Regular) */
@@ -102,7 +102,7 @@
     font-size: 1.4rem;
     font-weight: 400;
     letter-spacing: -0.02em;
-    line-height: normal;
+    line-height: 140%;
   }
 
   /* XSmall (12px, SemiBold) */
@@ -111,7 +111,7 @@
     font-size: 1.2rem;
     font-weight: 600;
     letter-spacing: -0.02em;
-    line-height: normal;
+    line-height: 140%;
   }
 
   /* XSmall (12px, Regular) */
@@ -120,7 +120,7 @@
     font-size: 1.2rem;
     font-weight: 400;
     letter-spacing: -0.02em;
-    line-height: normal;
+    line-height: 140%;
   }
 }
 
