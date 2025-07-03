@@ -8,3 +8,7 @@
  * @remarks
  * 이 주석은 해당 컴포넌트 코드 작성을 돕기 위한 목적으로, 코드 작성 완료 시 제거해도 됩니다.
  */
+
+export default function AuthRedirect() {
+  return <div></div>;
+}
