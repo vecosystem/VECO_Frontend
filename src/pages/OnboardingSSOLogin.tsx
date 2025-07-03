@@ -20,16 +20,12 @@ const OnboardingSSOLogin = () => {
         {/* 구글 로그인 버튼 */}
         <button
           disabled
-          className="relative w-[40rem] h-[6.4rem] rounded-[0.5rem] bg-gray-200 shrink-0"
+          className="pl-[2rem] w-[40rem] h-[6.4rem] rounded-[0.5rem] bg-gray-200 shrink-0"
         >
-          <img
-            src={googlelogo}
-            alt="Google"
-            className="absolute left-[2.8rem] top-1/2 -translate-y-1/2 w-[2.4rem] h-[2.4rem]"
-          />
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-body-r text-gray-400 text-center block">
-            구글로 계속하기
-          </span>
+          <div className="w-[23.3rem] flex items-center justify-between">
+            <img src={googlelogo} alt="Google" className="w-[2.4rem] h-[2.4rem]" />
+            <span className="font-body-r text-gray-400">구글로 계속하기</span>
+          </div>
         </button>
 
         {/* 카카오 로그인 버튼 */}
@@ -42,7 +38,7 @@ const OnboardingSSOLogin = () => {
             alt="Kakao"
             className="absolute left-[2rem] top-1/2 -translate-y-1/2 w-[4.2rem] h-[4.2rem]"
           />
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-body-r text-gray-400 text-center block">
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-body-r text-gray-400 text-center">
             카카오톡으로 계속하기
           </span>
         </button>
