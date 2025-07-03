@@ -7,7 +7,7 @@ interface DropdownHeaderProps {
   isOpen: boolean;
   onToggle: () => void;
   hasToggleIcon?: boolean;
-  customLeftIcon?: React.ReactNode;
+  teamIcon?: React.ReactNode;
 }
 
 const DropdownHeader = ({
@@ -15,15 +15,17 @@ const DropdownHeader = ({
   isOpen,
   onToggle,
   hasToggleIcon = true,
-  customLeftIcon,
+  teamIcon,
 }: DropdownHeaderProps) => {
   return (
     <div
       className="flex items-center gap-2 py-2 px-2 cursor-pointer hover:bg-gray-100 rounded-md"
       onClick={onToggle}
     >
-      {customLeftIcon && <span className="text-gray-600">{customLeftIcon}</span>}
+      {/* teamIcon ex: 팀 이미지 */}
+      {teamIcon && <span className="text-gray-600">{teamIcon}</span>}
       <span className="font-semibold text-gray-800">{title}</span>
+      {/* hasToggleIcon ex: 팀 드롭다운 토글 아이콘 */}
       {hasToggleIcon && (
         <span className="ml-auto text-gray-500">
           {isOpen ? (

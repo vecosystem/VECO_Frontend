@@ -1,13 +1,12 @@
 // src/components/DropdownMenu.jsx
 import React, { useState } from 'react';
 import DropdownHeader from './DropdownHeader';
-import SidebarItem from './SidebarItem';
 
 interface DropdownMenuProps {
   headerTitle: string;
   initialOpen?: boolean;
   children: React.ReactNode;
-  headerCustomLeftIcon?: React.ReactNode;
+  headerTeamIcon?: React.ReactNode;
   headerHasToggleIcon?: boolean;
   isNested?: boolean;
 }
@@ -16,7 +15,7 @@ const DropdownMenu = ({
   headerTitle,
   initialOpen = false,
   children,
-  headerCustomLeftIcon,
+  headerTeamIcon,
   headerHasToggleIcon = true,
   isNested = false, // 중첩된 드롭다운인지 여부
 }: DropdownMenuProps) => {
@@ -30,12 +29,13 @@ const DropdownMenu = ({
 
   return (
     <div className={`w-full ${containerPaddingClass}`}>
+      {/* headerTitle ex: 작업실, 나의 팀, Team1 */}
       {headerTitle && (
         <DropdownHeader
           title={headerTitle}
           isOpen={isOpen}
           onToggle={handleToggle}
-          customLeftIcon={headerCustomLeftIcon}
+          teamIcon={headerTeamIcon}
           hasToggleIcon={headerHasToggleIcon}
         />
       )}
