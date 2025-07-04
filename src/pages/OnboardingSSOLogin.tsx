@@ -47,7 +47,7 @@ const OnboardingSSOLogin = () => {
       {/* 하단 이용약관 + 밑줄 */}
       <div className="flex flex-col gap-[0.1rem] mt-[3.2rem]">
         <p className="font-body-r text-gray-400 text-center">이용약관 & 데이터 처리 동의</p>
-        <hr className=" bg-gray-400 w-[18.6rem] h-[0.1rem] border-none shrink-0" />
+        <hr className=" bg-gray-400 h-[0.1rem] border-none shrink-0" />
       </div>
     </div>
   );
