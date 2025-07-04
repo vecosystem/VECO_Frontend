@@ -13,6 +13,7 @@ import pr1 from '../../assets/icons/pr-1.svg';
 import pr2 from '../../assets/icons/pr-2.svg';
 import pr3 from '../../assets/icons/pr-3.svg';
 import pr4 from '../../assets/icons/pr-4.svg';
+import trashIcon from '../../assets/icons/trash.svg';
 
 /* 필터 적용 */
 const getFilter = (filter: ItemFilter = 'status'): DisplayField[] => {
@@ -43,7 +44,7 @@ const getPriorityIcon = (priority: PriorityLevel) => {
 /* 상태 아이콘 및 색상 */
 const getStatusIcon = (status: GoalStatus) => {
   if (status === '삭제')
-    return <img src="/icons/trash.svg" alt="삭제" style={{ width: '1.2rem', height: '1.2rem' }} />;
+    return <img src={trashIcon} alt="삭제" className="w-[2.4rem] h-[2.4rem]" />;
 
   const colorMap: Record<GoalStatus, string> = {
     없음: '##FFFFFF',
@@ -76,7 +77,6 @@ const defaultData: GoalItemProps = {
   type: 'goal', // 'goal' | 'my-goal'
   goalId: 'Veco-g3',
   title: '백호를 사용해서 다른 사람들과 협업해보기',
-  status: '해야할 일',
   priority: '보통',
   deadline: '2025-07-01',
   manage: '김선화',
