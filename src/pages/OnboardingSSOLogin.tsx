@@ -1,5 +1,5 @@
 import vecologo from '../assets/vecologo.svg';
-import googlelogo from '../assets/googlelogo.svg';
+import googlelogo from '../assets/googlelogo.png';
 import kakaologo from '../assets/kakaologo.svg';
 import '../index.css';
 
@@ -20,10 +20,12 @@ const OnboardingSSOLogin = () => {
         {/* 구글 로그인 버튼 */}
         <button
           disabled
-          className="pl-[2rem] w-[40rem] h-[6.4rem] rounded-[0.5rem] bg-gray-200 shrink-0"
+          className="pl-[2rem] w-[40rem] h-[6.2rem] rounded-[0.5rem] bg-gray-200 shrink-0"
         >
           <div className="w-[23.3rem] flex items-center justify-between">
-            <img src={googlelogo} alt="Google" className="w-[2.4rem] h-[2.4rem]" />
+            <div className="w-[4.2rem] h-[4.2rem] bg-gray-200 flex items-center justify-center shrink-0">
+              <img src={googlelogo} alt="Google" className="w-[1.966rem] h-[2.0553rem]" />
+            </div>
             <span className="font-body-r text-gray-400">구글로 계속하기</span>
           </div>
         </button>
@@ -31,16 +33,12 @@ const OnboardingSSOLogin = () => {
         {/* 카카오 로그인 버튼 */}
         <button
           disabled
-          className="relative w-[40rem] h-[6.4rem] rounded-[0.5rem] bg-gray-200 shrink-0"
+          className="pl-[2rem] w-[40rem] h-[6.2rem] rounded-[0.5rem] bg-gray-200 shrink-0"
         >
-          <img
-            src={kakaologo}
-            alt="Kakao"
-            className="absolute left-[2rem] top-1/2 -translate-y-1/2 w-[4.2rem] h-[4.2rem]"
-          />
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-body-r text-gray-400 text-center">
-            카카오톡으로 계속하기
-          </span>
+          <div className="w-[25.5rem] flex items-center justify-between">
+            <img src={kakaologo} alt="Kakao" className="w-[4.2rem] h-[4.2rem]" />
+            <span className="font-body-r text-gray-400">카카오톡으로 계속하기</span>
+          </div>
         </button>
       </div>
 
