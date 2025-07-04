@@ -7,6 +7,7 @@ export type ItemFilter = 'status' | 'priority' | 'manage';
 
 export interface GoalItemProps {
   showCheckbox?: boolean;
+  checked?: boolean;
   type?: 'goal' | 'my-goal';
   goalId: string;
   title: string;

@@ -72,6 +72,7 @@ const getStatusIcon = (status: GoalStatus) => {
  */
 const defaultData: GoalItemProps = {
   showCheckbox: true,
+  checked: false,
   type: 'goal', // 'goal' | 'my-goal'
   goalId: 'Veco-g3',
   title: '백호를 사용해서 다른 사람들과 협업해보기',
@@ -83,22 +84,27 @@ const defaultData: GoalItemProps = {
 };
 
 export const GoalItem = (props: Partial<GoalItemProps>) => {
-  const { showCheckbox, type, goalId, title, status, priority, deadline, manage, filter } = {
-    ...defaultData,
-    ...props,
-  };
+  const { showCheckbox, checked, type, goalId, title, status, priority, deadline, manage, filter } =
+    {
+      ...defaultData,
+      ...props,
+    };
 
   const displayFields = getFilter(filter);
 
   return (
-    <div className="font-body-r flex justify-between items-center h-[2.4rem]">
+    <div
+      className={`font-body-r flex justify-between items-center h-[5.6rem] ${checked ? 'bg-gray-300' : ''}`}
+    >
       <div className="flex items-center">
         {/* 목표 번호 */}
         {showCheckbox ? (
           <div className="flex items-center">
             <input
               type="checkbox"
-              className="w-[1.6rem] h-[1.6rem] mr-[0.8rem]"
+              checked={checked}
+              // onChange={() => {}} // 외부에서 상태 관리 필요
+              className="w-[1.6rem] h-[1.6rem] mr-[0.8rem] accent-primary-blue"
               aria-label="목표 선택"
             />
             <span className="font-body-sb">{goalId}</span>
