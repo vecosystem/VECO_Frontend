@@ -1,7 +1,7 @@
 import type {
   DisplayField,
   GoalItemProps,
-  GoalStatus,
+  Status,
   ItemFilter,
   PriorityLevel,
 } from '../../types/goal';
@@ -42,11 +42,11 @@ const getPriorityIcon = (priority: PriorityLevel) => {
 };
 
 /* 상태 아이콘 및 색상 */
-const getStatusIcon = (status: GoalStatus) => {
+const getStatusIcon = (status: Status) => {
   if (status === '삭제')
     return <img src={trashIcon} alt="삭제" className="w-[2.4rem] h-[2.4rem]" />;
 
-  const colorMap: Record<GoalStatus, string> = {
+  const colorMap: Record<Status, string> = {
     없음: '##FFFFFF',
     진행중: '#D4B042',
     '해야할 일': '#D44242',
@@ -77,6 +77,7 @@ const defaultData: GoalItemProps = {
   type: 'goal', // 'goal' | 'my-goal'
   goalId: 'Veco-g3',
   title: '백호를 사용해서 다른 사람들과 협업해보기',
+  status: '완료',
   priority: '보통',
   deadline: '2025-07-01',
   manage: '김선화',
