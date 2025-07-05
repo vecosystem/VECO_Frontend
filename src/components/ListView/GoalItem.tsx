@@ -113,10 +113,12 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
         ) : (
           <span className="font-body-sb ml-[2.4rem]">{goalId}</span>
         )}
-        {/* 목표 아이콘 */}
-        <img src={goalIcon} alt="date" className="w-[1.8rem] h-[1.8rem] ml-[1.6rem] mr-[0.8rem]" />
-        {/* 목표명 */}
-        <div className="truncate">{title}</div>
+        <div className="flex gap-[0.8rem] items-center">
+          {/* 목표 아이콘 */}
+          <img src={goalIcon} alt="date" className="w-[1.8rem] h-[1.8rem] ml-[1.6rem]" />
+          {/* 목표명 */}
+          <div className="truncate">{title}</div>
+        </div>
       </div>
       <div className="flex gap-[3.2rem] items-center">
         {/* 상태 */}
