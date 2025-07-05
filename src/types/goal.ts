@@ -18,3 +18,18 @@ export interface GoalItemProps {
   displayFields?: DisplayField[];
   filter?: ItemFilter;
 }
+
+export interface IssueItemProps {
+  showCheckbox?: boolean;
+  checked?: boolean;
+  type?: 'issue' | 'my-issue';
+  issueId: string;
+  issueTitle: string;
+  goalTitle: string;
+  status: Status;
+  priority: PriorityLevel;
+  deadline: string;
+  manage: string;
+  displayFields?: DisplayField[];
+  filter?: ItemFilter;
+}
