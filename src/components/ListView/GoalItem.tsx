@@ -1,4 +1,4 @@
-import type { GoalItemProps } from '../../types/goal';
+import type { GoalItemProps } from '../../types/listItem';
 import dateIcon from '../../assets/icons/date.svg';
 import grayIcon from '../../assets/icons/gray.svg';
 import goalIcon from '../../assets/icons/goal.svg';

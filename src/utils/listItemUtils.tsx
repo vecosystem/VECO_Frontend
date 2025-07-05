@@ -5,7 +5,7 @@ import pr3 from '../assets/icons/pr-3.svg';
 import pr4 from '../assets/icons/pr-4.svg';
 import trashIcon from '../assets/icons/trash.svg';
 
-import type { ItemFilter, DisplayField, PriorityLevel, Status } from '../types/goal';
+import type { ItemFilter, DisplayField, PriorityLevel, Status } from '../types/listItem';
 
 /* 필터 적용 */
 export const getFilter = (filter: ItemFilter = 'status'): DisplayField[] => {
