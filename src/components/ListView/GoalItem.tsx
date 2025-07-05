@@ -42,7 +42,7 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
               type="checkbox"
               checked={checked}
               // onChange={() => {}} // 외부에서 상태 관리 필요
-              className="w-[1.6rem] h-[1.6rem] mr-[0.8rem] accent-primary-blue"
+              className="w-[1.2rem] mr-[1.0rem] accent-primary-blue"
               aria-label="목표 선택"
             />
             <span className="font-body-sb">{goalId}</span>
