@@ -11,13 +11,13 @@ import type { ItemFilter, DisplayField, PriorityLevel, Status } from '../types/l
 export const getFilter = (filter: ItemFilter = 'status'): DisplayField[] => {
   switch (filter) {
     case 'status':
-      return ['priority', 'deadline', 'manage'];
+      return ['priority', 'manage'];
     case 'priority':
-      return ['status', 'deadline', 'manage'];
+      return ['status', 'manage'];
     case 'manage':
-      return ['status', 'priority', 'deadline'];
+      return ['status', 'priority'];
     default:
-      return ['status', 'priority', 'deadline', 'manage'];
+      return ['status', 'priority', 'manage'];
   }
 };
 

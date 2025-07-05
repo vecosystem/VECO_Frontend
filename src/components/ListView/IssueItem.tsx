@@ -93,12 +93,10 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
         </div>
 
         {/* 기한 */}
-        {displayFields.includes('deadline') && (
-          <div className="flex gap-[1.1rem] items-center">
-            <img src={dateIcon} alt="date" className="w-[1.8rem] h-[1.8rem]" />
-            <div className="truncate">{deadline}</div>
-          </div>
-        )}
+        <div className="flex gap-[0.8rem] items-center">
+          <img src={dateIcon} alt="date" className="w-[1.8rem] h-[1.8rem]" />
+          <div className="truncate">{deadline}</div>
+        </div>
         {/* 담당자/팀명 */}
         {/*
          * 담당자 1인 기준으로 작성
