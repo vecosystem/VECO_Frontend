@@ -108,7 +108,7 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
 
   return (
     <div
-      className={`font-body-r flex justify-between items-center h-[5.6rem] ${checked ? 'bg-gray-300' : ''}`}
+      className={`font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${checked ? 'bg-gray-300' : ''}`}
     >
       <div className="flex items-center">
         {/* 이슈 번호 */}
