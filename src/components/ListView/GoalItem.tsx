@@ -1,71 +1,8 @@
-import type {
-  DisplayField,
-  GoalItemProps,
-  Status,
-  ItemFilter,
-  PriorityLevel,
-} from '../../types/goal';
+import type { GoalItemProps } from '../../types/goal';
 import dateIcon from '../../assets/icons/date.svg';
 import grayIcon from '../../assets/icons/gray.svg';
 import goalIcon from '../../assets/icons/goal.svg';
-import pr0 from '../../assets/icons/pr-0.svg';
-import pr1 from '../../assets/icons/pr-1.svg';
-import pr2 from '../../assets/icons/pr-2.svg';
-import pr3 from '../../assets/icons/pr-3.svg';
-import pr4 from '../../assets/icons/pr-4.svg';
-import trashIcon from '../../assets/icons/trash.svg';
-
-/* 필터 적용 */
-const getFilter = (filter: ItemFilter = 'status'): DisplayField[] => {
-  switch (filter) {
-    case 'status': // 상태 필터 → 우선순위, 기한, 담당자
-      return ['priority', 'deadline', 'manage'];
-    case 'priority': // 우선순위 필터 → 상태, 기한, 담당자
-      return ['status', 'deadline', 'manage'];
-    case 'manage': // 담당자 필터 → 상태, 우선순위, 기한
-      return ['status', 'priority', 'deadline'];
-    default:
-      return ['status', 'priority', 'deadline', 'manage'];
-  }
-};
-
-/* 우선순위 아이콘 */
-const getPriorityIcon = (priority: PriorityLevel) => {
-  const iconMap: Record<PriorityLevel, string> = {
-    없음: pr0,
-    낮음: pr1,
-    보통: pr2,
-    높음: pr3,
-    긴급: pr4,
-  };
-  return iconMap[priority];
-};
-
-/* 상태 아이콘 및 색상 */
-const getStatusIcon = (status: Status) => {
-  if (status === '삭제')
-    return <img src={trashIcon} alt="삭제" className="w-[2.4rem] h-[2.4rem]" />;
-
-  const colorMap: Record<Status, string> = {
-    없음: '##FFFFFF',
-    진행중: '#D4B042',
-    '해야할 일': '#D44242',
-    완료: '#75D564',
-    검토: '#2e4475',
-    삭제: '#D44242',
-  };
-  return (
-    <span
-      style={{
-        display: 'inline-block',
-        width: '1.2rem',
-        height: '1.2rem',
-        borderRadius: '50%',
-        background: colorMap[status],
-      }}
-    />
-  );
-};
+import { getFilter, getPriorityIcon, getStatusIcon } from '../../utils/listItemUtils';
 
 /*
  * 기본값 설정, props 로 전달된 값이 없을 경우 사용
