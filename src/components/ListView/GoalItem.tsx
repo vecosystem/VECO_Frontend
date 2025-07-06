@@ -45,10 +45,10 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
               className="w-[1.2rem] mr-[1.0rem] accent-primary-blue"
               aria-label="목표 선택"
             />
-            <span className="font-body-sb">{goalId}</span>
+            <span className="font-body-b">{goalId}</span>
           </div>
         ) : (
-          <span className="font-body-sb ml-[2.4rem]">{goalId}</span>
+          <span className="font-body-b ml-[2.4rem]">{goalId}</span>
         )}
         <div className="flex gap-[0.8rem] items-center">
           {/* 목표 아이콘 */}

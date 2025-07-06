@@ -58,10 +58,10 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
               className="w-[1.2rem] mr-[1.0rem] accent-primary-blue"
               aria-label="이슈 선택"
             />
-            <span className="font-body-sb">{issueId}</span>
+            <span className="font-body-b">{issueId}</span>
           </div>
         ) : (
-          <span className="font-body-sb ml-[2.4rem]">{issueId}</span>
+          <span className="font-body-b ml-[2.4rem]">{issueId}</span>
         )}
         <div className="flex gap-[0.8rem] items-center">
           {/* 이슈 아이콘 */}
