@@ -1,4 +1,4 @@
-import PlusIcon from '../../assets/icons/plus.svg?react';
+import plusIcon from '../../assets/icons/plus.svg';
 
 interface SidebarItemProps {
   icon: React.ReactNode;
@@ -20,7 +20,7 @@ const SidebarItem = ({ icon, label, onClick, onAddClick }: SidebarItemProps) => 
       </button>
       {onAddClick && (
         <button onClick={onAddClick} type="button" className="cursor-pointer">
-          <PlusIcon className="w-[2.4rem] h-[2.4rem] aspect-square hover:bg-gray-200 rounded-full" />
+          <img src={plusIcon} alt="Add" className="w-[2.4rem] h-[2.4rem] aspect-square hover:bg-gray-200 rounded-full" />
         </button>
       )}
     </div>

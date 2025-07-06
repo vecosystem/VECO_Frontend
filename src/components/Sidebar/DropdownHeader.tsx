@@ -1,6 +1,6 @@
 // src/components/DropdownHeader.jsx
 import React from 'react';
-import DropdownIcon from '../../assets/icons/dropdown.svg?react';
+import dropdownIcon from '../../assets/icons/dropdown.svg';
 
 interface DropdownHeaderProps {
   title: string;
@@ -29,9 +29,9 @@ const DropdownHeader = ({
       {hasToggleIcon && (
         <span className="ml-auto text-gray-500">
           {isOpen ? (
-            <DropdownIcon className="h-4 w-4 rotate-180" />
+            <img src={dropdownIcon} alt="Dropdown" className="h-4 w-4 rotate-180" />
           ) : (
-            <DropdownIcon className="h-4 w-4" />
+            <img src={dropdownIcon} alt="Dropdown" className="h-4 w-4" />
           )}
         </span>
       )}
