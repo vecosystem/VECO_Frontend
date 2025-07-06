@@ -24,8 +24,6 @@ const PageIndicator = ({ currentStep, steps }: PageIndicatorProps) => {
         const isActive = idx === currentStep;
         // 이미 지난 단계 여부
         const isPast = idx < currentStep;
-        // 아직 오지 않은 단계 여부
-        const isFuture = idx > currentStep;
 
         // 바의 공통 스타일 (남색이면 길게, 회색이면 동그랗게)
         const baseStyle = `
