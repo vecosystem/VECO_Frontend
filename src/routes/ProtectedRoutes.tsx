@@ -36,6 +36,8 @@ export const protectedRoutes: RouteObject[] = [
           { path: 'goal/:goalId', element: <div>{/* Goal_Detail 페이지 */}</div> },
           { path: 'issue', element: <div>{/* Issue_Home 페이지 */}</div> },
           { path: 'issue/:issueId', element: <div>{/* Issue_Detail 페이지 */}</div> },
+          { path: 'ext', element: <div>{/* External_Home 페이지 */}</div> },
+          { path: 'ext/:extId', element: <div>{/* External_Detail 페이지 */}</div> },
           { path: 'doc', element: <div>{/* Document_Home 페이지 */}</div> },
           { path: 'doc/:docId', element: <div>{/* Document_Detail 페이지 */}</div> },
         ],
