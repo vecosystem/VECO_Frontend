@@ -1,9 +1,10 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
+import ProtectedLayout from '../layouts/ProtectedLayout';
 
 export const protectedRoutes: RouteObject[] = [
   {
     path: '/',
-    element: <div>ProtectedLayout</div>, // ProtectedLayout을 위한 placeholder (추후 ProtectedLayout 컴포넌트 작성 후 연결.)
+    element: <ProtectedLayout />, // ProtectedLayout을 위한 placeholder (추후 ProtectedLayout 컴포넌트 작성 후 연결.)
     errorElement: <div>Not Found</div>,
 
     /*
