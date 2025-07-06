@@ -18,16 +18,16 @@ const OnboardingCreateWorkspace = () => {
           <input
             type="text"
             placeholder="워크스페이스 이름"
-            className="w-full h-[6.2rem] rounded-[0.5rem] bg-gray-200 px-[2rem] text-body-r text-gray-400 focus:outline-none"
+            className="w-full h-[6.2rem] rounded-[0.5rem] bg-gray-200 px-[2rem] font-body-r text-gray-400 focus:outline-none"
           />
           <input
             type="text"
             placeholder="워크스페이스 URL"
-            className="w-full h-[6.2rem] rounded-[0.5rem] bg-gray-200 px-[2rem] text-body-r text-gray-400 focus:outline-none"
+            className="w-full h-[6.2rem] rounded-[0.5rem] bg-gray-200 px-[2rem] font-body-r text-gray-400 focus:outline-none"
           />
         </div>
 
-        <button className="mt-[3.2rem] w-[40rem] h-[6.2rem] bg-primary-blue text-title-sub-r text-gray-100 rounded-[0.8rem] text-center">
+        <button className="mt-[3.2rem] w-[40rem] h-[6.2rem] bg-primary-blue font-title-sub-r text-gray-100 rounded-[0.8rem] text-center">
           워크스페이스 생성하기
         </button>
       </div>
