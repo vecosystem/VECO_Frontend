@@ -6,9 +6,11 @@ import '../index.css';
 
 const OnboardingCreateWorkspace = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center bg-[#F9FAFB]">
-      {/* 본문 (화면 중앙에 고정) */}
-      <div className="flex-grow flex flex-col justify-center items-center text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9FAFB]">
+      {/* 인디케이터 */}
+      <PageIndicator currentStep={0} steps={onboardingSteps} />
+      {/* 본문 */}
+      <div className="mt-[6.4rem] text-center">
         <h1 className="font-bigtitle-b text-primary-blue">새 워크스페이스 생성하기</h1>
         <p className="font-title-sub-r text-gray-600 mt-[2rem]">
           팀이 함께 일하며 이슈들을 공유하는 환경이에요
@@ -30,11 +32,6 @@ const OnboardingCreateWorkspace = () => {
         <button className="mt-[3.2rem] w-[40rem] h-[6.2rem] bg-primary-blue font-title-sub-r text-gray-100 rounded-[0.8rem] text-center">
           워크스페이스 생성하기
         </button>
-      </div>
-
-      {/* 인디케이터 */}
-      <div className="mb-[2.5rem]">
-        <PageIndicator currentStep={0} steps={onboardingSteps} />
       </div>
     </div>
   );
