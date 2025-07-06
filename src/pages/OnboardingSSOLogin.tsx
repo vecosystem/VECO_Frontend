@@ -6,14 +6,14 @@ import '../index.css';
 const OnboardingSSOLogin = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9FAFB]">
-      {/* 백호 텍스트 */}
-      <h2 className="font-title-sb text-primary-blue">Veco</h2>
-
       {/* 백호 로고 */}
-      <img src={vecologo} alt="Veco" className="w-[12.2rem] h-[11.1726rem] shrink-0 mt-[1.6rem]" />
+      <img src={vecologo} alt="Veco" className="w-[12.2rem] h-[11.1726rem] shrink-0" />
+
+      {/* 백호 텍스트 */}
+      <h2 className="font-title-b text-primary-blue mt-[1.6rem]">Veco</h2>
 
       {/* "나의 작업실을 생성해봐요" 문구 */}
-      <h1 className=" font-body-r text-black mt-[3.13rem]">나의 작업실을 생성해봐요</h1>
+      <h1 className=" font-body-r text-gray-600 mt-[3.2rem]">나의 작업실을 생성해봐요</h1>
 
       {/* 소셜 로그인 버튼 영역 */}
       <div className="flex flex-col gap-[1.6rem] mt-[3.2rem]">
@@ -26,7 +26,7 @@ const OnboardingSSOLogin = () => {
             <div className="w-[4.2rem] h-[4.2rem] bg-gray-200 flex items-center justify-center shrink-0">
               <img src={googlelogo} alt="Google" className="w-[1.966rem] h-[2.0553rem]" />
             </div>
-            <span className="font-body-r text-gray-400">구글로 계속하기</span>
+            <span className="font-body-r text-gray-600">구글로 계속하기</span>
           </div>
         </button>
 
@@ -37,7 +37,7 @@ const OnboardingSSOLogin = () => {
         >
           <div className="w-[25.5rem] flex items-center justify-between">
             <img src={kakaologo} alt="Kakao" className="w-[4.2rem] h-[4.2rem]" />
-            <span className="font-body-r text-gray-400">카카오톡으로 계속하기</span>
+            <span className="font-body-r text-gray-600">카카오톡으로 계속하기</span>
           </div>
         </button>
       </div>
