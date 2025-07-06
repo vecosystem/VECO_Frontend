@@ -14,109 +14,125 @@
   --color-primary-variant-blue: #2e4475;
 }
 
+@font-face {
+  font-family: 'Spoqa Han Sans Neo';
+  src: url('./assets/fonts/SpoqaHanSansNeo-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Spoqa Han Sans Neo';
+  src: url('./assets/fonts/SpoqaHanSansNeo-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer utilities {
-  /* Big Title (32px, SemiBold) */
-  .font-bigtitle-sb {
-    font-family: 'Poppins', Arial, sans-serif;
+  /* Big Title (32px, Bold) */
+  .font-bigtitle-b {
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
     font-size: 3.2rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 150%;
   }
 
   /* Big Title (32px, Regular) */
   .font-bigtitle-r {
-    font-family: 'Poppins', Arial, sans-serif;
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
     font-size: 3.2rem;
     font-weight: 400;
     letter-spacing: -0.02em;
     line-height: 150%;
   }
 
-  /* Title (24px, SemiBold) */
-  .font-title-sb {
-    font-family: 'Poppins', Arial, sans-serif;
+  /* Title (24px, Bold) */
+  .font-title-b {
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
     font-size: 2.4rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 150%;
   }
 
   /* Title (24px, Regular) */
   .font-title-r {
-    font-family: 'Poppins', Arial, sans-serif;
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
     font-size: 2.4rem;
     font-weight: 400;
     letter-spacing: -0.02em;
     line-height: 140%;
   }
 
-  /* Title/Sub (20px, SemiBold) */
-  .font-title-sub-sb {
-    font-family: 'Poppins', Arial, sans-serif;
+  /* Title/Sub (20px, Bold) */
+  .font-title-sub-b {
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
     font-size: 2rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 140%;
   }
 
   /* Title/Sub (20px, Regular) */
   .font-title-sub-r {
-    font-family: 'Poppins', Arial, sans-serif;
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
     font-size: 2rem;
     font-weight: 400;
     letter-spacing: -0.02em;
     line-height: 140%;
   }
 
-  /* Body (16px, SemiBold) */
-  .font-body-sb {
-    font-family: 'Poppins', Arial, sans-serif;
+  /* Body (16px, Bold) */
+  .font-body-b {
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
     font-size: 1.6rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 140%;
   }
 
   /* Body (16px, Regular) */
   .font-body-r {
-    font-family: 'Poppins', Arial, sans-serif;
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
     font-size: 1.6rem;
     font-weight: 400;
     letter-spacing: -0.02em;
     line-height: 140%;
   }
 
-  /* Small (14px, SemiBold) */
-  .font-small-sb {
-    font-family: 'Poppins', Arial, sans-serif;
+  /* Small (14px, Bold) */
+  .font-small-b {
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
     font-size: 1.4rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 140%;
   }
 
   /* Small (14px, Regular) */
   .font-small-r {
-    font-family: 'Poppins', Arial, sans-serif;
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
     font-size: 1.4rem;
     font-weight: 400;
     letter-spacing: -0.02em;
     line-height: 140%;
   }
 
-  /* XSmall (12px, SemiBold) */
-  .font-xsmall-sb {
-    font-family: 'Poppins', Arial, sans-serif;
+  /* XSmall (12px, Bold) */
+  .font-xsmall-b {
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
     font-size: 1.2rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 140%;
   }
 
   /* XSmall (12px, Regular) */
   .font-xsmall-r {
-    font-family: 'Poppins', Arial, sans-serif;
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
     font-size: 1.2rem;
     font-weight: 400;
     letter-spacing: -0.02em;
@@ -128,6 +144,6 @@ html {
   font-size: 62.5%; /* 1rem = 10px */
 }
 body {
-  font-family: 'Poppins', Arial, sans-serif;
+  font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
   background-color: var(--color-gray-100);
 }
