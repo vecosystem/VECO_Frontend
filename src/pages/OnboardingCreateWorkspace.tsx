@@ -7,7 +7,7 @@ import '../index.css';
 const OnboardingCreateWorkspace = () => {
   return (
     <div className="min-h-screen flex flex-col items-center bg-[#F9FAFB]">
-      {/* 본문 */}
+      {/* 본문 (화면 중앙에 고정) */}
       <div className="flex-grow flex flex-col justify-center items-center text-center">
         <h1 className="font-bigtitle-b text-primary-blue">새 워크스페이스 생성하기</h1>
         <p className="font-title-sub-r text-gray-600 mt-[2rem]">
