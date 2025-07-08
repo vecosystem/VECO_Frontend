@@ -5,8 +5,11 @@ import issueIcon from '../../assets/icons/issue.svg';
 import externalIcon from '../../assets/icons/external.svg';
 import documentIcon from '../../assets/icons/document.svg';
 import grayIcon from '../../assets/icons/gray.svg';
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="w-[28rem] bg-white p-4 shadow-lg min-h-screen">
       {/* 첫 번째 드롭다운: 작업실 */}
@@ -14,14 +17,22 @@ const Sidebar = () => {
         <SidebarItem
           icon={<img src={externalIcon} alt="External" />}
           label="나의 목표"
-          onAddClick={() => {}}
-          onClick={() => {}}
+          onClick={() => {
+            navigate('/my/mygoal');
+          }}
+          onAddClick={() => {
+            navigate('/my/mygoal/:myGoalId');
+          }}
         />
         <SidebarItem
           icon={<img src={documentIcon} alt="Document" />}
           label="나의 이슈"
-          onAddClick={() => {}}
-          onClick={() => {}}
+          onClick={() => {
+            navigate('/my/myissue');
+          }}
+          onAddClick={() => {
+            navigate('/my/myissue/:myIssueId');
+          }}
         />
       </DropdownMenu>
       <div className="my-4 border-b border-gray-200"></div> {/* 구분선 */}
@@ -38,24 +49,36 @@ const Sidebar = () => {
             <SidebarItem
               icon={<img src={goalIcon} alt="Goal" />}
               label="목표"
-              onAddClick={() => {}}
-              onClick={() => {}}
+              onClick={() => {
+                navigate(`/team/:teamId/goal`);
+              }}
+              onAddClick={() => {
+                navigate(`/team/:teamId/goal/:goalId`);
+              }}
             />
             <SidebarItem
               icon={<img src={issueIcon} alt="Issue" />}
               label="이슈"
-              onAddClick={() => {}}
-              onClick={() => {}}
+              onClick={() => {
+                navigate(`/team/:teamId/issue`);
+              }}
+              onAddClick={() => {
+                navigate(`/team/:teamId/issue/:issueId`);
+              }}
             />
             <SidebarItem
               icon={<img src={externalIcon} alt="External" />}
               label="외부"
-              onClick={() => {}}
+              onClick={() => {
+                navigate(`/team/:teamId/ext`);
+              }}
             />
             <SidebarItem
               icon={<img src={documentIcon} alt="Document" />}
               label="문서"
-              onClick={() => {}}
+              onClick={() => {
+                navigate(`/team/:teamId/doc`);
+              }}
             />
           </div>
         </DropdownMenu>
@@ -69,24 +92,36 @@ const Sidebar = () => {
             <SidebarItem
               icon={<img src={goalIcon} alt="Goal" />}
               label="목표"
-              onAddClick={() => {}}
-              onClick={() => {}}
+              onClick={() => {
+                navigate(`/team/:teamId/goal`);
+              }}
+              onAddClick={() => {
+                navigate(`/team/:teamId/goal/:goalId`);
+              }}
             />
             <SidebarItem
               icon={<img src={issueIcon} alt="Issue" />}
               label="이슈"
-              onAddClick={() => {}}
-              onClick={() => {}}
+              onClick={() => {
+                navigate(`/team/:teamId/issue`);
+              }}
+              onAddClick={() => {
+                navigate(`/team/:teamId/issue/:issueId`);
+              }}
             />
             <SidebarItem
               icon={<img src={externalIcon} alt="External" />}
               label="외부"
-              onClick={() => {}}
+              onClick={() => {
+                navigate(`/team/:teamId/ext`);
+              }}
             />
             <SidebarItem
               icon={<img src={documentIcon} alt="Document" />}
               label="문서"
-              onClick={() => {}}
+              onClick={() => {
+                navigate(`/team/:teamId/doc`);
+              }}
             />
           </div>
         </DropdownMenu>
