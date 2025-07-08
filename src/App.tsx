@@ -23,7 +23,7 @@ function App() {
         </span>
         {isOpen && content && (
           <Dropdown
-            defaultValue={'우선순위'}
+            defaultValue={value}
             options={['없음', '해야할 일', '진행 중', '완료', '검토']}
             onSelect={(option) => {
               setValue(option);
