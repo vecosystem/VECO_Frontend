@@ -48,13 +48,8 @@ export const getStatusIcon = (status: Status) => {
   };
   return (
     <span
-      style={{
-        display: 'inline-block',
-        width: '1.2rem',
-        height: '1.2rem',
-        borderRadius: '50%',
-        background: colorMap[status],
-      }}
+      className="inline-block w-[1.2rem] h-[1.2rem] rounded-full"
+      style={{ background: colorMap[status] }}
     />
   );
 };
