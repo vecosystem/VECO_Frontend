@@ -1,13 +1,20 @@
 import { GoalItem } from '../../components/ListView/GoalItem';
 import BoxIcon from '../../assets/icons/box.svg';
 import ListIcon from '../../assets/icons/list.svg';
-import FilterIcon from '../../assets/icons/filter.svg';
 import TrashIcon from '../../assets/icons/trash-black.svg';
 import PlusIcon from '../../assets/icons/plus.svg';
-import { useEffect, useRef, useState } from 'react';
-import { FilterDropdown } from '../../components/ListView/FilterDropdown';
-import type { GoalItemProps } from '../../types/listItem';
+import { useState } from 'react';
+import {
+  PRIORITY_LIST,
+  STATUS_LIST,
+  type GoalItemProps,
+  type ItemFilter,
+} from '../../types/listItem';
+import { GoalFilterDropdown } from '../../components/ListView/GoalFilterDropdown';
 
+/*
+  추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
+*/
 const dummyGoals: Partial<GoalItemProps>[] = [
   {
     goalId: '1',
@@ -19,45 +26,20 @@ const dummyGoals: Partial<GoalItemProps>[] = [
   },
 ];
 
-// 필터 옵션
-const filterOptions = [
-  { type: 'status', label: '상태' },
-  { type: 'priority', label: '우선순위' },
-  { type: 'manage', label: '담당자' },
-] as const;
-
-type FilterType = (typeof filterOptions)[number]['type'];
-
-const statusList = ['없음', '진행중', '해야할 일', '완료', '검토', '삭제'] as const;
-const priorityList = ['없음', '긴급', '높음', '보통', '낮음'] as const;
 function getManagers(goals: typeof dummyGoals) {
   const set = new Set(goals.map((g) => g.manage));
   return ['없음', ...Array.from(set)];
 }
 
 const GoalHome = () => {
-  const [filter, setFilter] = useState<'status' | 'priority' | 'manage'>('status');
-  const [showDropdown, setShowDropdown] = useState(false);
-
-  // 드롭다운 외부 클릭 시 닫기
-  const filterRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!showDropdown) return;
-    const handleClick = (e: MouseEvent) => {
-      if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
-        setShowDropdown(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, [showDropdown]);
+  const [filter, setFilter] = useState<ItemFilter>('status');
 
   // 그룹핑
   const groupKeys =
     filter === 'status'
-      ? statusList
+      ? STATUS_LIST
       : filter === 'priority'
-        ? priorityList
+        ? PRIORITY_LIST
         : getManagers(dummyGoals);
 
   const grouped = groupKeys.map((key) => ({
@@ -91,21 +73,11 @@ const GoalHome = () => {
           </div>
           <div className="flex gap-[2.4rem] items-center">
             {/* 필터영역 */}
-            <div
-              className="flex gap-[0.8rem] items-center cursor-pointer relative"
-              onClick={() => setShowDropdown((v) => !v)}
-              ref={filterRef}
-            >
-              <img src={FilterIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
-              <span className="font-body-r">필터 </span>
+            <div className="flex gap-[0.8rem] items-center cursor-pointer relative">
               {/* 드롭다운 */}
-              <FilterDropdown<FilterType>
-                options={filterOptions}
+              <GoalFilterDropdown
                 value={filter}
-                onChange={setFilter}
-                show={showDropdown}
-                setShow={setShowDropdown}
-                buttonRef={filterRef}
+                onChange={(type) => setFilter(type as ItemFilter)}
               />
             </div>
             <div className="flex gap-[0.4rem] items-center">
@@ -114,6 +86,7 @@ const GoalHome = () => {
             </div>
           </div>
         </div>
+
         {/* 리스트 뷰 */}
         <div className="flex flex-col gap-[6.4rem]">
           {grouped.map(({ key, items }) =>
