@@ -6,8 +6,9 @@ import TrashIcon from '../../assets/icons/trash-black.svg';
 import PlusIcon from '../../assets/icons/plus.svg';
 import CheckIcon from '../../assets/icons/check.svg';
 import { useEffect, useRef, useState } from 'react';
+import type { GoalItemProps } from '../../types/listItem';
 
-const dummyGoals = [
+const dummyGoals: Partial<GoalItemProps>[] = [
   {
     goalId: '1',
     title: 'API 연동',
