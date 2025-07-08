@@ -1,4 +1,4 @@
-import { Navigate, type RouteObject } from 'react-router-dom';
+import { Navigate, Outlet, type RouteObject } from 'react-router-dom';
 import ProtectedLayout from '../layouts/ProtectedLayout';
 
 export const protectedRoutes: RouteObject[] = [
@@ -14,7 +14,7 @@ export const protectedRoutes: RouteObject[] = [
     children: [
       {
         path: 'my',
-        element: <div></div>, // Placeholder (필요시 컴포넌트로 변경하여 작성 후 연결)
+        element: <Outlet />, // Placeholder (필요시 컴포넌트로 변경하여 작성 후 연결)
         children: [
           // 기본 경로는 나의 이슈 페이지로 리다이렉트되게 했음. (문제시 변경)
           { index: true, element: <Navigate to="myissue" replace /> },
@@ -28,7 +28,7 @@ export const protectedRoutes: RouteObject[] = [
       },
       {
         path: 'team/:teamId',
-        element: <div></div>, // Placeholder (필요시 컴포넌트로 변경하여 작성 후 연결)
+        element: <Outlet />, // Placeholder (필요시 컴포넌트로 변경하여 작성 후 연결)
         children: [
           // 기본 경로는 이슈 페이지로 리다이렉트.
           { index: true, element: <Navigate to="issue" replace /> },
@@ -36,6 +36,8 @@ export const protectedRoutes: RouteObject[] = [
           { path: 'goal/:goalId', element: <div>{/* Goal_Detail 페이지 */}</div> },
           { path: 'issue', element: <div>{/* Issue_Home 페이지 */}</div> },
           { path: 'issue/:issueId', element: <div>{/* Issue_Detail 페이지 */}</div> },
+          { path: 'ext', element: <div>{/* External_Home 페이지 */}</div> },
+          { path: 'ext/:extId', element: <div>{/* External_Detail 페이지 */}</div> },
           { path: 'doc', element: <div>{/* Document_Home 페이지 */}</div> },
           { path: 'doc/:docId', element: <div>{/* Document_Detail 페이지 */}</div> },
         ],
