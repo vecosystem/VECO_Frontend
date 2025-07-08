@@ -2,6 +2,7 @@ import { GoalItem } from '../../components/ListView/GoalItem';
 import BoxIcon from '../../assets/icons/box.svg';
 import ListIcon from '../../assets/icons/list.svg';
 import TrashIcon from '../../assets/icons/trash-black.svg';
+import TrashIconRed from '../../assets/icons/trash.svg';
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useState } from 'react';
 import {
@@ -9,7 +10,9 @@ import {
   STATUS_LIST,
   type GoalItemProps,
   type ItemFilter,
+  type Status,
 } from '../../types/listItem';
+import { getPriorityIcon, getStatusColor, getStatusIcon } from '../../utils/listItemUtils';
 
 /*
   추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
@@ -57,9 +60,9 @@ const GoalHome = () => {
       <div className="flex flex-col gap-[3.2rem]">
         {/* 팀 아이콘, 팀명 */}
         <div className="flex gap-[1.6rem] items-center">
-          <img
-            src=""
-            className="inline-block w-[3.2rem] h-[3.2rem] rounded-full bg-primary-variant-blue"
+          <span
+            className="inline-block w-[3.2rem] h-[3.2rem] rounded-full bg-primary-variant-blue bg-center bg-cover"
+            style={{ backgroundImage: `url()` }}
           />
           <div className="flex font-title-b">팀명</div>
         </div>
@@ -89,7 +92,33 @@ const GoalHome = () => {
             items.length > 0 ? (
               <div key={key}>
                 <div className="flex justify-between pb-[3.2rem]">
-                  <div className="flex font-title-sub-b gap-[0.8rem]">
+                  <div className="flex font-title-sub-b gap-[0.8rem] items-center">
+                    {filter === 'status' &&
+                      (key === '삭제' ? (
+                        <img
+                          src={TrashIconRed}
+                          alt="삭제"
+                          className="w-[1.6rem] h-[1.6rem] mr-[0.4rem]"
+                        />
+                      ) : (
+                        <span
+                          className="inline-block rounded-full w-[1.6rem] h-[1.6rem] mr-[0.8rem]"
+                          style={{ background: getStatusColor(key as Status) }}
+                        />
+                      ))}
+                    {filter === 'priority' && (
+                      <img
+                        src={getPriorityIcon(key as any)}
+                        alt={key}
+                        className="w-[3.2rem] h-[3.2rem] mr-[0.8rem]"
+                      />
+                    )}
+                    {filter === 'manage' && (
+                      <span
+                        className="inline-block w-[2.4rem] h-[2.4rem] rounded-full bg-gray-300 mr-[1.2rem] bg-center bg-cover"
+                        style={{ backgroundImage: `url(')` }}
+                      />
+                    )}
                     {/* 유형명 */}
                     <div>{key}</div>
                     <div className="text-gray-500">{items.length}</div>
