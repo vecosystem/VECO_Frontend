@@ -31,7 +31,7 @@ const OnboardingSSOLogin = () => {
         </button>
 
         {/* 카카오 로그인 버튼 */}
-        <button disabled className="pl-[2rem] w-[40rem] h-[6.2rem] rounded-[0.5rem] bg-gray-200">
+        <button disabled className="pl-[2rem] w-[40rem] h-[6.2rem] rounded-[0.5rem] bg-[#FEE500]">
           <div className="w-[25.5rem] flex items-center justify-between">
             <img src={kakaologo} alt="Kakao" className="w-[4.2rem] h-[4.2rem]" />
             <span className="font-body-r text-gray-600">카카오톡으로 계속하기</span>
