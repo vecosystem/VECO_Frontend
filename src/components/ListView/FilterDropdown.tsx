@@ -6,13 +6,14 @@ export interface FilterOption<T extends string = string> {
   label: string;
 }
 
+// 필터 드롭다운의 Props 타입 제네릭
 interface FilterDropdownProps<T extends string> {
-  options: readonly FilterOption<T>[];
-  value: T;
-  onChange: (type: T) => void;
-  show: boolean;
-  setShow: (v: boolean) => void;
-  buttonRef: React.RefObject<HTMLDivElement | null>;
+  options: readonly FilterOption<T>[]; // { type: T, label: string } 형태, 드롭다운에 표시될 배열
+  value: T; // 현재 선택된 옵션의 type 값
+  onChange: (type: T) => void; // 옵션 선택 시 호출되는 콜백
+  show: boolean; // 드롭다운 표시 여부
+  setShow: (v: boolean) => void; // 외부 상태관리
+  buttonRef: React.RefObject<HTMLDivElement | null>; // 외부 클릭 감지(드롭다운 닫기)
 }
 
 export function FilterDropdown<T extends string>({
