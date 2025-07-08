@@ -28,7 +28,7 @@ const Dropdown = ({ defaultValue, options, onSelect, onClose }: DropdownProps) =
     <div
       ref={dropdownRef}
       style={{ boxShadow: '0px 4px 12px 0px rgba(0, 0, 0, 0.15)' }}
-      className={`absolute top-0 left-0 flex flex-col w-auto min-w-[11.6rem] max-w-[27.4rem]
+      className={`absolute z-30 top-0 left-0 flex flex-col w-auto min-w-[11.6rem] max-w-[27.4rem]
       border border-gray-400 bg-white rounded-[0.4rem]`}
     >
       {defaultValue && (
@@ -46,14 +46,18 @@ const Dropdown = ({ defaultValue, options, onSelect, onClose }: DropdownProps) =
       {options.map((option) => (
         <div
           key={option}
-          className={`flex group hover:bg-gray-200 py-[0.75rem] px-[1.2rem]`}
+          className={`flex ${defaultValue && 'group hover:bg-gray-200'} py-[0.75rem] px-[1.2rem]`}
           onClick={() => {
-            onSelect(option);
+            defaultValue && onSelect(option);
             onClose();
           }}
         >
           <span className={`font-xsmall-r text-gray-600 me-[0.4rem] truncate`}>{option}</span>
-          <img className={`opacity-0 group-hover:opacity-100`} src={IcCheck} alt={option} />
+          <img
+            className={`opacity-0 ${defaultValue && 'group-hover:opacity-100'}`}
+            src={IcCheck}
+            alt={option}
+          />
         </div>
       ))}
     </div>
