@@ -4,8 +4,8 @@ import ListIcon from '../../assets/icons/list.svg';
 import FilterIcon from '../../assets/icons/filter.svg';
 import TrashIcon from '../../assets/icons/trash-black.svg';
 import PlusIcon from '../../assets/icons/plus.svg';
-import CheckIcon from '../../assets/icons/check.svg';
 import { useEffect, useRef, useState } from 'react';
+import { FilterDropdown } from '../../components/ListView/FilterDropdown';
 import type { GoalItemProps } from '../../types/listItem';
 
 const dummyGoals: Partial<GoalItemProps>[] = [
@@ -97,32 +97,14 @@ const GoalHome = () => {
               <img src={FilterIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
               <span className="font-body-r">필터 </span>
               {/* 드롭다운 */}
-              {showDropdown && (
-                <div
-                  className="absolute right-0 top-[120%] w-[11.6rem] bg-gray-100 rounded-[0.4rem] border-[0.1rem] border-gray-400"
-                  style={{
-                    boxShadow: '0px 4px 12px 0px rgba(0,0,0,0.15)',
-                  }}
-                >
-                  {filterOptions.map((opt) => (
-                    <button
-                      key={opt.type}
-                      className={`flex items-center w-full h-[3.2rem] px-[1.2rem] text-left
-                        ${filter === opt.type ? 'bg-gray-200' : ''} hover:bg-gray-200 transition-colors`}
-                      onClick={() => {
-                        setFilter(opt.type);
-                        setShowDropdown(false);
-                      }}
-                      type="button"
-                    >
-                      <span className="font-xsmall-r">{opt.label}</span>
-                      {filter === opt.type && (
-                        <img src={CheckIcon} className="w-[1.6rem] h-[1.6rem] ml-[0.4rem]" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <FilterDropdown
+                options={filterOptions}
+                value={filter}
+                onChange={setFilter}
+                show={showDropdown}
+                setShow={setShowDropdown}
+                buttonRef={filterRef}
+              />
             </div>
             <div className="flex gap-[0.4rem] items-center">
               <img src={TrashIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
