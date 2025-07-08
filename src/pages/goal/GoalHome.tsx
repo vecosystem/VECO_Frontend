@@ -26,6 +26,8 @@ const filterOptions = [
   { type: 'manage', label: '담당자' },
 ] as const;
 
+type FilterType = (typeof filterOptions)[number]['type'];
+
 const statusList = ['없음', '진행중', '해야할 일', '완료', '검토', '삭제'] as const;
 const priorityList = ['없음', '긴급', '높음', '보통', '낮음'] as const;
 function getManagers(goals: typeof dummyGoals) {
@@ -97,7 +99,7 @@ const GoalHome = () => {
               <img src={FilterIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
               <span className="font-body-r">필터 </span>
               {/* 드롭다운 */}
-              <FilterDropdown
+              <FilterDropdown<FilterType>
                 options={filterOptions}
                 value={filter}
                 onChange={setFilter}

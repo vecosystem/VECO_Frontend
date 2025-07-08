@@ -1,29 +1,28 @@
-import { useRef, useEffect } from 'react';
-import CheckIcon from '../../assets/icons/check.svg'; // 체크 아이콘 경로 맞게!
+import { useEffect } from 'react';
+import CheckIcon from '../../assets/icons/check.svg';
 
-export interface FilterOption {
-  type: 'status' | 'priority' | 'manage';
+export interface FilterOption<T extends string = string> {
+  type: T;
   label: string;
 }
 
-interface FilterDropdownProps {
-  options: readonly FilterOption[];
-  value: FilterOption['type'];
-  onChange: (type: FilterOption['type']) => void;
+interface FilterDropdownProps<T extends string> {
+  options: readonly FilterOption<T>[];
+  value: T;
+  onChange: (type: T) => void;
   show: boolean;
   setShow: (v: boolean) => void;
   buttonRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export const FilterDropdown = ({
+export function FilterDropdown<T extends string>({
   options,
   value,
   onChange,
   show,
   setShow,
   buttonRef,
-}: FilterDropdownProps) => {
-  // 바깥 클릭 시 닫기 (중복 로직 방지, 필요하면 부모에서 관리)
+}: FilterDropdownProps<T>) {
   useEffect(() => {
     if (!show) return;
     const handler = (e: MouseEvent) => {
@@ -59,4 +58,4 @@ export const FilterDropdown = ({
       ))}
     </div>
   ) : null;
-};
+}
