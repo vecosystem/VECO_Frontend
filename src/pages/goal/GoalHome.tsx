@@ -12,6 +12,8 @@ import {
   type ItemFilter,
 } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
+import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
+import Dropdown from '../../components/Dropdown/Dropdown';
 
 /*
   추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
@@ -77,8 +79,25 @@ const GoalHome = () => {
           </div>
           <div className="flex gap-[2.4rem] items-center">
             {/* 필터영역 */}
-            <div className="flex gap-[0.8rem] items-center cursor-pointer relative">
-              {/* 드롭다운 */}
+            <div className="relative">
+              <div
+                className="flex gap-[0.8rem] items-center cursor-pointer relative"
+                onClick={() => openDropdown({ name: 'filter' })}
+              >
+                {/* 드롭다운 */}
+                <img src={FilterIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
+                <span className="font-body-r">{filter}</span>
+                {isOpen && content && (
+                  <Dropdown
+                    defaultValue="필터"
+                    options={['상태', '우선순위', '담당자']}
+                    onSelect={(option) => {
+                      setFilter(option as ItemFilter);
+                    }}
+                    onClose={closeDropdown}
+                  />
+                )}
+              </div>
             </div>
             <div className="flex gap-[0.4rem] items-center">
               <img src={TrashIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
