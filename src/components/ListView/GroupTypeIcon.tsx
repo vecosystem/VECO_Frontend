@@ -1,5 +1,4 @@
 import type { ItemFilter, Status } from '../../types/listItem';
-import TrashIconRed from '../../assets/icons/trash.svg';
 import GoalIcon from '../../assets/icons/goal.svg';
 import { getPriorityIcon, getStatusColor } from '../../utils/listItemUtils';
 
@@ -11,9 +10,6 @@ interface Props {
 
 const GroupTypeIcon = ({ filter, typeKey, profileImghUrl }: Props) => {
   if (filter === '상태') {
-    if (typeKey === '삭제') {
-      return <img src={TrashIconRed} alt="삭제" className="w-[1.6rem] h-[1.6rem] mr-[0.4rem]" />;
-    }
     return (
       <span
         className="inline-block rounded-full w-[1.6rem] h-[1.6rem] mr-[0.8rem]"

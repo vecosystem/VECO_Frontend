@@ -37,16 +37,12 @@ export const getPriorityIcon = (priority: PriorityLevel): string => {
 
 /* 상태 아이콘 및 색상 */
 export const getStatusIcon = (status: Status) => {
-  if (status === '삭제')
-    return <img src={trashIcon} alt="삭제" className="w-[2.4rem] h-[2.4rem]" />;
-
   const colorMap: Record<Status, string> = {
     없음: '#FFFFFF',
     진행중: '#D4B042',
     '해야할 일': '#D44242',
     완료: '#75D564',
     검토: '#2e4475',
-    삭제: '#D44242',
   };
   return (
     <span
@@ -59,12 +55,11 @@ export const getStatusIcon = (status: Status) => {
 /* 상태 아이콘 색상만 반환 */
 export const getStatusColor = (status: Status): string => {
   const colorMap: Record<Status, string> = {
-    없음: '#FFFFFF',
+    없음: '#DCDCDC',
     진행중: '#D4B042',
     '해야할 일': '#D44242',
     완료: '#75D564',
     검토: '#2e4475',
-    삭제: '#D44242',
   };
   return colorMap[status];
 };
