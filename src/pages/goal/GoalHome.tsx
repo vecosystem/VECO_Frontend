@@ -1,4 +1,5 @@
 import { GoalItem } from '../../components/ListView/GoalItem';
+import Logo from '/vecosmall.svg';
 import FilterIcon from '../../assets/icons/filter.svg';
 import TrashIcon from '../../assets/icons/trash-black.svg';
 import TrashRedIcon from '../../assets/icons/trash.svg';
@@ -90,8 +91,13 @@ const GoalHome = () => {
         {/* 팀 아이콘, 팀명 */}
         <div className="flex gap-[1.6rem] items-center">
           <span
-            className="inline-block w-[3.2rem] h-[3.2rem] rounded-full bg-primary-variant-blue bg-center bg-cover"
-            style={{ backgroundImage: `url()` }}
+            className="inline-block w-[3.2rem] h-[3.2rem] rounded-full border-[0.1rem] border-gray-200 bg-gray-100 bg-center bg-cover"
+            style={{
+              backgroundImage: `url('/vecosmall.svg')`,
+              backgroundSize: '50%',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+            }}
           />
           <div className="flex font-title-b">팀명</div>
         </div>
