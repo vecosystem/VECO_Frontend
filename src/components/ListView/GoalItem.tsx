@@ -37,7 +37,7 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
       <div className="flex items-center">
         {/* 목표 번호 */}
         {showCheckbox ? (
-          <div className="flex items-center">
+          <div className="flex items-center whitespace-nowrap">
             <input
               type="checkbox"
               checked={checked}
@@ -45,16 +45,16 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
               className="w-[1.2rem] mr-[1.0rem] accent-primary-blue"
               aria-label="목표 선택"
             />
-            <span className="font-body-b">{goalId}</span>
+            <span className="font-body-b whitespace-nowrap">{goalId}</span>
           </div>
         ) : (
-          <span className="font-body-b ml-[2.4rem]">{goalId}</span>
+          <span className="font-body-b ml-[2.4rem] whitespace-nowrap">{goalId}</span>
         )}
         <div className="flex gap-[0.8rem] items-center">
           {/* 목표 아이콘 */}
           <img src={goalIcon} alt="date" className="w-[1.8rem] h-[1.8rem] ml-[1.6rem]" />
           {/* 목표명 */}
-          <div className="truncate">{title}</div>
+          <div className="truncate max-w-[40rem]">{title}</div>
         </div>
       </div>
       <div className="flex gap-[3.2rem] items-center">
@@ -89,7 +89,7 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
               alt="manage"
               className="w-[1.8rem] h-[1.8rem]"
             />
-            <div>{manage}</div>
+            <div className="truncate">{manage}</div>
           </div>
         )}
       </div>
