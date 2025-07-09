@@ -2,7 +2,6 @@ import { GoalItem } from '../../components/ListView/GoalItem';
 import BoxIcon from '../../assets/icons/box.svg';
 import ListIcon from '../../assets/icons/list.svg';
 import TrashIcon from '../../assets/icons/trash-black.svg';
-import TrashIconRed from '../../assets/icons/trash.svg';
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useState } from 'react';
 import {
@@ -10,9 +9,7 @@ import {
   STATUS_LIST,
   type GoalItemProps,
   type ItemFilter,
-  type Status,
 } from '../../types/listItem';
-import { getPriorityIcon, getStatusColor } from '../../utils/listItemUtils';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 
 /*
