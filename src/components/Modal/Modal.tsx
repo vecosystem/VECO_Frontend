@@ -2,10 +2,11 @@ import { useModalActions } from '../../hooks/useModal.ts';
 import { createPortal } from 'react-dom';
 
 interface ModalProps {
+  title?: string;
   subtitle: string;
 }
 
-const Modal = ({ subtitle }: ModalProps) => {
+const Modal = ({ title = '알림', subtitle }: ModalProps) => {
   const { closeModal } = useModalActions();
 
   return createPortal(
@@ -14,7 +15,7 @@ const Modal = ({ subtitle }: ModalProps) => {
         className={`flex flex-col bg-white rounded-[0.8rem] p-[2.4rem] w-[36rem]`}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className={`text-gray-600 font-title-sub-b mb-[1.6rem]`}>알림</h2>
+        <h2 className={`text-gray-600 font-title-sub-b mb-[1.6rem]`}>{title}</h2>
         <p className={`text-gray-600 font-body-r mb-[2.4rem]`}>{subtitle}</p>
         <div className={`flex justify-end`}>
           <button
