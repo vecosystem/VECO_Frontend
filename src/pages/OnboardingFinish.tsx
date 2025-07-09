@@ -13,14 +13,14 @@ const OnboardingFinish = () => {
         <PageIndicator currentStep={2} steps={onboardingSteps} />
         {/* 본문 */}
         <div className="flex flex-col items-center gap-[11.4rem]">
-          <div className="flex flex-col items-center gap-[3.2rem]">
+          <div className="flex flex-col gap-[3.2rem]">
             {/* 백호 로고 & 백호 텍스트 */}
             <div className="flex flex-col items-center gap-[1.6rem]">
               <img src={vecologo} alt="Veco" className="w-[12.2rem] h-[11.1726rem]" />
               <h2 className="font-title-b text-primary-blue">Veco</h2>
             </div>
             {/* 툴 소개 문구 */}
-            <h1 className="font-bigtitle-b text-gray-600">
+            <h1 className="font-bigtitle-b text-gray-600 text-center">
               속도의 관성을 유지하여 목표를 달성하는 협업툴
             </h1>
           </div>
