@@ -59,9 +59,11 @@ const GoalHome = () => {
     ),
   }));
 
+  const isEmpty = grouped.every(({ items }) => items.length === 0);
+
   return (
     <>
-      <div className="flex flex-col gap-[3.2rem]">
+      <div className="flex flex-1 flex-col gap-[3.2rem]">
         {/* 팀 아이콘, 팀명 */}
         <div className="flex gap-[1.6rem] items-center">
           <span
@@ -105,36 +107,42 @@ const GoalHome = () => {
             </div>
           </div>
         </div>
-
-        {/* 리스트 뷰 */}
-        <div className="flex flex-col gap-[6.4rem]">
-          {grouped.map(({ key, items }) =>
-            /* 해당 요소 존재할 때만 생성 */
-            items.length > 0 ? (
-              <div key={key}>
-                <div className="flex justify-between pb-[3.2rem]">
-                  <div
-                    className={`flex font-title-sub-b h-[2.8rem] overflow-hidden ${filter === '우선순위' ? 'items-end' : 'items-center'}`}
-                  >
-                    <GroupTypeIcon
-                      filter={filter}
-                      typeKey={key}
-                      profileImghUrl={filter === '담당자' ? '' : undefined}
-                    />
-                    {/* 유형명 */}
-                    <div>{key}</div>
-                    <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
+        {isEmpty ? (
+          <div className="flex flex-1 items-center justify-center">
+            <div className="font-body-r">목표를 생성하세요</div>
+          </div>
+        ) : (
+          /* 리스트뷰 */
+          <div className="flex flex-col gap-[6.4rem]">
+            {grouped.map(({ key, items }) =>
+              /* 해당 요소 존재할 때만 생성 */
+              items.length > 0 ? (
+                <div key={key}>
+                  <div className="flex justify-between pb-[3.2rem]">
+                    <div
+                      className={`flex font-title-sub-b h-[2.8rem] overflow-hidden ${filter === '우선순위' ? 'items-end' : 'items-center'}`}
+                    >
+                      <GroupTypeIcon
+                        filter={filter}
+                        typeKey={key}
+                        profileImghUrl={filter === '담당자' ? '' : undefined}
+                      />
+                      {/* 유형명 */}
+                      <div>{key}</div>
+                      <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
+                    </div>
+                    {/* TODO : 추가 버튼 라우터 연결 */}
+                    <img src={PlusIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
                   </div>
-                  <img src={PlusIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
+                  {/* 각 유형 별 요소 */}
+                  {items.map((goal) => (
+                    <GoalItem key={goal.goalId} {...goal} filter={filter} />
+                  ))}
                 </div>
-                {/* 각 유형 별 요소 */}
-                {items.map((goal) => (
-                  <GoalItem key={goal.goalId} {...goal} filter={filter} />
-                ))}
-              </div>
-            ) : null
-          )}
-        </div>
+              ) : null
+            )}
+          </div>
+        )}
       </div>
     </>
   );
