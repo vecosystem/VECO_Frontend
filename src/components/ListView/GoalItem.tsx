@@ -24,17 +24,28 @@ const defaultData: GoalItemProps = {
 };
 
 export const GoalItem = (props: Partial<GoalItemProps>) => {
-  const { showCheckbox, checked, type, goalId, title, status, priority, deadline, manage, filter } =
-    {
-      ...defaultData,
-      ...props,
-    };
+  const {
+    showCheckbox,
+    checked,
+    onCheckChange,
+    type,
+    goalId,
+    title,
+    status,
+    priority,
+    deadline,
+    manage,
+    filter,
+  } = {
+    ...defaultData,
+    ...props,
+  };
 
   const displayFields = getFilter(filter);
 
   return (
     <div
-      className={`font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${checked ? 'bg-gray-300' : ''}`}
+      className={`font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
     >
       <div className="flex items-center">
         {/* 목표 번호 */}
@@ -44,7 +55,7 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
               <input
                 type="checkbox"
                 checked={checked}
-                // onChange={() => {}} // 외부에서 상태 관리 필요
+                onChange={(e) => onCheckChange?.(e.target.checked)}
                 className="peer absolute w-[1.6rem] h-[1.6rem] opacity-0 cursor-pointer"
                 aria-label="목표 선택"
                 tabIndex={-1}

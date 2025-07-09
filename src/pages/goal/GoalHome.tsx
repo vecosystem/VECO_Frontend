@@ -3,6 +3,7 @@ import BoxIcon from '../../assets/icons/box.svg';
 import ListIcon from '../../assets/icons/list.svg';
 import FilterIcon from '../../assets/icons/filter.svg';
 import TrashIcon from '../../assets/icons/trash-black.svg';
+import TrashRedIcon from '../../assets/icons/trash.svg';
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useState } from 'react';
 import {
@@ -38,6 +39,18 @@ const GoalHome = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
+
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [checkItems, setCheckItems] = useState<string[]>([]);
+
+  const handleCheck = (goalId: string, checked: boolean) => {
+    setCheckItems(
+      (prev) =>
+        checked
+          ? [...prev, goalId] // 체크 시 goalId 추가
+          : prev.filter((id) => id !== goalId) // 체크 해제 시 goalId 제거
+    );
+  };
 
   // 그룹핑
   const groupKeys = (
@@ -101,9 +114,20 @@ const GoalHome = () => {
                 )}
               </div>
             </div>
-            <div className="flex gap-[0.4rem] items-center">
-              <img src={TrashIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
-              <span className="font-body-r">삭제</span>
+            {/* 삭제버튼 */}
+            <div
+              className="flex gap-[0.4rem] items-center cursor-pointer"
+              onClick={() => {
+                setIsDeleteMode((prev) => !prev);
+                if (!isDeleteMode) setCheckItems([]);
+              }}
+            >
+              <img
+                src={isDeleteMode ? TrashRedIcon : TrashIcon}
+                className="inline-block w-[2.4rem] h-[2.4rem]"
+                alt=""
+              />
+              <span className={`font-body-r ${isDeleteMode ? 'text-[#D44242]' : ''}`}>삭제</span>
             </div>
           </div>
         </div>
@@ -118,7 +142,7 @@ const GoalHome = () => {
               /* 해당 요소 존재할 때만 생성 */
               items.length > 0 ? (
                 <div key={key}>
-                  <div className="flex justify-between pb-[3.2rem]">
+                  <div className="flex justify-between pb-[1.6em]">
                     <div
                       className={`flex font-title-sub-b h-[2.8rem] overflow-hidden ${filter === '우선순위' ? 'items-end' : 'items-center'}`}
                     >
@@ -136,7 +160,14 @@ const GoalHome = () => {
                   </div>
                   {/* 각 유형 별 요소 */}
                   {items.map((goal) => (
-                    <GoalItem key={goal.goalId} {...goal} filter={filter} />
+                    <GoalItem
+                      showCheckbox={isDeleteMode}
+                      checked={checkItems.includes(goal.goalId || '')}
+                      onCheckChange={(checked) => goal.goalId && handleCheck(goal.goalId, checked)}
+                      key={goal.goalId}
+                      {...goal}
+                      filter={filter}
+                    />
                   ))}
                 </div>
               ) : null
