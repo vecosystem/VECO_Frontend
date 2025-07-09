@@ -10,7 +10,7 @@ interface Props {
 }
 
 const GroupTypeIcon = ({ filter, typeKey, profileImghUrl }: Props) => {
-  if (filter === 'status') {
+  if (filter === '상태') {
     if (typeKey === '삭제') {
       return <img src={TrashIconRed} alt="삭제" className="w-[1.6rem] h-[1.6rem] mr-[0.4rem]" />;
     }
@@ -21,7 +21,7 @@ const GroupTypeIcon = ({ filter, typeKey, profileImghUrl }: Props) => {
       />
     );
   }
-  if (filter === 'priority') {
+  if (filter === '우선순위') {
     return (
       <img
         src={getPriorityIcon(typeKey as any)}
@@ -30,7 +30,7 @@ const GroupTypeIcon = ({ filter, typeKey, profileImghUrl }: Props) => {
       />
     );
   }
-  if (filter === 'manage') {
+  if (filter === '담당자') {
     return (
       <span
         className="inline-block w-[2.4rem] h-[2.4rem] rounded-full bg-gray-300 mr-[1.2rem] bg-center bg-cover"
@@ -38,7 +38,7 @@ const GroupTypeIcon = ({ filter, typeKey, profileImghUrl }: Props) => {
       />
     );
   }
-  if (filter === 'goal') {
+  if (filter === '목표') {
     return <img src={GoalIcon} alt="삭제" className="w-[2.4rem] h-[2.4rem] mr-[0.8rem]" />;
   }
 };

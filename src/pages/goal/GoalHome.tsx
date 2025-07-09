@@ -1,6 +1,7 @@
 import { GoalItem } from '../../components/ListView/GoalItem';
 import BoxIcon from '../../assets/icons/box.svg';
 import ListIcon from '../../assets/icons/list.svg';
+import FilterIcon from '../../assets/icons/filter.svg';
 import TrashIcon from '../../assets/icons/trash-black.svg';
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useState } from 'react';
@@ -32,13 +33,15 @@ function getManagers(goals: typeof dummyGoals) {
 }
 
 const GoalHome = () => {
-  const [filter, setFilter] = useState<ItemFilter>('status');
+  const { isOpen, content } = useDropdownInfo();
+  const { openDropdown, closeDropdown } = useDropdownActions();
+  const [filter, setFilter] = useState<ItemFilter>('상태');
 
   // 그룹핑
   const groupKeys = (
-    filter === 'status'
+    filter === '상태'
       ? STATUS_LIST
-      : filter === 'priority'
+      : filter === '우선순위'
         ? PRIORITY_LIST
         : getManagers(dummyGoals)
   ) as string[];
@@ -46,9 +49,9 @@ const GoalHome = () => {
   const grouped = groupKeys.map((key) => ({
     key,
     items: dummyGoals.filter((goal) =>
-      filter === 'status'
+      filter === '상태'
         ? goal.status === key
-        : filter === 'priority'
+        : filter === '우선순위'
           ? goal.priority === key
           : goal.manage === key
     ),
@@ -92,12 +95,12 @@ const GoalHome = () => {
               <div key={key}>
                 <div className="flex justify-between pb-[3.2rem]">
                   <div
-                    className={`flex font-title-sub-b h-[2.8rem] overflow-hidden ${filter === 'priority' ? 'items-end' : 'items-center'}`}
+                    className={`flex font-title-sub-b h-[2.8rem] overflow-hidden ${filter === '우선순위' ? 'items-end' : 'items-center'}`}
                   >
                     <GroupTypeIcon
                       filter={filter}
                       typeKey={key}
-                      profileImghUrl={filter === 'manage' ? '' : undefined}
+                      profileImghUrl={filter === '담당자' ? '' : undefined}
                     />
                     {/* 유형명 */}
                     <div>{key}</div>

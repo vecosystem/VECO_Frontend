@@ -8,18 +8,20 @@ import trashIcon from '../assets/icons/trash.svg';
 import type { ItemFilter, DisplayField, PriorityLevel, Status } from '../types/listItem';
 
 /* 필터 적용 */
-export const getFilter = (filter: ItemFilter = 'status'): DisplayField[] => {
+export const getFilter = (filter: ItemFilter = '상태'): DisplayField[] => {
   switch (filter) {
-    case 'status':
+    case '상태':
       return ['priority', 'manage'];
-    case 'priority':
+    case '우선순위':
       return ['status', 'manage'];
-    case 'manage':
+    case '담당자':
       return ['status', 'priority'];
     default:
       return ['status', 'priority', 'manage'];
   }
 };
+
+// TODO : 각 아이콘 사이즈 변경 및 색상 변경 확인
 
 /* 우선순위 아이콘 */
 export const getPriorityIcon = (priority: PriorityLevel): string => {
