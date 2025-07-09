@@ -2,6 +2,8 @@ import type { GoalItemProps } from '../../types/listItem';
 import dateIcon from '../../assets/icons/date.svg';
 import grayIcon from '../../assets/icons/gray.svg';
 import goalIcon from '../../assets/icons/goal.svg';
+import CheckedIcon from '../../assets/icons/check-box-o.svg';
+import UncheckedIcon from '../../assets/icons/check-box-x.svg';
 import { getFilter, getPriorityIcon, getStatusIcon } from '../../utils/listItemUtils';
 
 /*
@@ -38,13 +40,20 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
         {/* 목표 번호 */}
         {showCheckbox ? (
           <div className="flex items-center whitespace-nowrap">
-            <input
-              type="checkbox"
-              checked={checked}
-              // onChange={() => {}} // 외부에서 상태 관리 필요
-              className="w-[1.2rem] mr-[1.0rem] accent-primary-blue"
-              aria-label="목표 선택"
-            />
+            <label className="relative flex items-center cursor-pointer mr-[0.8rem]">
+              <input
+                type="checkbox"
+                checked={checked}
+                // onChange={() => {}} // 외부에서 상태 관리 필요
+                className="peer absolute w-[1.6rem] h-[1.6rem] opacity-0 cursor-pointer"
+                aria-label="목표 선택"
+                tabIndex={-1}
+              />
+              <img
+                src={checked ? CheckedIcon : UncheckedIcon}
+                className="w-[1.6rem] h-[1.6rem] pointer-events-none"
+              />
+            </label>
             <span className="font-body-b whitespace-nowrap">{goalId}</span>
           </div>
         ) : (
