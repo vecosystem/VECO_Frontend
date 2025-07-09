@@ -53,3 +53,16 @@ export const getStatusIcon = (status: Status) => {
     />
   );
 };
+
+/* 상태 아이콘 색상만 반환 */
+export const getStatusColor = (status: Status): string => {
+  const colorMap: Record<Status, string> = {
+    없음: '#FFFFFF',
+    진행중: '#D4B042',
+    '해야할 일': '#D44242',
+    완료: '#75D564',
+    검토: '#2e4475',
+    삭제: '#D44242',
+  };
+  return colorMap[status];
+};

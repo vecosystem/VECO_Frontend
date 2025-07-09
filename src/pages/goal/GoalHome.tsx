@@ -12,7 +12,8 @@ import {
   type ItemFilter,
   type Status,
 } from '../../types/listItem';
-import { getPriorityIcon, getStatusColor, getStatusIcon } from '../../utils/listItemUtils';
+import { getPriorityIcon, getStatusColor } from '../../utils/listItemUtils';
+import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 
 /*
   추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
@@ -37,12 +38,13 @@ const GoalHome = () => {
   const [filter, setFilter] = useState<ItemFilter>('status');
 
   // 그룹핑
-  const groupKeys =
+  const groupKeys = (
     filter === 'status'
       ? STATUS_LIST
       : filter === 'priority'
         ? PRIORITY_LIST
-        : getManagers(dummyGoals);
+        : getManagers(dummyGoals)
+  ) as string[];
 
   const grouped = groupKeys.map((key) => ({
     key,
@@ -92,36 +94,17 @@ const GoalHome = () => {
             items.length > 0 ? (
               <div key={key}>
                 <div className="flex justify-between pb-[3.2rem]">
-                  <div className="flex font-title-sub-b gap-[0.8rem] items-center">
-                    {filter === 'status' &&
-                      (key === '삭제' ? (
-                        <img
-                          src={TrashIconRed}
-                          alt="삭제"
-                          className="w-[1.6rem] h-[1.6rem] mr-[0.4rem]"
-                        />
-                      ) : (
-                        <span
-                          className="inline-block rounded-full w-[1.6rem] h-[1.6rem] mr-[0.8rem]"
-                          style={{ background: getStatusColor(key as Status) }}
-                        />
-                      ))}
-                    {filter === 'priority' && (
-                      <img
-                        src={getPriorityIcon(key as any)}
-                        alt={key}
-                        className="w-[3.2rem] h-[3.2rem] mr-[0.8rem]"
-                      />
-                    )}
-                    {filter === 'manage' && (
-                      <span
-                        className="inline-block w-[2.4rem] h-[2.4rem] rounded-full bg-gray-300 mr-[1.2rem] bg-center bg-cover"
-                        style={{ backgroundImage: `url(')` }}
-                      />
-                    )}
+                  <div
+                    className={`flex font-title-sub-b h-[2.8rem] overflow-hidden ${filter === 'priority' ? 'items-end' : 'items-center'}`}
+                  >
+                    <GroupTypeIcon
+                      filter={filter}
+                      typeKey={key}
+                      profileImghUrl={filter === 'manage' ? '' : undefined}
+                    />
                     {/* 유형명 */}
                     <div>{key}</div>
-                    <div className="text-gray-500">{items.length}</div>
+                    <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
                   </div>
                   <img src={PlusIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
                 </div>
