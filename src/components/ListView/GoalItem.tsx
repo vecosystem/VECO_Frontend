@@ -18,7 +18,7 @@ const defaultData: GoalItemProps = {
   priority: '보통',
   deadline: '2025-07-01',
   manage: '김선화',
-  filter: 'priority', // 'status' | 'priority' | 'manage'
+  filter: '우선순위', // '상태' | '우선순위' | '담당자'
 };
 
 export const GoalItem = (props: Partial<GoalItemProps>) => {
