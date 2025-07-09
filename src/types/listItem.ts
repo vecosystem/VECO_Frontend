@@ -13,6 +13,7 @@ export const PRIORITY_LIST: PriorityLevel[] = ['없음', '긴급', '높음', '�
 export interface BaseItemProps {
   showCheckbox?: boolean;
   checked?: boolean;
+  onCheckChange?: (checked: boolean) => void;
   status: Status;
   priority: PriorityLevel;
   deadline: string;

@@ -1,6 +1,4 @@
 import { GoalItem } from '../../components/ListView/GoalItem';
-import BoxIcon from '../../assets/icons/box.svg';
-import ListIcon from '../../assets/icons/list.svg';
 import FilterIcon from '../../assets/icons/filter.svg';
 import TrashIcon from '../../assets/icons/trash-black.svg';
 import TrashRedIcon from '../../assets/icons/trash.svg';
@@ -15,6 +13,7 @@ import {
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import Dropdown from '../../components/Dropdown/Dropdown';
+import SelectAllCheckbox from '../../components/ListView/SelectAllCheckbox';
 
 /*
   추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
@@ -42,6 +41,9 @@ const GoalHome = () => {
 
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [checkItems, setCheckItems] = useState<string[]>([]);
+  const isAllChecked =
+    dummyGoals.length > 0 &&
+    dummyGoals.every((goal) => goal.goalId && checkItems.includes(goal.goalId));
 
   const handleCheck = (goalId: string, checked: boolean) => {
     setCheckItems(
@@ -50,6 +52,14 @@ const GoalHome = () => {
           ? [...prev, goalId] // 체크 시 goalId 추가
           : prev.filter((id) => id !== goalId) // 체크 해제 시 goalId 제거
     );
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setCheckItems(dummyGoals.map((goal) => goal.goalId || ''));
+    } else {
+      setCheckItems([]);
+    }
   };
 
   // 그룹핑
@@ -88,9 +98,12 @@ const GoalHome = () => {
 
         {/* 필터 선택 */}
         <div className="flex justify-between">
-          <div className="flex gap-[0.8rem] items-center">
-            <img src={BoxIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
-            <img src={ListIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
+          <div className="flex items-center">
+            {isDeleteMode ? (
+              <SelectAllCheckbox checked={isAllChecked} onCheckChange={handleSelectAll} />
+            ) : (
+              ''
+            )}
           </div>
           <div className="flex gap-[2.4rem] items-center">
             {/* 필터영역 */}
