@@ -29,6 +29,7 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
   const {
     showCheckbox,
     checked,
+    onCheckChange,
     type,
     issueId,
     issueTitle,
@@ -45,9 +46,18 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
 
   const displayFields = getFilter(filter);
 
+  const handleItemClick = (e: React.MouseEvent) => {
+    if (!showCheckbox) return;
+    if ((e.target as HTMLElement).closest('label')) return;
+    onCheckChange?.(!checked);
+  };
+
   return (
     <div
-      className={`font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${checked ? 'bg-gray-300' : ''}`}
+      className={`font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
+      onClick={handleItemClick}
+      tabIndex={showCheckbox ? 0 : -1}
+      style={{ cursor: showCheckbox ? 'pointer' : 'default' }}
     >
       <div className="flex items-center">
         {/* 이슈 번호 */}
@@ -57,7 +67,7 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
               <input
                 type="checkbox"
                 checked={checked}
-                // onChange={() => {}} // 외부에서 상태 관리 필요
+                onChange={(e) => onCheckChange?.(e.target.checked)}
                 className="peer absolute w-[1.6rem] h-[1.6rem] opacity-0 cursor-pointer"
                 aria-label="목표 선택"
                 tabIndex={-1}
