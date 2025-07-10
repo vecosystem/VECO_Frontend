@@ -1,11 +1,12 @@
 import IcCheck from '../../assets/icons/check.svg';
 import IcDownArrow from '../../assets/icons/down-arrow.svg';
 import useDropdownRef from '../../hooks/useDropdownRef.ts';
+import { useCallback } from 'react';
 
 interface DropdownProps {
-  value?: string;
-  defaultValue?: string;
-  options: string[];
+  value?: string; // 현재 선택된 값
+  defaultValue?: string; // 최상단 고정 텍스트
+  options: string[]; // 드롭다운에 표시할 옵션들
   onSelect: (value: string) => void;
   onClose: () => void;
   className?: string;
@@ -21,10 +22,13 @@ const Dropdown = ({
 }: DropdownProps) => {
   const dropdownRef = useDropdownRef(onClose);
 
-  const handleSelect = (option: string) => {
-    defaultValue && onSelect(option);
-    onClose();
-  };
+  const handleSelect = useCallback(
+    (option: string) => {
+      defaultValue && onSelect(option);
+      onClose();
+    },
+    [onSelect, onClose]
+  );
 
   return (
     <div
