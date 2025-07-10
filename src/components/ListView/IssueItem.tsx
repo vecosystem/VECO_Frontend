@@ -3,6 +3,8 @@ import dateIcon from '../../assets/icons/date.svg';
 import grayIcon from '../../assets/icons/gray.svg';
 import goalIcon from '../../assets/icons/goal.svg';
 import issueIcon from '../../assets/icons/issue.svg';
+import CheckedIcon from '../../assets/icons/check-box-o.svg';
+import UncheckedIcon from '../../assets/icons/check-box-x.svg';
 import { getFilter, getPriorityIcon, getStatusIcon } from '../../utils/listItemUtils';
 
 /*
@@ -20,7 +22,7 @@ const defaultData: IssueItemProps = {
   priority: '보통',
   deadline: '2025-07-01',
   manage: '김선화',
-  filter: 'manage', // 'status' | 'priority' | 'manage'
+  filter: '담당자', // '상태' | '우선순위' | '담당자'
 };
 
 export const IssueItem = (props: Partial<IssueItemProps>) => {
@@ -50,18 +52,25 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
       <div className="flex items-center">
         {/* 이슈 번호 */}
         {showCheckbox ? (
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              checked={checked}
-              // onChange={() => {}} // 외부에서 상태 관리 필요
-              className="w-[1.2rem] mr-[1.0rem] accent-primary-blue"
-              aria-label="이슈 선택"
-            />
-            <span className="font-body-b">{issueId}</span>
+          <div className="flex items-center whitespace-nowrap">
+            <label className="relative flex items-center cursor-pointer mr-[0.8rem]">
+              <input
+                type="checkbox"
+                checked={checked}
+                // onChange={() => {}} // 외부에서 상태 관리 필요
+                className="peer absolute w-[1.6rem] h-[1.6rem] opacity-0 cursor-pointer"
+                aria-label="목표 선택"
+                tabIndex={-1}
+              />
+              <img
+                src={checked ? CheckedIcon : UncheckedIcon}
+                className="w-[1.6rem] h-[1.6rem] pointer-events-none"
+              />
+            </label>
+            <span className="font-body-b whitespace-nowrap">{issueId}</span>
           </div>
         ) : (
-          <span className="font-body-b ml-[2.4rem]">{issueId}</span>
+          <span className="font-body-b ml-[2.4rem] whitespace-nowrap">{issueId}</span>
         )}
         <div className="flex gap-[0.8rem] items-center">
           {/* 이슈 아이콘 */}

@@ -7,7 +7,7 @@ const ProtectedLayout = () => {
       <aside className="overflow-auto">
         <Sidebar />
       </aside>
-      <main className="flex-1 min-w-0 p-[3.2rem] overflow-auto">
+      <main className="flex flex-1 min-w-0 p-[3.2rem] overflow-auto">
         <Outlet />
       </main>
     </div>
