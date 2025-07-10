@@ -3,7 +3,6 @@ import pr1 from '../assets/icons/pr-1.svg';
 import pr2 from '../assets/icons/pr-2.svg';
 import pr3 from '../assets/icons/pr-3.svg';
 import pr4 from '../assets/icons/pr-4.svg';
-import trashIcon from '../assets/icons/trash.svg';
 
 import type { ItemFilter, DisplayField, PriorityLevel, Status } from '../types/listItem';
 
