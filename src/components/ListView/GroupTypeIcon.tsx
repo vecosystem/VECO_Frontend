@@ -1,5 +1,6 @@
 import type { ItemFilter, Status } from '../../types/listItem';
 import GoalIcon from '../../assets/icons/goal.svg';
+import GoalGrayIcon from '../../assets/icons/goal-gray.svg';
 import { getPriorityIcon, getStatusColor } from '../../utils/listItemUtils';
 
 interface Props {
@@ -35,7 +36,13 @@ const GroupTypeIcon = ({ filter, typeKey, profileImghUrl }: Props) => {
     );
   }
   if (filter === '목표') {
-    return <img src={GoalIcon} alt="삭제" className="w-[2.4rem] h-[2.4rem] mr-[0.8rem]" />;
+    return (
+      <img
+        src={typeKey === '없음' ? GoalGrayIcon : GoalIcon}
+        alt="삭제"
+        className="w-[2.4rem] h-[2.4rem] mr-[0.8rem]"
+      />
+    );
   }
 };
 

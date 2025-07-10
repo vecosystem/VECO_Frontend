@@ -30,9 +30,11 @@ const dummyGoals: Partial<GoalItemProps>[] = [
   },
 ];
 
-function getManagers(goals: typeof dummyGoals) {
-  const set = new Set(goals.map((g) => g.manage));
-  return ['없음', ...Array.from(set)];
+// '없음', '', undefined 모두 '없음' 처리
+function getManagers(issues: typeof dummyGoals) {
+  const set = new Set(issues.map((i) => (!i.manage || i.manage === '' ? '없음' : i.manage)));
+  const arr = Array.from(set).filter((m) => m !== '없음');
+  return ['없음', ...arr];
 }
 
 const GoalHome = () => {
@@ -79,7 +81,7 @@ const GoalHome = () => {
         ? goal.status === key
         : filter === '우선순위'
           ? goal.priority === key
-          : goal.manage === key
+          : (!goal.manage || goal.manage === '' ? '없음' : goal.manage) === key
     ),
   }));
 

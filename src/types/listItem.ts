@@ -17,7 +17,7 @@ export interface BaseItemProps {
   status: Status;
   priority: PriorityLevel;
   deadline: string;
-  manage: string;
+  manage?: string;
   displayFields?: DisplayField[];
   filter?: ItemFilter;
 }
@@ -32,5 +32,5 @@ export interface IssueItemProps extends BaseItemProps {
   type?: 'issue' | 'my-issue';
   issueId: string;
   issueTitle: string;
-  goalTitle: string;
+  goalTitle?: string;
 }

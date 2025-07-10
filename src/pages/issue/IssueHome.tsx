@@ -31,14 +31,19 @@ const dummyIssues: Partial<IssueItemProps>[] = [
   },
 ];
 
+// '없음', '', undefined 모두 '없음' 처리
 function getManagers(issues: typeof dummyIssues) {
-  const set = new Set(issues.map((i) => i.manage));
-  return ['없음', ...Array.from(set)];
+  const set = new Set(issues.map((i) => (!i.manage || i.manage === '' ? '없음' : i.manage)));
+  const arr = Array.from(set).filter((m) => m !== '없음');
+  return ['없음', ...arr];
 }
 
 function getGoals(issues: typeof dummyIssues) {
-  const set = new Set(issues.map((i) => i.goalTitle));
-  return ['없음', ...Array.from(set)];
+  const set = new Set(
+    issues.map((i) => (!i.goalTitle || i.goalTitle === '' ? '없음' : i.goalTitle))
+  );
+  const arr = Array.from(set).filter((g) => g !== '없음');
+  return ['없음', ...arr];
 }
 
 const IssueHome = () => {
@@ -88,8 +93,8 @@ const IssueHome = () => {
         : filter === '우선순위'
           ? issue.priority === key
           : filter === '담당자'
-            ? issue.manage === key
-            : issue.goalTitle === key
+            ? (!issue.manage || issue.manage === '' ? '없음' : issue.manage) === key
+            : (!issue.goalTitle || issue.goalTitle === '' ? '없음' : issue.goalTitle) === key
     ),
   }));
 
