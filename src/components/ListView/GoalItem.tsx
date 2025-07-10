@@ -19,7 +19,7 @@ const defaultData: GoalItemProps = {
   status: '완료',
   priority: '보통',
   deadline: '2025-07-01',
-  manage: '김선화',
+  manage: '없음',
   filter: '우선순위', // '상태' | '우선순위' | '담당자'
 };
 

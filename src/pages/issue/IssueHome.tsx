@@ -21,13 +21,40 @@ import { IssueItem } from '../../components/ListView/IssueItem';
 */
 const dummyIssues: Partial<IssueItemProps>[] = [
   {
-    issueId: 'Veco-g4',
-    issueTitle: 'API 연동',
-    goalTitle: 'API 연동 목표',
+    issueId: 'Veco-i4',
+    issueTitle: 'API 연동API 연동API 연동API 연동',
+    // goalTitle: '없음',
     status: '진행중',
-    priority: '높음',
+    priority: '없음',
     deadline: '2025-07-01',
-    manage: '김선화',
+    // manage: '김선화',
+  },
+  {
+    issueId: 'Veco-i3',
+    issueTitle: '최대스무자까지작성가능최대스무자까지작성',
+    goalTitle: '',
+    status: '해야할 일',
+    priority: '낮음',
+    deadline: '2025-07-20',
+    manage: '없음',
+  },
+  {
+    issueId: 'Veco-i1',
+    issueTitle: '최대스무자까지작성가능최대스무자까지작성',
+    goalTitle: '기획 및 요구사항 분석',
+    status: '완료',
+    priority: '보통',
+    deadline: '2025-07-02',
+    manage: '이가을',
+  },
+  {
+    issueId: 'Veco-i2',
+    issueTitle: '이슈명을 작성합니다',
+    goalTitle: 'wpahrapwhar',
+    status: '완료',
+    priority: '긴급',
+    deadline: '2025-07-10',
+    manage: '박유민',
   },
 ];
 

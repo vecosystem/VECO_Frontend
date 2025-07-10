@@ -17,12 +17,12 @@ const defaultData: IssueItemProps = {
   type: 'issue', // 'issue' | 'my-issue'
   issueId: 'Veco-i3',
   issueTitle: '백호를 사용해서 다른 사람들과 협업해보기',
-  goalTitle: '기획 및 요구사항 분석',
+  goalTitle: '없음',
   status: '완료',
   priority: '보통',
   deadline: '2025-07-01',
-  manage: '김선화',
-  filter: '담당자', // '상태' | '우선순위' | '담당자'
+  manage: '없음',
+  filter: '담당자', // '상태' | '우선순위' | '담당자' | '목표'
 };
 
 export const IssueItem = (props: Partial<IssueItemProps>) => {
