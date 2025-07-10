@@ -20,13 +20,38 @@ import TeamIcon from '../../components/ListView/TeamIcon';
   추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
 */
 const dummyGoals: Partial<GoalItemProps>[] = [
+  /**/
   {
-    goalId: '1',
+    goalId: 'Veco-g4',
     title: 'API 연동',
     status: '진행중',
     priority: '높음',
     deadline: '2025-07-01',
     manage: '김선화',
+  },
+  {
+    goalId: 'Veco-g1',
+    title: '최대스무자까지작성가능최대스무자까지작성',
+    status: '완료',
+    priority: '보통',
+    deadline: '2025-07-02',
+    manage: '이가을',
+  },
+  {
+    goalId: 'Veco-g2',
+    title: '목표명을 작성합니다',
+    status: '완료',
+    priority: '긴급',
+    deadline: '2025-07-10',
+    manage: '박유민',
+  },
+  {
+    goalId: 'Veco-g3',
+    title: '최대스무자까지작성가능최대스무자까지작성',
+    status: '해야할 일',
+    priority: '낮음',
+    deadline: '2025-07-20',
+    manage: '박유민',
   },
 ];
 

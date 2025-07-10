@@ -32,7 +32,7 @@ const dummyIssues: Partial<IssueItemProps>[] = [
   {
     issueId: 'Veco-i3',
     issueTitle: '최대스무자까지작성가능최대스무자까지작성',
-    goalTitle: '',
+    goalTitle: '목표 제목 작성',
     status: '해야할 일',
     priority: '낮음',
     deadline: '2025-07-20',
@@ -50,7 +50,7 @@ const dummyIssues: Partial<IssueItemProps>[] = [
   {
     issueId: 'Veco-i2',
     issueTitle: '이슈명을 작성합니다',
-    goalTitle: 'wpahrapwhar',
+    goalTitle: '목표 제목 작성',
     status: '완료',
     priority: '긴급',
     deadline: '2025-07-10',
