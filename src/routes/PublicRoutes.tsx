@@ -1,5 +1,10 @@
 import type { RouteObject } from 'react-router-dom';
 import AuthRedirect from '../components/AuthRedirect';
+import PublicLayout from '../layouts/PublicLayout';
+import OnboardingSSOLogin from '../pages/OnboardingSSOLogin';
+import OnboardingCreateWorkspace from '../pages/OnboardingCreateWorkspace';
+import OnboardingInviteMembers from '../pages/OnboardingInviteMembers';
+import OnboardingFinish from '../pages/OnboardingFinish';
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -9,7 +14,7 @@ export const publicRoutes: RouteObject[] = [
   },
   {
     path: '/onboarding',
-    element: <div>OnboardingLayout</div>, // Placeholder (필요시 OnboardingLayout 작성 후 연결)
+    element: <PublicLayout />, // Placeholder (필요시 OnboardingLayout 작성 후 연결)
     errorElement: <div>Not Found</div>,
 
     /*
@@ -17,11 +22,38 @@ export const publicRoutes: RouteObject[] = [
       필요시 각 페이지 파일 작성 후 연결하여 사용.
     */
     children: [
-      { index: true, element: <div>{/* Onboarding_SSO_Login 페이지 */}</div> },
-      { path: 'workspace', element: <div>{/* Onboarding_Create_Workspace 페이지 */}</div> },
-      { path: 'integration', element: <div>{/* Onboarding_External_Integration 페이지 */}</div> },
-      { path: 'invite', element: <div>{/* Onboarding_Invite_Members 페이지 */}</div> },
-      { path: 'fin', element: <div>{/* Onboarding_Finish 페이지 */}</div> },
+      {
+        index: true,
+        element: (
+          <div>
+            <OnboardingSSOLogin />
+          </div>
+        ),
+      },
+      {
+        path: 'workspace',
+        element: (
+          <div>
+            <OnboardingCreateWorkspace />
+          </div>
+        ),
+      },
+      {
+        path: 'invite',
+        element: (
+          <div>
+            <OnboardingInviteMembers />
+          </div>
+        ),
+      },
+      {
+        path: 'fin',
+        element: (
+          <div>
+            <OnboardingFinish />
+          </div>
+        ),
+      },
     ],
   },
 ];
