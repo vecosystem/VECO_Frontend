@@ -147,3 +147,27 @@ body {
   font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
   background-color: var(--color-gray-100);
 }
+
+/* 스크롤바 커스텀 */
+/* WebKit 기반 브라우저 (Chrome, Safari, Edge) 스크롤바 */
+
+/* 1. 전체 스크롤바의 너비/높이 */
+::-webkit-scrollbar {
+  width: 0.4rem; /* 세로 스크롤바 너비 */
+}
+
+/* 2. 스크롤바 트랙 (배경 부분) */
+::-webkit-scrollbar-track {
+  background: var(--color-gray-200);
+}
+
+/* 3. 스크롤바 썸 (움직이는 막대) */
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-gray-400);
+  border-radius: 1rem;
+}
+
+/* 4. 스크롤바 썸 호버 시 색상 변경 */
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-gray-500); /* 마우스 오버 시 색상 변경 */
+}

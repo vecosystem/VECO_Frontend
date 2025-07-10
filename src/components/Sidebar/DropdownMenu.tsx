@@ -17,7 +17,7 @@ const DropdownMenu = ({
   children,
   headerTeamIcon,
   headerHasToggleIcon = true,
-  isNested = false, // 중첩된 드롭다운인지 여부
+  isNested = false,
 }: DropdownMenuProps) => {
   const [isOpen, setIsOpen] = useState(initialOpen);
 
@@ -25,10 +25,8 @@ const DropdownMenu = ({
     setIsOpen(!isOpen);
   };
 
-  const containerPaddingClass = isNested ? 'pl-4' : 'pl-0'; // 중첩될 때 들여쓰기
-
   return (
-    <div className={`w-full ${containerPaddingClass}`}>
+    <div className={`flex flex-col w-full`}>
       {/* headerTitle ex: 작업실, 나의 팀, Team1 */}
       {headerTitle && (
         <DropdownHeader
@@ -37,10 +35,11 @@ const DropdownMenu = ({
           onToggle={handleToggle}
           teamIcon={headerTeamIcon}
           hasToggleIcon={headerHasToggleIcon}
+          isNested={isNested}
         />
       )}
 
-      {isOpen && <div className="mt-1">{children}</div>}
+      {isOpen && <div className="">{children}</div>}
     </div>
   );
 };
