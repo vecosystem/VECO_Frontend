@@ -84,7 +84,7 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
           {/* 목표 아이콘 */}
           <img src={goalIcon} alt="date" className="w-[2.4rem] h-[2.4rem] ml-[1.6rem]" />
           {/* 목표명 */}
-          <div className="truncate max-w-[40rem]">{title}</div>
+          <div className="truncate min-w-0 flex-1">{title}</div>
         </div>
       </div>
       <div className="flex gap-[3.2rem] items-center">
@@ -103,9 +103,9 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
           </div>
         )}
         {/* 기한 */}
-        <div className="flex gap-[0.8rem] items-center">
+        <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
           <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
-          <div className="truncate">{deadline}</div>
+          <div className="">{deadline}</div>
         </div>
         {/* 담당자/팀명 */}
         {/*
@@ -113,13 +113,13 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
          * 프로필 이미지, 고유 색상 등 추가 예정
          */}
         {displayFields.includes('manage') && (
-          <div className="flex gap-[0.8rem] items-center">
+          <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
             <img
               src={type === 'goal' ? grayIcon : grayIcon}
               alt="manage"
               className="w-[2.0rem] h-[2.0rem]"
             />
-            <div className="truncate">{manage}</div>
+            <div className="">{manage}</div>
           </div>
         )}
       </div>
