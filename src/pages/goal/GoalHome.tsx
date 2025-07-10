@@ -1,5 +1,4 @@
 import { GoalItem } from '../../components/ListView/GoalItem';
-import Logo from '/vecosmall.svg';
 import FilterIcon from '../../assets/icons/filter.svg';
 import TrashIcon from '../../assets/icons/trash-black.svg';
 import TrashRedIcon from '../../assets/icons/trash.svg';
@@ -15,6 +14,7 @@ import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import Dropdown from '../../components/Dropdown/Dropdown';
 import SelectAllCheckbox from '../../components/ListView/SelectAllCheckbox';
+import TeamIcon from '../../components/ListView/TeamIcon';
 
 /*
   추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
@@ -88,20 +88,8 @@ const GoalHome = () => {
   return (
     <>
       <div className="flex flex-1 flex-col gap-[3.2rem]">
-        {/* 팀 아이콘, 팀명 */}
-        <div className="flex gap-[1.6rem] items-center">
-          <span
-            className="inline-block w-[3.2rem] h-[3.2rem] rounded-full border-[0.1rem] border-gray-200 bg-gray-100 bg-center bg-cover"
-            style={{
-              backgroundImage: `url('/vecosmall.svg')`,
-              backgroundSize: '50%',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-            }}
-          />
-          <div className="flex font-title-b">팀명</div>
-        </div>
-
+        {/* 팀 아이콘, 팀명, props로 요소 전달 가능 */}
+        <TeamIcon />
         {/* 필터 선택 */}
         <div className="flex justify-between">
           <div className="flex items-center">
