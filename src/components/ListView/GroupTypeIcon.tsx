@@ -29,7 +29,7 @@ const GroupTypeIcon = ({ filter, typeKey, profileImghUrl }: Props) => {
   if (filter === '담당자') {
     return (
       <span
-        className="inline-block w-[2.4rem] h-[2.4rem] rounded-full bg-gray-300 mr-[1.2rem] bg-center bg-cover"
+        className="inline-block w-[2.0rem] h-[2.0rem] rounded-full bg-gray-300 mr-[1.2rem] bg-center bg-cover"
         style={{ backgroundImage: `url('${profileImghUrl}')` }}
       />
     );
