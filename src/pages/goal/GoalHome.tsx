@@ -110,14 +110,16 @@ const GoalHome = () => {
                 <img src={FilterIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
                 <span className="font-body-r">{filter}</span>
                 {isOpen && content && (
-                  <Dropdown
-                    defaultValue="필터"
-                    options={['상태', '우선순위', '담당자']}
-                    onSelect={(option) => {
-                      setFilter(option as ItemFilter);
-                    }}
-                    onClose={closeDropdown}
-                  />
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <Dropdown
+                      defaultValue="필터"
+                      options={['상태', '우선순위', '담당자']}
+                      onSelect={(option) => {
+                        setFilter(option as ItemFilter);
+                      }}
+                      onClose={closeDropdown}
+                    />
+                  </div>
                 )}
               </div>
             </div>
