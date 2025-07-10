@@ -6,10 +6,10 @@ import '../index.css';
 
 const OnboardingInviteMembers = () => {
   // 사용자가 입력한 초대 URL과 암호를 저장하는 상태
-  const [inviteUrl, setInviteUrl] = useState('');
+  const [inviteText, setInviteText] = useState('');
 
   // 텍스트 영역의 DOM 요소에 접근하기 위한 ref (복사 기능용)
-  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9FAFB]">
@@ -28,15 +28,13 @@ const OnboardingInviteMembers = () => {
             {/* 입력창 */}
             <div className="flex gap-[1rem]">
               <textarea
-                ref={inputRef as React.RefObject<HTMLTextAreaElement>}
-                value={inviteUrl}
-                onChange={(e) => setInviteUrl(e.target.value)} // 사용자가 입력한 내용을 상태로 저장
+                ref={inputRef}
+                value={inviteText}
+                onChange={(e) => setInviteText(e.target.value)} // 사용자가 입력한 내용을 상태로 저장
                 className="bg-gray-200 text-gray-600 w-[35rem] h-[16.7rem] rounded-[0.5rem] px-[2rem] py-[1.8rem] font-xsmall-r focus:outline-none resize-none"
               />
               {/* 복사 버튼 */}
-              <CopyToClipboard
-                inputRef={inputRef as React.RefObject<HTMLInputElement | HTMLTextAreaElement>}
-              />
+              <CopyToClipboard inputRef={inputRef} />
             </div>
           </div>
           {/* 팀원 초대 완료 버튼 */}

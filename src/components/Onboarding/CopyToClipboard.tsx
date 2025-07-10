@@ -3,7 +3,7 @@ import copy from '../../assets/copy.svg';
 
 // props로 전달받은 inputRef를 통해 복사 대상 엘리먼트에 접근
 interface CopyToClipboardProps {
-  inputRef: React.RefObject<HTMLInputElement | HTMLTextAreaElement>;
+  inputRef: React.RefObject<HTMLTextAreaElement | null>;
 }
 
 const CopyToClipboard = ({ inputRef }: CopyToClipboardProps) => {
