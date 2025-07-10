@@ -43,9 +43,19 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
 
   const displayFields = getFilter(filter);
 
+  const handleItemClick = (e: React.MouseEvent) => {
+    if (!showCheckbox) return;
+    if ((e.target as HTMLElement).closest('label')) return;
+    onCheckChange?.(!checked);
+  };
+
+  // TODO : 이슈 아이탬도 동일하게 whitespace wrap 등 설정
   return (
     <div
       className={`font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
+      onClick={handleItemClick}
+      tabIndex={showCheckbox ? 0 : -1}
+      style={{ cursor: showCheckbox ? 'pointer' : 'default' }}
     >
       <div className="flex items-center">
         {/* 목표 번호 */}
