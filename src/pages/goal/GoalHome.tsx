@@ -108,7 +108,7 @@ const GoalHome = () => {
               >
                 {/* 드롭다운 */}
                 <img src={FilterIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
-                <span className="font-body-r">{filter}</span>
+                <span className="font-body-r">필터</span>
                 {isOpen && content && (
                   <div onClick={(e) => e.stopPropagation()}>
                     <Dropdown
