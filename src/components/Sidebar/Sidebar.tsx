@@ -30,7 +30,7 @@ const Sidebar = () => {
 
         <button
           type="button"
-          className="flex w-[25.6rem] items-center gap-[0.8rem] hover:bg-gray-300 rounded-[0.6rem] cursor-pointer transition-colors duration-150 ease-in-out"
+          className="flex w-[25.6rem] min-h-[3.2rem] items-center gap-[0.8rem] hover:bg-gray-300 rounded-[0.6rem] cursor-pointer transition-colors duration-150 ease-in-out"
         >
           <img
             src={bellIcon}

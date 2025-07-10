@@ -9,7 +9,7 @@ interface SidebarItemProps {
 
 const SidebarItem = ({ icon, label, onClick, onAddClick }: SidebarItemProps) => {
   return (
-    <div className="flex w-full height-[3.2rem] items-center self-stretch hover:bg-gray-300 rounded-[0.6rem] transition-colors duration-150 ease-in-out">
+    <div className="flex w-full min-h-[3.2rem] items-center self-stretch hover:bg-gray-300 rounded-[0.6rem] transition-colors duration-150 ease-in-out">
       <button
         onClick={onClick}
         type="button"
@@ -24,7 +24,11 @@ const SidebarItem = ({ icon, label, onClick, onAddClick }: SidebarItemProps) => 
           type="button"
           className="hover:bg-gray-400 rounded-[0.6rem] cursor-pointer transition-colors duration-150 ease-in-out"
         >
-          <img src={plusIcon} alt="Add" className="w-[2.4rem] h-[2.4rem] aspect-square" />
+          <img
+            src={plusIcon}
+            alt="Add"
+            className="w-[3.2rem] h-[3.2rem] p-[0.4rem] aspect-square"
+          />
         </button>
       )}
     </div>
