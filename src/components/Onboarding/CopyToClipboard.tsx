@@ -45,7 +45,7 @@ const CopyToClipboard = ({ inputRef }: CopyToClipboardProps) => {
       {copied && (
         <div className="absolute top-[-7.1rem] w-[14.4rem] h-[5.7021rem] flex flex-col items-center">
           {/* 말풍선 본체 */}
-          <div className="bg-gray-600 text-gray-100 px-[1.5rem] py-[2rem] rounded-[0.5rem] font-xsmall-r  whitespace-nowrap">
+          <div className="bg-gray-600 text-gray-100 px-[1.5rem] py-[2rem] rounded-[0.5rem] font-xsmall-r whitespace-nowrap">
             복사가 완료되었습니다!
           </div>
           {/* 꼬리 (삼각형으로 표시) */}

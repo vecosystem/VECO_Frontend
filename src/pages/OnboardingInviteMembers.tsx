@@ -25,8 +25,8 @@ const OnboardingInviteMembers = () => {
               <p className="font-title-sub-r text-gray-600">팀원을 OO님의 팀에 초대해봐요</p>
               {/* 백엔드 연동 후 사용자 이름을 동적으로 바인딩 할 것 */}
             </div>
-            {/* 입력창 */}
-            <div className="flex gap-[1rem]">
+            <div className="flex items-start gap-[1rem]">
+              {/* 입력창 */}
               <textarea
                 ref={inputRef}
                 value={inviteText}
