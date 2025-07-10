@@ -74,9 +74,9 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
         )}
         <div className="flex gap-[0.8rem] items-center">
           {/* 이슈 아이콘 */}
-          <img src={issueIcon} alt="date" className="w-[1.8rem] h-[1.8rem] ml-[1.6rem]" />
+          <img src={issueIcon} alt="date" className="w-[2.4rem] h-[2.4rem] ml-[1.6rem]" />
           {/* 이슈명 */}
-          <div className="truncate">{issueTitle}</div>
+          <div className="truncate min-w-0 flex-1">{issueTitle}</div>
         </div>
       </div>
       <div className="flex gap-[3.2rem] items-center">
@@ -91,22 +91,22 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
         {displayFields.includes('priority') && (
           <div className="flex gap-[0.8rem] items-center">
             <img src={getPriorityIcon(priority)} alt={priority} className="w-[2.4rem] h-[2.4rem]" />
-            <div className="truncate">{priority}</div>
+            <div className="whitespace-nowrap">{priority}</div>
           </div>
         )}
         {displayFields.includes('goal') && (
           <div className="flex gap-[0.8rem] items-center">
             {/* 목표 아이콘 */}
-            <img src={goalIcon} alt="date" className="w-[1.8rem] h-[1.8rem] ml-[1.6rem]" />
+            <img src={goalIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
             {/* 목표명 */}
             <div className="truncate">{goalTitle}</div>
           </div>
         )}
 
         {/* 기한 */}
-        <div className="flex gap-[0.8rem] items-center">
-          <img src={dateIcon} alt="date" className="w-[1.8rem] h-[1.8rem]" />
-          <div className="truncate">{deadline}</div>
+        <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
+          <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
+          <div className="">{deadline}</div>
         </div>
         {/* 담당자/팀명 */}
         {/*
@@ -114,11 +114,11 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
          * 프로필 이미지, 고유 색상 등 추가 예정
          */}
         {displayFields.includes('manage') && (
-          <div className="flex gap-[0.8rem] items-center">
+          <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
             <img
               src={type === 'issue' ? grayIcon : grayIcon}
               alt="manage"
-              className="w-[1.8rem] h-[1.8rem]"
+              className="w-[2.0rem] h-[2.0rem]"
             />
             <div>{manage}</div>
           </div>
