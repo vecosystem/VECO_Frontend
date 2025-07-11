@@ -127,12 +127,14 @@ const IssueHome = () => {
                 {isOpen && content && (
                   <div onClick={(e) => e.stopPropagation()}>
                     <Dropdown
+                      value={filter}
                       defaultValue="필터"
                       options={['상태', '우선순위', '담당자', '목표']}
                       onSelect={(option) => {
                         setFilter(option as ItemFilter);
                       }}
                       onClose={closeDropdown}
+                      className="top-[3.0rem]"
                     />
                   </div>
                 )}
