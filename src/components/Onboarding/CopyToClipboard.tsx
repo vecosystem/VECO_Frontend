@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import copy from '../../assets/copy.svg';
-import speechbubblebody from '../../assets/speechbubblebody.svg';
-import speechbubbletail from '../../assets/speechbubbletail.svg';
+import copy from '../../assets/icons/copy.svg';
+import speechbubblebody from '../../assets/icons/speechbubblebody.svg';
+import speechbubbletail from '../../assets/icons/speechbubbletail.svg';
 
 // props로 전달받은 inputRef를 통해 복사 대상 엘리먼트에 접근
 interface CopyToClipboardProps {
