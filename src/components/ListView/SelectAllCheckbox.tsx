@@ -7,8 +7,17 @@ interface CheckboxProps {
 }
 
 const SelectAllCheckbox = ({ checked, onCheckChange }: CheckboxProps) => {
+  const handleItemClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('label')) return;
+    onCheckChange?.(!checked);
+  };
+
   return (
-    <div className="flex items-center whitespace-nowrap">
+    <div
+      className="flex items-center whitespace-nowrap"
+      onClick={handleItemClick}
+      style={{ cursor: 'pointer' }}
+    >
       <label className="relative flex items-center cursor-pointer mr-[0.8rem]">
         <input
           type="checkbox"
