@@ -17,6 +17,7 @@ import TeamIcon from '../../components/ListView/TeamIcon';
 import { IssueItem } from '../../components/ListView/IssueItem';
 import useCheckItems from '../../hooks/useCheckItems';
 import { getGoals, getManagers } from '../../utils/listGroupingUtils';
+import ListViewToolbar from '../../components/ListView/ListViewToolbar';
 
 /*
   추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
@@ -114,58 +115,24 @@ const IssueHome = () => {
       <div className="flex flex-1 flex-col gap-[3.2rem]">
         {/* 팀 아이콘, 팀명, props로 요소 전달 가능 */}
         <TeamIcon />
-        {/* 필터 선택 */}
-        <div className="flex justify-between">
-          <div className="flex items-center">
-            {isDeleteMode ? (
-              <SelectAllCheckbox checked={isAllChecked} onCheckChange={handleSelectAll} />
-            ) : (
-              ''
-            )}
-          </div>
-          <div className="flex gap-[2.4rem] items-center">
-            {/* 필터영역 */}
-            <div className="relative">
-              <div
-                className="flex gap-[0.8rem] items-center cursor-pointer relative"
-                onClick={() => openDropdown({ name: 'filter' })}
-              >
-                {/* 드롭다운 */}
-                <img src={FilterIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
-                <span className="font-body-r">필터</span>
-                {isOpen && content && (
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <Dropdown
-                      value={filter}
-                      defaultValue="필터"
-                      options={['상태', '우선순위', '담당자', '목표']}
-                      onSelect={(option) => {
-                        setFilter(option as ItemFilter);
-                      }}
-                      onClose={closeDropdown}
-                      className="top-[3.0rem]"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-            {/* 삭제버튼 */}
-            <div
-              className="flex gap-[0.4rem] items-center cursor-pointer"
-              onClick={() => {
-                setIsDeleteMode((prev) => !prev);
-                if (!isDeleteMode) setCheckedIds([]);
-              }}
-            >
-              <img
-                src={isDeleteMode ? TrashRedIcon : TrashIcon}
-                className="inline-block w-[2.4rem] h-[2.4rem]"
-                alt=""
-              />
-              <span className={`font-body-r ${isDeleteMode ? 'text-[#D44242]' : ''}`}>삭제</span>
-            </div>
-          </div>
-        </div>
+        <ListViewToolbar
+          filter={filter}
+          isDeleteMode={isDeleteMode}
+          isAllChecked={isAllChecked}
+          showSelectAll={grouped.some(({ items }) => items.length > 0)}
+          filterOptions={['상태', '우선순위', '담당자', '목표']}
+          onFilterClick={() => openDropdown({ name: 'filter' })}
+          onFilterSelect={(option) => {
+            setFilter(option as ItemFilter);
+            closeDropdown();
+          }}
+          onDeleteClick={() => {
+            setIsDeleteMode(!isDeleteMode);
+            if (!isDeleteMode) setCheckedIds([]);
+          }}
+          onSelectAllChange={handleSelectAll}
+          dropdownProps={{ isOpen, content, closeDropdown }}
+        />
         {isEmpty ? (
           <div className="flex flex-1 items-center justify-center">
             <div className="font-body-r">목표를 생성하세요</div>
