@@ -1,6 +1,7 @@
 import { Navigate, Outlet, type RouteObject } from 'react-router-dom';
 import ProtectedLayout from '../layouts/ProtectedLayout';
 import GoalHome from '../pages/goal/GoalHome';
+import IssueHome from '../pages/issue/IssueHome';
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -35,7 +36,7 @@ export const protectedRoutes: RouteObject[] = [
           { index: true, element: <Navigate to="issue" replace /> },
           { path: 'goal', element: <GoalHome /> },
           { path: 'goal/:goalId', element: <div>{/* Goal_Detail 페이지 */}</div> },
-          { path: 'issue', element: <div>{/* Issue_Home 페이지 */}</div> },
+          { path: 'issue', element: <IssueHome /> },
           { path: 'issue/:issueId', element: <div>{/* Issue_Detail 페이지 */}</div> },
           { path: 'ext', element: <div>{/* External_Home 페이지 */}</div> },
           { path: 'ext/:extId', element: <div>{/* External_Detail 페이지 */}</div> },

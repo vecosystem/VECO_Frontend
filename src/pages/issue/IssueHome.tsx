@@ -1,4 +1,3 @@
-import { GoalItem } from '../../components/ListView/GoalItem';
 import FilterIcon from '../../assets/icons/filter.svg';
 import TrashIcon from '../../assets/icons/trash-black.svg';
 import TrashRedIcon from '../../assets/icons/trash.svg';
@@ -7,7 +6,7 @@ import { useState } from 'react';
 import {
   PRIORITY_LIST,
   STATUS_LIST,
-  type GoalItemProps,
+  type IssueItemProps,
   type ItemFilter,
 } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
@@ -15,54 +14,66 @@ import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import Dropdown from '../../components/Dropdown/Dropdown';
 import SelectAllCheckbox from '../../components/ListView/SelectAllCheckbox';
 import TeamIcon from '../../components/ListView/TeamIcon';
+import { IssueItem } from '../../components/ListView/IssueItem';
 
 /*
   추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
 */
-const dummyGoals: Partial<GoalItemProps>[] = [
-  /**/
+const dummyIssues: Partial<IssueItemProps>[] = [
   {
-    goalId: 'Veco-g4',
-    title: 'API 연동',
+    issueId: 'Veco-i4',
+    issueTitle: 'API 연동API 연동API 연동API 연동',
+    // goalTitle: '없음',
     status: '진행중',
-    priority: '높음',
+    priority: '없음',
     deadline: '2025-07-01',
-    manage: '김선화',
+    // manage: '김선화',
   },
   {
-    goalId: 'Veco-g1',
-    title: '최대스무자까지작성가능최대스무자까지작성',
+    issueId: 'Veco-i3',
+    issueTitle: '최대스무자까지작성가능최대스무자까지작성',
+    goalTitle: '목표 제목 작성',
+    status: '해야할 일',
+    priority: '낮음',
+    deadline: '2025-07-20',
+    manage: '없음',
+  },
+  {
+    issueId: 'Veco-i1',
+    issueTitle: '최대스무자까지작성가능최대스무자까지작성',
+    goalTitle: '기획 및 요구사항 분석',
     status: '완료',
     priority: '보통',
     deadline: '2025-07-02',
     manage: '이가을',
   },
   {
-    goalId: 'Veco-g2',
-    title: '목표명을 작성합니다',
+    issueId: 'Veco-i2',
+    issueTitle: '이슈명을 작성합니다',
+    goalTitle: '목표 제목 작성',
     status: '완료',
     priority: '긴급',
     deadline: '2025-07-10',
     manage: '박유민',
   },
-  {
-    goalId: 'Veco-g3',
-    title: '최대스무자까지작성가능최대스무자까지작성',
-    status: '해야할 일',
-    priority: '낮음',
-    deadline: '2025-07-20',
-    manage: '박유민',
-  },
 ];
 
 // '없음', '', undefined 모두 '없음' 처리
-function getManagers(issues: typeof dummyGoals) {
+function getManagers(issues: typeof dummyIssues) {
   const set = new Set(issues.map((i) => (!i.manage || i.manage === '' ? '없음' : i.manage)));
   const arr = Array.from(set).filter((m) => m !== '없음');
   return ['없음', ...arr];
 }
 
-const GoalHome = () => {
+function getGoals(issues: typeof dummyIssues) {
+  const set = new Set(
+    issues.map((i) => (!i.goalTitle || i.goalTitle === '' ? '없음' : i.goalTitle))
+  );
+  const arr = Array.from(set).filter((g) => g !== '없음');
+  return ['없음', ...arr];
+}
+
+const IssueHome = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
@@ -70,21 +81,21 @@ const GoalHome = () => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [checkItems, setCheckItems] = useState<string[]>([]);
   const isAllChecked =
-    dummyGoals.length > 0 &&
-    dummyGoals.every((goal) => goal.goalId && checkItems.includes(goal.goalId));
+    dummyIssues.length > 0 &&
+    dummyIssues.every((issue) => issue.issueId && checkItems.includes(issue.issueId));
 
-  const handleCheck = (goalId: string, checked: boolean) => {
+  const handleCheck = (issueId: string, checked: boolean) => {
     setCheckItems(
       (prev) =>
         checked
-          ? [...prev, goalId] // 체크 시 goalId 추가
-          : prev.filter((id) => id !== goalId) // 체크 해제 시 goalId 제거
+          ? [...prev, issueId] // 체크 시 issueId 추가
+          : prev.filter((id) => id !== issueId) // 체크 해제 시 issueId 제거
     );
   };
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setCheckItems(dummyGoals.map((goal) => goal.goalId || ''));
+      setCheckItems(dummyIssues.map((issue) => issue.issueId || ''));
     } else {
       setCheckItems([]);
     }
@@ -96,17 +107,21 @@ const GoalHome = () => {
       ? STATUS_LIST
       : filter === '우선순위'
         ? PRIORITY_LIST
-        : getManagers(dummyGoals)
-  ) as string[];
+        : filter === '담당자'
+          ? getManagers(dummyIssues)
+          : getGoals(dummyIssues)
+  ) as string[]; // 목표 필터는 고정된 값
 
   const grouped = groupKeys.map((key) => ({
     key,
-    items: dummyGoals.filter((goal) =>
+    items: dummyIssues.filter((issue) =>
       filter === '상태'
-        ? goal.status === key
+        ? issue.status === key
         : filter === '우선순위'
-          ? goal.priority === key
-          : (!goal.manage || goal.manage === '' ? '없음' : goal.manage) === key
+          ? issue.priority === key
+          : filter === '담당자'
+            ? (!issue.manage || issue.manage === '' ? '없음' : issue.manage) === key
+            : (!issue.goalTitle || issue.goalTitle === '' ? '없음' : issue.goalTitle) === key
     ),
   }));
 
@@ -140,7 +155,7 @@ const GoalHome = () => {
                   <div onClick={(e) => e.stopPropagation()}>
                     <Dropdown
                       defaultValue="필터"
-                      options={['상태', '우선순위', '담당자']}
+                      options={['상태', '우선순위', '담당자', '목표']}
                       onSelect={(option) => {
                         setFilter(option as ItemFilter);
                       }}
@@ -195,13 +210,15 @@ const GoalHome = () => {
                     <img src={PlusIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
                   </div>
                   {/* 각 유형 별 요소 */}
-                  {items.map((goal) => (
-                    <GoalItem
+                  {items.map((issue) => (
+                    <IssueItem
                       showCheckbox={isDeleteMode}
-                      checked={checkItems.includes(goal.goalId || '')}
-                      onCheckChange={(checked) => goal.goalId && handleCheck(goal.goalId, checked)}
-                      key={goal.goalId}
-                      {...goal}
+                      checked={checkItems.includes(issue.issueId || '')}
+                      onCheckChange={(checked) =>
+                        issue.issueId && handleCheck(issue.issueId, checked)
+                      }
+                      key={issue.issueId}
+                      {...issue}
                       filter={filter}
                     />
                   ))}
@@ -215,4 +232,4 @@ const GoalHome = () => {
   );
 };
 
-export default GoalHome;
+export default IssueHome;
