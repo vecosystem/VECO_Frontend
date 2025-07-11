@@ -31,7 +31,9 @@ const SelectAllCheckbox = ({ checked, onCheckChange }: CheckboxProps) => {
           className="w-[1.6rem] h-[1.6rem] pointer-events-none"
         />
       </label>
-      <span className="font-small-b text-gray-400">전체선택</span>
+      <span className={`font-small-b ${checked ? 'text-primary-variant-blue' : 'text-gray-400'}`}>
+        전체선택
+      </span>
     </div>
   );
 };
