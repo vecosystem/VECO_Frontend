@@ -1,6 +1,3 @@
-import FilterIcon from '../../assets/icons/filter.svg';
-import TrashIcon from '../../assets/icons/trash-black.svg';
-import TrashRedIcon from '../../assets/icons/trash.svg';
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useState } from 'react';
 import {
@@ -11,8 +8,6 @@ import {
 } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
-import Dropdown from '../../components/Dropdown/Dropdown';
-import SelectAllCheckbox from '../../components/ListView/SelectAllCheckbox';
 import TeamIcon from '../../components/ListView/TeamIcon';
 import { IssueItem } from '../../components/ListView/IssueItem';
 import useCheckItems from '../../hooks/useCheckItems';
