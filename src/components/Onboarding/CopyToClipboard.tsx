@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import copy from '../../assets/copy.svg';
+import speechbubblebody from '../../assets/speechbubblebody.svg';
+import speechbubbletail from '../../assets/speechbubbletail.svg';
 
 // props로 전달받은 inputRef를 통해 복사 대상 엘리먼트에 접근
 interface CopyToClipboardProps {
@@ -41,15 +43,20 @@ const CopyToClipboard = ({ inputRef }: CopyToClipboardProps) => {
       aria-label="클립보드에 복사"
     >
       <img src={copy} alt="Copy" className="w-[1.6rem] h-[1.6rem]" />
-
       {copied && (
-        <div className="absolute top-[-7.1rem] w-[14.4rem] h-[5.7021rem] flex flex-col items-center">
-          {/* 말풍선 본체 */}
-          <div className="bg-gray-600 text-gray-100 px-[1.5rem] py-[2rem] rounded-[0.5rem] font-xsmall-r whitespace-nowrap">
-            복사가 완료되었습니다!
+        <div className="absolute top-[-6.2rem] w-[14.4rem] h-[6.5rem] flex flex-col items-center">
+          {/* 말풍선 바디 + 텍스트 */}
+          <div className="relative w-[14.4rem] h-[4.7rem] flex items-center justify-center">
+            <img src={speechbubblebody} alt="말풍선 바디" className="absolute w-full h-full" />
+            <span className="z-10 text-white font-xsmall-r">복사가 완료되었습니다!</span>
           </div>
-          {/* 꼬리 (삼각형으로 표시) */}
-          <div className="w-0 h-0 border-x-[0.8rem] border-x-transparent border-t-[1.2rem] border-t-gray-600" />
+
+          {/* 꼬리 */}
+          <img
+            src={speechbubbletail}
+            alt="말풍선 꼬리"
+            className="w-[2rem] h-[1.8rem] -mt-[0.5rem]"
+          />
         </div>
       )}
     </button>
