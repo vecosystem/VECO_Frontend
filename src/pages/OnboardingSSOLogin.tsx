@@ -3,7 +3,6 @@
 import vecologo from '../assets/logos/vecologo.svg';
 import googlelogo from '../assets/logos/googlelogo.png';
 import kakaologo from '../assets/logos/kakaologo.svg';
-import '../index.css';
 
 const OnboardingSSOLogin = () => {
   return (

@@ -3,7 +3,6 @@
 import vecologo from '../assets/logos/vecologo.svg';
 import PageIndicator from '../components/Onboarding/PageIndicator';
 import onboardingSteps from '../constants/onboardingSteps';
-import '../index.css';
 
 const OnboardingFinish = () => {
   return (
