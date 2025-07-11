@@ -16,6 +16,7 @@ import Dropdown from '../../components/Dropdown/Dropdown';
 import SelectAllCheckbox from '../../components/ListView/SelectAllCheckbox';
 import TeamIcon from '../../components/ListView/TeamIcon';
 import useCheckItems from '../../hooks/useCheckItems';
+import { getManagers } from '../../utils/listGroupingUtils';
 
 /*
   추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
@@ -55,13 +56,6 @@ const dummyGoals: Partial<GoalItemProps>[] = [
     manage: '박유민',
   },
 ];
-
-// '없음', '', undefined 모두 '없음' 처리
-function getManagers(issues: typeof dummyGoals) {
-  const set = new Set(issues.map((i) => (!i.manage || i.manage === '' ? '없음' : i.manage)));
-  const arr = Array.from(set).filter((m) => m !== '없음');
-  return ['없음', ...arr];
-}
 
 const GoalHome = () => {
   const { isOpen, content } = useDropdownInfo();
