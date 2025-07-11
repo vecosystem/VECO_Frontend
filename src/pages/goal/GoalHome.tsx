@@ -15,6 +15,7 @@ import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import Dropdown from '../../components/Dropdown/Dropdown';
 import SelectAllCheckbox from '../../components/ListView/SelectAllCheckbox';
 import TeamIcon from '../../components/ListView/TeamIcon';
+import useCheckItems from '../../hooks/useCheckItems';
 
 /*
   추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
@@ -68,27 +69,13 @@ const GoalHome = () => {
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   const [isDeleteMode, setIsDeleteMode] = useState(false);
-  const [checkItems, setCheckItems] = useState<string[]>([]);
-  const isAllChecked =
-    dummyGoals.length > 0 &&
-    dummyGoals.every((goal) => goal.goalId && checkItems.includes(goal.goalId));
-
-  const handleCheck = (goalId: string, checked: boolean) => {
-    setCheckItems(
-      (prev) =>
-        checked
-          ? [...prev, goalId] // 체크 시 goalId 추가
-          : prev.filter((id) => id !== goalId) // 체크 해제 시 goalId 제거
-    );
-  };
-
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setCheckItems(dummyGoals.map((goal) => goal.goalId || ''));
-    } else {
-      setCheckItems([]);
-    }
-  };
+  const {
+    checkedIds: checkItems,
+    isAllChecked,
+    handleCheck,
+    handleSelectAll,
+    setCheckedIds,
+  } = useCheckItems(dummyGoals, 'goalId');
 
   // 그룹핑
   const groupKeys = (
@@ -155,7 +142,7 @@ const GoalHome = () => {
               className="flex gap-[0.4rem] items-center cursor-pointer"
               onClick={() => {
                 setIsDeleteMode((prev) => !prev);
-                if (!isDeleteMode) setCheckItems([]);
+                if (!isDeleteMode) setCheckedIds([]);
               }}
             >
               <img
