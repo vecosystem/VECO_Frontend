@@ -2,7 +2,6 @@ import DetailHeader from '../../components/DetailView/DetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 
 // 우선순위 아이콘 svg import
-import pr0 from '../../assets/icons/pr-0.svg';
 import pr1 from '../../assets/icons/pr-1.svg';
 import pr2 from '../../assets/icons/pr-2.svg';
 import pr3 from '../../assets/icons/pr-3.svg';
@@ -17,7 +16,7 @@ import IcReview from '../../assets/icons/status/review.svg';
 import IcNone from '../../assets/icons/status/none.svg';
 
 import IcDummyProfile from '../../assets/icons/gray.svg';
-import IcCheckSm from '../../assets/icons/check-sm.svg';
+import CompletionToggleButton from '../../components/DetailView/CompletionToggleButton';
 
 const GoalDetail = () => {
   const statusIconMap = {
@@ -48,9 +47,9 @@ const GoalDetail = () => {
 
   return (
     <div className="flex flex-col gap-[5.7rem] w-full">
-      {/* 헤더 컴포넌트: 글 제목에 따라 실시간으로 바뀌도록 수정 */}
-      {/* 목표명: 팀명+목표번호가 반영되게 */}
+      {/* 상세페이지 헤더 */}
       <DetailHeader />
+
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full h-full">
         {/* 글 작성란 */}
         <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)]">
@@ -69,7 +68,7 @@ const GoalDetail = () => {
         </div>
 
         <div className="w-[33rem] h-full flex flex-col">
-          <div className="w-full flex flex-col gap-[1.6rem] ">
+          <div className="w-full h-full flex flex-col gap-[1.6rem] ">
             {/* 속성 */}
             {/* TODO: 각 항목 모두 분리하여 컴포넌트화할 것 */}
             <div className="w-full font-title-sub-r tex-gray-600">속성</div>
@@ -98,14 +97,7 @@ const GoalDetail = () => {
           </div>
 
           {/* 작성 완료 버튼 */}
-          {/* 컴포넌트로 만들기. 최초 생성일 때, 그리고 수정-작성완료 토글되게. */}
-          {/* 제목이 필수입력 되어야 활성화되게 */}
-          <div className="w-full h-full flex items-end justify-end mb-[1.6rem]">
-            <button className="flex items-center justify-center gap-[0.8rem] h-[3.6rem] py-[0.8rem] pl-[1.2rem] pr-[1.6rem] bg-gray-200 rounded-md">
-              <img src={IcCheckSm} alt="확인" />
-              <div className="font-small-b text-gray-400">작성 완료</div>
-            </button>
-          </div>
+          <CompletionToggleButton />
         </div>
       </div>
     </div>
