@@ -18,7 +18,7 @@ import IcNone from '../../assets/icons/status/none.svg';
 
 import IcDummyProfile from '../../assets/icons/gray.svg';
 
-const GoalDetail = () => {
+const IssueDetail = () => {
   const statusIconMap = {
     상태: IcNone,
     없음: IcNone,
@@ -55,7 +55,7 @@ const GoalDetail = () => {
         <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)]">
           <input
             type="text"
-            placeholder="목표를 생성하세요"
+            placeholder="이슈를 생성하세요"
             className="w-full font-bigtitle-b placeholder-gray-400 text-gray-600 focus:outline-none"
           />
           {/* 상세 설명 컴포넌트: 추후 텍스트 에디터 반영. */}
@@ -92,7 +92,7 @@ const GoalDetail = () => {
                 options={['없음', '전채운', '전시현']}
                 iconMap={personIconMap}
               />
-              {/* TODO: 기한, 이슈 항목은 구현 예정 */}
+              {/* TODO: 기한, 목표, 외부 항목은 구현 예정 */}
             </div>
           </div>
 
@@ -104,4 +104,4 @@ const GoalDetail = () => {
   );
 };
 
-export default GoalDetail;
+export default IssueDetail;

@@ -2,6 +2,7 @@ import { Navigate, Outlet, type RouteObject } from 'react-router-dom';
 import ProtectedLayout from '../layouts/ProtectedLayout';
 import GoalHome from '../pages/goal/GoalHome';
 import GoalDetail from '../pages/goal/GoalDetail';
+import IssueDetail from '../pages/issue/IssueDetail';
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -37,7 +38,7 @@ export const protectedRoutes: RouteObject[] = [
           { path: 'goal', element: <GoalHome /> },
           { path: 'goal/:goalId', element: <GoalDetail /> },
           { path: 'issue', element: <div>{/* Issue_Home 페이지 */}</div> },
-          { path: 'issue/:issueId', element: <div>{/* Issue_Detail 페이지 */}</div> },
+          { path: 'issue/:issueId', element: <IssueDetail /> },
           { path: 'ext', element: <div>{/* External_Home 페이지 */}</div> },
           { path: 'ext/:extId', element: <div>{/* External_Detail 페이지 */}</div> },
           { path: 'doc', element: <div>{/* Document_Home 페이지 */}</div> },
