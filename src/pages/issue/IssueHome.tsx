@@ -188,7 +188,7 @@ const IssueHome = () => {
           </div>
         ) : (
           /* 리스트뷰 */
-          <div className="flex flex-col gap-[6.4rem]">
+          <div className="flex flex-col gap-[4.8rem]">
             {grouped.map(({ key, items }) =>
               /* 해당 요소 존재할 때만 생성 */
               items.length > 0 ? (

@@ -49,10 +49,9 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
     onCheckChange?.(!checked);
   };
 
-  // TODO : 이슈 아이탬도 동일하게 whitespace wrap 등 설정
   return (
     <div
-      className={`font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
+      className={`font-body-r flex justify-between items-center min-w-[110rem] h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
       onClick={handleItemClick}
       tabIndex={showCheckbox ? 0 : -1}
       style={{ cursor: showCheckbox ? 'pointer' : 'default' }}

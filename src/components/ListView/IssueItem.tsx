@@ -54,7 +54,7 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
 
   return (
     <div
-      className={`font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
+      className={`font-body-r flex justify-between items-center min-w-[110rem] h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
       onClick={handleItemClick}
       tabIndex={showCheckbox ? 0 : -1}
       style={{ cursor: showCheckbox ? 'pointer' : 'default' }}
@@ -107,7 +107,7 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
         {displayFields.includes('goal') && (
           <div className="flex gap-[0.8rem] items-center">
             {/* 목표 아이콘 */}
-            <img src={goalIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
+            <img src={goalIcon} alt="date" className="w-[2.4rem] h-[2.4rem]" />
             {/* 목표명 */}
             <div className="truncate">{goalTitle}</div>
           </div>
