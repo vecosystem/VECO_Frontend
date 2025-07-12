@@ -9,10 +9,10 @@ const InviteCodeInput = ({ correctCode }: InviteCodeInputProps) => {
   const [hasError, setHasError] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputCode(value);
+    const typedcode = e.target.value;
+    setInputCode(typedcode);
 
-    if (value && value !== correctCode) {
+    if (typedcode && typedcode !== correctCode) {
       setHasError(true);
     } else {
       setHasError(false);
