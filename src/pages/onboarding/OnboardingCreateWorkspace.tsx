@@ -1,8 +1,7 @@
-// src/pages/OnboardingCreateWorkspace.tsx
+// src/pages/onboarding/OnboardingCreateWorkspace.tsx
 
-import PageIndicator from '../components/Onboarding/PageIndicator';
-import onboardingSteps from '../constants/onboardingSteps';
-import '../index.css';
+import PageIndicator from '../../components/Onboarding/PageIndicator';
+import onboardingSteps from '../../constants/onboardingSteps';
 
 const OnboardingCreateWorkspace = () => {
   return (

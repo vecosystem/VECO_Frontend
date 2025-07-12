@@ -1,10 +1,10 @@
 import type { RouteObject } from 'react-router-dom';
 import AuthRedirect from '../components/AuthRedirect';
 import PublicLayout from '../layouts/PublicLayout';
-import OnboardingSSOLogin from '../pages/OnboardingSSOLogin';
-import OnboardingCreateWorkspace from '../pages/OnboardingCreateWorkspace';
-import OnboardingInviteMembers from '../pages/OnboardingInviteMembers';
-import OnboardingFinish from '../pages/OnboardingFinish';
+import OnboardingSSOLogin from '../pages/onboarding/OnboardingSSOLogin';
+import OnboardingCreateWorkspace from '../pages/onboarding/OnboardingCreateWorkspace';
+import OnboardingInviteMembers from '../pages/onboarding/OnboardingInviteMembers';
+import OnboardingFinish from '../pages/onboarding/OnboardingFinish';
 
 export const publicRoutes: RouteObject[] = [
   {
