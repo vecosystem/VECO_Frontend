@@ -5,16 +5,16 @@ import Dropdown from '../Dropdown/Dropdown';
 import SelectAllCheckbox from './SelectAllCheckbox';
 
 interface ListViewToolbarProps {
-  filter: string;
-  isDeleteMode: boolean;
+  filter: string; // dropdown
+  isDeleteMode: boolean; // check mode
   isAllChecked: boolean;
   showSelectAll?: boolean;
-  filterOptions: string[];
-  onFilterClick: () => void;
-  onFilterSelect: (option: string) => void;
-  onDeleteClick: () => void;
+  filterOptions: string[]; // dropdown
+  onFilterClick: () => void; // open dropdown
+  onFilterSelect: (option: string) => void; // dropdown
+  onDeleteClick: () => void; // items check
   onSelectAllChange?: (checked: boolean) => void;
-  dropdownProps?: any;
+  dropdownProps?: any; // dropdown
 }
 
 const ListViewToolbar = ({
