@@ -25,8 +25,8 @@ const dummyIssues: Partial<IssueItemProps>[] = [
     issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
     status: '없음',
     priority: '보통',
-    goalTitle: '기획 및 요구사항 분석',
-    deadline: '25.05.02',
+    //goalTitle: '기획 및 요구사항 분석',
+    //deadline: '25.05.02',
     manage: '이가을',
   },
   {
@@ -34,7 +34,7 @@ const dummyIssues: Partial<IssueItemProps>[] = [
     issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
     status: '진행중',
     priority: '긴급',
-    goalTitle: '기획 및 요구사항 분석',
+    //goalTitle: '기획 및 요구사항 분석',
     deadline: '25.05.02',
     manage: '박유민',
   },
@@ -44,7 +44,7 @@ const dummyIssues: Partial<IssueItemProps>[] = [
     status: '해야할 일',
     priority: '높음',
     goalTitle: '기획 및 요구사항 분석',
-    deadline: '25.05.02',
+    //deadline: '25.05.02',
     manage: '박유민',
   },
   {

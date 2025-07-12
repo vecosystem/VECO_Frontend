@@ -17,10 +17,8 @@ const defaultData: IssueItemProps = {
   type: 'issue', // 'issue' | 'my-issue'
   issueId: 'Veco-i3',
   issueTitle: '백호를 사용해서 다른 사람들과 협업해보기',
-  goalTitle: '없음',
   status: '완료',
   priority: '보통',
-  deadline: '2025-07-01',
   manage: '없음',
   filter: '담당자', // '상태' | '우선순위' | '담당자' | '목표'
 };
@@ -104,7 +102,7 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
             <div className="whitespace-nowrap">{priority}</div>
           </div>
         )}
-        {displayFields.includes('goal') && (
+        {displayFields.includes('goal') && goalTitle && goalTitle !== '없음' && (
           <div className="flex gap-[0.8rem] items-center">
             {/* 목표 아이콘 */}
             <img src={goalIcon} alt="date" className="w-[2.4rem] h-[2.4rem]" />
@@ -114,10 +112,12 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
         )}
 
         {/* 기한 */}
-        <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
-          <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
-          <div className="">{deadline}</div>
-        </div>
+        {deadline && deadline !== '없음' && (
+          <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
+            <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
+            <div className="">{deadline}</div>
+          </div>
+        )}
         {/* 담당자/팀명 */}
         {/*
          * 담당자 1인 기준으로 작성
