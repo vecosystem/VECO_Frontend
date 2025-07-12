@@ -13,6 +13,8 @@ import { IssueItem } from '../../components/ListView/IssueItem';
 import useCheckItems from '../../hooks/useCheckItems';
 import { getGoals, getManagers } from '../../utils/listGroupingUtils';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
+import { useModalActions, useModalInfo } from '../../hooks/useModal';
+import Modal from '../../components/Modal/Modal';
 
 /*
   추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
@@ -79,6 +81,19 @@ const IssueHome = () => {
     setCheckedIds,
   } = useCheckItems(dummyIssues, 'issueId');
 
+  const { isOpen: isModalOpen, content: modalContent } = useModalInfo();
+  const { openModal } = useModalActions();
+  const handleDeleteClick = () => {
+    if (isDeleteMode && checkItems.length > 0) {
+      openModal({
+        name: `${checkItems.length}개의 이슈를 삭제하시겠습니까?`,
+      });
+    } else {
+      setIsDeleteMode((prev) => !prev);
+      if (!isDeleteMode) setCheckedIds([]);
+    }
+  };
+
   // 그룹핑
   const groupKeys = (
     filter === '상태'
@@ -121,13 +136,11 @@ const IssueHome = () => {
             setFilter(option as ItemFilter);
             closeDropdown();
           }}
-          onDeleteClick={() => {
-            setIsDeleteMode(!isDeleteMode);
-            if (!isDeleteMode) setCheckedIds([]);
-          }}
+          onDeleteClick={handleDeleteClick}
           onSelectAllChange={handleSelectAll}
           dropdownProps={{ isOpen, content, closeDropdown }}
         />
+        {isModalOpen && modalContent && <Modal subtitle={modalContent.name} />}
         {isEmpty ? (
           <div className="flex flex-1 items-center justify-center">
             <div className="font-body-r">목표를 생성하세요</div>
