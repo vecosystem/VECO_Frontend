@@ -1,4 +1,4 @@
-// src/pages/Error404NotFound.tsx
+// src/pages/onboarding/Error404NotFound.tsx
 
 const Error404NotFound = () => {
   return (

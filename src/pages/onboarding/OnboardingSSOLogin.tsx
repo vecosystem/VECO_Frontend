@@ -1,8 +1,8 @@
-// src/pages/OnboardingSSOLogin.tsx
+// src/pages/onboarding/OnboardingSSOLogin.tsx
 
-import vecologo from '../assets/logos/vecologo.svg';
-import googlelogo from '../assets/logos/googlelogo.png';
-import kakaologo from '../assets/logos/kakaologo.svg';
+import vecologo from '../../assets/logos/vecologo.svg';
+import googlelogo from '../../assets/logos/googlelogo.png';
+import kakaologo from '../../assets/logos/kakaologo.svg';
 
 const OnboardingSSOLogin = () => {
   return (
