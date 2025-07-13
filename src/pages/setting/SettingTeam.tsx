@@ -1,36 +1,52 @@
 import TeamItem from './components/TeamItem.tsx';
+import TeamHeader from './components/TeamHeader.tsx';
 
 const SettingTeam = () => {
+  const mockTeams = [
+    {
+      id: 1,
+      name: 'Workspace',
+      memberCount: 10,
+      createdAt: '2025-01-01',
+    },
+    {
+      id: 2,
+      name: 'Team A',
+      memberCount: 5,
+      createdAt: '2025-02-01',
+    },
+    {
+      id: 3,
+      name: 'Team B',
+      memberCount: 8,
+      createdAt: '2025-03-01',
+    },
+    {
+      id: 4,
+      name: 'Team C',
+      memberCount: 3,
+      createdAt: '2025-04-01',
+    },
+  ];
+
   return (
     <div className={`flex flex-col w-full`}>
-      <section className={`flex flex-col px-[3.2rem] pt-[3.2rem] pb-[1rem]`}>
-        <h1 className={`text-gray-600 font-title-b mb-[1.6rem]`}>팀</h1>
-        <div className={`flex justify-end`}>
-          <button
-            className={`bg-primary-blue rounded-[0.6rem] text-gray-100 font-small-r px-[0.9rem] py-[0.8rem]`}
-          >
-            팀 생성하기
-          </button>
-        </div>
-        <div
-          className={`flex w-full mt-[2rem] justify-between items-center text-gray-600 font-body-b pe-[3rem]`}
-        >
-          <div className={`flex gap-x-[1rem]`}>
-            <span>아이콘</span>
-            <span>팀 이름</span>
-          </div>
-          <div className={`flex gap-x-[6.8rem]`}>
-            <span>멤버 수</span>
-            <span>생성일</span>
-          </div>
-        </div>
-      </section>
+      <TeamHeader />
       <hr className={`w-full text-gray-300`} />
-      <TeamItem />
+      <TeamItem
+        name={mockTeams[0].name}
+        memberCount={mockTeams[0].memberCount}
+        createdAt={mockTeams[0].createdAt}
+      />
       <hr className={`w-full text-gray-300`} />
-      <TeamItem />
-      <TeamItem />
-      <TeamItem />
+      {mockTeams.slice(1).map((team, index) => (
+        <TeamItem
+          key={index}
+          name={team.name}
+          memberCount={team.memberCount}
+          createdAt={team.createdAt}
+        />
+      ))}
     </div>
   );
 };
