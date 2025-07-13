@@ -5,7 +5,7 @@ import InviteCodeInput from '../components/Onboarding/InviteCodeInput';
 
 const InviteTeamMember = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-[3.2rem] bg-[#F9FAFB]">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9FAFB]">
       <div className="flex flex-col gap-[6.9rem]">
         <div className="flex flex-col items-center gap-[3.2rem]">
           {/* 원형 로고 */}
