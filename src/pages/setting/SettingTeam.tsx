@@ -31,7 +31,23 @@ const SettingTeam = () => {
 
   return (
     <div className={`flex flex-col w-full`}>
-      <TeamHeader />
+      <TeamHeader
+        title={'팀'}
+        buttonText={'팀 생성하기'}
+        onClick={() => {}}
+        children={
+          <>
+            <div className={`flex gap-x-[1rem]`}>
+              <span>아이콘</span>
+              <span>팀 이름</span>
+            </div>
+            <div className={`flex gap-x-[6.8rem] me-[0.6rem]`}>
+              <span>멤버 수</span>
+              <span>생성일</span>
+            </div>
+          </>
+        }
+      />
       <hr className={`w-full text-gray-300`} />
       <TeamItem
         name={mockTeams[0].name}
