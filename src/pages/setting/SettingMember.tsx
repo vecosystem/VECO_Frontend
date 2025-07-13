@@ -1,5 +1,7 @@
 import TeamHeader from './components/TeamHeader.tsx';
 import MemberItem from './components/MemberItem.tsx';
+import { useState } from 'react';
+import MemberInviteModal from './components/MemberInviteModal.tsx';
 
 const SettingMember = () => {
   const mockMembers = [
@@ -26,12 +28,17 @@ const SettingMember = () => {
     },
   ];
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleInviteClick = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   return (
     <div className={`flex flex-col w-full`}>
       <TeamHeader
         title={'멤버'}
         buttonText={'팀원 초대하기'}
-        onClick={() => {}}
+        onClick={() => setIsModalOpen(!isModalOpen)}
         children={
           <>
             <div className={`flex gap-x-[1rem]`}>
@@ -64,6 +71,7 @@ const SettingMember = () => {
           className={`mb-[3.2rem]`}
         />
       ))}
+      {isModalOpen && <MemberInviteModal onClick={handleInviteClick} />}
     </div>
   );
 };

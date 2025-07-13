@@ -14,6 +14,7 @@ const TeamHeader = (props: TeamHeaderProps) => {
       <div className={`flex justify-end`}>
         <button
           className={`bg-primary-blue rounded-[0.6rem] text-gray-100 font-small-r px-[0.9rem] py-[0.8rem]`}
+          onClick={props.onClick}
         >
           {props.buttonText}
         </button>
