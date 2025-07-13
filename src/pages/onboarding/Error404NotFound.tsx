@@ -13,9 +13,9 @@ const Error404NotFound = () => {
               <br /> 요청하신 페이지가 사라졌거나, 잘못된 경로로 이용하셨어요!
             </h3>
           </div>
-          {/* 홈으로 이동 버튼 */}
+          {/* 돌아가기 버튼 */}
           <button className="w-[40rem] h-[6.2rem] rounded-[0.5rem] bg-primary-blue">
-            <span className="font-title-sub-r text-gray-100">홈으로 이동</span>
+            <span className="font-title-sub-r text-gray-100">돌아가기</span>
           </button>
         </div>
       </div>
