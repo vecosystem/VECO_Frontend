@@ -1,16 +1,21 @@
 import IcUserSearch from '../../../assets/icons/user-round-search.svg';
 import IcDate from '../../../assets/icons/date.svg';
+import ProfileImage from './ProfileImage.tsx';
 
 interface TeamItemProps {
+  profileImage: string | null;
   name: string;
   memberCount: number;
   createdAt: string;
+  className?: string;
 }
 
 const TeamItem = (props: TeamItemProps) => {
   return (
-    <div className={`flex w-full items-center px-[4.4rem] py-[2.4rem] text-gray-600 font-body-r`}>
-      <div className={`rounded-full bg-gray-300 w-[2rem] h-[2rem]`} />
+    <div
+      className={`flex w-full items-center text-gray-600 font-body-r px-[4.35rem] ${props.className}`}
+    >
+      <ProfileImage profileImage={props.profileImage} />
       <span className={`flex-1 text-start ms-[2rem]`}>{props.name}</span>
       <div className={`flex gap-x-[3.2rem]`}>
         <div className={`flex gap-x-[0.8rem] items-center`}>
