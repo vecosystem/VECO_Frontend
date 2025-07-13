@@ -34,7 +34,7 @@ const Dropdown = ({
     <div
       ref={dropdownRef}
       style={{ boxShadow: '0px 4px 12px 0px rgba(0, 0, 0, 0.15)' }}
-      className={`absolute z-30 top-0 right-0 flex flex-col w-auto min-w-[11.6rem] max-w-[27.4rem]
+      className={`absolute z-30 top-0 flex flex-col w-auto min-w-[11.6rem] max-w-[27.4rem]
       border border-gray-400 bg-white rounded-[0.4rem] ${className}`}
     >
       {defaultValue && (

@@ -58,7 +58,7 @@ const ListViewToolbar = ({
                     options={filterOptions}
                     onSelect={onFilterSelect}
                     onClose={dropdownProps.closeDropdown}
-                    className="top-[3.0rem]"
+                    className="top-[3.0rem] right-0"
                   />
                 </div>
               )}
