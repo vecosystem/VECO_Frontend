@@ -1,7 +1,7 @@
 // src/pages/onboarding/InviteTeamMember.tsx // 스크린ID 확정 후 페이지명 수정
 
-import vecocirclenavy from '../assets/logos/veco-circle-logo-bg-navy.svg';
-import InviteCodeInput from '../components/Onboarding/InviteCodeInput';
+import vecocirclenavy from '../../assets/logos/veco-circle-logo-bg-navy.svg';
+import InviteCodeInput from '../../components/Onboarding/InviteCodeInput';
 
 const InviteTeamMember = () => {
   return (
