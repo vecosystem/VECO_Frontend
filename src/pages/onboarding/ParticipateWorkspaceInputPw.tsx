@@ -1,9 +1,9 @@
-// src/pages/onboarding/InviteTeamMember.tsx // 스크린ID 확정 후 페이지명 수정
+// src/pages/onboarding/ParticipateWorkspaceInputPw.tsx
 
 import vecocirclenavy from '../../assets/logos/veco-circle-logo-bg-navy.svg';
 import InviteCodeInput from '../../components/Onboarding/InviteCodeInput';
 
-const InviteTeamMember = () => {
+const ParticipateWorkspaceInputPw = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9FAFB]">
       <div className="flex flex-col gap-[6.9rem]">
@@ -24,4 +24,4 @@ const InviteTeamMember = () => {
   );
 };
 
-export default InviteTeamMember;
+export default ParticipateWorkspaceInputPw;
