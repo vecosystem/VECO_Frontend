@@ -1,8 +1,9 @@
+// src/pages/onboarding/OnboardingInviteMembers.tsx
+
 import { useRef, useState } from 'react';
-import CopyToClipboard from '../components/Onboarding/CopyToClipboard';
-import PageIndicator from '../components/Onboarding/PageIndicator';
-import onboardingSteps from '../constants/onboardingSteps';
-import '../index.css';
+import CopyToClipboard from '../../components/Onboarding/CopyToClipboard';
+import PageIndicator from '../../components/Onboarding/PageIndicator';
+import onboardingSteps from '../../constants/onboardingSteps';
 
 const OnboardingInviteMembers = () => {
   // 사용자가 입력한 초대 URL과 암호를 저장하는 상태

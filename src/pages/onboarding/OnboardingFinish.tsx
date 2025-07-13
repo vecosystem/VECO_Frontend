@@ -1,9 +1,8 @@
-// src/pages/OnboardingFinish.tsx
+// src/pages/onboarding/OnboardingFinish.tsx
 
-import vecologo from '../assets/logos/vecologo.svg';
-import PageIndicator from '../components/Onboarding/PageIndicator';
-import onboardingSteps from '../constants/onboardingSteps';
-import '../index.css';
+import vecologo from '../../assets/logos/vecologo.svg';
+import PageIndicator from '../../components/Onboarding/PageIndicator';
+import onboardingSteps from '../../constants/onboardingSteps';
 
 const OnboardingFinish = () => {
   return (
