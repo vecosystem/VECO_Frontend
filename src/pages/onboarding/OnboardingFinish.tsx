@@ -24,8 +24,8 @@ const OnboardingFinish = () => {
               속도의 관성을 유지하여 목표를 달성하는 협업툴
             </h1>
           </div>
-          {/* 지금 시작하기 버튼 - 추후 경로 연결 */}
-          <PrimaryButton text="지금 시작하기" />
+          {/* 지금 시작하기 버튼 */}
+          <PrimaryButton text="지금 시작하기" to="/workspace/issue" />
         </div>
       </div>
     </div>
