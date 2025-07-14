@@ -1,10 +1,11 @@
-import { useRef, useState } from 'react';
-import CopyToClipboard from '../components/Onboarding/CopyToClipboard';
-import PageIndicator from '../components/Onboarding/PageIndicator';
-import onboardingSteps from '../constants/onboardingSteps';
-import '../index.css';
+// src/pages/onboarding/OnboardingInviteMember.tsx
 
-const OnboardingInviteMembers = () => {
+import { useRef, useState } from 'react';
+import CopyToClipboard from '../../components/Onboarding/CopyToClipboard';
+import PageIndicator from '../../components/Onboarding/PageIndicator';
+import onboardingSteps from '../../constants/onboardingSteps';
+
+const OnboardingInviteMember = () => {
   // 사용자가 입력한 초대 URL과 암호를 저장하는 상태
   const [inviteText, setInviteText] = useState('');
 
@@ -47,4 +48,4 @@ const OnboardingInviteMembers = () => {
   );
 };
 
-export default OnboardingInviteMembers;
+export default OnboardingInviteMember;

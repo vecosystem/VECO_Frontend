@@ -18,7 +18,6 @@ const defaultData: GoalItemProps = {
   title: '백호를 사용해서 다른 사람들과 협업해보기',
   status: '완료',
   priority: '보통',
-  deadline: '2025-07-01',
   manage: '없음',
   filter: '우선순위', // '상태' | '우선순위' | '담당자'
 };
@@ -49,10 +48,9 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
     onCheckChange?.(!checked);
   };
 
-  // TODO : 이슈 아이탬도 동일하게 whitespace wrap 등 설정
   return (
     <div
-      className={`font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
+      className={`font-body-r flex justify-between items-center min-w-[110rem] h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
       onClick={handleItemClick}
       tabIndex={showCheckbox ? 0 : -1}
       style={{ cursor: showCheckbox ? 'pointer' : 'default' }}
@@ -103,10 +101,12 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
           </div>
         )}
         {/* 기한 */}
-        <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
-          <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
-          <div className="">{deadline}</div>
-        </div>
+        {deadline && deadline !== '없음' && (
+          <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
+            <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
+            <div className="">{deadline}</div>
+          </div>
+        )}
         {/* 담당자/팀명 */}
         {/*
          * 담당자 1인 기준으로 작성

@@ -1,6 +1,3 @@
-import FilterIcon from '../../assets/icons/filter.svg';
-import TrashIcon from '../../assets/icons/trash-black.svg';
-import TrashRedIcon from '../../assets/icons/trash.svg';
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useState } from 'react';
 import {
@@ -11,67 +8,64 @@ import {
 } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
-import Dropdown from '../../components/Dropdown/Dropdown';
-import SelectAllCheckbox from '../../components/ListView/SelectAllCheckbox';
 import TeamIcon from '../../components/ListView/TeamIcon';
 import { IssueItem } from '../../components/ListView/IssueItem';
+import useCheckItems from '../../hooks/useCheckItems';
+import { getGoals, getManagers } from '../../utils/listGroupingUtils';
+import ListViewToolbar from '../../components/ListView/ListViewToolbar';
+import { useModalActions, useModalInfo } from '../../hooks/useModal';
+import Modal from '../../components/Modal/Modal';
 
 /*
   추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
 */
 const dummyIssues: Partial<IssueItemProps>[] = [
   {
-    issueId: 'Veco-i4',
-    issueTitle: 'API 연동API 연동API 연동API 연동',
-    // goalTitle: '없음',
-    status: '진행중',
-    priority: '없음',
-    deadline: '2025-07-01',
-    // manage: '김선화',
-  },
-  {
-    issueId: 'Veco-i3',
-    issueTitle: '최대스무자까지작성가능최대스무자까지작성',
-    goalTitle: '목표 제목 작성',
-    status: '해야할 일',
-    priority: '낮음',
-    deadline: '2025-07-20',
-    manage: '없음',
-  },
-  {
     issueId: 'Veco-i1',
-    issueTitle: '최대스무자까지작성가능최대스무자까지작성',
-    goalTitle: '기획 및 요구사항 분석',
-    status: '완료',
+    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
+    status: '없음',
     priority: '보통',
-    deadline: '2025-07-02',
+    //goalTitle: '기획 및 요구사항 분석',
+    //deadline: '25.05.02',
     manage: '이가을',
   },
   {
     issueId: 'Veco-i2',
-    issueTitle: '이슈명을 작성합니다',
-    goalTitle: '목표 제목 작성',
-    status: '완료',
+    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
+    status: '진행중',
     priority: '긴급',
-    deadline: '2025-07-10',
+    //goalTitle: '기획 및 요구사항 분석',
+    deadline: '25.05.02',
     manage: '박유민',
   },
+  {
+    issueId: 'Veco-i3',
+    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
+    status: '해야할 일',
+    priority: '높음',
+    goalTitle: '기획 및 요구사항 분석',
+    //deadline: '25.05.02',
+    manage: '박유민',
+  },
+  {
+    issueId: 'Veco-i4',
+    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
+    status: '완료',
+    priority: '없음',
+    goalTitle: '개발 및 배포',
+    deadline: '25.05.02',
+    manage: '김선화',
+  },
+  {
+    issueId: 'Veco-i5',
+    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
+    status: '검토',
+    priority: '낮음',
+    goalTitle: '개발 및 배포',
+    deadline: '25.05.02',
+    manage: '김선화',
+  },
 ];
-
-// '없음', '', undefined 모두 '없음' 처리
-function getManagers(issues: typeof dummyIssues) {
-  const set = new Set(issues.map((i) => (!i.manage || i.manage === '' ? '없음' : i.manage)));
-  const arr = Array.from(set).filter((m) => m !== '없음');
-  return ['없음', ...arr];
-}
-
-function getGoals(issues: typeof dummyIssues) {
-  const set = new Set(
-    issues.map((i) => (!i.goalTitle || i.goalTitle === '' ? '없음' : i.goalTitle))
-  );
-  const arr = Array.from(set).filter((g) => g !== '없음');
-  return ['없음', ...arr];
-}
 
 const IssueHome = () => {
   const { isOpen, content } = useDropdownInfo();
@@ -79,25 +73,24 @@ const IssueHome = () => {
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   const [isDeleteMode, setIsDeleteMode] = useState(false);
-  const [checkItems, setCheckItems] = useState<string[]>([]);
-  const isAllChecked =
-    dummyIssues.length > 0 &&
-    dummyIssues.every((issue) => issue.issueId && checkItems.includes(issue.issueId));
+  const {
+    checkedIds: checkItems,
+    isAllChecked,
+    handleCheck,
+    handleSelectAll,
+    setCheckedIds,
+  } = useCheckItems(dummyIssues, 'issueId');
 
-  const handleCheck = (issueId: string, checked: boolean) => {
-    setCheckItems(
-      (prev) =>
-        checked
-          ? [...prev, issueId] // 체크 시 issueId 추가
-          : prev.filter((id) => id !== issueId) // 체크 해제 시 issueId 제거
-    );
-  };
-
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setCheckItems(dummyIssues.map((issue) => issue.issueId || ''));
+  const { isOpen: isModalOpen, content: modalContent } = useModalInfo();
+  const { openModal } = useModalActions();
+  const handleDeleteClick = () => {
+    if (isDeleteMode && checkItems.length > 0) {
+      openModal({
+        name: `${checkItems.length}개의 이슈를 삭제하시겠습니까?`,
+      });
     } else {
-      setCheckItems([]);
+      setIsDeleteMode((prev) => !prev);
+      if (!isDeleteMode) setCheckedIds([]);
     }
   };
 
@@ -132,63 +125,29 @@ const IssueHome = () => {
       <div className="flex flex-1 flex-col gap-[3.2rem]">
         {/* 팀 아이콘, 팀명, props로 요소 전달 가능 */}
         <TeamIcon />
-        {/* 필터 선택 */}
-        <div className="flex justify-between">
-          <div className="flex items-center">
-            {isDeleteMode ? (
-              <SelectAllCheckbox checked={isAllChecked} onCheckChange={handleSelectAll} />
-            ) : (
-              ''
-            )}
-          </div>
-          <div className="flex gap-[2.4rem] items-center">
-            {/* 필터영역 */}
-            <div className="relative">
-              <div
-                className="flex gap-[0.8rem] items-center cursor-pointer relative"
-                onClick={() => openDropdown({ name: 'filter' })}
-              >
-                {/* 드롭다운 */}
-                <img src={FilterIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
-                <span className="font-body-r">필터</span>
-                {isOpen && content && (
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <Dropdown
-                      defaultValue="필터"
-                      options={['상태', '우선순위', '담당자', '목표']}
-                      onSelect={(option) => {
-                        setFilter(option as ItemFilter);
-                      }}
-                      onClose={closeDropdown}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-            {/* 삭제버튼 */}
-            <div
-              className="flex gap-[0.4rem] items-center cursor-pointer"
-              onClick={() => {
-                setIsDeleteMode((prev) => !prev);
-                if (!isDeleteMode) setCheckItems([]);
-              }}
-            >
-              <img
-                src={isDeleteMode ? TrashRedIcon : TrashIcon}
-                className="inline-block w-[2.4rem] h-[2.4rem]"
-                alt=""
-              />
-              <span className={`font-body-r ${isDeleteMode ? 'text-[#D44242]' : ''}`}>삭제</span>
-            </div>
-          </div>
-        </div>
+        <ListViewToolbar
+          filter={filter}
+          isDeleteMode={isDeleteMode}
+          isAllChecked={isAllChecked}
+          showSelectAll={grouped.some(({ items }) => items.length > 0)}
+          filterOptions={['상태', '우선순위', '담당자', '목표']}
+          onFilterClick={() => openDropdown({ name: 'filter' })}
+          onFilterSelect={(option) => {
+            setFilter(option as ItemFilter);
+            closeDropdown();
+          }}
+          onDeleteClick={handleDeleteClick}
+          onSelectAllChange={handleSelectAll}
+          dropdownProps={{ isOpen, content, closeDropdown }}
+        />
+        {isModalOpen && modalContent && <Modal subtitle={modalContent.name} />}
         {isEmpty ? (
           <div className="flex flex-1 items-center justify-center">
             <div className="font-body-r">목표를 생성하세요</div>
           </div>
         ) : (
           /* 리스트뷰 */
-          <div className="flex flex-col gap-[6.4rem]">
+          <div className="flex flex-col gap-[4.8rem]">
             {grouped.map(({ key, items }) =>
               /* 해당 요소 존재할 때만 생성 */
               items.length > 0 ? (
