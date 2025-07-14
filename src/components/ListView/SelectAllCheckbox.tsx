@@ -7,8 +7,17 @@ interface CheckboxProps {
 }
 
 const SelectAllCheckbox = ({ checked, onCheckChange }: CheckboxProps) => {
+  const handleItemClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('label')) return;
+    onCheckChange?.(!checked);
+  };
+
   return (
-    <div className="flex items-center whitespace-nowrap">
+    <div
+      className="flex items-center whitespace-nowrap"
+      onClick={handleItemClick}
+      style={{ cursor: 'pointer' }}
+    >
       <label className="relative flex items-center cursor-pointer mr-[0.8rem]">
         <input
           type="checkbox"
@@ -22,7 +31,9 @@ const SelectAllCheckbox = ({ checked, onCheckChange }: CheckboxProps) => {
           className="w-[1.6rem] h-[1.6rem] pointer-events-none"
         />
       </label>
-      <span className="font-small-b text-gray-400">전체선택</span>
+      <span className={`font-small-b ${checked ? 'text-primary-variant-blue' : 'text-gray-400'}`}>
+        전체선택
+      </span>
     </div>
   );
 };
