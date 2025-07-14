@@ -53,11 +53,7 @@ const Sidebar = () => {
 
         <div className="flex flex-col items-start self-stretch">
           {/* 첫 번째 드롭다운: 워크스페이스 전체 팀 */}
-          <DropdownMenu
-            headerTitle="워크스페이스 전체 팀"
-            initialOpen={true}
-            headerHasToggleIcon={false}
-          >
+          <DropdownMenu headerTitle="워크스페이스 전체 팀" initialOpen={true}>
             <div className="flex flex-col">
               <DropdownMenu
                 headerTitle="Workspace"
