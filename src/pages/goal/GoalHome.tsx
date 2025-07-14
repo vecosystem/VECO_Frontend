@@ -2,7 +2,11 @@ import { GoalItem } from '../../components/ListView/GoalItem';
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useState } from 'react';
 import {
+  PRIORITY_CODES,
+  PRIORITY_LABELS,
   PRIORITY_LIST,
+  STATUS_CODES,
+  STATUS_LABELS,
   STATUS_LIST,
   type GoalItemProps,
   type ItemFilter,
@@ -24,40 +28,40 @@ const dummyGoals: Partial<GoalItemProps>[] = [
   {
     goalId: 'Veco-g1',
     title: '백호를 사용해서 다른 사람들과 협업해보기',
-    status: '없음',
-    priority: '보통',
+    status: STATUS_CODES[0],
+    priority: PRIORITY_CODES[3],
     deadline: '25.05.02',
     manage: '이가을',
   },
   {
     goalId: 'Veco-g2',
     title: '백호를 사용해서 다른 사람들과 협업해보기',
-    status: '진행중',
-    priority: '긴급',
+    status: STATUS_CODES[1],
+    priority: PRIORITY_CODES[2],
     deadline: '25.05.02',
     manage: '박유민',
   },
   {
     goalId: 'Veco-g3',
     title: '백호를 사용해서 다른 사람들과 협업해보기',
-    status: '해야할 일',
-    priority: '높음',
+    status: STATUS_CODES[2],
+    priority: PRIORITY_CODES[3],
     deadline: '25.05.02',
     manage: '박유민',
   },
   {
     goalId: 'Veco-g4',
     title: '백호를 사용해서 다른 사람들과 협업해보기',
-    status: '완료',
-    priority: '없음',
+    status: STATUS_CODES[3],
+    priority: PRIORITY_CODES[0],
     deadline: '25.05.02',
     manage: '김선화',
   },
   {
     goalId: 'Veco-g5',
     title: '백호를 사용해서 다른 사람들과 협업해보기',
-    status: '검토',
-    priority: '낮음',
+    status: STATUS_CODES[4],
+    priority: PRIORITY_CODES[4],
     deadline: '25.05.02',
     manage: '김선화',
   },
@@ -154,7 +158,13 @@ const GoalHome = () => {
                         profileImghUrl={filter === '담당자' ? '' : undefined}
                       />
                       {/* 유형명 */}
-                      <div>{key}</div>
+                      <div>
+                        {filter === '상태'
+                          ? STATUS_LABELS[key as keyof typeof STATUS_LABELS] || key
+                          : filter === '우선순위'
+                            ? PRIORITY_LABELS[key as keyof typeof PRIORITY_LABELS] || key
+                            : key}
+                      </div>{' '}
                       <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
                     </div>
                     {/* TODO : 추가 버튼 라우터 연결 */}

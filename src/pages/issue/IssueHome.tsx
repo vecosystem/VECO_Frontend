@@ -1,7 +1,11 @@
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useState } from 'react';
 import {
+  PRIORITY_CODES,
+  PRIORITY_LABELS,
   PRIORITY_LIST,
+  STATUS_CODES,
+  STATUS_LABELS,
   STATUS_LIST,
   type IssueItemProps,
   type ItemFilter,
@@ -23,8 +27,8 @@ const dummyIssues: Partial<IssueItemProps>[] = [
   {
     issueId: 'Veco-i1',
     issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: '없음',
-    priority: '보통',
+    status: STATUS_CODES[0],
+    priority: PRIORITY_CODES[3],
     //goalTitle: '기획 및 요구사항 분석',
     //deadline: '25.05.02',
     manage: '이가을',
@@ -32,38 +36,38 @@ const dummyIssues: Partial<IssueItemProps>[] = [
   {
     issueId: 'Veco-i2',
     issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: '진행중',
-    priority: '긴급',
-    //goalTitle: '기획 및 요구사항 분석',
+    status: STATUS_CODES[1],
+    // priority: PRIORITY_CODES[2],
+    // goalTitle: '기획 및 요구사항 분석',
     deadline: '25.05.02',
     manage: '박유민',
   },
   {
     issueId: 'Veco-i3',
     issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: '해야할 일',
-    priority: '높음',
+    status: 'TODO',
+    priority: PRIORITY_CODES[3],
     goalTitle: '기획 및 요구사항 분석',
-    //deadline: '25.05.02',
-    manage: '박유민',
+    deadline: '25.05.02',
+    // manage: '박유민',
   },
   {
     issueId: 'Veco-i4',
     issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: '완료',
-    priority: '없음',
+    status: STATUS_CODES[3],
+    priority: PRIORITY_CODES[0],
     goalTitle: '개발 및 배포',
-    deadline: '25.05.02',
+    deadline: '25.05.01-25.05.02',
     manage: '김선화',
   },
   {
     issueId: 'Veco-i5',
     issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: '검토',
-    priority: '낮음',
-    goalTitle: '개발 및 배포',
-    deadline: '25.05.02',
-    manage: '김선화',
+    status: STATUS_CODES[0],
+    priority: PRIORITY_CODES[0],
+    goalTitle: '없음 ',
+    deadline: '없음 ',
+    manage: '없음 ',
   },
 ];
 
@@ -162,7 +166,13 @@ const IssueHome = () => {
                         profileImghUrl={filter === '담당자' ? '' : undefined}
                       />
                       {/* 유형명 */}
-                      <div>{key}</div>
+                      <div>
+                        {filter === '상태'
+                          ? STATUS_LABELS[key as keyof typeof STATUS_LABELS] || key
+                          : filter === '우선순위'
+                            ? PRIORITY_LABELS[key as keyof typeof PRIORITY_LABELS] || key
+                            : key}
+                      </div>
                       <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
                     </div>
                     {/* TODO : 추가 버튼 라우터 연결 */}
