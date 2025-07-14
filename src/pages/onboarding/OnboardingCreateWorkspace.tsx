@@ -32,7 +32,7 @@ const OnboardingCreateWorkspace = () => {
               />
             </div>
           </div>
-          <button className="w-[40rem] h-[6.2rem] bg-primary-blue font-title-sub-r text-gray-100 rounded-[0.8rem] text-center">
+          <button className="w-[40rem] h-[6.2rem] bg-gray-300 font-title-sub-r text-gray-100 rounded-[0.8rem] text-center">
             워크스페이스 생성하기
           </button>
         </div>
