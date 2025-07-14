@@ -3,7 +3,7 @@ import AuthRedirect from '../components/AuthRedirect';
 import PublicLayout from '../layouts/PublicLayout';
 import OnboardingSSOLogin from '../pages/onboarding/OnboardingSSOLogin';
 import OnboardingCreateWorkspace from '../pages/onboarding/OnboardingCreateWorkspace';
-import OnboardingInviteMembers from '../pages/onboarding/OnboardingInviteMembers';
+import OnboardingInviteMember from '../pages/onboarding/OnboardingInviteMember';
 import OnboardingFinish from '../pages/onboarding/OnboardingFinish';
 
 export const publicRoutes: RouteObject[] = [
@@ -42,7 +42,7 @@ export const publicRoutes: RouteObject[] = [
         path: 'invite',
         element: (
           <div>
-            <OnboardingInviteMembers />
+            <OnboardingInviteMember />
           </div>
         ),
       },
