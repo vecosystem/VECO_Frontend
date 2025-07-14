@@ -1,17 +1,17 @@
-import { GoalItem } from '../../components/ListView/GoalItem';
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useState } from 'react';
 import {
   PRIORITY_LIST,
   STATUS_LIST,
-  type GoalItemProps,
+  type IssueItemProps,
   type ItemFilter,
 } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import TeamIcon from '../../components/ListView/TeamIcon';
+import { IssueItem } from '../../components/ListView/IssueItem';
 import useCheckItems from '../../hooks/useCheckItems';
-import { getManagers } from '../../utils/listGroupingUtils';
+import { getGoals, getManagers } from '../../utils/listGroupingUtils';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
 import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import Modal from '../../components/Modal/Modal';
@@ -19,51 +19,55 @@ import Modal from '../../components/Modal/Modal';
 /*
   추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
 */
-const dummyGoals: Partial<GoalItemProps>[] = [
-  /**/
+const dummyIssues: Partial<IssueItemProps>[] = [
   {
-    goalId: 'Veco-g1',
-    title: '백호를 사용해서 다른 사람들과 협업해보기',
+    issueId: 'Veco-i1',
+    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
     status: '없음',
     priority: '보통',
-    deadline: '25.05.02',
+    //goalTitle: '기획 및 요구사항 분석',
+    //deadline: '25.05.02',
     manage: '이가을',
   },
   {
-    goalId: 'Veco-g2',
-    title: '백호를 사용해서 다른 사람들과 협업해보기',
+    issueId: 'Veco-i2',
+    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
     status: '진행중',
     priority: '긴급',
+    //goalTitle: '기획 및 요구사항 분석',
     deadline: '25.05.02',
     manage: '박유민',
   },
   {
-    goalId: 'Veco-g3',
-    title: '백호를 사용해서 다른 사람들과 협업해보기',
+    issueId: 'Veco-i3',
+    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
     status: '해야할 일',
     priority: '높음',
-    deadline: '25.05.02',
+    goalTitle: '기획 및 요구사항 분석',
+    //deadline: '25.05.02',
     manage: '박유민',
   },
   {
-    goalId: 'Veco-g4',
-    title: '백호를 사용해서 다른 사람들과 협업해보기',
+    issueId: 'Veco-i4',
+    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
     status: '완료',
     priority: '없음',
+    goalTitle: '개발 및 배포',
     deadline: '25.05.02',
     manage: '김선화',
   },
   {
-    goalId: 'Veco-g5',
-    title: '백호를 사용해서 다른 사람들과 협업해보기',
+    issueId: 'Veco-i5',
+    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
     status: '검토',
     priority: '낮음',
+    goalTitle: '개발 및 배포',
     deadline: '25.05.02',
     manage: '김선화',
   },
 ];
 
-const GoalHome = () => {
+const IssueHome = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
@@ -75,14 +79,14 @@ const GoalHome = () => {
     handleCheck,
     handleSelectAll,
     setCheckedIds,
-  } = useCheckItems(dummyGoals, 'goalId');
+  } = useCheckItems(dummyIssues, 'issueId');
 
   const { isOpen: isModalOpen, content: modalContent } = useModalInfo();
   const { openModal } = useModalActions();
   const handleDeleteClick = () => {
     if (isDeleteMode && checkItems.length > 0) {
       openModal({
-        name: `${checkItems.length}개의 목표를 삭제하시겠습니까?`,
+        name: `${checkItems.length}개의 이슈를 삭제하시겠습니까?`,
       });
     } else {
       setIsDeleteMode((prev) => !prev);
@@ -96,17 +100,21 @@ const GoalHome = () => {
       ? STATUS_LIST
       : filter === '우선순위'
         ? PRIORITY_LIST
-        : getManagers(dummyGoals)
-  ) as string[];
+        : filter === '담당자'
+          ? getManagers(dummyIssues)
+          : getGoals(dummyIssues)
+  ) as string[]; // 목표 필터는 고정된 값
 
   const grouped = groupKeys.map((key) => ({
     key,
-    items: dummyGoals.filter((goal) =>
+    items: dummyIssues.filter((issue) =>
       filter === '상태'
-        ? goal.status === key
+        ? issue.status === key
         : filter === '우선순위'
-          ? goal.priority === key
-          : (!goal.manage || goal.manage === '' ? '없음' : goal.manage) === key
+          ? issue.priority === key
+          : filter === '담당자'
+            ? (!issue.manage || issue.manage === '' ? '없음' : issue.manage) === key
+            : (!issue.goalTitle || issue.goalTitle === '' ? '없음' : issue.goalTitle) === key
     ),
   }));
 
@@ -122,7 +130,7 @@ const GoalHome = () => {
           isDeleteMode={isDeleteMode}
           isAllChecked={isAllChecked}
           showSelectAll={grouped.some(({ items }) => items.length > 0)}
-          filterOptions={['상태', '우선순위', '담당자']}
+          filterOptions={['상태', '우선순위', '담당자', '목표']}
           onFilterClick={() => openDropdown({ name: 'filter' })}
           onFilterSelect={(option) => {
             setFilter(option as ItemFilter);
@@ -161,13 +169,15 @@ const GoalHome = () => {
                     <img src={PlusIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
                   </div>
                   {/* 각 유형 별 요소 */}
-                  {items.map((goal) => (
-                    <GoalItem
+                  {items.map((issue) => (
+                    <IssueItem
                       showCheckbox={isDeleteMode}
-                      checked={checkItems.includes(goal.goalId || '')}
-                      onCheckChange={(checked) => goal.goalId && handleCheck(goal.goalId, checked)}
-                      key={goal.goalId}
-                      {...goal}
+                      checked={checkItems.includes(issue.issueId || '')}
+                      onCheckChange={(checked) =>
+                        issue.issueId && handleCheck(issue.issueId, checked)
+                      }
+                      key={issue.issueId}
+                      {...issue}
                       filter={filter}
                     />
                   ))}
@@ -181,4 +191,4 @@ const GoalHome = () => {
   );
 };
 
-export default GoalHome;
+export default IssueHome;

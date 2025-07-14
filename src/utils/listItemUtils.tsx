@@ -10,13 +10,15 @@ import type { ItemFilter, DisplayField, PriorityLevel, Status } from '../types/l
 export const getFilter = (filter: ItemFilter = '상태'): DisplayField[] => {
   switch (filter) {
     case '상태':
-      return ['priority', 'manage'];
+      return ['priority', 'manage', 'goal'];
     case '우선순위':
-      return ['status', 'manage'];
+      return ['status', 'manage', 'goal'];
     case '담당자':
-      return ['status', 'priority'];
-    default:
+      return ['status', 'priority', 'goal'];
+    case '목표':
       return ['status', 'priority', 'manage'];
+    default:
+      return ['status', 'priority', 'manage', 'goal'];
   }
 };
 
@@ -37,7 +39,7 @@ export const getPriorityIcon = (priority: PriorityLevel): string => {
 /* 상태 아이콘 및 색상 */
 export const getStatusIcon = (status: Status) => {
   const colorMap: Record<Status, string> = {
-    없음: '#FFFFFF',
+    없음: '#DCDCDC',
     진행중: '#D4B042',
     '해야할 일': '#D44242',
     완료: '#75D564',

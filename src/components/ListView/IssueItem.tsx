@@ -17,18 +17,17 @@ const defaultData: IssueItemProps = {
   type: 'issue', // 'issue' | 'my-issue'
   issueId: 'Veco-i3',
   issueTitle: '백호를 사용해서 다른 사람들과 협업해보기',
-  goalTitle: '기획 및 요구사항 분석',
   status: '완료',
   priority: '보통',
-  deadline: '2025-07-01',
-  manage: '김선화',
-  filter: '담당자', // '상태' | '우선순위' | '담당자'
+  manage: '없음',
+  filter: '담당자', // '상태' | '우선순위' | '담당자' | '목표'
 };
 
 export const IssueItem = (props: Partial<IssueItemProps>) => {
   const {
     showCheckbox,
     checked,
+    onCheckChange,
     type,
     issueId,
     issueTitle,
@@ -45,9 +44,18 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
 
   const displayFields = getFilter(filter);
 
+  const handleItemClick = (e: React.MouseEvent) => {
+    if (!showCheckbox) return;
+    if ((e.target as HTMLElement).closest('label')) return;
+    onCheckChange?.(!checked);
+  };
+
   return (
     <div
-      className={`font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${checked ? 'bg-gray-300' : ''}`}
+      className={`font-body-r flex justify-between items-center min-w-[110rem] h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
+      onClick={handleItemClick}
+      tabIndex={showCheckbox ? 0 : -1}
+      style={{ cursor: showCheckbox ? 'pointer' : 'default' }}
     >
       <div className="flex items-center">
         {/* 이슈 번호 */}
@@ -57,7 +65,7 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
               <input
                 type="checkbox"
                 checked={checked}
-                // onChange={() => {}} // 외부에서 상태 관리 필요
+                onChange={(e) => onCheckChange?.(e.target.checked)}
                 className="peer absolute w-[1.6rem] h-[1.6rem] opacity-0 cursor-pointer"
                 aria-label="목표 선택"
                 tabIndex={-1}
@@ -74,9 +82,9 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
         )}
         <div className="flex gap-[0.8rem] items-center">
           {/* 이슈 아이콘 */}
-          <img src={issueIcon} alt="date" className="w-[1.8rem] h-[1.8rem] ml-[1.6rem]" />
+          <img src={issueIcon} alt="date" className="w-[2.4rem] h-[2.4rem] ml-[1.6rem]" />
           {/* 이슈명 */}
-          <div className="truncate">{issueTitle}</div>
+          <div className="truncate min-w-0 flex-1">{issueTitle}</div>
         </div>
       </div>
       <div className="flex gap-[3.2rem] items-center">
@@ -91,32 +99,36 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
         {displayFields.includes('priority') && (
           <div className="flex gap-[0.8rem] items-center">
             <img src={getPriorityIcon(priority)} alt={priority} className="w-[2.4rem] h-[2.4rem]" />
-            <div className="truncate">{priority}</div>
+            <div className="whitespace-nowrap">{priority}</div>
           </div>
         )}
-        <div className="flex gap-[0.8rem] items-center">
-          {/* 목표 아이콘 */}
-          <img src={goalIcon} alt="date" className="w-[1.8rem] h-[1.8rem] ml-[1.6rem]" />
-          {/* 목표명 */}
-          <div className="truncate">{goalTitle}</div>
-        </div>
+        {displayFields.includes('goal') && goalTitle && goalTitle !== '없음' && (
+          <div className="flex gap-[0.8rem] items-center">
+            {/* 목표 아이콘 */}
+            <img src={goalIcon} alt="date" className="w-[2.4rem] h-[2.4rem]" />
+            {/* 목표명 */}
+            <div className="truncate">{goalTitle}</div>
+          </div>
+        )}
 
         {/* 기한 */}
-        <div className="flex gap-[0.8rem] items-center">
-          <img src={dateIcon} alt="date" className="w-[1.8rem] h-[1.8rem]" />
-          <div className="truncate">{deadline}</div>
-        </div>
+        {deadline && deadline !== '없음' && (
+          <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
+            <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
+            <div className="">{deadline}</div>
+          </div>
+        )}
         {/* 담당자/팀명 */}
         {/*
          * 담당자 1인 기준으로 작성
          * 프로필 이미지, 고유 색상 등 추가 예정
          */}
         {displayFields.includes('manage') && (
-          <div className="flex gap-[0.8rem] items-center">
+          <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
             <img
               src={type === 'issue' ? grayIcon : grayIcon}
               alt="manage"
-              className="w-[1.8rem] h-[1.8rem]"
+              className="w-[2.0rem] h-[2.0rem]"
             />
             <div>{manage}</div>
           </div>
