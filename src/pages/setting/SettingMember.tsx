@@ -4,7 +4,7 @@ import { useState } from 'react';
 import MemberInviteModal from './components/MemberInviteModal.tsx';
 
 const SettingMember = () => {
-  const mockMembers = [
+  const dummyMembers = [
     {
       id: 1,
       profileImage: 'https://avatars.githubusercontent.com/u/91470334?v=4',
@@ -29,9 +29,6 @@ const SettingMember = () => {
   ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleInviteClick = () => {
-    setIsModalOpen(!isModalOpen);
-  };
 
   return (
     <div className={`flex flex-col w-full`}>
@@ -54,14 +51,14 @@ const SettingMember = () => {
       />
       <hr className={`w-full text-gray-300`} />
       <MemberItem
-        profileImage={mockMembers[0].profileImage}
-        name={mockMembers[0].name}
-        email={mockMembers[0].email}
-        date={mockMembers[0].date}
+        profileImage={dummyMembers[0].profileImage}
+        name={dummyMembers[0].name}
+        email={dummyMembers[0].email}
+        date={dummyMembers[0].date}
         className={`py-[2.4rem]`}
       />
       <hr className={`w-full text-gray-300 mb-[2.4rem]`} />
-      {mockMembers.slice(1).map((member, index) => (
+      {dummyMembers.slice(1).map((member, index) => (
         <MemberItem
           key={index}
           profileImage={member.profileImage}
@@ -71,7 +68,13 @@ const SettingMember = () => {
           className={`mb-[3.2rem]`}
         />
       ))}
-      {isModalOpen && <MemberInviteModal onClick={handleInviteClick} />}
+      {isModalOpen && (
+        <MemberInviteModal
+          url={'https://veco-eight.vercel.app/invite'}
+          password={'1234'}
+          onClick={() => setIsModalOpen(!isModalOpen)}
+        />
+      )}
     </div>
   );
 };
