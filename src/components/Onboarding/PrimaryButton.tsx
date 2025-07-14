@@ -31,7 +31,7 @@ const PrimaryButton = ({
     'w-[40rem] h-[6.2rem] font-title-sub-r text-gray-100 text-center rounded-[0.5rem]';
 
   // 활성화 상태일 때 배경색
-  const enabledClass = 'bg-primary-blue';
+  const enabledClass = 'bg-primary-blue cursor-pointer hover:opacity-90';
 
   // 비활성화 상태일 때 배경색
   const disabledClass = 'bg-gray-300';
