@@ -7,6 +7,10 @@ import bellIcon from '../../assets/icons/bell.svg';
 import settingIcon from '../../assets/icons/setting.svg';
 import vecocirclenavy from '../../assets/logos/veco-circle-logo-bg-navy.svg';
 import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
+import goalHoverIcon from '../../assets/icons/goal-hover.svg';
+import issueHoverIcon from '../../assets/icons/issue-hover.svg';
+import externalHoverIcon from '../../assets/icons/external-hover.svg';
+import bellHoverIcon from '../../assets/icons/bell-hover.svg';
 import { useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
@@ -32,7 +36,16 @@ const Sidebar = () => {
           type="button"
           className="group flex min-h-[3.2rem] items-center self-stretch gap-[0.8rem] hover:bg-gray-300 rounded-[0.6rem] cursor-pointer transition-colors duration-150 ease-in-out"
         >
-          <img src={bellIcon} className="w-[2.4rem] h-[2.4rem]" alt="Bell" />
+          <img
+            src={bellIcon}
+            className="w-[2.4rem] h-[2.4rem] block group-hover:hidden"
+            alt="Bell"
+          />
+          <img
+            src={bellHoverIcon}
+            className="w-[2.4rem] h-[2.4rem] hidden group-hover:block"
+            alt="Bell"
+          />
           <span className="font-small-r text-gray-600 letter-spacing-[-0.028rem] group-hover:text-primary-blue group-hover:font-bold">
             알림
           </span>
@@ -57,7 +70,8 @@ const Sidebar = () => {
                 <div className="flex flex-col pl-[3rem] justify-end">
                   <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] mb-[1.6rem]">
                     <SidebarItem
-                      icon={<img src={goalIcon} alt="Goal" />}
+                      defaultIcon={<img src={goalIcon} alt="Goal" />}
+                      hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
                       label="목표"
                       onClick={() => {
                         navigate(`/team/:teamId/goal`);
@@ -67,7 +81,8 @@ const Sidebar = () => {
                       }}
                     />
                     <SidebarItem
-                      icon={<img src={issueIcon} alt="Issue" />}
+                      defaultIcon={<img src={issueIcon} alt="Issue" />}
+                      hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
                       label="이슈"
                       onClick={() => {
                         navigate(`/team/:teamId/issue`);
@@ -77,7 +92,8 @@ const Sidebar = () => {
                       }}
                     />
                     <SidebarItem
-                      icon={<img src={externalIcon} alt="External" />}
+                      defaultIcon={<img src={externalIcon} alt="External" />}
+                      hoverIcon={<img src={externalHoverIcon} alt="External" />}
                       label="외부"
                       onClick={() => {
                         navigate(`/team/:teamId/ext`);
@@ -104,7 +120,8 @@ const Sidebar = () => {
               <div className="flex flex-col pl-[3rem] justify-end">
                 <div className="flex flex-col justify-center items-start gap-[1.6rem] mb-[1.6rem]">
                   <SidebarItem
-                    icon={<img src={goalIcon} alt="Goal" />}
+                    defaultIcon={<img src={goalIcon} alt="Goal" />}
+                    hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
                     label="목표"
                     onClick={() => {
                       navigate(`/team/:teamId/goal`);
@@ -114,7 +131,8 @@ const Sidebar = () => {
                     }}
                   />
                   <SidebarItem
-                    icon={<img src={issueIcon} alt="Issue" />}
+                    defaultIcon={<img src={issueIcon} alt="Issue" />}
+                    hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
                     label="이슈"
                     onClick={() => {
                       navigate(`/team/:teamId/issue`);
@@ -124,7 +142,8 @@ const Sidebar = () => {
                     }}
                   />
                   <SidebarItem
-                    icon={<img src={externalIcon} alt="External" />}
+                    defaultIcon={<img src={externalIcon} alt="External" />}
+                    hoverIcon={<img src={externalHoverIcon} alt="External" />}
                     label="외부"
                     onClick={() => {
                       navigate(`/team/:teamId/ext`);
@@ -144,7 +163,8 @@ const Sidebar = () => {
               <div className="flex flex-col pl-[3rem] justify-end">
                 <div className="flex flex-col justify-center items-start gap-[1.6rem] mb-[1.6rem]">
                   <SidebarItem
-                    icon={<img src={goalIcon} alt="Goal" />}
+                    defaultIcon={<img src={goalIcon} alt="Goal" />}
+                    hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
                     label="목표"
                     onClick={() => {
                       navigate(`/team/:teamId/goal`);
@@ -154,7 +174,8 @@ const Sidebar = () => {
                     }}
                   />
                   <SidebarItem
-                    icon={<img src={issueIcon} alt="Issue" />}
+                    defaultIcon={<img src={issueIcon} alt="Issue" />}
+                    hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
                     label="이슈"
                     onClick={() => {
                       navigate(`/team/:teamId/issue`);
@@ -164,7 +185,8 @@ const Sidebar = () => {
                     }}
                   />
                   <SidebarItem
-                    icon={<img src={externalIcon} alt="External" />}
+                    defaultIcon={<img src={externalIcon} alt="External" />}
+                    hoverIcon={<img src={externalHoverIcon} alt="External" />}
                     label="외부"
                     onClick={() => {
                       navigate(`/team/:teamId/ext`);
