@@ -5,7 +5,7 @@ import SettingMember from './pages/setting/SettingMember.tsx';
 
 function App() {
   // return <RouterProvider router={router} />;
-  return <SettingMember />;
+  return <SettingTeam />;
 }
 
 export default App;

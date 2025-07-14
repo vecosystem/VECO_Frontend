@@ -12,13 +12,11 @@ interface MemberItemProps {
 const MemberItem = (props: MemberItemProps) => {
   return (
     <div
-      className={`flex w-full items-center text-gray-600 font-body-r px-[4.35rem] ${props.className}`}
+      className={`flex w-full items-center text-gray-600 font-body-r px-[4.9rem] ${props.className}`}
     >
-      <div className={`flex flex-1 gap-[2rem]`}>
-        <ProfileImage profileImage={props.profileImage} />
-        <span>{props.name}</span>
-        <span>{props.email}</span>
-      </div>
+      <ProfileImage profileImage={props.profileImage} />
+      <span className={`ms-[4.1rem] text-start w-[5.5rem] truncate`}>{props.name}</span>
+      <span className={`flex-1 ms-[3.7rem] text-start`}>{props.email}</span>
       <div className={`flex gap-x-[0.8rem] items-center`}>
         <img src={IcDate} alt={'생성일'} />
         <span>{props.date}</span>

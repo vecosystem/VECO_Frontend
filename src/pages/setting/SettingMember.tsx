@@ -1,33 +1,33 @@
 import TeamHeader from './components/TeamHeader.tsx';
 import MemberItem from './components/MemberItem.tsx';
 import { useState } from 'react';
-import MemberInviteModal from './components/MemberInviteModal.tsx';
+import MemberInviteModal from './components/modal/MemberInviteModal.tsx';
+
+const DUMMY_MEMBERS = [
+  {
+    id: 1,
+    profileImage: 'https://avatars.githubusercontent.com/u/91470334?v=4',
+    name: '이가을',
+    email: 'gaeulzzang@gmail.com',
+    date: '25.01.01',
+  },
+  {
+    id: 2,
+    profileImage: null,
+    name: '마이멜로디',
+    email: 'mymelody@naver.com',
+    date: '25.02.01',
+  },
+  {
+    id: 3,
+    profileImage: null,
+    name: '가응가',
+    email: 'gaeullee@gmail.com',
+    date: '25.03.01',
+  },
+];
 
 const SettingMember = () => {
-  const dummyMembers = [
-    {
-      id: 1,
-      profileImage: 'https://avatars.githubusercontent.com/u/91470334?v=4',
-      name: '이가을',
-      email: 'gaeulzzang@gmail.com',
-      date: '2025-01-01',
-    },
-    {
-      id: 2,
-      profileImage: null,
-      name: '마이멜로디',
-      email: 'mymelody@naver.com',
-      date: '2025-02-01',
-    },
-    {
-      id: 3,
-      profileImage: null,
-      name: '가응가',
-      email: 'gaeullee@gmail.com',
-      date: '2025-03-01',
-    },
-  ];
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -38,27 +38,25 @@ const SettingMember = () => {
         onClick={() => setIsModalOpen(!isModalOpen)}
         children={
           <>
-            <div className={`flex gap-x-[1rem]`}>
+            <div className={`flex gap-x-[3.2rem]`}>
               <span>아이콘</span>
               <span>멤버이름</span>
-              <span className={`ms-[0.45rem]`}>이메일</span>
+              <span className={`mx-[0.45rem]`}>이메일</span>
             </div>
-            <div className={`flex`}>
-              <span>참여일</span>
-            </div>
+            <span>참여일</span>
           </>
         }
       />
       <hr className={`w-full text-gray-300`} />
       <MemberItem
-        profileImage={dummyMembers[0].profileImage}
-        name={dummyMembers[0].name}
-        email={dummyMembers[0].email}
-        date={dummyMembers[0].date}
+        profileImage={DUMMY_MEMBERS[0].profileImage}
+        name={DUMMY_MEMBERS[0].name}
+        email={DUMMY_MEMBERS[0].email}
+        date={DUMMY_MEMBERS[0].date}
         className={`py-[2.4rem]`}
       />
       <hr className={`w-full text-gray-300 mb-[2.4rem]`} />
-      {dummyMembers.slice(1).map((member, index) => (
+      {DUMMY_MEMBERS.slice(1).map((member, index) => (
         <MemberItem
           key={index}
           profileImage={member.profileImage}

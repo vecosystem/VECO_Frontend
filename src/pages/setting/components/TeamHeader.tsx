@@ -20,7 +20,7 @@ const TeamHeader = (props: TeamHeaderProps) => {
         </button>
       </div>
       <div
-        className={`flex w-full mt-[2rem] justify-between items-center text-gray-600 font-body-b pe-[2.4rem]`}
+        className={`flex w-full mt-[2rem] justify-between items-center text-gray-600 font-body-b pe-[6.8rem]`}
       >
         {props.children}
       </div>
