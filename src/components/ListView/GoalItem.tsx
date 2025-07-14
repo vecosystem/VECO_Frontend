@@ -1,4 +1,4 @@
-import type { GoalItemProps } from '../../types/listItem';
+import { PRIORITY_LABELS, STATUS_LABELS, type GoalItemProps } from '../../types/listItem';
 import dateIcon from '../../assets/icons/date.svg';
 import grayIcon from '../../assets/icons/gray.svg';
 import goalIcon from '../../assets/icons/goal.svg';
@@ -10,24 +10,12 @@ import { getFilter, getPriorityIcon, getStatusIcon } from '../../utils/listItemU
  * 기본값 설정, props 로 전달된 값이 없을 경우 사용
  * 추후 백엔드 명세서 확인 후 변수명 등 수정 예정
  */
-const defaultData: GoalItemProps = {
-  showCheckbox: true,
-  checked: false,
-  type: 'goal', // 'goal' | 'my-goal'
-  goalId: 'Veco-g3',
-  title: '백호를 사용해서 다른 사람들과 협업해보기',
-  status: '완료',
-  priority: '보통',
-  manage: '없음',
-  filter: '우선순위', // '상태' | '우선순위' | '담당자'
-};
 
 export const GoalItem = (props: Partial<GoalItemProps>) => {
   const {
     showCheckbox,
     checked,
     onCheckChange,
-    type,
     goalId,
     title,
     status,
@@ -36,7 +24,6 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
     manage,
     filter,
   } = {
-    ...defaultData,
     ...props,
   };
 
@@ -89,15 +76,19 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
         {/* 상태 */}
         {displayFields.includes('status') && (
           <div className="flex gap-[0.8rem] items-center">
-            {getStatusIcon(status)}
-            <div className="truncate">{status}</div>
+            {status ? getStatusIcon(status) : null}
+            <div className="truncate">{status && STATUS_LABELS[status]}</div>
           </div>
         )}
         {/* 우선순위 */}
         {displayFields.includes('priority') && (
           <div className="flex gap-[0.8rem] items-center">
-            <img src={getPriorityIcon(priority)} alt={priority} className="w-[2.4rem] h-[2.4rem]" />
-            <div className="truncate">{priority}</div>
+            <img
+              src={getPriorityIcon(priority ?? 'NONE')}
+              alt={priority}
+              className="w-[2.4rem] h-[2.4rem]"
+            />
+            <div className="whitespace-nowrap">{priority && PRIORITY_LABELS[priority]}</div>
           </div>
         )}
         {/* 기한 */}
@@ -114,11 +105,7 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
          */}
         {displayFields.includes('manage') && (
           <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
-            <img
-              src={type === 'goal' ? grayIcon : grayIcon}
-              alt="manage"
-              className="w-[2.0rem] h-[2.0rem]"
-            />
+            <img src={grayIcon} alt="manage" className="w-[2.0rem] h-[2.0rem]" />
             <div className="">{manage}</div>
           </div>
         )}

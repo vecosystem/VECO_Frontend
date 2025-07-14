@@ -1,4 +1,4 @@
-import type { IssueItemProps } from '../../types/listItem';
+import { PRIORITY_LABELS, STATUS_LABELS, type IssueItemProps } from '../../types/listItem';
 import dateIcon from '../../assets/icons/date.svg';
 import grayIcon from '../../assets/icons/gray.svg';
 import goalIcon from '../../assets/icons/goal.svg';
@@ -11,24 +11,12 @@ import { getFilter, getPriorityIcon, getStatusIcon } from '../../utils/listItemU
  * 기본값 설정, props 로 전달된 값이 없을 경우 사용
  * 추후 백엔드 명세서 확인 후 변수명 등 수정 예정
  */
-const defaultData: IssueItemProps = {
-  showCheckbox: true,
-  checked: false,
-  type: 'issue', // 'issue' | 'my-issue'
-  issueId: 'Veco-i3',
-  issueTitle: '백호를 사용해서 다른 사람들과 협업해보기',
-  status: '완료',
-  priority: '보통',
-  manage: '없음',
-  filter: '담당자', // '상태' | '우선순위' | '담당자' | '목표'
-};
 
 export const IssueItem = (props: Partial<IssueItemProps>) => {
   const {
     showCheckbox,
     checked,
     onCheckChange,
-    type,
     issueId,
     issueTitle,
     goalTitle,
@@ -38,7 +26,6 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
     manage,
     filter,
   } = {
-    ...defaultData,
     ...props,
   };
 
@@ -91,15 +78,19 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
         {/* 상태 */}
         {displayFields.includes('status') && (
           <div className="flex gap-[0.8rem] items-center">
-            {getStatusIcon(status)}
-            <div className="truncate">{status}</div>
+            {status ? getStatusIcon(status) : null}
+            <div className="truncate">{status && STATUS_LABELS[status]}</div>
           </div>
         )}
         {/* 우선순위 */}
         {displayFields.includes('priority') && (
           <div className="flex gap-[0.8rem] items-center">
-            <img src={getPriorityIcon(priority)} alt={priority} className="w-[2.4rem] h-[2.4rem]" />
-            <div className="whitespace-nowrap">{priority}</div>
+            <img
+              src={getPriorityIcon(priority ?? 'NONE')}
+              alt={priority}
+              className="w-[2.4rem] h-[2.4rem]"
+            />
+            <div className="whitespace-nowrap">{priority && PRIORITY_LABELS[priority]}</div>
           </div>
         )}
         {displayFields.includes('goal') && goalTitle && goalTitle !== '없음' && (
@@ -125,11 +116,7 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
          */}
         {displayFields.includes('manage') && (
           <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
-            <img
-              src={type === 'issue' ? grayIcon : grayIcon}
-              alt="manage"
-              className="w-[2.0rem] h-[2.0rem]"
-            />
+            <img src={grayIcon} alt="manage" className="w-[2.0rem] h-[2.0rem]" />
             <div>{manage}</div>
           </div>
         )}
