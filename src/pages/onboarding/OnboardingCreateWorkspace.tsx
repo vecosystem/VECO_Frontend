@@ -10,8 +10,8 @@ const OnboardingCreateWorkspace = () => {
         {/* 인디케이터 */}
         <PageIndicator currentStep={0} steps={onboardingSteps} />
         {/* 본문 */}
-        <div className="flex flex-col items-center gap-[7.3rem]">
-          <div className="flex flex-col items-center gap-[3.2rem]">
+        <div className="flex flex-col items-center gap-[7.1rem]">
+          <div className="flex flex-col items-center gap-[5.9rem]">
             <div className="flex flex-col text-center gap-[1rem]">
               <h1 className="font-bigtitle-b text-primary-blue">새 워크스페이스 생성하기</h1>
               <p className="font-title-sub-r text-gray-600">
