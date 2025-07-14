@@ -2,6 +2,7 @@
 
 import vecocirclenavy from '../../assets/logos/veco-circle-logo-bg-navy.svg';
 import InviteCodeInput from '../../components/Onboarding/InviteCodeInput';
+import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 
 const ParticipateWorkspaceInputPw = () => {
   return (
@@ -15,10 +16,8 @@ const ParticipateWorkspaceInputPw = () => {
           {/* 암호 입력란 - 백엔드 연동 후 수정 */}
           <InviteCodeInput correctCode="tempcode" />
         </div>
-        {/* 입장하기 버튼 */}
-        <button className="w-[40rem] h-[6.2rem] rounded-[0.5rem] bg-primary-blue">
-          <span className="font-title-sub-r text-gray-100">입장하기</span>
-        </button>
+        {/* 입장하기 버튼 - 추후 경로 연결 */}
+        <PrimaryButton text="입장하기" />
       </div>
     </div>
   );

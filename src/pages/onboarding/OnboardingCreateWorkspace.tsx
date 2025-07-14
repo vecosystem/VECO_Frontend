@@ -2,6 +2,7 @@
 
 import PageIndicator from '../../components/Onboarding/PageIndicator';
 import onboardingSteps from '../../constants/onboardingSteps';
+import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 
 const OnboardingCreateWorkspace = () => {
   return (
@@ -32,9 +33,8 @@ const OnboardingCreateWorkspace = () => {
               />
             </div>
           </div>
-          <button className="w-[40rem] h-[6.2rem] bg-gray-300 font-title-sub-r text-gray-100 rounded-[0.5rem] text-center">
-            워크스페이스 생성하기
-          </button>
+          {/* 워크스페이스 생성하기 버튼 - 추후 경로 연결 */}
+          <PrimaryButton text="워크스페이스 생성하기" disabled />
         </div>
       </div>
     </div>

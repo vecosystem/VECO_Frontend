@@ -3,6 +3,7 @@
 import vecologo from '../../assets/logos/vecologo.svg';
 import PageIndicator from '../../components/Onboarding/PageIndicator';
 import onboardingSteps from '../../constants/onboardingSteps';
+import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 
 const OnboardingFinish = () => {
   return (
@@ -23,10 +24,8 @@ const OnboardingFinish = () => {
               속도의 관성을 유지하여 목표를 달성하는 협업툴
             </h1>
           </div>
-          {/* 지금 시작하기 버튼 */}
-          <button className="w-[40rem] h-[6.2rem] rounded-[0.5rem] bg-primary-blue">
-            <span className="font-title-sub-r text-gray-100">지금 시작하기</span>
-          </button>
+          {/* 지금 시작하기 버튼 - 추후 경로 연결 */}
+          <PrimaryButton text="지금 시작하기" />
         </div>
       </div>
     </div>

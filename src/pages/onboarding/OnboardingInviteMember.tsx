@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import CopyToClipboard from '../../components/Onboarding/CopyToClipboard';
 import PageIndicator from '../../components/Onboarding/PageIndicator';
 import onboardingSteps from '../../constants/onboardingSteps';
+import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 
 const OnboardingInviteMember = () => {
   // 사용자가 입력한 초대 URL과 암호를 저장하는 상태
@@ -39,9 +40,7 @@ const OnboardingInviteMember = () => {
             </div>
           </div>
           {/* 팀원 초대 완료 버튼 */}
-          <button className="w-[40rem] h-[6.2rem] rounded-[0.5rem] bg-primary-blue">
-            <span className="font-title-sub-r text-gray-100">팀원 초대 완료</span>
-          </button>
+          <PrimaryButton text="팀원 초대 완료" to="/onboarding/fin" />
         </div>
       </div>
     </div>
