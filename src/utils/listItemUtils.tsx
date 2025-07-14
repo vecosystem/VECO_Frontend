@@ -39,7 +39,7 @@ export const getPriorityIcon = (priority: PriorityLevel): string => {
 /* 상태 아이콘 및 색상 */
 export const getStatusIcon = (status: Status) => {
   const colorMap: Record<Status, string> = {
-    없음: '#FFFFFF',
+    없음: '#DCDCDC',
     진행중: '#D4B042',
     '해야할 일': '#D44242',
     완료: '#75D564',
