@@ -1,6 +1,6 @@
 // src/pages/onboarding/OnboardingInviteMember.tsx
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import CopyToClipboard from '../../components/Onboarding/CopyToClipboard';
 import PageIndicator from '../../components/Onboarding/PageIndicator';
 import onboardingSteps from '../../constants/onboardingSteps';
@@ -12,6 +12,13 @@ const OnboardingInviteMember = () => {
 
   // 텍스트 영역의 DOM 요소에 접근하기 위한 ref (복사 기능용)
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // 임시로 하드코딩된 초대 정보 세팅
+  useEffect(() => {
+    setInviteText(
+      `팀원 URL : https://veco-eight.vercel.app/{slug}/invite?token=abcd1234\n\n암호 : aK39Gp`
+    );
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9FAFB]">
@@ -32,8 +39,8 @@ const OnboardingInviteMember = () => {
               <textarea
                 ref={inputRef}
                 value={inviteText}
-                onChange={(e) => setInviteText(e.target.value)} // 사용자가 입력한 내용을 상태로 저장
-                className="bg-gray-200 text-gray-600 w-[35rem] h-[16.7rem] rounded-[0.5rem] px-[2rem] py-[1.8rem] font-xsmall-r focus:outline-none resize-none"
+                readOnly
+                className="cursor-default select-none bg-gray-200 text-gray-600 w-[35rem] h-[16.7rem] rounded-[0.5rem] px-[2rem] py-[1.8rem] font-xsmall-r focus:outline-none resize-none"
               />
               {/* 복사 버튼 */}
               <CopyToClipboard inputRef={inputRef} />
