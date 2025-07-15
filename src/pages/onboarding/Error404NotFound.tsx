@@ -1,8 +1,11 @@
 // src/pages/onboarding/Error404NotFound.tsx
 
+import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 
 const Error404NotFound = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9FAFB]">
       <div className="h-[42rem] flex flex-col justify-end">
@@ -15,8 +18,8 @@ const Error404NotFound = () => {
               <br /> 요청하신 페이지가 사라졌거나, 잘못된 경로로 이용하셨어요!
             </h3>
           </div>
-          {/* 돌아가기 버튼 - 추후 경로 연결 */}
-          <PrimaryButton text="돌아가기" />
+          {/* 돌아가기 버튼 */}
+          <PrimaryButton text="돌아가기" onClick={() => navigate(-1)} />
         </div>
       </div>
     </div>
