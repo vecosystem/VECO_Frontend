@@ -17,12 +17,10 @@ export const publicRoutes: RouteObject[] = [
       // '시작하기'를 눌렀을 때 AuthRedirect 컴포넌트로 리다이렉트.
       // 사용자 인증 여부에 따라 protected 또는 public 경로로 리다이렉트됨.
       { path: 'entry', element: <AuthRedirect /> },
-      // 모든 잘못된 경로는 Not Found로 처리
-      { path: '*', element: <div>Not Found</div> },
     ],
   },
+  /* Onboarding 단계 페이지들 */
   {
-    // Onboarding 단계 페이지들
     path: '/onboarding',
     element: <PublicLayout />,
     errorElement: <div>Not Found</div>,
@@ -62,10 +60,6 @@ export const publicRoutes: RouteObject[] = [
       {
         path: 'input-pw',
         element: <div>Participate_Workspace_Input_PW</div>,
-      },
-      {
-        path: '*',
-        element: <div>Not Found</div>, // 모든 잘못된 경로는 Not Found로 처리.
       },
     ],
   },
