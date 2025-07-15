@@ -16,9 +16,7 @@ const OnboardingSSOLogin = () => {
         <h1 className="font-body-r text-gray-600">나의 작업실을 생성해봐요</h1>
         {/* 소셜 로그인 버튼 영역 */}
         <div className="flex flex-col items-center gap-[1.6rem]">
-          {/* 구글 로그인 버튼 */}
           <SocialLoginButton provider="google" />
-          {/* 카카오 로그인 버튼 */}
           <SocialLoginButton provider="kakao" />
         </div>
         {/* 하단 이용약관 + 밑줄 */}
