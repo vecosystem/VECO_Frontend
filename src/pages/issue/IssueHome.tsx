@@ -27,11 +27,11 @@ const dummyIssues: Partial<IssueItemProps>[] = [
   {
     issueId: 'Veco-i1',
     issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: STATUS_CODES[0],
-    priority: PRIORITY_CODES[3],
-    //goalTitle: '기획 및 요구사항 분석',
+    // status: STATUS_CODES[0],
+    //priority: PRIORITY_CODES[3],
+    //goalTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
     //deadline: '25.05.02',
-    manage: '이가을',
+    //manage: '이가을',
   },
   {
     issueId: 'Veco-i2',
@@ -55,8 +55,8 @@ const dummyIssues: Partial<IssueItemProps>[] = [
     issueId: 'Veco-i4',
     issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
     status: STATUS_CODES[3],
-    priority: PRIORITY_CODES[0],
-    goalTitle: '개발 및 배포',
+    priority: PRIORITY_CODES[4],
+    goalTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
     deadline: '25.05.01-25.05.02',
     manage: '김선화',
   },
@@ -64,10 +64,10 @@ const dummyIssues: Partial<IssueItemProps>[] = [
     issueId: 'Veco-i5',
     issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
     status: STATUS_CODES[0],
-    priority: PRIORITY_CODES[0],
-    goalTitle: '없음 ',
-    deadline: '없음 ',
-    manage: '없음 ',
+    priority: PRIORITY_CODES[2],
+    goalTitle: '없음',
+    deadline: '없음',
+    manage: '없음',
   },
 ];
 
@@ -113,9 +113,9 @@ const IssueHome = () => {
     key,
     items: dummyIssues.filter((issue) =>
       filter === '상태'
-        ? issue.status === key
+        ? (!issue.status ? 'NONE' : issue.status) === key
         : filter === '우선순위'
-          ? issue.priority === key
+          ? (!issue.priority ? 'NONE' : issue.priority) === key
           : filter === '담당자'
             ? (!issue.manage || issue.manage === '' ? '없음' : issue.manage) === key
             : (!issue.goalTitle || issue.goalTitle === '' ? '없음' : issue.goalTitle) === key
@@ -168,9 +168,9 @@ const IssueHome = () => {
                       {/* 유형명 */}
                       <div>
                         {filter === '상태'
-                          ? STATUS_LABELS[key as keyof typeof STATUS_LABELS] || key
+                          ? STATUS_LABELS[key as keyof typeof STATUS_LABELS]
                           : filter === '우선순위'
-                            ? PRIORITY_LABELS[key as keyof typeof PRIORITY_LABELS] || key
+                            ? PRIORITY_LABELS[key as keyof typeof PRIORITY_LABELS]
                             : key}
                       </div>
                       <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>

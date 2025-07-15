@@ -28,10 +28,10 @@ const dummyGoals: Partial<GoalItemProps>[] = [
   {
     goalId: 'Veco-g1',
     title: '백호를 사용해서 다른 사람들과 협업해보기',
-    status: STATUS_CODES[0],
-    priority: PRIORITY_CODES[3],
-    deadline: '25.05.02',
-    manage: '이가을',
+    // status: STATUS_CODES[0],
+    // priority: PRIORITY_CODES[3],
+    // deadline: '25.05.02',
+    // manage: '이가을',
   },
   {
     goalId: 'Veco-g2',
@@ -107,9 +107,9 @@ const GoalHome = () => {
     key,
     items: dummyGoals.filter((goal) =>
       filter === '상태'
-        ? goal.status === key
+        ? (!goal.status ? 'NONE' : goal.status) === key
         : filter === '우선순위'
-          ? goal.priority === key
+          ? (!goal.priority ? 'NONE' : goal.priority) === key
           : (!goal.manage || goal.manage === '' ? '없음' : goal.manage) === key
     ),
   }));
@@ -160,9 +160,9 @@ const GoalHome = () => {
                       {/* 유형명 */}
                       <div>
                         {filter === '상태'
-                          ? STATUS_LABELS[key as keyof typeof STATUS_LABELS] || key
+                          ? STATUS_LABELS[key as keyof typeof STATUS_LABELS]
                           : filter === '우선순위'
-                            ? PRIORITY_LABELS[key as keyof typeof PRIORITY_LABELS] || key
+                            ? PRIORITY_LABELS[key as keyof typeof PRIORITY_LABELS]
                             : key}
                       </div>{' '}
                       <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
