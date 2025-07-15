@@ -9,18 +9,23 @@ import OnboardingFinish from '../pages/onboarding/OnboardingFinish';
 export const publicRoutes: RouteObject[] = [
   {
     path: '/',
-    element: <AuthRedirect />,
+    element: <div>HomeLayout</div>,
     errorElement: <div>Not Found</div>,
+    children: [
+      // 도메인 최상위: 백호 랜딩페이지
+      { index: true, element: <div>VECO Landing Page</div> },
+      // '시작하기'를 눌렀을 때 AuthRedirect 컴포넌트로 리다이렉트.
+      // 사용자 인증 여부에 따라 protected 또는 public 경로로 리다이렉트됨.
+      { path: 'entry', element: <AuthRedirect /> },
+      // 모든 잘못된 경로는 Not Found로 처리
+      { path: '*', element: <div>Not Found</div> },
+    ],
   },
   {
+    // Onboarding 단계 페이지들
     path: '/onboarding',
-    element: <PublicLayout />, // Placeholder (필요시 OnboardingLayout 작성 후 연결)
+    element: <PublicLayout />,
     errorElement: <div>Not Found</div>,
-
-    /*
-      하위 경로 페이지들: 전부 placeholder 처리해둠.
-      필요시 각 페이지 파일 작성 후 연결하여 사용.
-    */
     children: [
       {
         index: true,
@@ -53,6 +58,14 @@ export const publicRoutes: RouteObject[] = [
             <OnboardingFinish />
           </div>
         ),
+      },
+      {
+        path: 'input-pw',
+        element: <div>Participate_Workspace_Input_PW</div>,
+      },
+      {
+        path: '*',
+        element: <div>Not Found</div>, // 모든 잘못된 경로는 Not Found로 처리.
       },
     ],
   },
