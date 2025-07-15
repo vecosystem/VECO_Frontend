@@ -1,10 +1,13 @@
 // src/pages/onboarding/OnboardingCreateWorkspace.tsx
 
+import { useState } from 'react';
 import PageIndicator from '../../components/Onboarding/PageIndicator';
 import onboardingSteps from '../../constants/onboardingSteps';
 import PrimaryButton from '../../components/Onboarding/PrimaryButton';
+import WorkspaceNameInput from '../../components/Onboarding/WorkspaceNameInput';
 
 const OnboardingCreateWorkspace = () => {
+  const [workspaceUrl, setWorkspaceUrl] = useState('');
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9FAFB]">
       <div className="flex flex-col items-center gap-[3.2rem]">
@@ -21,20 +24,22 @@ const OnboardingCreateWorkspace = () => {
             </div>
 
             <div className="flex flex-col w-[40rem] gap-[1.6rem] items-center">
-              <input
-                type="text"
-                placeholder="워크스페이스 이름"
-                className="w-full h-[6.2rem] rounded-[0.5rem] bg-gray-200 px-[2rem] font-body-r text-gray-400 focus:outline-none"
-              />
+              <WorkspaceNameInput onUrlGenerated={setWorkspaceUrl} />
               <input
                 type="text"
                 placeholder="워크스페이스 URL"
+                value={workspaceUrl}
+                readOnly
                 className="w-full h-[6.2rem] rounded-[0.5rem] bg-gray-200 px-[2rem] font-body-r text-gray-400 focus:outline-none"
               />
             </div>
           </div>
-          {/* 워크스페이스 생성하기 버튼 - 추후 경로 연결 */}
-          <PrimaryButton text="워크스페이스 생성하기" disabled />
+          {/* 워크스페이스 생성하기 버튼 */}
+          <PrimaryButton
+            text="워크스페이스 생성하기"
+            disabled={!workspaceUrl}
+            to="/onboarding/invite"
+          />
         </div>
       </div>
     </div>
