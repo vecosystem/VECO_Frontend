@@ -1,10 +1,23 @@
-import { PRIORITY_LABELS, STATUS_LABELS, type GoalItemProps } from '../../types/listItem';
+import {
+  PRIORITY_CODES,
+  PRIORITY_LABELS,
+  STATUS_CODES,
+  STATUS_LABELS,
+  type GoalItemProps,
+  type PriorityCode,
+  type StatusCode,
+} from '../../types/listItem';
 import dateIcon from '../../assets/icons/date.svg';
 import grayIcon from '../../assets/icons/gray.svg';
 import goalIcon from '../../assets/icons/goal.svg';
 import CheckedIcon from '../../assets/icons/check-box-o.svg';
 import UncheckedIcon from '../../assets/icons/check-box-x.svg';
-import { getFilter, getPriorityIcon, getStatusIcon } from '../../utils/listItemUtils';
+import {
+  formatGoalDate,
+  getFilter,
+  getPriorityIcon,
+  getStatusIcon,
+} from '../../utils/listItemUtils';
 
 /*
  * 기본값 설정, props 로 전달된 값이 없을 경우 사용
@@ -12,16 +25,20 @@ import { getFilter, getPriorityIcon, getStatusIcon } from '../../utils/listItemU
  */
 
 export const GoalItem = (props: Partial<GoalItemProps>) => {
+  const status: StatusCode =
+    props.status && STATUS_CODES.includes(props.status) ? props.status : 'NONE';
+
+  const priority: PriorityCode =
+    props.priority && PRIORITY_CODES.includes(props.priority) ? props.priority : 'NONE';
+
   const {
     showCheckbox,
     checked,
     onCheckChange,
-    goalId,
+    name,
     title,
-    status = 'NONE',
-    priority = 'NONE',
-    deadline = '없음',
-    manage = '없음',
+    deadline = { start: '', end: '' },
+    managers = { cnt: 0, info: [] },
     filter,
   } = {
     ...props,
@@ -60,10 +77,10 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
                 className="w-[1.6rem] h-[1.6rem] pointer-events-none"
               />
             </label>
-            <span className="font-body-b whitespace-nowrap">{goalId}</span>
+            <span className="font-body-b whitespace-nowrap">{name}</span>
           </div>
         ) : (
-          <span className="font-body-b ml-[2.4rem] whitespace-nowrap">{goalId}</span>
+          <span className="font-body-b ml-[2.4rem] whitespace-nowrap">{name}</span>
         )}
         <div className="flex gap-[0.8rem] items-center">
           {/* 목표 아이콘 */}
@@ -77,22 +94,22 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
         {displayFields.includes('status') && (
           <div className="flex gap-[0.8rem] items-center">
             {getStatusIcon(status)}
-            <div className="truncate">{status && STATUS_LABELS[status]}</div>
+            <div className="truncate">{STATUS_LABELS[status]}</div>
           </div>
         )}
         {/* 우선순위 */}
         {displayFields.includes('priority') && (
           <div className="flex gap-[0.8rem] items-center">
             <img src={getPriorityIcon(priority)} alt={priority} className="w-[2.4rem] h-[2.4rem]" />
-            <div className="whitespace-nowrap">{priority && PRIORITY_LABELS[priority]}</div>
+            <div className="whitespace-nowrap">{PRIORITY_LABELS[priority]}</div>
           </div>
         )}
         {/* 기한 */}
         <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
           <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
-          <div className="">{deadline}</div>
+          <div>{formatGoalDate(deadline?.start, deadline?.end)}</div>
         </div>
-        {/* 담당자/팀명 */}
+        {/* 담당자 */}
         {/*
          * 담당자 1인 기준으로 작성
          * 프로필 이미지, 고유 색상 등 추가 예정
@@ -100,7 +117,15 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
         {displayFields.includes('manage') && (
           <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
             <img src={grayIcon} alt="manage" className="w-[2.0rem] h-[2.0rem]" />
-            <div className="">{manage}</div>
+            <div className="">
+              {managers.info && managers.info.length > 0
+                ? managers.info.map((manager, idx) => (
+                    <span key={idx} className="mr-[0.4rem]">
+                      {manager.name}
+                    </span>
+                  ))
+                : '없음'}
+            </div>
           </div>
         )}
       </div>

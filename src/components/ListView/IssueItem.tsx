@@ -1,11 +1,24 @@
-import { PRIORITY_LABELS, STATUS_LABELS, type IssueItemProps } from '../../types/listItem';
+import {
+  PRIORITY_CODES,
+  PRIORITY_LABELS,
+  STATUS_CODES,
+  STATUS_LABELS,
+  type IssueItemProps,
+  type PriorityCode,
+  type StatusCode,
+} from '../../types/listItem';
 import dateIcon from '../../assets/icons/date.svg';
 import grayIcon from '../../assets/icons/gray.svg';
 import goalIcon from '../../assets/icons/goal.svg';
 import issueIcon from '../../assets/icons/issue.svg';
 import CheckedIcon from '../../assets/icons/check-box-o.svg';
 import UncheckedIcon from '../../assets/icons/check-box-x.svg';
-import { getFilter, getPriorityIcon, getStatusIcon } from '../../utils/listItemUtils';
+import {
+  formatGoalDate,
+  getFilter,
+  getPriorityIcon,
+  getStatusIcon,
+} from '../../utils/listItemUtils';
 
 /*
  * 기본값 설정, props 로 전달된 값이 없을 경우 사용
@@ -13,17 +26,21 @@ import { getFilter, getPriorityIcon, getStatusIcon } from '../../utils/listItemU
  */
 
 export const IssueItem = (props: Partial<IssueItemProps>) => {
+  const status: StatusCode =
+    props.status && STATUS_CODES.includes(props.status) ? props.status : 'NONE';
+
+  const priority: PriorityCode =
+    props.priority && PRIORITY_CODES.includes(props.priority) ? props.priority : 'NONE';
+
   const {
     showCheckbox,
     checked,
     onCheckChange,
-    issueId,
-    issueTitle,
+    name,
+    title,
     goalTitle = '없음',
-    status = 'NONE',
-    priority = 'NONE',
-    deadline = '없음',
-    manage = '없음',
+    deadline = { start: '', end: '' },
+    managers = { cnt: 0, info: [] },
     filter,
   } = {
     ...props,
@@ -62,16 +79,16 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
                 className="w-[1.6rem] h-[1.6rem] pointer-events-none"
               />
             </label>
-            <span className="font-body-b whitespace-nowrap">{issueId}</span>
+            <span className="font-body-b whitespace-nowrap">{name}</span>
           </div>
         ) : (
-          <span className="font-body-b ml-[2.4rem] whitespace-nowrap">{issueId}</span>
+          <span className="font-body-b ml-[2.4rem] whitespace-nowrap">{name}</span>
         )}
         <div className="flex gap-[0.8rem] items-center">
           {/* 이슈 아이콘 */}
           <img src={issueIcon} alt="date" className="w-[2.4rem] h-[2.4rem] ml-[1.6rem]" />
           {/* 이슈명 */}
-          <div className="truncate min-w-0 flex-1">{issueTitle}</div>
+          <div className="truncate min-w-0 flex-1">{title}</div>
         </div>
       </div>
       <div className="flex gap-[3.2rem] items-center">
@@ -79,14 +96,14 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
         {displayFields.includes('status') && (
           <div className="flex gap-[0.8rem] items-center">
             {getStatusIcon(status)}
-            <div className="truncate">{status && STATUS_LABELS[status]}</div>
+            <div className="truncate">{STATUS_LABELS[status]}</div>
           </div>
         )}
         {/* 우선순위 */}
         {displayFields.includes('priority') && (
           <div className="flex gap-[0.8rem] items-center">
             <img src={getPriorityIcon(priority)} alt={priority} className="w-[2.4rem] h-[2.4rem]" />
-            <div className="whitespace-nowrap">{priority && PRIORITY_LABELS[priority]}</div>
+            <div className="whitespace-nowrap">{PRIORITY_LABELS[priority]}</div>
           </div>
         )}
         {displayFields.includes('goal') && goalTitle && (
@@ -101,7 +118,7 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
         {/* 기한 */}
         <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
           <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
-          <div className="">{deadline}</div>
+          <div>{formatGoalDate(deadline?.start, deadline?.end)}</div>
         </div>
         {/* 담당자/팀명 */}
         {/*
@@ -111,7 +128,15 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
         {displayFields.includes('manage') && (
           <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
             <img src={grayIcon} alt="manage" className="w-[2.0rem] h-[2.0rem]" />
-            <div>{manage}</div>
+            <div className="">
+              {managers.info && managers.info.length > 0
+                ? managers.info.map((manager, idx) => (
+                    <span key={idx} className="mr-[0.4rem]">
+                      {manager.name}
+                    </span>
+                  ))
+                : '없음'}
+            </div>{' '}
           </div>
         )}
       </div>
