@@ -1,84 +1,92 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDropdownActions } from '../../hooks/useDropdown.ts';
 import useDropdownRef from '../../hooks/useDropdownRef.ts';
 import IcDownArrow from '../../assets/icons/down-arrow.svg';
-import { formatDate, toFormattedDate } from '../../utils/dateFormat.ts';
 import CalendarInput from './CalendarInput.tsx';
 import './react-calendar.css';
 
 interface CalendarDropdownProps {
-  onSelect: (dates: [string | null, string | null]) => void;
+  selectedDate: [Date | null, Date | null];
+  onSelect: (dates: [Date | null, Date | null]) => void;
 }
 
-const CalendarDropdown = (props: CalendarDropdownProps) => {
+const CalendarDropdown = ({ selectedDate, onSelect }: CalendarDropdownProps) => {
   const { closeDropdown } = useDropdownActions();
-  const dropdownRef = useDropdownRef(closeDropdown);
+  const dropdownRef = useDropdownRef(() => {
+    closeDropdown();
+    onSelect([startDate, endDate]);
+  });
 
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [startDate, setStartDate] = useState<Date | null>(selectedDate[0]);
+  const [endDate, setEndDate] = useState<Date | null>(selectedDate[1]);
   const [isStartActive, setIsStartActive] = useState(false);
-  const [isEndActive, setIsEndActive] = useState(true);
+  const [isEndActive, setIsEndActive] = useState(false);
+
+  useEffect(() => {
+    const today = new Date();
+    const [start, end] = selectedDate;
+
+    if (!start && !end) {
+      setStartDate(null);
+      setEndDate(today);
+      setIsStartActive(false);
+      setIsEndActive(true);
+      return;
+    }
+
+    setStartDate(start);
+    setEndDate(end);
+    setIsStartActive(start !== null);
+    setIsEndActive(end !== null);
+  }, [selectedDate]);
 
   const handleStartClick = () => {
-    if (!isStartActive) {
-      setIsStartActive(!isStartActive);
+    const today = new Date();
 
-      const today = new Date();
-      let nextStartDate = today;
-      let nextEndDate = endDate;
-
-      if (!startDate) {
-        setStartDate(today);
-        nextStartDate = today;
+    if (isStartActive) {
+      setIsStartActive(false);
+      setStartDate(null);
+    } else {
+      const newStart = isEndActive ? (endDate ?? today) : today;
+      setIsStartActive(true);
+      setStartDate(newStart);
+      if (!isEndActive) {
+        setIsEndActive(true);
+        setEndDate(today);
       }
-
-      // 종료일 보정: 시작일이 더 늦으면 종료일을 시작일로 맞춤
-      if (!endDate || endDate < nextStartDate) {
-        setEndDate(nextStartDate);
-        nextEndDate = nextStartDate;
-      }
-
-      props.onSelect([toFormattedDate(nextStartDate), toFormattedDate(nextEndDate)]);
     }
   };
 
   const handleEndClick = () => {
-    if (!isEndActive) {
-      setIsEndActive(!isEndActive);
-
-      let nextStartDate = startDate;
-      let nextEndDate = endDate;
-
-      // 종료일은 이미 있음. 시작일이 없거나 종료일보다 늦으면 보정
-      if (!startDate || (endDate && startDate > endDate)) {
-        setStartDate(endDate);
-        nextStartDate = endDate;
-      }
-
-      props.onSelect([toFormattedDate(nextStartDate), toFormattedDate(nextEndDate)]);
+    if (isEndActive && isStartActive) {
+      // 종료일, 시작일 둘 다 활성화 상태일 때 초기화
+      setIsStartActive(false);
+      setIsEndActive(false);
+      setStartDate(null);
+      setEndDate(null);
+    } else if (!isEndActive) {
+      const today = new Date();
+      setIsEndActive(true);
+      setEndDate(today);
+    } else {
+      // 종료일만 활성화 상태일 때
+      setIsEndActive(false);
+      setEndDate(null);
     }
   };
 
   const handleStartChange = (date: Date) => {
     setStartDate(date);
-
-    if (endDate && endDate < date) {
+    if (endDate && date > endDate) {
       setEndDate(date);
     }
-
-    props.onSelect([formatDate(date), toFormattedDate(endDate)]);
   };
 
   const handleEndChange = (date: Date) => {
     setEndDate(date);
-
-    let newStart = startDate;
-    if (!startDate || startDate > date) {
-      newStart = date;
+    if (startDate && date < startDate) {
       setStartDate(date);
     }
-
-    props.onSelect([toFormattedDate(newStart), formatDate(date)]);
   };
 
   return (
@@ -90,7 +98,10 @@ const CalendarDropdown = (props: CalendarDropdownProps) => {
     >
       <div
         className={`flex border-b border-gray-200 justify-between items-center py-[0.4rem] ps-[1.2rem] pe-[0.8rem]`}
-        onClick={closeDropdown}
+        onClick={() => {
+          closeDropdown();
+          onSelect([startDate, endDate]);
+        }}
       >
         <span className={`font-xsmall-r text-gray-600 me-[0.4rem]`}>기한</span>
         <img src={IcDownArrow} alt={'기한'} />
@@ -100,15 +111,15 @@ const CalendarDropdown = (props: CalendarDropdownProps) => {
           isActive={isStartActive}
           label="시작일"
           selectedDate={startDate}
-          onChange={handleStartChange}
           onClick={handleStartClick}
+          onChange={handleStartChange}
         />
         <CalendarInput
           isActive={isEndActive}
           label="종료일"
           selectedDate={endDate}
-          onChange={handleEndChange}
           onClick={handleEndClick}
+          onChange={handleEndChange}
         />
       </section>
     </div>
