@@ -6,43 +6,60 @@ import GoalDetail from '../pages/goal/GoalDetail';
 import IssueDetail from '../pages/issue/IssueDetail';
 export const protectedRoutes: RouteObject[] = [
   {
-    path: '/',
-    element: <ProtectedLayout />, // ProtectedLayout을 위한 placeholder (추후 ProtectedLayout 컴포넌트 작성 후 연결.)
+    // 워크스페이스 내부 페이지들 : 로그인해야 들어올 수 있음
+    path: '/workspace',
+    element: <ProtectedLayout />,
     errorElement: <div>Not Found</div>,
 
-    /*
-      하위 경로 페이지들: 전부 placeholder 처리해둠.
-      필요시 각 페이지 파일 작성 후 연결하여 사용.
-    */
     children: [
+      { index: true, element: <Navigate to="team/default/issue" replace /> }, // 기본 경로는 team/default로 리다이렉트
+      /* 알람 페이지 */
       {
-        path: 'my',
-        element: <Outlet />, // Placeholder (필요시 컴포넌트로 변경하여 작성 후 연결)
+        path: 'noti',
+        element: <Outlet />,
+        children: [{ index: true, element: <div>Notification</div> }],
+      },
+      /* 설정 페이지들 */
+      {
+        path: 'setting',
+        element: <Outlet />,
         children: [
-          // 기본 경로는 나의 이슈 페이지로 리다이렉트되게 했음. (문제시 변경)
-          { index: true, element: <Navigate to="myissue" replace /> },
-          { path: 'noti', element: <div>{/* Notification 페이지 */}</div> },
-          { path: 'myissue', element: <div>{/* MyIssue_Home 페이지 */}</div> },
-          { path: 'myissue/:myIssueId', element: <div>{/* MyIssue_Detail 페이지 */}</div> },
-          { path: 'mygoal', element: <div>{/* MyGoal_Home 페이지 */}</div> },
-          { path: 'mygoal/:mygGoalId', element: <div>{/* MyGoal_Detail 페이지 */}</div> },
-          { path: 'setting', element: <div>{/* Setting 페이지 */}</div> },
+          // 기본 경로는 워크스페이스 프로필 페이지로 리다이렉트.
+          { index: true, element: <Navigate to="ws-profile" replace /> },
+          { path: 'ws-profile', element: <div>Setting_Workspace_Profile</div> },
+          { path: 'team-list', element: <div>Setting_Team_List</div> },
+          { path: 'team-members', element: <div>Setting_Team_Member_List</div> },
+          { path: 'my-profile', element: <div>Setting_My_Profile</div> },
         ],
       },
+      /* 워크스페이스 전체 팀 페이지들 */
+      {
+        path: 'team/default',
+        element: <Outlet />,
+        children: [
+          // 기본 경로는 이슈 페이지로 리다이렉트
+          { index: true, element: <Navigate to="issue" replace /> },
+          { path: 'issue', element: <div>Workspace_Issue_Home</div> },
+          { path: 'issue/:issueId', element: <div>Workspace_Issue_Detail</div> },
+          { path: 'goal', element: <div>Workspace_Goal_Home</div> },
+          { path: 'goal/:goalId', element: <div>Workspace_Goal_Detail</div> },
+          { path: 'ext', element: <div>Workspace_External_Home</div> },
+          { path: 'ext/:extId', element: <div>Workspace_External_Detail</div> },
+        ],
+      },
+      /* 팀별 페이지들 */
       {
         path: 'team/:teamId',
-        element: <Outlet />, // Placeholder (필요시 컴포넌트로 변경하여 작성 후 연결)
+        element: <Outlet />,
         children: [
           // 기본 경로는 이슈 페이지로 리다이렉트.
           { index: true, element: <Navigate to="issue" replace /> },
           { path: 'goal', element: <GoalHome /> },
-          { path: 'goal/:goalId', element: <GoalDetail /> },
+          { path: 'goal/:goalId', element: <div>Goal_Detail</div> },
           { path: 'issue', element: <IssueHome /> },
-          { path: 'issue/:issueId', element: <IssueDetail /> },
-          { path: 'ext', element: <div>{/* External_Home 페이지 */}</div> },
-          { path: 'ext/:extId', element: <div>{/* External_Detail 페이지 */}</div> },
-          { path: 'doc', element: <div>{/* Document_Home 페이지 */}</div> },
-          { path: 'doc/:docId', element: <div>{/* Document_Detail 페이지 */}</div> },
+          { path: 'issue/:issueId', element: <div>Issue_Detail</div> },
+          { path: 'ext', element: <div>External_Home</div> },
+          { path: 'ext/:extId', element: <div>External_Detail</div> },
         ],
       },
     ],
