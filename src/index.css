@@ -138,11 +138,30 @@
     letter-spacing: -0.02em;
     line-height: 140%;
   }
+
+  /* XXSmall (8px, Regular) */
+  .font-xxsmall-r {
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 140%;
+  }
+
+  /* XXXSmall (6px, Regular) */
+  .font-xxxsmall-r {
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
+    font-size: 0.6rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 140%;
+  }
 }
 
 html {
   font-size: 62.5%; /* 1rem = 10px */
 }
+
 body {
   font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
   background-color: var(--color-gray-100);
