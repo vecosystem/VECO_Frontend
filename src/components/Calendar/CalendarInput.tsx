@@ -29,7 +29,7 @@ const CalendarInput = ({
       </p>
       <div
         className={`flex items-center justify-start px-[1.2rem] py-[0.75rem] gap-x-[0.4rem] font-xsmall-r
-        ${isActive ? 'bg-gray-200' : ''}`}
+        ${isActive ? 'bg-gray-200' : 'bg-white'}`}
       >
         {isActive ? (
           <>
