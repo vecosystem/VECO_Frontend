@@ -25,29 +25,51 @@ export const PRIORITY_LABELS: Record<PriorityCode, string> = {
 export const STATUS_LIST: readonly StatusCode[] = STATUS_CODES;
 export const PRIORITY_LIST: readonly PriorityCode[] = PRIORITY_CODES;
 
+export const FILTER_MAP = {
+  상태: 'state',
+  우선순위: 'priority',
+  담당자: 'manager',
+  목표: 'goal',
+} as const;
+
+export type ItemFilter = keyof typeof FILTER_MAP;
+
 // 공통 타입
 export type DisplayField = 'status' | 'priority' | 'deadline' | 'manage' | 'goal';
-export type ItemFilter = '상태' | '우선순위' | '담당자' | '목표';
 
 // 공통 props
 export interface BaseItemProps {
   showCheckbox?: boolean;
   checked?: boolean;
   onCheckChange?: (checked: boolean) => void;
-  status: StatusCode;
-  priority: PriorityCode;
-  deadline?: string;
-  manage?: string;
   displayFields?: DisplayField[];
   filter?: ItemFilter;
 }
 
 export interface GoalItemProps extends BaseItemProps {
-  goalId: string;
+  id: number;
+  name: string;
   title: string;
+  status?: StatusCode;
+  priority?: PriorityCode;
+  deadline?: {
+    start: string;
+    end: string;
+  };
+  managers?: {
+    cnt: number;
+    info: {
+      profileUrl: string;
+      name: string;
+    }[];
+  };
 }
 
 export interface IssueItemProps extends BaseItemProps {
+  status: StatusCode;
+  priority: PriorityCode;
+  deadline?: string;
+  manage?: string;
   issueId: string;
   issueTitle: string;
   goalTitle?: string;
