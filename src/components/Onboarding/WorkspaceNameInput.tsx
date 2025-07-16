@@ -108,7 +108,7 @@ const WorkspaceNameInput = ({ onUrlGenerated }: WorkspaceNameInputProps) => {
           <button
             type="button"
             onClick={handleCheck}
-            className="w-[3.6rem] h-[3.6rem] flex items-center justify-center rounded-[0.6rem] bg-primary-blue ml-[1.3rem] shrink-0"
+            className="w-[4rem] h-[3.6rem] flex items-center justify-center rounded-[0.6rem] bg-primary-blue ml-[1.3rem] shrink-0"
           >
             <img src={whitecheck} alt="Check" className="w-[1.6rem] h-[1.6rem]" />
           </button>
