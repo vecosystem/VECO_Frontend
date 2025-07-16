@@ -1,89 +1,62 @@
 import PlusIcon from '../../assets/icons/plus.svg';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
-  PRIORITY_CODES,
   PRIORITY_LABELS,
-  PRIORITY_LIST,
-  STATUS_CODES,
   STATUS_LABELS,
-  STATUS_LIST,
-  type IssueItemProps,
   type ItemFilter,
+  type PriorityCode,
+  type StatusCode,
 } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import TeamIcon from '../../components/ListView/TeamIcon';
 import { IssueItem } from '../../components/ListView/IssueItem';
 import useCheckItems from '../../hooks/useCheckItems';
-import { getGoals, getManagers } from '../../utils/listGroupingUtils';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
 import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import Modal from '../../components/Modal/Modal';
+import {
+  dummyGoalTitleIssueGroups,
+  dummyManagerIssueGroups,
+  dummyPriorityIssueGroups,
+  dummyStatusIssueGroups,
+} from '../../types/testDummy';
+import type { IssueFilter } from '../../types/issue';
 
-/*
-  추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
-*/
-const dummyIssues: Partial<IssueItemProps>[] = [
-  {
-    issueId: 'Veco-i1',
-    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    // status: STATUS_CODES[0],
-    //priority: PRIORITY_CODES[3],
-    //goalTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    //deadline: '25.05.02',
-    //manage: '이가을',
-  },
-  {
-    issueId: 'Veco-i2',
-    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: STATUS_CODES[1],
-    // priority: PRIORITY_CODES[2],
-    // goalTitle: '기획 및 요구사항 분석',
-    deadline: '25.05.02',
-    manage: '박유민',
-  },
-  {
-    issueId: 'Veco-i3',
-    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: 'TODO',
-    priority: PRIORITY_CODES[3],
-    goalTitle: '기획 및 요구사항 분석',
-    deadline: '25.05.02',
-    // manage: '박유민',
-  },
-  {
-    issueId: 'Veco-i4',
-    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: STATUS_CODES[3],
-    priority: PRIORITY_CODES[4],
-    goalTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    deadline: '25.05.01-25.05.02',
-    manage: '김선화',
-  },
-  {
-    issueId: 'Veco-i5',
-    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: STATUS_CODES[0],
-    priority: PRIORITY_CODES[2],
-    goalTitle: '없음',
-    deadline: '없음',
-    manage: '없음',
-  },
-];
+const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
 const IssueHome = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
-  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
+  const dimmyIssueGroups = useMemo<IssueFilter[]>(() => {
+    switch (filter) {
+      case '상태':
+        return dummyStatusIssueGroups;
+      case '우선순위':
+        return dummyPriorityIssueGroups;
+      case '담당자':
+        return dummyManagerIssueGroups;
+      case '목표':
+        return dummyGoalTitleIssueGroups;
+      default:
+        return [];
+    }
+  }, [filter]);
+
+  const allGoalsFlat = dimmyIssueGroups.flatMap((i) => i.issues);
+
   const {
     checkedIds: checkItems,
     isAllChecked,
     handleCheck,
     handleSelectAll,
     setCheckedIds,
-  } = useCheckItems(dummyIssues, 'issueId');
+  } = useCheckItems(allGoalsFlat, 'id');
+
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
 
   const { isOpen: isModalOpen, content: modalContent } = useModalInfo();
   const { openModal } = useModalActions();
@@ -99,27 +72,9 @@ const IssueHome = () => {
   };
 
   // 그룹핑
-  const groupKeys = (
-    filter === '상태'
-      ? STATUS_LIST
-      : filter === '우선순위'
-        ? PRIORITY_LIST
-        : filter === '담당자'
-          ? getManagers(dummyIssues)
-          : getGoals(dummyIssues)
-  ) as string[]; // 목표 필터는 고정된 값
-
-  const grouped = groupKeys.map((key) => ({
-    key,
-    items: dummyIssues.filter((issue) =>
-      filter === '상태'
-        ? (!issue.status ? 'NONE' : issue.status) === key
-        : filter === '우선순위'
-          ? (!issue.priority ? 'NONE' : issue.priority) === key
-          : filter === '담당자'
-            ? (!issue.manage || issue.manage === '' ? '없음' : issue.manage) === key
-            : (!issue.goalTitle || issue.goalTitle === '' ? '없음' : issue.goalTitle) === key
-    ),
+  const grouped = dimmyIssueGroups.map((i) => ({
+    key: i.filterName,
+    items: i.issues,
   }));
 
   const isEmpty = grouped.every(({ items }) => items.length === 0);
@@ -134,7 +89,7 @@ const IssueHome = () => {
           isDeleteMode={isDeleteMode}
           isAllChecked={isAllChecked}
           showSelectAll={grouped.some(({ items }) => items.length > 0)}
-          filterOptions={['상태', '우선순위', '담당자', '목표']}
+          filterOptions={FILTER_OPTIONS}
           onFilterClick={() => openDropdown({ name: 'filter' })}
           onFilterSelect={(option) => {
             setFilter(option as ItemFilter);
@@ -168,9 +123,9 @@ const IssueHome = () => {
                       {/* 유형명 */}
                       <div>
                         {filter === '상태'
-                          ? STATUS_LABELS[key as keyof typeof STATUS_LABELS]
+                          ? STATUS_LABELS[key as keyof typeof STATUS_LABELS] || key
                           : filter === '우선순위'
-                            ? PRIORITY_LABELS[key as keyof typeof PRIORITY_LABELS]
+                            ? PRIORITY_LABELS[key as keyof typeof PRIORITY_LABELS] || key
                             : key}
                       </div>
                       <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
@@ -182,12 +137,17 @@ const IssueHome = () => {
                   {items.map((issue) => (
                     <IssueItem
                       showCheckbox={isDeleteMode}
-                      checked={checkItems.includes(issue.issueId || '')}
-                      onCheckChange={(checked) =>
-                        issue.issueId && handleCheck(issue.issueId, checked)
-                      }
-                      key={issue.issueId}
-                      {...issue}
+                      checked={checkItems.includes(issue.id ?? '')}
+                      onCheckChange={(checked) => issue.id && handleCheck(issue.id, checked)}
+                      key={issue.id}
+                      id={issue.id}
+                      name={issue.name}
+                      title={issue.title}
+                      status={issue.status as StatusCode}
+                      priority={issue.priority as PriorityCode}
+                      goaltitle={issue.goaltitle}
+                      deadline={issue.deadline}
+                      managers={issue.managers}
                       filter={filter}
                     />
                   ))}

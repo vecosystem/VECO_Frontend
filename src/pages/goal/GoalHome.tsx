@@ -1,85 +1,59 @@
 import { GoalItem } from '../../components/ListView/GoalItem';
 import PlusIcon from '../../assets/icons/plus.svg';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
-  PRIORITY_CODES,
   PRIORITY_LABELS,
-  PRIORITY_LIST,
-  STATUS_CODES,
   STATUS_LABELS,
-  STATUS_LIST,
-  type GoalItemProps,
   type ItemFilter,
+  type PriorityCode,
+  type StatusCode,
 } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import TeamIcon from '../../components/ListView/TeamIcon';
 import useCheckItems from '../../hooks/useCheckItems';
-import { getManagers } from '../../utils/listGroupingUtils';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
 import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import Modal from '../../components/Modal/Modal';
+import {
+  dummyStatusGoalGroups,
+  dummyPriorityGoalGroups,
+  dummyManagerGoalGroups,
+} from '../../types/testDummy';
+import type { GoalFilter } from '../../types/goal';
 
-/*
-  추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
-*/
-const dummyGoals: Partial<GoalItemProps>[] = [
-  /**/
-  {
-    goalId: 'Veco-g1',
-    title: '백호를 사용해서 다른 사람들과 협업해보기',
-    // status: STATUS_CODES[0],
-    // priority: PRIORITY_CODES[3],
-    // deadline: '25.05.02',
-    // manage: '이가을',
-  },
-  {
-    goalId: 'Veco-g2',
-    title: '백호를 사용해서 다른 사람들과 협업해보기',
-    status: STATUS_CODES[1],
-    priority: PRIORITY_CODES[2],
-    deadline: '25.05.02',
-    manage: '박유민',
-  },
-  {
-    goalId: 'Veco-g3',
-    title: '백호를 사용해서 다른 사람들과 협업해보기',
-    status: STATUS_CODES[2],
-    priority: PRIORITY_CODES[3],
-    deadline: '25.05.02',
-    manage: '박유민',
-  },
-  {
-    goalId: 'Veco-g4',
-    title: '백호를 사용해서 다른 사람들과 협업해보기',
-    status: STATUS_CODES[3],
-    priority: PRIORITY_CODES[0],
-    deadline: '25.05.02',
-    manage: '김선화',
-  },
-  {
-    goalId: 'Veco-g5',
-    title: '백호를 사용해서 다른 사람들과 협업해보기',
-    status: STATUS_CODES[4],
-    priority: PRIORITY_CODES[4],
-    deadline: '25.05.02',
-    manage: '김선화',
-  },
-];
+const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
 const GoalHome = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
-  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
+  const dummyGoalGroups = useMemo<GoalFilter[]>(() => {
+    switch (filter) {
+      case '상태':
+        return dummyStatusGoalGroups;
+      case '우선순위':
+        return dummyPriorityGoalGroups;
+      case '담당자':
+        return dummyManagerGoalGroups;
+      default:
+        return [];
+    }
+  }, [filter]);
+
+  const allGoalsFlat = dummyGoalGroups.flatMap((g) => g.goals);
+
   const {
     checkedIds: checkItems,
     isAllChecked,
     handleCheck,
     handleSelectAll,
     setCheckedIds,
-  } = useCheckItems(dummyGoals, 'goalId');
+  } = useCheckItems(allGoalsFlat, 'id');
+
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
 
   const { isOpen: isModalOpen, content: modalContent } = useModalInfo();
   const { openModal } = useModalActions();
@@ -95,23 +69,9 @@ const GoalHome = () => {
   };
 
   // 그룹핑
-  const groupKeys = (
-    filter === '상태'
-      ? STATUS_LIST
-      : filter === '우선순위'
-        ? PRIORITY_LIST
-        : getManagers(dummyGoals)
-  ) as string[];
-
-  const grouped = groupKeys.map((key) => ({
-    key,
-    items: dummyGoals.filter((goal) =>
-      filter === '상태'
-        ? (!goal.status ? 'NONE' : goal.status) === key
-        : filter === '우선순위'
-          ? (!goal.priority ? 'NONE' : goal.priority) === key
-          : (!goal.manage || goal.manage === '' ? '없음' : goal.manage) === key
-    ),
+  const grouped = dummyGoalGroups.map((g) => ({
+    key: g.filterName,
+    items: g.goals,
   }));
 
   const isEmpty = grouped.every(({ items }) => items.length === 0);
@@ -119,14 +79,14 @@ const GoalHome = () => {
   return (
     <>
       <div className="flex flex-1 flex-col gap-[3.2rem]">
-        {/* 팀 아이콘, 팀명, props로 요소 전달 가능 */}
+        {/* 팀 아이콘, 팀명 */}
         <TeamIcon />
         <ListViewToolbar
           filter={filter}
           isDeleteMode={isDeleteMode}
           isAllChecked={isAllChecked}
           showSelectAll={grouped.some(({ items }) => items.length > 0)}
-          filterOptions={['상태', '우선순위', '담당자']}
+          filterOptions={FILTER_OPTIONS}
           onFilterClick={() => openDropdown({ name: 'filter' })}
           onFilterSelect={(option) => {
             setFilter(option as ItemFilter);
@@ -160,11 +120,11 @@ const GoalHome = () => {
                       {/* 유형명 */}
                       <div>
                         {filter === '상태'
-                          ? STATUS_LABELS[key as keyof typeof STATUS_LABELS]
+                          ? STATUS_LABELS[key as keyof typeof STATUS_LABELS] || key
                           : filter === '우선순위'
-                            ? PRIORITY_LABELS[key as keyof typeof PRIORITY_LABELS]
+                            ? PRIORITY_LABELS[key as keyof typeof PRIORITY_LABELS] || key
                             : key}
-                      </div>{' '}
+                      </div>
                       <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
                     </div>
                     {/* TODO : 추가 버튼 라우터 연결 */}
@@ -174,10 +134,16 @@ const GoalHome = () => {
                   {items.map((goal) => (
                     <GoalItem
                       showCheckbox={isDeleteMode}
-                      checked={checkItems.includes(goal.goalId || '')}
-                      onCheckChange={(checked) => goal.goalId && handleCheck(goal.goalId, checked)}
-                      key={goal.goalId}
-                      {...goal}
+                      checked={checkItems.includes(goal.id ?? '')}
+                      onCheckChange={(checked) => goal.id && handleCheck(goal.id, checked)}
+                      key={goal.id}
+                      id={goal.id}
+                      name={goal.name}
+                      title={goal.title}
+                      status={goal.status as StatusCode}
+                      priority={goal.priority as PriorityCode}
+                      deadline={goal.deadline}
+                      managers={goal.managers}
                       filter={filter}
                     />
                   ))}
