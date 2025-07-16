@@ -66,11 +66,24 @@ export interface GoalItemProps extends BaseItemProps {
 }
 
 export interface IssueItemProps extends BaseItemProps {
-  status: StatusCode;
-  priority: PriorityCode;
-  deadline?: string;
-  manage?: string;
-  issueId: string;
-  issueTitle: string;
-  goalTitle?: string;
+  id: number;
+  name: string;
+  title: string;
+  status?: StatusCode;
+  priority?: PriorityCode;
+  goaltitle?: string;
+  deadline?: {
+    start: string;
+    end: string;
+  };
+  managers?: {
+    cnt: number;
+    info: {
+      profileUrl: string;
+      name: string;
+    }[];
+  };
 }
+
+// api 데이터 불러오는 목록? props 정보 작성.
+// 쿼리로 필터 불러오는 것도 적용하여.
