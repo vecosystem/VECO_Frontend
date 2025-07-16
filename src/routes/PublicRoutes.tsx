@@ -5,12 +5,14 @@ import OnboardingSSOLogin from '../pages/onboarding/OnboardingSSOLogin';
 import OnboardingCreateWorkspace from '../pages/onboarding/OnboardingCreateWorkspace';
 import OnboardingInviteMember from '../pages/onboarding/OnboardingInviteMember';
 import OnboardingFinish from '../pages/onboarding/OnboardingFinish';
+import Error404NotFound from '../pages/Error404NotFound';
+import ParticipateWorkspaceInputPw from '../pages/onboarding/ParticipateWorkspaceInputPw';
 
 export const publicRoutes: RouteObject[] = [
   {
     path: '/',
     element: <div>HomeLayout</div>,
-    errorElement: <div>Not Found</div>,
+    errorElement: <Error404NotFound />,
     children: [
       // 도메인 최상위: 백호 랜딩페이지
       { index: true, element: <div>VECO Landing Page</div> },
@@ -23,7 +25,7 @@ export const publicRoutes: RouteObject[] = [
   {
     path: '/onboarding',
     element: <PublicLayout />,
-    errorElement: <div>Not Found</div>,
+    errorElement: <Error404NotFound />,
     children: [
       {
         index: true,
@@ -59,7 +61,7 @@ export const publicRoutes: RouteObject[] = [
       },
       {
         path: 'input-pw',
-        element: <div>Participate_Workspace_Input_PW</div>,
+        element: <ParticipateWorkspaceInputPw />,
       },
     ],
   },
