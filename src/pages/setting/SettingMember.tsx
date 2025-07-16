@@ -14,7 +14,7 @@ const DUMMY_MEMBERS = [
   {
     id: 2,
     profileImage: null,
-    name: '마이멜로디',
+    name: '선우정아',
     email: 'mymelody@naver.com',
     date: '25.02.01',
   },

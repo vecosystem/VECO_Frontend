@@ -31,6 +31,7 @@ const MemberInviteModal = (props: MemberInviteModalProps) => {
             className={`flex-1 border border-gray-300 rounded-[0.6rem] h-[8rem] px-[1.2rem] py-[0.8rem]
             font-xsmall-r text-gray-600 focus:outline-none resize-none`}
             disabled={true}
+            readOnly={true}
             value={`팀원 URL : ${props.url}\n\n암호 : ${props.password}`}
             ref={inputRef}
           />
