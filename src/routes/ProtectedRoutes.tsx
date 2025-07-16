@@ -2,8 +2,6 @@ import { Navigate, Outlet, type RouteObject } from 'react-router-dom';
 import ProtectedLayout from '../layouts/ProtectedLayout';
 import GoalHome from '../pages/goal/GoalHome';
 import IssueHome from '../pages/issue/IssueHome';
-import GoalDetail from '../pages/goal/GoalDetail';
-import IssueDetail from '../pages/issue/IssueDetail';
 export const protectedRoutes: RouteObject[] = [
   {
     // 워크스페이스 내부 페이지들 : 로그인해야 들어올 수 있음
