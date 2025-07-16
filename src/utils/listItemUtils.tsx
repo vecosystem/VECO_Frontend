@@ -22,8 +22,6 @@ export const getFilter = (filter: ItemFilter = '상태'): DisplayField[] => {
   }
 };
 
-// TODO : 각 아이콘 사이즈 변경 및 색상 변경 확인
-
 /* 우선순위 아이콘 */
 export const getPriorityIcon = (priority: PriorityCode): string => {
   const iconMap: Record<PriorityCode, string> = {
@@ -66,3 +64,15 @@ export const getStatusColor = (status: StatusCode): string => {
   };
   return colorMap[status];
 };
+
+export function formatGoalDate(start?: string, end?: string): string {
+  if (!start && !end) return '없음';
+
+  const fmt = (date?: string) => (date ? date.slice(2).replace(/-/g, '.') : '');
+
+  if (!start) return fmt(end);
+  if (!end) return fmt(start);
+
+  if (start === end) return fmt(end);
+  return `${fmt(start)}-${fmt(end)}`;
+}
