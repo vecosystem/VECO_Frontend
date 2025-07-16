@@ -94,10 +94,10 @@ const CalendarDropdown = ({ selectedDate, onSelect }: CalendarDropdownProps) => 
       ref={dropdownRef}
       style={{ boxShadow: '0px 4px 12px 0px rgba(0, 0, 0, 0.15)' }}
       className={`absolute z-30 top-0 left-0 flex flex-col min-w-[23.2rem] w-auto
-      border border-gray-400 bg-white rounded-[0.4rem]`}
+      border border-gray-400 bg-gray-200 rounded-[0.4rem]`}
     >
       <div
-        className={`flex border-b border-gray-200 justify-between items-center py-[0.4rem] ps-[1.2rem] pe-[0.8rem]`}
+        className={`flex border-b border-gray-200 bg-white rounded-t-[0.4rem] justify-between items-center py-[0.4rem] ps-[1.2rem] pe-[0.8rem]`}
         onClick={() => {
           closeDropdown();
           onSelect([startDate, endDate]);

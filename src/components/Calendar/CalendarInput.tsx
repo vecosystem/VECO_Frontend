@@ -22,7 +22,7 @@ const CalendarInput = ({
   return (
     <div className={`flex flex-col w-full`}>
       <p
-        className={`px-[1.2rem] py-[0.75rem] font-xsmall-r ${isActive ? 'text-gray-600' : 'text-gray-400'}`}
+        className={`bg-white px-[1.2rem] py-[0.75rem] font-xsmall-r ${isActive ? 'text-gray-600' : 'text-gray-400'}`}
         onClick={onClick}
       >
         {label}
@@ -59,10 +59,10 @@ const CalendarInput = ({
           onChange={(value) => {
             if (isActive && value instanceof Date) onChange(value);
           }}
-          tileDisabled={({ date }) => {
-            const today = new Date();
+          tileDisabled={({ date, activeStartDate }) => {
             return (
-              date.getMonth() !== today.getMonth() || date.getFullYear() !== today.getFullYear()
+              date.getMonth() !== activeStartDate.getMonth() ||
+              date.getFullYear() !== activeStartDate.getFullYear()
             );
           }}
           view={'month'}
