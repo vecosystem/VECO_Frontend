@@ -1,3 +1,6 @@
+import type { Goal } from './goal';
+import type { Issue } from './issue';
+
 // 상태 코드
 export const STATUS_CODES = ['NONE', 'DOING', 'TODO', 'FINISH', 'REVIEW', 'DELETE'] as const;
 export type StatusCode = (typeof STATUS_CODES)[number];
@@ -46,44 +49,6 @@ export interface BaseItemProps {
   filter?: ItemFilter;
 }
 
-export interface GoalItemProps extends BaseItemProps {
-  id: number;
-  name: string;
-  title: string;
-  status?: StatusCode;
-  priority?: PriorityCode;
-  deadline?: {
-    start: string;
-    end: string;
-  };
-  managers?: {
-    cnt: number;
-    info: {
-      profileUrl: string;
-      name: string;
-    }[];
-  };
-}
+export interface GoalItemProps extends Goal, BaseItemProps {}
 
-export interface IssueItemProps extends BaseItemProps {
-  id: number;
-  name: string;
-  title: string;
-  status?: StatusCode;
-  priority?: PriorityCode;
-  goaltitle?: string;
-  deadline?: {
-    start: string;
-    end: string;
-  };
-  managers?: {
-    cnt: number;
-    info: {
-      profileUrl: string;
-      name: string;
-    }[];
-  };
-}
-
-// api 데이터 불러오는 목록? props 정보 작성.
-// 쿼리로 필터 불러오는 것도 적용하여.
+export interface IssueItemProps extends Issue, BaseItemProps {}

@@ -27,10 +27,14 @@ import ManagerAvatar from './ManagerAvartar';
 
 export const IssueItem = (props: Partial<IssueItemProps>) => {
   const status: StatusCode =
-    props.status && STATUS_CODES.includes(props.status) ? props.status : 'NONE';
+    props.status && STATUS_CODES.includes(props.status as StatusCode)
+      ? (props.status as StatusCode)
+      : ('NONE' as StatusCode);
 
   const priority: PriorityCode =
-    props.priority && PRIORITY_CODES.includes(props.priority) ? props.priority : 'NONE';
+    props.priority && PRIORITY_CODES.includes(props.priority as PriorityCode)
+      ? (props.priority as PriorityCode)
+      : ('NONE' as PriorityCode);
 
   const {
     showCheckbox,
