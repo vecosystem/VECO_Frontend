@@ -110,10 +110,6 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
           <div>{formatGoalDate(deadline?.start, deadline?.end)}</div>
         </div>
         {/* 담당자 */}
-        {/*
-         * 담당자 1인 기준으로 작성
-         * 프로필 이미지, 고유 색상 등 추가 예정
-         */}
         {displayFields.includes('manage') && <ManagerAvatar managers={managers.info} />}
       </div>
     </div>
