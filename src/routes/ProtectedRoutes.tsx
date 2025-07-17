@@ -2,6 +2,7 @@ import { Navigate, Outlet, type RouteObject } from 'react-router-dom';
 import ProtectedLayout from '../layouts/ProtectedLayout';
 import GoalHome from '../pages/goal/GoalHome';
 import IssueHome from '../pages/issue/IssueHome';
+import NotiHome from '../pages/notification/NotiHome';
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -16,7 +17,7 @@ export const protectedRoutes: RouteObject[] = [
       {
         path: 'noti',
         element: <Outlet />,
-        children: [{ index: true, element: <div>Notification</div> }],
+        children: [{ index: true, element: <NotiHome /> }],
       },
       /* 설정 페이지들 */
       {
