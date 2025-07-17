@@ -101,7 +101,9 @@ const WorkspaceNameInput = ({ onUrlGenerated }: WorkspaceNameInputProps) => {
             placeholder="워크스페이스 이름"
             value={workspaceName}
             onChange={(e) => setWorkspaceName(e.target.value)}
-            className="w-full bg-transparent font-body-r text-gray-400 focus:outline-none"
+            className={`w-full bg-transparent font-body-r focus:outline-none placeholder-text-gray-400 ${
+              workspaceUrl && !error ? 'text-gray-600' : 'text-gray-400'
+            }`}
           />
 
           {/* 오른쪽 체크 버튼 */}
