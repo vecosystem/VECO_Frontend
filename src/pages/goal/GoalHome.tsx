@@ -2,9 +2,7 @@ import { GoalItem } from '../../components/ListView/GoalItem';
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useMemo, useState } from 'react';
 import {
-  PRIORITY_CODES,
   PRIORITY_LABELS,
-  STATUS_CODES,
   STATUS_LABELS,
   type ItemFilter,
   type PriorityCode,
@@ -23,6 +21,7 @@ import {
   dummyManagerGoalGroups,
 } from '../../types/testDummy';
 import type { GoalFilter, GroupedGoal } from '../../types/goal';
+import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
@@ -75,25 +74,8 @@ const GoalHome = () => {
     items: g.goals,
   }));
 
-  const getSortedGrouped = (filter: ItemFilter, grouped: GroupedGoal[]): GroupedGoal[] => {
-    if (filter === '상태') {
-      return STATUS_CODES.map((status) => grouped.find((g) => g.key === status)).filter(
-        Boolean
-      ) as GroupedGoal[];
-    }
-    if (filter === '우선순위') {
-      return PRIORITY_CODES.map((priority) => grouped.find((g) => g.key === priority)).filter(
-        Boolean
-      ) as GroupedGoal[];
-    }
-    return [
-      ...grouped.filter((g) => g.key === '없음'),
-      ...grouped.filter((g) => g.key !== '없음').sort((a, b) => a.key.localeCompare(b.key, 'ko')),
-    ];
-  };
-
-  const isEmpty = grouped.every(({ items }) => items.length === 0);
   const sortedGrouped = getSortedGrouped(filter, grouped);
+  const isEmpty = grouped.every(({ items }) => items.length === 0);
 
   return (
     <>
