@@ -175,22 +175,49 @@ body {
 /* WebKit 기반 브라우저 (Chrome, Safari, Edge) 스크롤바 */
 
 /* 1. 전체 스크롤바의 너비/높이 */
-::-webkit-scrollbar {
-  width: 0.4rem; /* 세로 스크롤바 너비 */
+.sidebar-scroll::-webkit-scrollbar {
+  width: 1.2rem; /* 세로 스크롤바 너비 */
+  height: 1.2rem; /* 가로 스크롤바 높이 */
 }
 
 /* 2. 스크롤바 트랙 (배경 부분) */
-::-webkit-scrollbar-track {
+.sidebar-scroll::-webkit-scrollbar-track {
   background: var(--color-gray-200);
 }
 
 /* 3. 스크롤바 썸 (움직이는 막대) */
-::-webkit-scrollbar-thumb {
+.sidebar-scroll::-webkit-scrollbar-thumb {
   background-color: var(--color-gray-400);
   border-radius: 1rem;
+
+  box-shadow: inset 0 0 0 0.4rem var(--color-gray-200); /* 스크롤을 적용할 영역 색깔과 border 색상을 똑같이 맞춘다 */
 }
 
 /* 4. 스크롤바 썸 호버 시 색상 변경 */
-::-webkit-scrollbar-thumb:hover {
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-gray-500); /* 마우스 오버 시 색상 변경 */
+}
+
+/* 1. 전체 스크롤바의 너비/높이 */
+.basic-scroll::-webkit-scrollbar {
+  width: 1.2rem; /* 세로 스크롤바 너비 */
+  height: 1.2rem; /* 가로 스크롤바 높이 */
+}
+
+/* 2. 스크롤바 트랙 (배경 부분) */
+.basic-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0);
+}
+
+/* 3. 스크롤바 썸 (움직이는 막대) */
+.basic-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--color-gray-400);
+  border-radius: 1rem;
+
+  box-shadow: inset 0 0 0 0.4rem white; /* 스크롤을 적용할 영역 색깔과 border 색상을 똑같이 맞춘다 */
+}
+
+/* 4. 스크롤바 썸 호버 시 색상 변경 */
+.basic-scroll::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-gray-500); /* 마우스 오버 시 색상 변경 */
 }

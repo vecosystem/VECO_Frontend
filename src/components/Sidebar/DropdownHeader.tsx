@@ -20,7 +20,10 @@ const DropdownHeader = ({
   isNested = false,
 }: DropdownHeaderProps) => {
   return (
-    <div className={`flex items-center gap-[0.8rem] cursor-pointer mb-[1.6rem]`} onClick={onToggle}>
+    <div
+      className={`flex w-fit items-center gap-[0.8rem] cursor-pointer mb-[1.6rem]`}
+      onClick={onToggle}
+    >
       {/* teamIcon ex: 팀 이미지 */}
       {teamIcon && <span className="text-gray-600">{teamIcon}</span>}
 
@@ -38,9 +41,9 @@ const DropdownHeader = ({
         {hasToggleIcon && (
           <span className="ml-auto text-gray-500 h-[2.4rem] w-[2.4rem]">
             {isOpen ? (
-              <img src={dropdownIcon} alt="Dropdown" className="rotate-180" />
-            ) : (
               <img src={dropdownIcon} alt="Dropdown" />
+            ) : (
+              <img src={dropdownIcon} alt="Dropdown" className="rotate-270" />
             )}
           </span>
         )}
