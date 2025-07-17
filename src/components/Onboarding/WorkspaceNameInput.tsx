@@ -29,8 +29,8 @@ const WorkspaceNameInput = ({ onUrlGenerated }: WorkspaceNameInputProps) => {
     // 백엔드로 중복 체크 및 URL 생성 요청
     try {
       setError(''); // 에러 초기화
-
-      const response = await fetch(`/api/workspace/check?name=${name}`);
+      // 명세서 확정되면 아래 코드 수정
+      const response = await fetch(`https://your-api.com/api/workspace/check?name=${name}`);
       const data = await response.json();
 
       if (data.exists) {
