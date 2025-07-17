@@ -28,6 +28,8 @@ export type Issue = {
   managers?: Manager;
 };
 
+export type GroupedIssue = { key: string; items: Issue[] };
+
 export type IssueFilter = {
   filterName: string;
   dataCnt: number;

@@ -1,7 +1,9 @@
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useMemo, useState } from 'react';
 import {
+  PRIORITY_CODES,
   PRIORITY_LABELS,
+  STATUS_CODES,
   STATUS_LABELS,
   type ItemFilter,
   type PriorityCode,
@@ -21,7 +23,7 @@ import {
   dummyPriorityIssueGroups,
   dummyStatusIssueGroups,
 } from '../../types/testDummy';
-import type { IssueFilter } from '../../types/issue';
+import type { GroupedIssue, IssueFilter } from '../../types/issue';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
@@ -72,12 +74,30 @@ const IssueHome = () => {
   };
 
   // 그룹핑
-  const grouped = dimmyIssueGroups.map((i) => ({
+  const grouped: GroupedIssue[] = dimmyIssueGroups.map((i) => ({
     key: i.filterName,
     items: i.issues,
   }));
 
+  const getSortedGrouped = (filter: ItemFilter, grouped: GroupedIssue[]): GroupedIssue[] => {
+    if (filter === '상태') {
+      return STATUS_CODES.map((status) => grouped.find((g) => g.key === status)).filter(
+        Boolean
+      ) as GroupedIssue[];
+    }
+    if (filter === '우선순위') {
+      return PRIORITY_CODES.map((priority) => grouped.find((g) => g.key === priority)).filter(
+        Boolean
+      ) as GroupedIssue[];
+    }
+    return [
+      ...grouped.filter((g) => g.key === '없음'),
+      ...grouped.filter((g) => g.key !== '없음').sort((a, b) => a.key.localeCompare(b.key, 'ko')),
+    ];
+  };
+
   const isEmpty = grouped.every(({ items }) => items.length === 0);
+  const sortedGrouped = getSortedGrouped(filter, grouped);
 
   return (
     <>
@@ -107,7 +127,7 @@ const IssueHome = () => {
         ) : (
           /* 리스트뷰 */
           <div className="flex flex-col gap-[4.8rem]">
-            {grouped.map(({ key, items }) =>
+            {sortedGrouped.map(({ key, items }) =>
               /* 해당 요소 존재할 때만 생성 */
               items.length > 0 ? (
                 <div key={key}>

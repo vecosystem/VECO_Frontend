@@ -25,6 +25,8 @@ export type Goal = {
   managers?: Manager;
 };
 
+export type GroupedGoal = { key: string; items: Goal[] };
+
 export type GoalFilter = {
   filterName: string;
   dataCnt: number;
