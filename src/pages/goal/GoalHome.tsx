@@ -1,13 +1,7 @@
 import { GoalItem } from '../../components/ListView/GoalItem';
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useMemo, useState } from 'react';
-import {
-  PRIORITY_LABELS,
-  STATUS_LABELS,
-  type ItemFilter,
-  type PriorityCode,
-  type StatusCode,
-} from '../../types/listItem';
+import { PRIORITY_LABELS, STATUS_LABELS, type ItemFilter } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import TeamIcon from '../../components/ListView/TeamIcon';
@@ -134,17 +128,11 @@ const GoalHome = () => {
                   {/* 각 유형 별 요소 */}
                   {items.map((goal) => (
                     <GoalItem
-                      showCheckbox={isDeleteMode}
-                      checked={checkItems.includes(goal.id ?? '')}
-                      onCheckChange={(checked) => goal.id && handleCheck(goal.id, checked)}
                       key={goal.id}
-                      id={goal.id}
-                      name={goal.name}
-                      title={goal.title}
-                      status={goal.status as StatusCode}
-                      priority={goal.priority as PriorityCode}
-                      deadline={goal.deadline}
-                      managers={goal.managers}
+                      {...goal}
+                      showCheckbox={isDeleteMode}
+                      checked={checkItems.includes(goal.id)}
+                      onCheckChange={(checked) => handleCheck(goal.id, checked)}
                       filter={filter}
                     />
                   ))}
