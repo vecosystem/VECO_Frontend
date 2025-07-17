@@ -2,13 +2,14 @@ import { Navigate, Outlet, type RouteObject } from 'react-router-dom';
 import ProtectedLayout from '../layouts/ProtectedLayout';
 import GoalHome from '../pages/goal/GoalHome';
 import IssueHome from '../pages/issue/IssueHome';
+import Error404NotFound from '../pages/Error404NotFound';
 
 export const protectedRoutes: RouteObject[] = [
   {
     // 워크스페이스 내부 페이지들 : 로그인해야 들어올 수 있음
     path: '/workspace',
     element: <ProtectedLayout />,
-    errorElement: <div>Not Found</div>,
+    errorElement: <Error404NotFound />,
 
     children: [
       { index: true, element: <Navigate to="team/default/issue" replace /> }, // 기본 경로는 team/default로 리다이렉트
