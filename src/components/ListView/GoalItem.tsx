@@ -8,7 +8,6 @@ import {
   type StatusCode,
 } from '../../types/listItem';
 import dateIcon from '../../assets/icons/date.svg';
-import grayIcon from '../../assets/icons/gray.svg';
 import goalIcon from '../../assets/icons/goal.svg';
 import CheckedIcon from '../../assets/icons/check-box-o.svg';
 import UncheckedIcon from '../../assets/icons/check-box-x.svg';
@@ -18,6 +17,7 @@ import {
   getPriorityIcon,
   getStatusIcon,
 } from '../../utils/listItemUtils';
+import ManagerAvatar from './ManagerAvartar';
 
 /*
  * 기본값 설정, props 로 전달된 값이 없을 경우 사용
@@ -114,20 +114,7 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
          * 담당자 1인 기준으로 작성
          * 프로필 이미지, 고유 색상 등 추가 예정
          */}
-        {displayFields.includes('manage') && (
-          <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
-            <img src={grayIcon} alt="manage" className="w-[2.0rem] h-[2.0rem]" />
-            <div className="">
-              {managers.info && managers.info.length > 0
-                ? managers.info.map((manager, idx) => (
-                    <span key={idx} className="mr-[0.4rem]">
-                      {manager.name}
-                    </span>
-                  ))
-                : '없음'}
-            </div>
-          </div>
-        )}
+        {displayFields.includes('manage') && <ManagerAvatar managers={managers.info} />}
       </div>
     </div>
   );

@@ -136,7 +136,7 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
                     </span>
                   ))
                 : '없음'}
-            </div>{' '}
+            </div>
           </div>
         )}
       </div>
