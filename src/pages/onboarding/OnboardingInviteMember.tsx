@@ -21,34 +21,32 @@ const OnboardingInviteMember = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9FAFB]">
-      <div className="flex flex-col items-center gap-[3.2rem]">
-        {/* 인디케이터 */}
-        <PageIndicator currentStep={1} steps={onboardingSteps} />
-        {/* 본문 */}
-        <div className="flex flex-col items-center gap-[7.3rem]">
-          <div className="flex flex-col items-center gap-[3.2rem]">
-            {/* 초대 문구 */}
-            <div className="flex flex-col text-center gap-[1rem]">
-              <h1 className="font-bigtitle-b text-primary-blue">팀원 초대</h1>
-              <p className="font-title-sub-r text-gray-600">팀원을 OO님의 팀에 초대해봐요</p>
-              {/* 백엔드 연동 후 사용자 이름을 동적으로 바인딩 할 것 */}
-            </div>
-            <div className="flex items-start gap-[1rem]">
-              {/* 입력창 */}
-              <textarea
-                ref={inputRef}
-                value={inviteText}
-                readOnly
-                className="cursor-default select-none bg-gray-200 text-gray-600 w-[35rem] h-[16.7rem] rounded-[0.5rem] px-[2rem] py-[1.8rem] font-xsmall-r focus:outline-none resize-none"
-              />
-              {/* 복사 버튼 */}
-              <CopyToClipboard inputRef={inputRef} />
-            </div>
+    <div className="flex flex-col items-center gap-[3.2rem]">
+      {/* 인디케이터 */}
+      <PageIndicator currentStep={1} steps={onboardingSteps} />
+      {/* 본문 */}
+      <div className="flex flex-col items-center gap-[7.3rem]">
+        <div className="flex flex-col items-center gap-[3.2rem]">
+          {/* 초대 문구 */}
+          <div className="flex flex-col text-center gap-[1rem]">
+            <h1 className="font-bigtitle-b text-primary-blue">팀원 초대</h1>
+            <p className="font-title-sub-r text-gray-600">팀원을 OO님의 팀에 초대해봐요</p>
+            {/* 백엔드 연동 후 사용자 이름을 동적으로 바인딩 할 것 */}
           </div>
-          {/* 팀원 초대 완료 버튼 */}
-          <PrimaryButton text="팀원 초대 완료" to="/onboarding/fin" />
+          <div className="flex items-start gap-[1rem]">
+            {/* 입력창 */}
+            <textarea
+              ref={inputRef}
+              value={inviteText}
+              readOnly
+              className="cursor-default select-none bg-gray-200 text-gray-600 w-[35rem] h-[16.7rem] rounded-[0.5rem] px-[2rem] py-[1.8rem] font-xsmall-r focus:outline-none resize-none"
+            />
+            {/* 복사 버튼 */}
+            <CopyToClipboard inputRef={inputRef} />
+          </div>
         </div>
+        {/* 팀원 초대 완료 버튼 */}
+        <PrimaryButton text="팀원 초대 완료" to="/onboarding/fin" />
       </div>
     </div>
   );
