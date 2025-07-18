@@ -59,22 +59,10 @@ const SettingMember = () => {
   return (
     <div className={`flex flex-col w-full`}>
       <TeamHeader
+        type={'member'}
         title={'멤버'}
         buttonText={'팀원 초대하기'}
         onClick={() => setIsModalOpen(!isModalOpen)}
-        children={
-          <>
-            <div className={`flex gap-x-[3.2rem]`}>
-              <span>아이콘</span>
-              <span>멤버이름</span>
-              <span className={`mx-[0.45rem]`}>이메일</span>
-            </div>
-            <div className={`flex gap-x-[6.1rem]`}>
-              <span>팀</span>
-              <span>참여일</span>
-            </div>
-          </>
-        }
       />
       <hr className={`w-full text-gray-300`} />
       <MemberItem

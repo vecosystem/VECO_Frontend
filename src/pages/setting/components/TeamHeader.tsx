@@ -1,10 +1,8 @@
-import React from 'react';
-
 interface TeamHeaderProps {
+  type: 'team' | 'member';
   title: string;
   buttonText: string;
   onClick: () => void;
-  children: React.ReactNode;
 }
 
 const TeamHeader = (props: TeamHeaderProps) => {
@@ -22,7 +20,30 @@ const TeamHeader = (props: TeamHeaderProps) => {
       <div
         className={`flex w-full mt-[2rem] justify-between items-center text-gray-600 font-body-b pe-[6.8rem]`}
       >
-        {props.children}
+        {props.type === 'team' ? (
+          <>
+            <div className={`flex gap-x-[3.2rem]`}>
+              <span>아이콘</span>
+              <span>팀 이름</span>
+            </div>
+            <div className={`flex gap-x-[3.2rem]`}>
+              <span>멤버 수</span>
+              <span>생성일</span>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={`flex gap-x-[3.2rem]`}>
+              <span>아이콘</span>
+              <span>멤버이름</span>
+              <span className={`mx-[0.45rem]`}>이메일</span>
+            </div>
+            <div className={`flex gap-x-[6.1rem]`}>
+              <span>팀</span>
+              <span>참여일</span>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

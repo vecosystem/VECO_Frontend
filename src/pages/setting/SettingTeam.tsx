@@ -40,21 +40,10 @@ const SettingTeam = () => {
   return (
     <div className={`flex flex-col w-full`}>
       <TeamHeader
+        type={'team'}
         title={'팀'}
         buttonText={'팀 생성하기'}
         onClick={() => setIsModalOpen(!isModalOpen)}
-        children={
-          <>
-            <div className={`flex gap-x-[3.2rem]`}>
-              <span>아이콘</span>
-              <span>팀 이름</span>
-            </div>
-            <div className={`flex gap-x-[3.2rem]`}>
-              <span>멤버 수</span>
-              <span>생성일</span>
-            </div>
-          </>
-        }
       />
       <hr className={`w-full text-gray-300`} />
       <TeamItem
