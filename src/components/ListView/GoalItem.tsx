@@ -1,42 +1,50 @@
-import type { GoalItemProps } from '../../types/listItem';
+import {
+  PRIORITY_CODES,
+  PRIORITY_LABELS,
+  STATUS_CODES,
+  STATUS_LABELS,
+  type GoalItemProps,
+  type PriorityCode,
+  type StatusCode,
+} from '../../types/listItem';
 import dateIcon from '../../assets/icons/date.svg';
-import grayIcon from '../../assets/icons/gray.svg';
 import goalIcon from '../../assets/icons/goal.svg';
 import CheckedIcon from '../../assets/icons/check-box-o.svg';
 import UncheckedIcon from '../../assets/icons/check-box-x.svg';
-import { getFilter, getPriorityIcon, getStatusIcon } from '../../utils/listItemUtils';
+import {
+  formatGoalDate,
+  getFilter,
+  getPriorityIcon,
+  getStatusIcon,
+} from '../../utils/listItemUtils';
+import ManagerAvatar from './ManagerAvartar';
 
 /*
  * 기본값 설정, props 로 전달된 값이 없을 경우 사용
  * 추후 백엔드 명세서 확인 후 변수명 등 수정 예정
  */
-const defaultData: GoalItemProps = {
-  showCheckbox: true,
-  checked: false,
-  type: 'goal', // 'goal' | 'my-goal'
-  goalId: 'Veco-g3',
-  title: '백호를 사용해서 다른 사람들과 협업해보기',
-  status: '완료',
-  priority: '보통',
-  manage: '없음',
-  filter: '우선순위', // '상태' | '우선순위' | '담당자'
-};
 
 export const GoalItem = (props: Partial<GoalItemProps>) => {
+  const status: StatusCode =
+    props.status && STATUS_CODES.includes(props.status as StatusCode)
+      ? (props.status as StatusCode)
+      : ('NONE' as StatusCode);
+
+  const priority: PriorityCode =
+    props.priority && PRIORITY_CODES.includes(props.priority as PriorityCode)
+      ? (props.priority as PriorityCode)
+      : ('NONE' as PriorityCode);
+
   const {
     showCheckbox,
     checked,
     onCheckChange,
-    type,
-    goalId,
+    name,
     title,
-    status,
-    priority,
-    deadline,
-    manage,
+    deadline = { start: '', end: '' },
+    managers = { cnt: 0, info: [] },
     filter,
   } = {
-    ...defaultData,
     ...props,
   };
 
@@ -50,7 +58,7 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
 
   return (
     <div
-      className={`font-body-r flex justify-between items-center min-w-[110rem] h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
+      className={`font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
       onClick={handleItemClick}
       tabIndex={showCheckbox ? 0 : -1}
       style={{ cursor: showCheckbox ? 'pointer' : 'default' }}
@@ -73,10 +81,10 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
                 className="w-[1.6rem] h-[1.6rem] pointer-events-none"
               />
             </label>
-            <span className="font-body-b whitespace-nowrap">{goalId}</span>
+            <span className="font-body-b whitespace-nowrap">{name}</span>
           </div>
         ) : (
-          <span className="font-body-b ml-[2.4rem] whitespace-nowrap">{goalId}</span>
+          <span className="font-body-b ml-[2.4rem] whitespace-nowrap">{name}</span>
         )}
         <div className="flex gap-[0.8rem] items-center">
           {/* 목표 아이콘 */}
@@ -90,38 +98,23 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
         {displayFields.includes('status') && (
           <div className="flex gap-[0.8rem] items-center">
             {getStatusIcon(status)}
-            <div className="truncate">{status}</div>
+            <div className="truncate">{STATUS_LABELS[status]}</div>
           </div>
         )}
         {/* 우선순위 */}
         {displayFields.includes('priority') && (
           <div className="flex gap-[0.8rem] items-center">
             <img src={getPriorityIcon(priority)} alt={priority} className="w-[2.4rem] h-[2.4rem]" />
-            <div className="truncate">{priority}</div>
+            <div className="whitespace-nowrap">{PRIORITY_LABELS[priority]}</div>
           </div>
         )}
         {/* 기한 */}
-        {deadline && deadline !== '없음' && (
-          <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
-            <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
-            <div className="">{deadline}</div>
-          </div>
-        )}
-        {/* 담당자/팀명 */}
-        {/*
-         * 담당자 1인 기준으로 작성
-         * 프로필 이미지, 고유 색상 등 추가 예정
-         */}
-        {displayFields.includes('manage') && (
-          <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
-            <img
-              src={type === 'goal' ? grayIcon : grayIcon}
-              alt="manage"
-              className="w-[2.0rem] h-[2.0rem]"
-            />
-            <div className="">{manage}</div>
-          </div>
-        )}
+        <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
+          <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
+          <div>{formatGoalDate(deadline?.start, deadline?.end)}</div>
+        </div>
+        {/* 담당자 */}
+        {displayFields.includes('manage') && <ManagerAvatar managers={managers.info} />}
       </div>
     </div>
   );
