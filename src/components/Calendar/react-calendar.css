@@ -1,0 +1,54 @@
+/* react-calendar.css */
+.react-calendar__navigation {
+    /* 달력 상단의 네비게이션 바 */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.react-calendar__navigation__label {
+    /* 달력 상단의 연도/월 레이블 */
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 140%;
+    color: var(--color-gray-500);
+}
+
+.react-calendar__month-view {
+    /* 월별 달력 뷰 */
+    margin-top: 1.6rem;
+}
+
+.react-calendar__month-view__weekdays {
+    /* 요일 행 (월, 화, 수...) */
+    display: none !important;
+}
+
+.react-calendar__tile {
+    /* 모든 날짜 타일 공통 */
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
+    font-size: 0.6rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 140%;
+    width: 1.4rem;
+    height: 1.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    margin-top: 0.1rem;
+}
+
+.react-calendar__tile--active {
+    /* 선택된 날짜 */
+    background-color: var(--color-gray-300);
+    border-radius: 0.2rem;
+}
+
+.react-calendar__tile--neighboringMonth {
+    /* 이웃 달의 날짜 */
+    color: var(--color-gray-300);
+}
+

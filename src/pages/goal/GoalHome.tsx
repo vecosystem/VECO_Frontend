@@ -79,8 +79,8 @@ const GoalHome = () => {
 
   return (
     <>
-      <div className="flex flex-1 flex-col gap-[3.2rem]">
-        {/* 팀 아이콘, 팀명 */}
+      <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
+        {/* 팀 아이콘, 팀명, props로 요소 전달 가능 */}
         <TeamIcon />
         <ListViewToolbar
           filter={filter}

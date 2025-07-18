@@ -1,28 +1,19 @@
-import { useState } from 'react';
-
 interface InviteCodeInputProps {
-  correctCode: string; // 초대한 사람이 준 암호
+  inputCode: string; // 상위 컴포넌트에서 내려준 입력값 (input의 value로 사용)
+  onChange: (value: string) => void; // 입력이 변경되었을 때 상위에 전달할 함수
+  hasError: boolean; // 에러 상태
 }
 
-const InviteCodeInput = ({ correctCode }: InviteCodeInputProps) => {
-  const [inputCode, setInputCode] = useState(''); // 사용자가 입력한 암호를 저장하는 상태 변수
-  const [hasError, setHasError] = useState(false); // 에러 상태를 저장하는 변수
-
+const InviteCodeInput = ({ inputCode, onChange, hasError }: InviteCodeInputProps) => {
+  // input의 값이 바뀔 때 호출되는 함수
+  // 사용자가 입력한 값을 상위 컴포넌트로 전달
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const typedCode = e.target.value; // 사용자가 입력한 암호
-    setInputCode(typedCode); // 상태 업데이트
-
-    // 입력한 암호가 있고, 초대한 사람이 준 암호와 다르면 에러
-    if (typedCode && typedCode !== correctCode) {
-      setHasError(true);
-    } else {
-      setHasError(false);
-    }
+    onChange(e.target.value); // 상위 컴포넌트로 전달
   };
 
   return (
     <div className="flex flex-col gap-[1rem]">
-      {/* 텍스트 입력창 */}
+      {/* 암호 입력창 */}
       <input
         type="text"
         value={inputCode}
