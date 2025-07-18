@@ -16,7 +16,7 @@ export interface BaseItemProps {
   onCheckChange?: (checked: boolean) => void;
   status: Status;
   priority: PriorityLevel;
-  deadline: string;
+  deadline?: string;
   manage?: string;
   displayFields?: DisplayField[];
   filter?: ItemFilter;
