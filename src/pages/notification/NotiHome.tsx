@@ -22,6 +22,7 @@ import type { GoalFilter } from '../../types/goal';
 import type { IssueFilter } from '../../types/issue';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
+import GroupTypeTab from '../../components/ListView/GroupTypeTab';
 
 const TAB_LIST = ['goal', 'issue', 'external'] as const;
 type NotiTab = (typeof TAB_LIST)[number];
@@ -57,6 +58,11 @@ const NotiHome = () => {
       return [];
     }
     return [];
+  };
+
+  const handleTabChange = (newTab: NotiTab) => {
+    setTab(newTab);
+    setCheckedIds([]); // 탭 변경 시 선택 해제
   };
 
   const dummyGroups = getDummyGroups(tab, filter);
@@ -104,21 +110,6 @@ const NotiHome = () => {
     <div className="flex flex-1 flex-col gap-[3.2rem]">
       {/* 알림 아이콘/텍스트 */}
       <TeamIcon teamName="알림" teamImgUrl={BellIcon} />
-      {/* 탭 버튼 */}
-      <div className="flex gap-[2.4rem] mb-[1.6rem]">
-        {TAB_LIST.map((t) => (
-          <button
-            key={t}
-            className={`font-body-b py-2 px-4 rounded ${tab === t ? 'bg-blue-100' : ''}`}
-            onClick={() => {
-              setTab(t);
-              setCheckedIds([]); // 탭 변경 시 선택 초기화
-            }}
-          >
-            {t}
-          </button>
-        ))}
-      </div>
       {/* 툴바 */}
       <ListViewToolbar
         filter={filter}
@@ -135,11 +126,12 @@ const NotiHome = () => {
         onSelectAllChange={handleSelectAll}
         dropdownProps={{ isOpen, content, closeDropdown }}
       />
-
+      {/* 탭 버튼 */}
+      <GroupTypeTab currentTab={tab} onTabChange={handleTabChange} />
       {isModalOpen && modalContent && <Modal subtitle={modalContent.name} />}
       {isEmpty ? (
         <div className="flex flex-1 items-center justify-center">
-          <div className="font-body-r">{tab} 알림이 없습니다</div>
+          <div className="font-body-r">새로운 알림이 없습니다</div>
         </div>
       ) : (
         /* 리스트뷰 */

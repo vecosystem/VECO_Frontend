@@ -1,0 +1,66 @@
+import GoalIcon from '../../assets/icons/goal.svg';
+import GoalBlueIcon from '../../assets/icons/goal-blue.svg';
+import IssueIcon from '../../assets/icons/issue.svg';
+import IssueBlueIcon from '../../assets/icons/issue-blue.svg';
+import ExternalIcon from '../../assets/icons/external.svg';
+import ExternalBlueIcon from '../../assets/icons/external-blue.svg';
+
+const TAB_LIST = ['goal', 'issue', 'external'] as const;
+const TAB_LABELS: Record<(typeof TAB_LIST)[number], string> = {
+  goal: '목표',
+  issue: '이슈',
+  external: '외부',
+} as const;
+
+const ICONS = {
+  goal: GoalIcon,
+  issue: IssueIcon,
+  external: ExternalIcon,
+};
+
+const SELECTED_ICONS = {
+  goal: GoalBlueIcon,
+  issue: IssueBlueIcon,
+  external: ExternalBlueIcon,
+};
+
+export type NotiTab = (typeof TAB_LIST)[number];
+
+interface TabProps {
+  currentTab: NotiTab;
+  onTabChange: (tab: NotiTab) => void;
+}
+
+const GroupTypeTab = ({ currentTab, onTabChange }: TabProps) => {
+  return (
+    <div className="flex items-center justify-between relative">
+      <div className="absolute left-[-3.2rem] right-[-3.2rem] bottom-0 h-[0.1rem] bg-gray-300" />
+
+      <div className="flex gap-[2rem] items-center">
+        {TAB_LIST.map((tab) => (
+          <div key={tab} className="relative">
+            <button
+              className="flex gap-[0.8rem] items-center pb-[1rem]"
+              onClick={() => onTabChange(tab)}
+            >
+              <img
+                src={currentTab === tab ? SELECTED_ICONS[tab] : ICONS[tab]}
+                className="w-[2.4rem] h-[2.4rem]"
+              />
+              <span className={`font-small-b ${currentTab === tab ? 'text-primary-blue' : ''}`}>
+                {TAB_LABELS[tab]}
+              </span>
+            </button>
+
+            {currentTab === tab && (
+              <div className="absolute h-[0.3rem] bg-primary-variant-blue left-[-1rem] right-[-1rem] bottom-0" />
+            )}
+          </div>
+        ))}
+      </div>
+      <div>페이지네이션 화살표</div>
+    </div>
+  );
+};
+
+export default GroupTypeTab;
