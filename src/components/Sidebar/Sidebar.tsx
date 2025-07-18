@@ -27,6 +27,7 @@ const Sidebar = () => {
           <button
             type="button"
             className="flex w-[3.2rem] h-[3.2rem] p-[0.3rem] items-center justify-center cursor-pointer hover:bg-gray-300 rounded-[0.6rem] transition-colors duration-150 ease-in-out"
+            onClick={() => navigate('/workspace/setting')}
           >
             <img src={settingIcon} width="full" height="full" alt="Setting" />
           </button>
@@ -63,39 +64,37 @@ const Sidebar = () => {
                 }
                 isNested={true}
               >
-                <div className="flex flex-col pl-[3rem] justify-end">
-                  <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] mb-[1.6rem]">
-                    <SidebarItem
-                      defaultIcon={<img src={goalIcon} alt="Goal" />}
-                      hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
-                      label="목표"
-                      onClick={() => {
-                        navigate(`/team/:teamId/goal`);
-                      }}
-                      onAddClick={() => {
-                        navigate(`/team/:teamId/goal/:goalId`);
-                      }}
-                    />
-                    <SidebarItem
-                      defaultIcon={<img src={issueIcon} alt="Issue" />}
-                      hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
-                      label="이슈"
-                      onClick={() => {
-                        navigate(`/team/:teamId/issue`);
-                      }}
-                      onAddClick={() => {
-                        navigate(`/team/:teamId/issue/:issueId`);
-                      }}
-                    />
-                    <SidebarItem
-                      defaultIcon={<img src={externalIcon} alt="External" />}
-                      hoverIcon={<img src={externalHoverIcon} alt="External" />}
-                      label="외부"
-                      onClick={() => {
-                        navigate(`/team/:teamId/ext`);
-                      }}
-                    />
-                  </div>
+                <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
+                  <SidebarItem
+                    defaultIcon={<img src={goalIcon} alt="Goal" />}
+                    hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
+                    label="목표"
+                    onClick={() => {
+                      navigate(`/team/:teamId/goal`);
+                    }}
+                    onAddClick={() => {
+                      navigate(`/team/:teamId/goal/:goalId`);
+                    }}
+                  />
+                  <SidebarItem
+                    defaultIcon={<img src={issueIcon} alt="Issue" />}
+                    hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
+                    label="이슈"
+                    onClick={() => {
+                      navigate(`/team/:teamId/issue`);
+                    }}
+                    onAddClick={() => {
+                      navigate(`/team/:teamId/issue/:issueId`);
+                    }}
+                  />
+                  <SidebarItem
+                    defaultIcon={<img src={externalIcon} alt="External" />}
+                    hoverIcon={<img src={externalHoverIcon} alt="External" />}
+                    label="외부"
+                    onClick={() => {
+                      navigate(`/team/:teamId/ext`);
+                    }}
+                  />
                 </div>
               </DropdownMenu>
             </div>
@@ -113,39 +112,37 @@ const Sidebar = () => {
               }
               isNested={true}
             >
-              <div className="flex flex-col pl-[3rem] justify-end">
-                <div className="flex flex-col justify-center items-start gap-[1.6rem] mb-[1.6rem]">
-                  <SidebarItem
-                    defaultIcon={<img src={goalIcon} alt="Goal" />}
-                    hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
-                    label="목표"
-                    onClick={() => {
-                      navigate(`/team/:teamId/goal`);
-                    }}
-                    onAddClick={() => {
-                      navigate(`/team/:teamId/goal/:goalId`);
-                    }}
-                  />
-                  <SidebarItem
-                    defaultIcon={<img src={issueIcon} alt="Issue" />}
-                    hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
-                    label="이슈"
-                    onClick={() => {
-                      navigate(`/team/:teamId/issue`);
-                    }}
-                    onAddClick={() => {
-                      navigate(`/team/:teamId/issue/:issueId`);
-                    }}
-                  />
-                  <SidebarItem
-                    defaultIcon={<img src={externalIcon} alt="External" />}
-                    hoverIcon={<img src={externalHoverIcon} alt="External" />}
-                    label="외부"
-                    onClick={() => {
-                      navigate(`/team/:teamId/ext`);
-                    }}
-                  />
-                </div>
+              <div className="flex flex-col justify-center items-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
+                <SidebarItem
+                  defaultIcon={<img src={goalIcon} alt="Goal" />}
+                  hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
+                  label="목표"
+                  onClick={() => {
+                    navigate(`/team/:teamId/goal`);
+                  }}
+                  onAddClick={() => {
+                    navigate(`/team/:teamId/goal/:goalId`);
+                  }}
+                />
+                <SidebarItem
+                  defaultIcon={<img src={issueIcon} alt="Issue" />}
+                  hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
+                  label="이슈"
+                  onClick={() => {
+                    navigate(`/team/:teamId/issue`);
+                  }}
+                  onAddClick={() => {
+                    navigate(`/team/:teamId/issue/:issueId`);
+                  }}
+                />
+                <SidebarItem
+                  defaultIcon={<img src={externalIcon} alt="External" />}
+                  hoverIcon={<img src={externalHoverIcon} alt="External" />}
+                  label="외부"
+                  onClick={() => {
+                    navigate(`/team/:teamId/ext`);
+                  }}
+                />
               </div>
             </DropdownMenu>
             <DropdownMenu
@@ -156,39 +153,37 @@ const Sidebar = () => {
               }
               isNested={true}
             >
-              <div className="flex flex-col pl-[3rem] justify-end">
-                <div className="flex flex-col justify-center items-start gap-[1.6rem] mb-[1.6rem]">
-                  <SidebarItem
-                    defaultIcon={<img src={goalIcon} alt="Goal" />}
-                    hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
-                    label="목표"
-                    onClick={() => {
-                      navigate(`/team/:teamId/goal`);
-                    }}
-                    onAddClick={() => {
-                      navigate(`/team/:teamId/goal/:goalId`);
-                    }}
-                  />
-                  <SidebarItem
-                    defaultIcon={<img src={issueIcon} alt="Issue" />}
-                    hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
-                    label="이슈"
-                    onClick={() => {
-                      navigate(`/team/:teamId/issue`);
-                    }}
-                    onAddClick={() => {
-                      navigate(`/team/:teamId/issue/:issueId`);
-                    }}
-                  />
-                  <SidebarItem
-                    defaultIcon={<img src={externalIcon} alt="External" />}
-                    hoverIcon={<img src={externalHoverIcon} alt="External" />}
-                    label="외부"
-                    onClick={() => {
-                      navigate(`/team/:teamId/ext`);
-                    }}
-                  />
-                </div>
+              <div className="flex flex-col justify-center items-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
+                <SidebarItem
+                  defaultIcon={<img src={goalIcon} alt="Goal" />}
+                  hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
+                  label="목표"
+                  onClick={() => {
+                    navigate(`/team/:teamId/goal`);
+                  }}
+                  onAddClick={() => {
+                    navigate(`/team/:teamId/goal/:goalId`);
+                  }}
+                />
+                <SidebarItem
+                  defaultIcon={<img src={issueIcon} alt="Issue" />}
+                  hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
+                  label="이슈"
+                  onClick={() => {
+                    navigate(`/team/:teamId/issue`);
+                  }}
+                  onAddClick={() => {
+                    navigate(`/team/:teamId/issue/:issueId`);
+                  }}
+                />
+                <SidebarItem
+                  defaultIcon={<img src={externalIcon} alt="External" />}
+                  hoverIcon={<img src={externalHoverIcon} alt="External" />}
+                  label="외부"
+                  onClick={() => {
+                    navigate(`/team/:teamId/ext`);
+                  }}
+                />
               </div>
             </DropdownMenu>
           </DropdownMenu>
