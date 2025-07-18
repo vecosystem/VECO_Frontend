@@ -1,10 +1,11 @@
 interface ProfileImageProps {
   profileImage: string | null;
+  className?: string;
 }
 
-const ProfileImage = ({ profileImage }: ProfileImageProps) => {
+const ProfileImage = ({ profileImage, className }: ProfileImageProps) => {
   return (
-    <div className={`p-[0.4rem]`}>
+    <div className={`z-10 ${className}`}>
       {profileImage ? (
         <img
           className={`rounded-full w-[2rem] h-[2rem] object-cover`}
