@@ -33,9 +33,8 @@ interface TabProps {
 
 const GroupTypeTab = ({ currentTab, onTabChange }: TabProps) => {
   return (
-    <div className="flex items-center justify-between relative">
+    <div className="relative">
       <div className="absolute left-[-3.2rem] right-[-3.2rem] bottom-0 h-[0.1rem] bg-gray-300" />
-
       <div className="flex gap-[2rem] items-center">
         {TAB_LIST.map((tab) => (
           <div key={tab} className="relative">
@@ -58,7 +57,6 @@ const GroupTypeTab = ({ currentTab, onTabChange }: TabProps) => {
           </div>
         ))}
       </div>
-      <div>페이지네이션 화살표</div>
     </div>
   );
 };
