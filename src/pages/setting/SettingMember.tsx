@@ -43,7 +43,10 @@ const SettingMember = () => {
               <span>멤버이름</span>
               <span className={`mx-[0.45rem]`}>이메일</span>
             </div>
-            <span>참여일</span>
+            <div className={`flex gap-x-[6.1rem]`}>
+              <span>팀</span>
+              <span>참여일</span>
+            </div>
           </>
         }
       />
