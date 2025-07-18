@@ -9,9 +9,13 @@
   --color-gray-500: #777777;
   --color-gray-600: #111111;
 
+  /* Error Scale */
+  --color-red-400: #D44242;
+
   /* Primary Color */
   --color-primary-blue: #132650;
   --color-primary-variant-blue: #2e4475;
+  --color-calendar-blue: #4474E2;
 }
 
 @font-face {
@@ -138,11 +142,30 @@
     letter-spacing: -0.02em;
     line-height: 140%;
   }
+
+  /* XXSmall (8px, Regular) */
+  .font-xxsmall-r {
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 140%;
+  }
+
+  /* XXXSmall (6px, Regular) */
+  .font-xxxsmall-r {
+    font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
+    font-size: 0.6rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 140%;
+  }
 }
 
 html {
   font-size: 62.5%; /* 1rem = 10px */
 }
+
 body {
   font-family: 'Spoqa Han Sans Neo', Arial, sans-serif;
   background-color: var(--color-gray-100);
@@ -152,22 +175,49 @@ body {
 /* WebKit 기반 브라우저 (Chrome, Safari, Edge) 스크롤바 */
 
 /* 1. 전체 스크롤바의 너비/높이 */
-::-webkit-scrollbar {
-  width: 0.4rem; /* 세로 스크롤바 너비 */
+.sidebar-scroll::-webkit-scrollbar {
+  width: 1.2rem; /* 세로 스크롤바 너비 */
+  height: 1.2rem; /* 가로 스크롤바 높이 */
 }
 
 /* 2. 스크롤바 트랙 (배경 부분) */
-::-webkit-scrollbar-track {
+.sidebar-scroll::-webkit-scrollbar-track {
   background: var(--color-gray-200);
 }
 
 /* 3. 스크롤바 썸 (움직이는 막대) */
-::-webkit-scrollbar-thumb {
+.sidebar-scroll::-webkit-scrollbar-thumb {
   background-color: var(--color-gray-400);
   border-radius: 1rem;
+
+  box-shadow: inset 0 0 0 0.4rem var(--color-gray-200); /* 스크롤을 적용할 영역 색깔과 border 색상을 똑같이 맞춘다 */
 }
 
 /* 4. 스크롤바 썸 호버 시 색상 변경 */
-::-webkit-scrollbar-thumb:hover {
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-gray-500); /* 마우스 오버 시 색상 변경 */
+}
+
+/* 1. 전체 스크롤바의 너비/높이 */
+.basic-scroll::-webkit-scrollbar {
+  width: 1.2rem; /* 세로 스크롤바 너비 */
+  height: 1.2rem; /* 가로 스크롤바 높이 */
+}
+
+/* 2. 스크롤바 트랙 (배경 부분) */
+.basic-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0);
+}
+
+/* 3. 스크롤바 썸 (움직이는 막대) */
+.basic-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--color-gray-400);
+  border-radius: 1rem;
+
+  box-shadow: inset 0 0 0 0.4rem white; /* 스크롤을 적용할 영역 색깔과 border 색상을 똑같이 맞춘다 */
+}
+
+/* 4. 스크롤바 썸 호버 시 색상 변경 */
+.basic-scroll::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-gray-500); /* 마우스 오버 시 색상 변경 */
 }
