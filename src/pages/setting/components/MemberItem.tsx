@@ -1,6 +1,8 @@
 import IcDate from '../../../assets/icons/date.svg';
 import ProfileImage from './ProfileImage.tsx';
 import SubProfileImage from './SubProfileImage.tsx';
+import { useDropdownActions, useDropdownInfo } from '../../../hooks/useDropdown.ts';
+import Dropdown from '../../../components/Dropdown/Dropdown.tsx';
 
 type SettingMemberTeam = {
   id: number;
@@ -18,6 +20,9 @@ interface MemberItemProps {
 }
 
 const MemberItem = (props: MemberItemProps) => {
+  const { isOpen, content } = useDropdownInfo();
+  const { openDropdown, closeDropdown } = useDropdownActions();
+
   return (
     <div
       className={`flex w-full items-center text-gray-600 font-body-r ps-[4.3rem] pe-[4.9rem] ${props.className}`}
@@ -26,7 +31,17 @@ const MemberItem = (props: MemberItemProps) => {
       <span className={`ms-[4.1rem] text-start w-[6.4rem] truncate`}>{props.name}</span>
       <span className={`flex-1 ms-[2.8rem] text-start`}>{props.email}</span>
       <div className={`flex gap-x-[1.8rem]`}>
-        <ProfileLayout teams={props.teams} />
+        <section className={`relative`}>
+          <ProfileLayout teams={props.teams} onClick={() => openDropdown({ name: props.name })} />
+          {isOpen && content?.name == props.name && (
+            <Dropdown
+              options={props.teams?.map((team) => team.name) || []}
+              onSelect={() => {}}
+              onClose={closeDropdown}
+              className={`right-0 top-[2.4rem]`}
+            />
+          )}
+        </section>
         <div className={`flex gap-x-[0.8rem] items-center`}>
           <img src={IcDate} alt={'생성일'} />
           <span>{props.date}</span>
@@ -36,9 +51,15 @@ const MemberItem = (props: MemberItemProps) => {
   );
 };
 
-const ProfileLayout = ({ teams }: { teams?: SettingMemberTeam[] }) => {
+const ProfileLayout = ({
+  teams,
+  onClick,
+}: {
+  teams?: SettingMemberTeam[];
+  onClick: () => void;
+}) => {
   return (
-    <div className={`flex w-[6.2rem] justify-start items-center`}>
+    <div className={`flex w-[6.2rem] justify-start items-center`} onClick={onClick}>
       {teams && teams.length === 1 && <ProfileImage profileImage={teams[0].teamProfileImage} />}
       {teams && teams.length === 2 && (
         <div className={`flex relative items-center`}>
