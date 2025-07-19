@@ -8,7 +8,13 @@ interface SidebarItemProps {
   onAddClick?: () => void;
 }
 
-const SidebarItem = ({ defaultIcon, hoverIcon, label, onClick, onAddClick }: SidebarItemProps) => {
+const SidebarItem = ({
+  defaultIcon,
+  hoverIcon = defaultIcon,
+  label,
+  onClick,
+  onAddClick,
+}: SidebarItemProps) => {
   return (
     <div className="group flex w-full min-h-[3.2rem] items-center self-stretch hover:bg-gray-300 rounded-[0.6rem] transition-colors duration-150 ease-in-out">
       <button

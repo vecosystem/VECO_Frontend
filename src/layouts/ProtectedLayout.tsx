@@ -1,13 +1,16 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar/Sidebar';
+import SettingSidebar from '../components/Sidebar/SettingSidebar';
 
 const ProtectedLayout = () => {
+  const location = useLocation();
+  const isSettingRoute = location.pathname.startsWith('/workspace/setting');
   return (
     <div className="flex h-screen">
       <aside className="overflow-auto sidebar-scroll">
-        <Sidebar />
+        {isSettingRoute ? <SettingSidebar /> : <Sidebar />}
       </aside>
-      <main className="flex flex-1 min-w-0 p-[3.2rem] overflow-auto basic-scroll">
+      <main className="flex flex-1 min-w-0 overflow-auto basic-scroll">
         <Outlet />
       </main>
     </div>
