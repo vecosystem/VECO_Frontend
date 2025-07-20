@@ -2,12 +2,16 @@ import { Navigate, Outlet, type RouteObject } from 'react-router-dom';
 import ProtectedLayout from '../layouts/ProtectedLayout';
 import GoalHome from '../pages/goal/GoalHome';
 import IssueHome from '../pages/issue/IssueHome';
+import Error404NotFound from '../pages/Error404NotFound';
+import SettingTeam from '../pages/setting/SettingTeam.tsx';
+import SettingMember from '../pages/setting/SettingMember.tsx';
+
 export const protectedRoutes: RouteObject[] = [
   {
     // 워크스페이스 내부 페이지들 : 로그인해야 들어올 수 있음
     path: '/workspace',
     element: <ProtectedLayout />,
-    errorElement: <div>Not Found</div>,
+    errorElement: <Error404NotFound />,
 
     children: [
       { index: true, element: <Navigate to="team/default/issue" replace /> }, // 기본 경로는 team/default로 리다이렉트
@@ -25,8 +29,8 @@ export const protectedRoutes: RouteObject[] = [
           // 기본 경로는 워크스페이스 프로필 페이지로 리다이렉트.
           { index: true, element: <Navigate to="ws-profile" replace /> },
           { path: 'ws-profile', element: <div>Setting_Workspace_Profile</div> },
-          { path: 'team-list', element: <div>Setting_Team_List</div> },
-          { path: 'team-members', element: <div>Setting_Team_Member_List</div> },
+          { path: 'team-list', element: <SettingTeam /> },
+          { path: 'team-members', element: <SettingMember /> },
           { path: 'my-profile', element: <div>Setting_My_Profile</div> },
         ],
       },

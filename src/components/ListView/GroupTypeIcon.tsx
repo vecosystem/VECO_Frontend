@@ -1,4 +1,4 @@
-import type { ItemFilter, Status } from '../../types/listItem';
+import type { ItemFilter, PriorityCode, StatusCode } from '../../types/listItem';
 import GoalIcon from '../../assets/icons/goal.svg';
 import GoalGrayIcon from '../../assets/icons/goal-gray.svg';
 import { getPriorityIcon, getStatusColor } from '../../utils/listItemUtils';
@@ -14,14 +14,14 @@ const GroupTypeIcon = ({ filter, typeKey, profileImghUrl }: Props) => {
     return (
       <span
         className="inline-block rounded-full w-[1.6rem] h-[1.6rem] mr-[0.8rem]"
-        style={{ background: getStatusColor(typeKey as Status) }}
+        style={{ background: getStatusColor(typeKey as StatusCode) }}
       />
     );
   }
   if (filter === '우선순위') {
     return (
       <img
-        src={getPriorityIcon(typeKey as any)}
+        src={getPriorityIcon(typeKey as PriorityCode)}
         alt={typeKey}
         className="w-[3.2rem] h-[3.2rem] mr-[0.8rem]"
       />

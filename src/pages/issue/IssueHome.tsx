@@ -1,85 +1,63 @@
 import PlusIcon from '../../assets/icons/plus.svg';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
-  PRIORITY_LIST,
-  STATUS_LIST,
-  type IssueItemProps,
+  PRIORITY_LABELS,
+  STATUS_LABELS,
   type ItemFilter,
+  type PriorityCode,
+  type StatusCode,
 } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import TeamIcon from '../../components/ListView/TeamIcon';
 import { IssueItem } from '../../components/ListView/IssueItem';
 import useCheckItems from '../../hooks/useCheckItems';
-import { getGoals, getManagers } from '../../utils/listGroupingUtils';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
 import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import Modal from '../../components/Modal/Modal';
+import {
+  dummyGoalTitleIssueGroups,
+  dummyManagerIssueGroups,
+  dummyPriorityIssueGroups,
+  dummyStatusIssueGroups,
+} from '../../types/testDummy';
+import type { GroupedIssue, IssueFilter } from '../../types/issue';
+import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 
-/*
-  추후 더미데이터 대신 실제 api 명세서 참고하여 수정 예정
-*/
-const dummyIssues: Partial<IssueItemProps>[] = [
-  {
-    issueId: 'Veco-i1',
-    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: '없음',
-    priority: '보통',
-    //goalTitle: '기획 및 요구사항 분석',
-    //deadline: '25.05.02',
-    manage: '이가을',
-  },
-  {
-    issueId: 'Veco-i2',
-    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: '진행중',
-    priority: '긴급',
-    //goalTitle: '기획 및 요구사항 분석',
-    deadline: '25.05.02',
-    manage: '박유민',
-  },
-  {
-    issueId: 'Veco-i3',
-    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: '해야할 일',
-    priority: '높음',
-    goalTitle: '기획 및 요구사항 분석',
-    //deadline: '25.05.02',
-    manage: '박유민',
-  },
-  {
-    issueId: 'Veco-i4',
-    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: '완료',
-    priority: '없음',
-    goalTitle: '개발 및 배포',
-    deadline: '25.05.02',
-    manage: '김선화',
-  },
-  {
-    issueId: 'Veco-i5',
-    issueTitle: '기능 정의: 구현할 핵심 기능과 부가 기능 목록화',
-    status: '검토',
-    priority: '낮음',
-    goalTitle: '개발 및 배포',
-    deadline: '25.05.02',
-    manage: '김선화',
-  },
-];
+const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
 const IssueHome = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
-  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
+  const dimmyIssueGroups = useMemo<IssueFilter[]>(() => {
+    switch (filter) {
+      case '상태':
+        return dummyStatusIssueGroups;
+      case '우선순위':
+        return dummyPriorityIssueGroups;
+      case '담당자':
+        return dummyManagerIssueGroups;
+      case '목표':
+        return dummyGoalTitleIssueGroups;
+      default:
+        return [];
+    }
+  }, [filter]);
+
+  const allGoalsFlat = dimmyIssueGroups.flatMap((i) => i.issues);
+
   const {
     checkedIds: checkItems,
     isAllChecked,
     handleCheck,
     handleSelectAll,
     setCheckedIds,
-  } = useCheckItems(dummyIssues, 'issueId');
+  } = useCheckItems(allGoalsFlat, 'id');
+
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
 
   const { isOpen: isModalOpen, content: modalContent } = useModalInfo();
   const { openModal } = useModalActions();
@@ -95,34 +73,17 @@ const IssueHome = () => {
   };
 
   // 그룹핑
-  const groupKeys = (
-    filter === '상태'
-      ? STATUS_LIST
-      : filter === '우선순위'
-        ? PRIORITY_LIST
-        : filter === '담당자'
-          ? getManagers(dummyIssues)
-          : getGoals(dummyIssues)
-  ) as string[]; // 목표 필터는 고정된 값
-
-  const grouped = groupKeys.map((key) => ({
-    key,
-    items: dummyIssues.filter((issue) =>
-      filter === '상태'
-        ? issue.status === key
-        : filter === '우선순위'
-          ? issue.priority === key
-          : filter === '담당자'
-            ? (!issue.manage || issue.manage === '' ? '없음' : issue.manage) === key
-            : (!issue.goalTitle || issue.goalTitle === '' ? '없음' : issue.goalTitle) === key
-    ),
+  const grouped: GroupedIssue[] = dimmyIssueGroups.map((i) => ({
+    key: i.filterName,
+    items: i.issues,
   }));
 
+  const sortedGrouped = getSortedGrouped(filter, grouped);
   const isEmpty = grouped.every(({ items }) => items.length === 0);
 
   return (
     <>
-      <div className="flex flex-1 flex-col gap-[3.2rem]">
+      <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
         {/* 팀 아이콘, 팀명, props로 요소 전달 가능 */}
         <TeamIcon />
         <ListViewToolbar
@@ -130,7 +91,7 @@ const IssueHome = () => {
           isDeleteMode={isDeleteMode}
           isAllChecked={isAllChecked}
           showSelectAll={grouped.some(({ items }) => items.length > 0)}
-          filterOptions={['상태', '우선순위', '담당자', '목표']}
+          filterOptions={FILTER_OPTIONS}
           onFilterClick={() => openDropdown({ name: 'filter' })}
           onFilterSelect={(option) => {
             setFilter(option as ItemFilter);
@@ -148,7 +109,7 @@ const IssueHome = () => {
         ) : (
           /* 리스트뷰 */
           <div className="flex flex-col gap-[4.8rem]">
-            {grouped.map(({ key, items }) =>
+            {sortedGrouped.map(({ key, items }) =>
               /* 해당 요소 존재할 때만 생성 */
               items.length > 0 ? (
                 <div key={key}>
@@ -162,7 +123,13 @@ const IssueHome = () => {
                         profileImghUrl={filter === '담당자' ? '' : undefined}
                       />
                       {/* 유형명 */}
-                      <div>{key}</div>
+                      <div>
+                        {filter === '상태'
+                          ? STATUS_LABELS[key as keyof typeof STATUS_LABELS] || key
+                          : filter === '우선순위'
+                            ? PRIORITY_LABELS[key as keyof typeof PRIORITY_LABELS] || key
+                            : key}
+                      </div>
                       <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
                     </div>
                     {/* TODO : 추가 버튼 라우터 연결 */}
@@ -172,12 +139,17 @@ const IssueHome = () => {
                   {items.map((issue) => (
                     <IssueItem
                       showCheckbox={isDeleteMode}
-                      checked={checkItems.includes(issue.issueId || '')}
-                      onCheckChange={(checked) =>
-                        issue.issueId && handleCheck(issue.issueId, checked)
-                      }
-                      key={issue.issueId}
-                      {...issue}
+                      checked={checkItems.includes(issue.id ?? '')}
+                      onCheckChange={(checked) => issue.id && handleCheck(issue.id, checked)}
+                      key={issue.id}
+                      id={issue.id}
+                      name={issue.name}
+                      title={issue.title}
+                      status={issue.status as StatusCode}
+                      priority={issue.priority as PriorityCode}
+                      goaltitle={issue.goaltitle}
+                      deadline={issue.deadline}
+                      managers={issue.managers}
                       filter={filter}
                     />
                   ))}
