@@ -162,6 +162,7 @@ const NotiHome = () => {
                       checked={checkItems.includes(item.id)}
                       onCheckChange={(checked) => handleCheck(item.id, checked)}
                       filter={filter}
+                      variant="notification"
                     />
                   ) : (
                     <IssueItem
@@ -171,6 +172,7 @@ const NotiHome = () => {
                       checked={checkItems.includes(item.id)}
                       onCheckChange={(checked) => handleCheck(item.id, checked)}
                       filter={filter}
+                      variant="notification"
                     />
                   )
                 )}

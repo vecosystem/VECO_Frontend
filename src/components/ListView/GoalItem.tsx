@@ -36,6 +36,7 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
       : ('NONE' as PriorityCode);
 
   const {
+    variant = 'default',
     showCheckbox,
     checked,
     onCheckChange,
@@ -55,6 +56,8 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
     if ((e.target as HTMLElement).closest('label')) return;
     onCheckChange?.(!checked);
   };
+
+  const dateColor = variant === 'notification' ? (checked ? '' : 'text-red-400') : '';
 
   return (
     <div
@@ -111,7 +114,7 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
         {/* 기한 */}
         <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
           <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
-          <div>{formatGoalDate(deadline?.start, deadline?.end)}</div>
+          <div className={`${dateColor}`}>{formatGoalDate(deadline?.start, deadline?.end)}</div>
         </div>
         {/* 담당자 */}
         {displayFields.includes('manage') && <ManagerAvatar managers={managers.info} />}
