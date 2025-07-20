@@ -104,7 +104,7 @@ const NotiHome = () => {
   const isEmpty = sortedGrouped.every(({ items }) => items.length === 0);
 
   return (
-    <div className="flex flex-1 flex-col gap-[3.2rem]">
+    <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
       {/* 알림 아이콘/텍스트 */}
       <TeamIcon teamName="알림" teamImgUrl={BellIcon} />
       {/* 툴바 */}
