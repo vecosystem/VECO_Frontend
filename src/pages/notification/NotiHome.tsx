@@ -8,8 +8,6 @@ import useCheckItems from '../../hooks/useCheckItems';
 import Modal from '../../components/Modal/Modal';
 import {
   dummyGoalTitleIssueGroups,
-  dummyManagerGoalGroups,
-  dummyManagerIssueGroups,
   dummyPriorityGoalGroups,
   dummyPriorityIssueGroups,
   dummyStatusGoalGroups,
@@ -33,23 +31,21 @@ const NotiHome = () => {
   const isGoal = tab === 'goal';
   const isIssue = tab === 'issue';
 
-  const filterOptions: ItemFilter[] = isGoal
-    ? ['상태', '우선순위', '담당자']
+  const filterOptions: ItemFilter[] = isGoal // 담당자필터 제거
+    ? ['상태', '우선순위']
     : isIssue
-      ? ['상태', '우선순위', '담당자', '목표']
+      ? ['상태', '우선순위', '목표']
       : []; // TODO : 외부 데이터 필터링 옵션 추가
 
   const getDummyGroups = (tab: NotiTab, filter: ItemFilter) => {
     if (tab === 'goal') {
       if (filter === '상태') return dummyStatusGoalGroups;
       if (filter === '우선순위') return dummyPriorityGoalGroups;
-      if (filter === '담당자') return dummyManagerGoalGroups;
       return [];
     }
     if (tab === 'issue') {
       if (filter === '상태') return dummyStatusIssueGroups;
       if (filter === '우선순위') return dummyPriorityIssueGroups;
-      if (filter === '담당자') return dummyManagerIssueGroups;
       if (filter === '목표') return dummyGoalTitleIssueGroups;
       return [];
     }
@@ -62,6 +58,7 @@ const NotiHome = () => {
 
   const handleTabChange = (newTab: NotiTab) => {
     setTab(newTab);
+    setFilter('상태'); // 탭 변경 시 필터 초기화
     setCheckedIds([]); // 탭 변경 시 선택 해제
   };
 
@@ -143,11 +140,7 @@ const NotiHome = () => {
                   <div
                     className={`flex font-title-sub-b h-[2.8rem] overflow-hidden ${filter === '우선순위' ? 'items-end' : 'items-center'}`}
                   >
-                    <GroupTypeIcon
-                      filter={filter}
-                      typeKey={key}
-                      profileImghUrl={filter === '담당자' ? '' : undefined}
-                    />
+                    <GroupTypeIcon filter={filter} typeKey={key} />
                     {/* 유형명 */}
                     <div>
                       {filter === '상태'
