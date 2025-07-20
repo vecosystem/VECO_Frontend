@@ -1,3 +1,11 @@
+/**
+ * PropertyItem.tsx
+ * 상세페이지 내 속성 항목 컴포넌트
+ *
+ * @todo
+ * - onClick에 이벤트 전파 관련 처리 코드 반영
+ * - 관련된 드롭다운 컴포넌트 수정: 일부 구성 등
+ */
 import { useState } from 'react';
 import Dropdown from '../Dropdown/Dropdown';
 

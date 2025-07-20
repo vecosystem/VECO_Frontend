@@ -1,4 +1,13 @@
-// 상세페이지 내 작성완료 <-> 수정하기 버튼 컴포넌트
+/**
+ * CompletionToggleButton.tsx
+ * 상세페이지 내 작성완료 <-> 수정하기 버튼 컴포넌트
+ *
+ * @todo
+ * (1) 최초 생성 후: 제목 작성 완료 전에는 비활성화 상태 '작성 완료'
+ * (2) 작성 완료하여 반영 후: '수정하기' 버튼으로 변경
+ * (3) '수정하기' 버튼 클릭 시, 다시 '작성 완료' 버튼으로 변경
+ * => 해당 플로우 맞는지 점검 필요함. pm님에게 여쭤보기
+ */
 import IcCheckSm from '../../assets/icons/check-sm.svg';
 
 const CompletionToggleButton = () => {
