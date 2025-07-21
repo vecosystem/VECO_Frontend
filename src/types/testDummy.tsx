@@ -1,3 +1,4 @@
+import type { ExternalFilter } from './external';
 import type { GoalFilter } from './goal';
 import type { IssueFilter } from './issue';
 
@@ -602,3 +603,13 @@ export const dummyGoalTitleIssueGroups: IssueFilter[] = [
     ],
   },
 ];
+
+export const dummyStatusExternalGroups: ExternalFilter[] = [];
+
+export const dummyPriorityExternalGroups: ExternalFilter[] = [];
+
+export const dummyManagerExternalGroups: ExternalFilter[] = [];
+
+export const dummyGoalTitleExternalGroups: ExternalFilter[] = [];
+
+export const dummyExternalToolExternalGroups: ExternalFilter[] = [];
