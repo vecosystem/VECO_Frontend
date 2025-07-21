@@ -5,6 +5,7 @@
  * @todo
  * - onClick에 이벤트 전파 관련 처리 코드 반영
  * - 관련된 드롭다운 컴포넌트 수정: 일부 구성 등
+ * - 화면 가로 길이 줄여도 줄어들지 않게 처리
  */
 import { useState } from 'react';
 import Dropdown from '../Dropdown/Dropdown';
@@ -31,7 +32,7 @@ const PropertyItem = ({ defaultValue, options, iconMap }: PropertyItemProps) => 
 
   return (
     <div
-      className={`flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] hover:bg-gray-200`}
+      className={`flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200`}
     >
       {/* 속성 아이콘 */}
       <img src={icon} alt={value} />

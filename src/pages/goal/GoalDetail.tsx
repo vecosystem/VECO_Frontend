@@ -9,7 +9,7 @@
 
 import DetailHeader from '../../components/DetailView/DetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
-import CompletionToggleButton from '../../components/DetailView/CompletionToggleButton';
+import CompletionToggleButton from '../../components/DetailView/CompletionButton';
 
 // 우선순위 아이콘 svg import
 import pr1 from '../../assets/icons/pr-1.svg';
