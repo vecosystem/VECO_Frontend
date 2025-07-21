@@ -33,6 +33,7 @@ export const FILTER_MAP = {
   우선순위: 'priority',
   담당자: 'manager',
   목표: 'goal',
+  외부: 'external',
 } as const;
 
 export type ItemFilter = keyof typeof FILTER_MAP;
