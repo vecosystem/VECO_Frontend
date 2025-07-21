@@ -1,3 +1,4 @@
+import PlusIcon from '../../assets/icons/plus.svg';
 import TeamIcon from '../../components/ListView/TeamIcon';
 import LinkButton from '../../assets/icons/link-button.svg';
 import GitIcon from '../../assets/icons/github.svg';
@@ -5,7 +6,12 @@ import SlackIcn from '../../assets/icons/slack.svg';
 import PlusBlueIcon from '../../assets/icons/plus-blue.svg';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { useMemo, useState } from 'react';
-import type { ItemFilter } from '../../types/listItem';
+import {
+  EXTERNAL_LABELS,
+  PRIORITY_LABELS,
+  STATUS_LABELS,
+  type ItemFilter,
+} from '../../types/listItem';
 import useCheckItems from '../../hooks/useCheckItems';
 import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
@@ -19,6 +25,8 @@ import {
   dummyStatusExternalGroups,
 } from '../../types/testDummy';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
+import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
+import { ExternalItem } from '../../components/ListView/ExternalItem';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
@@ -121,7 +129,45 @@ const ExternalHome = () => {
           <div className="flex flex-col gap-[4.8rem]">
             {sortedGrouped.map(({ key, items }) =>
               /* 해당 요소 존재할 때만 생성 */
-              items.length > 0 ? <></> : null
+              items.length > 0 ? (
+                <div key={key}>
+                  <div className="flex justify-between pb-[1.6em]">
+                    <div
+                      className={`flex font-title-sub-b h-[2.8rem] overflow-hidden ${filter === '우선순위' ? 'items-end' : 'items-center'}`}
+                    >
+                      <GroupTypeIcon
+                        filter={filter}
+                        typeKey={key}
+                        profileImghUrl={filter === '담당자' ? '' : undefined}
+                      />
+                      {/* 유형명 */}
+                      <div>
+                        {filter === '상태'
+                          ? STATUS_LABELS[key as keyof typeof STATUS_LABELS] || key
+                          : filter === '우선순위'
+                            ? PRIORITY_LABELS[key as keyof typeof PRIORITY_LABELS] || key
+                            : filter === '외부'
+                              ? EXTERNAL_LABELS[key as keyof typeof EXTERNAL_LABELS] || key
+                              : key}
+                      </div>
+                      <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
+                    </div>
+                    {/* TODO : 추가 버튼 라우터 연결 */}
+                    <img src={PlusIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
+                  </div>
+                  {/* 각 유형 별 요소 */}
+                  {items.map((issue) => (
+                    <ExternalItem
+                      key={issue.id}
+                      {...issue}
+                      showCheckbox={isDeleteMode}
+                      checked={checkItems.includes(issue.id)}
+                      onCheckChange={(checked) => handleCheck(issue.id, checked)}
+                      filter={filter}
+                    />
+                  ))}
+                </div>
+              ) : null
             )}
           </div>
         )}
