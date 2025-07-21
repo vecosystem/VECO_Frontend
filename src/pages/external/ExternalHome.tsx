@@ -1,9 +1,5 @@
 import PlusIcon from '../../assets/icons/plus.svg';
 import TeamIcon from '../../components/ListView/TeamIcon';
-import LinkButton from '../../assets/icons/link-button.svg';
-import GitIcon from '../../assets/icons/github.svg';
-import SlackIcn from '../../assets/icons/slack.svg';
-import PlusBlueIcon from '../../assets/icons/plus-blue.svg';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { useMemo, useState } from 'react';
 import {
@@ -27,6 +23,7 @@ import {
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { ExternalItem } from '../../components/ListView/ExternalItem';
+import ExternalToolArea from './components/ExternalToolArea';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
@@ -93,16 +90,7 @@ const ExternalHome = () => {
         <div className="flex items-center">
           <TeamIcon />
           {/* 아래 부분 연동 여부에 따라 다르게 보임. 추후 컴포넌트 분리*/}
-          <img src={LinkButton} className="ml-[1.6rem] cursor-pointer" alt="외부 리소스 연결" />
-          <div className="flex gap-[2rem] ml-[3.2rem]">
-            <img src={GitIcon} className="w-[2.4rem] h-[2.4rem]" alt="GitHub" />
-            <img src={SlackIcn} className="w-[2.4rem] h-[2.4rem]" alt="Slack" />
-          </div>
-          <img
-            src={PlusBlueIcon}
-            className="ml-[3.2rem] w-[2.4rem] h-[2.4rem] cursor-pointer"
-            alt="추가"
-          />
+          <ExternalToolArea />
         </div>
         <ListViewToolbar
           filter={filter}
