@@ -13,7 +13,7 @@ function ManagerAvatar({ managers }: ManagerAvatarsProps) {
   if (!managers || managers.length === 0) {
     return (
       <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
-        <img src={userIcon} alt="manage" className="w-[2.4rem] h-[2.4rem]" />
+        <img src={userIcon} alt="manage" className="w-[1.8rem] h-[1.8rem]" />
         <div>없음</div>
       </div>
     );
@@ -25,7 +25,7 @@ function ManagerAvatar({ managers }: ManagerAvatarsProps) {
         <img
           src={managers[0].profileUrl || userIcon}
           alt="manage"
-          className="w-[2.4rem] h-[2.4rem] rounded-full"
+          className="[1.8rem] h-[1.8rem] rounded-full"
         />
         <div>{managers[0].name}</div>
       </div>
@@ -45,13 +45,13 @@ function ManagerAvatar({ managers }: ManagerAvatarsProps) {
         <img
           src={displayAvatars[0].profileUrl || userIcon}
           alt={displayAvatars[0].name}
-          className="w-[2.4rem] h-[2.4rem] rounded-full z-2"
+          className="w-[1.8rem] h-[1.8rem] rounded-full z-2"
         />
         {displayAvatars[1] && (
           <img
             src={displayAvatars[1].profileUrl || userIcon}
             alt={displayAvatars[1].name}
-            className="w-[2.4rem] h-[2.4rem] -ml-[1.4rem] rounded-full z-1"
+            className="w-[1.8rem] h-[1.8rem] -ml-[0.8rem] rounded-full z-1"
           />
         )}
       </div>
