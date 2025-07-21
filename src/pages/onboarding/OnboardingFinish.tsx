@@ -19,7 +19,7 @@ const OnboardingFinish = () => {
             <h2 className="font-title-b text-primary-blue">Veco</h2>
           </div>
           {/* 툴 소개 문구 */}
-          <h1 className="font-bigtitle-b text-gray-600 text-center">
+          <h1 className="min-w-max px-5 font-bigtitle-b text-gray-600">
             속도의 관성을 유지하여 목표를 달성하는 협업툴
           </h1>
         </div>
