@@ -5,6 +5,7 @@ import IssueHome from '../pages/issue/IssueHome';
 import Error404NotFound from '../pages/Error404NotFound';
 import SettingTeam from '../pages/setting/SettingTeam.tsx';
 import SettingMember from '../pages/setting/SettingMember.tsx';
+import SettingMyProfile from '../pages/setting/SettingMyProfile.tsx';
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -31,7 +32,7 @@ export const protectedRoutes: RouteObject[] = [
           { path: 'ws-profile', element: <div>Setting_Workspace_Profile</div> },
           { path: 'team-list', element: <SettingTeam /> },
           { path: 'team-members', element: <SettingMember /> },
-          { path: 'my-profile', element: <div>Setting_My_Profile</div> },
+          { path: 'my-profile', element: <SettingMyProfile /> },
         ],
       },
       /* 워크스페이스 전체 팀 페이지들 */
