@@ -43,12 +43,13 @@ const ListViewToolbar = ({
         <div className="flex gap-[2.4rem] items-center">
           {/* 필터영역 */}
           <div className="relative">
-            <div
-              className="flex gap-[0.8rem] items-center cursor-pointer relative"
-              onClick={onFilterClick}
-            >
+            <div className="flex items-center cursor-pointer relative" onClick={onFilterClick}>
               {/* 드롭다운 */}
-              <img src={FilterIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
+              <img
+                src={FilterIcon}
+                className="inline-block w-[2.4rem] h-[2.4rem] mr-[0.8rem]"
+                alt=""
+              />
               <span className="font-body-r">필터</span>
               {dropdownProps.isOpen && dropdownProps.content && (
                 <div onClick={(e) => e.stopPropagation()}>
@@ -71,7 +72,7 @@ const ListViewToolbar = ({
               className="inline-block w-[2.4rem] h-[2.4rem]"
               alt=""
             />
-            <span className={`font-body-r ${isDeleteMode ? 'text-[#D44242]' : ''}`}>삭제</span>
+            <span className={`font-body-r ${isDeleteMode ? 'text-red-400' : ''}`}>삭제</span>
           </div>
         </div>
       </div>
