@@ -12,9 +12,16 @@ import issueHoverIcon from '../../assets/icons/issue-hover.svg';
 import externalHoverIcon from '../../assets/icons/external-hover.svg';
 import bellHoverIcon from '../../assets/icons/bell-hover.svg';
 import { useNavigate } from 'react-router-dom';
+import SortableDropdownList from './SortableDropDownList';
+import hamburgerIcon from '../../assets/icons/hamburger.svg';
 
 const Sidebar = () => {
   const navigate = useNavigate();
+
+  const teams = [
+    { id: 'team1', name: 'Team1', icon: <img src={vecocirclewhite} /> },
+    { id: 'team2', name: 'Team2', icon: <img src={vecocirclewhite} /> },
+  ];
 
   return (
     <div className="w-[32rem] bg-gray-200 p-[3.2rem] shadow-lg min-h-screen">
@@ -109,88 +116,56 @@ const Sidebar = () => {
         <div className="flex flex-col items-start self-stretch">
           <DropdownMenu headerTitle="나의 팀" initialOpen={true}>
             {/* Team1 드롭다운 (내부 드롭다운) */}
-            <DropdownMenu
-              headerTitle="Team1"
-              initialOpen={true} // Team1은 기본적으로 열려있게 설정
-              headerTeamIcon={
-                <img src={vecocirclewhite} className="w-[2.4rem] h-[2.4rem]" alt="Team" />
-              }
-              isNested={true}
-            >
-              <div className="flex flex-col justify-center items-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
-                <SidebarItem
-                  defaultIcon={<img src={goalIcon} alt="Goal" />}
-                  hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
-                  label="목표"
-                  onClick={() => {
-                    navigate(`/workspace/team/:teamId/goal`);
-                  }}
-                  onAddClick={() => {
-                    navigate(`/workspace/team/:teamId/goal/:goalId`);
-                  }}
-                />
-                <SidebarItem
-                  defaultIcon={<img src={issueIcon} alt="Issue" />}
-                  hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
-                  label="이슈"
-                  onClick={() => {
-                    navigate(`/workspace/team/:teamId/issue`);
-                  }}
-                  onAddClick={() => {
-                    navigate(`/workspace/team/:teamId/issue/:issueId`);
-                  }}
-                />
-                <SidebarItem
-                  defaultIcon={<img src={externalIcon} alt="External" />}
-                  hoverIcon={<img src={externalHoverIcon} alt="External" />}
-                  label="외부"
-                  onClick={() => {
-                    navigate(`/workspace/team/:teamId/ext`);
-                  }}
-                />
-              </div>
-            </DropdownMenu>
-            <DropdownMenu
-              headerTitle="Team2"
-              initialOpen={true} // Team2은 기본적으로 열려있게 설정
-              headerTeamIcon={
-                <img src={vecocirclewhite} className="w-[2.4rem] h-[2.4rem]" alt="Team" />
-              }
-              isNested={true}
-            >
-              <div className="flex flex-col justify-center items-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
-                <SidebarItem
-                  defaultIcon={<img src={goalIcon} alt="Goal" />}
-                  hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
-                  label="목표"
-                  onClick={() => {
-                    navigate(`/workspace/team/:teamId/goal`);
-                  }}
-                  onAddClick={() => {
-                    navigate(`/workspace/team/:teamId/goal/:goalId`);
-                  }}
-                />
-                <SidebarItem
-                  defaultIcon={<img src={issueIcon} alt="Issue" />}
-                  hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
-                  label="이슈"
-                  onClick={() => {
-                    navigate(`/workspace/team/:teamId/issue`);
-                  }}
-                  onAddClick={() => {
-                    navigate(`/workspace/team/:teamId/issue/:issueId`);
-                  }}
-                />
-                <SidebarItem
-                  defaultIcon={<img src={externalIcon} alt="External" />}
-                  hoverIcon={<img src={externalHoverIcon} alt="External" />}
-                  label="외부"
-                  onClick={() => {
-                    navigate(`/workspace/team/:teamId/ext`);
-                  }}
-                />
-              </div>
-            </DropdownMenu>
+            <SortableDropdownList
+              items={teams}
+              renderContent={(team, { listeners, attributes }) => (
+                <DropdownMenu
+                  headerTitle={team.name}
+                  initialOpen={true}
+                  headerTeamIcon={team.icon}
+                  isNested={true}
+                  dragHandle={
+                    <button {...attributes} {...listeners} type="button" className="cursor-grab">
+                      <img src={hamburgerIcon} className="w-[2.4rem] h-[2.4rem]" alt="Drag" />
+                    </button>
+                  }
+                >
+                  <div className="flex flex-col justify-center items-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
+                    <SidebarItem
+                      defaultIcon={<img src={goalIcon} alt="Goal" />}
+                      hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
+                      label="목표"
+                      onClick={() => {
+                        navigate(`/workspace/team/:teamId/goal`);
+                      }}
+                      onAddClick={() => {
+                        navigate(`/workspace/team/:teamId/goal/:goalId`);
+                      }}
+                    />
+                    <SidebarItem
+                      defaultIcon={<img src={issueIcon} alt="Issue" />}
+                      hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
+                      label="이슈"
+                      onClick={() => {
+                        navigate(`/workspace/team/:teamId/issue`);
+                      }}
+                      onAddClick={() => {
+                        navigate(`/workspace/team/:teamId/issue/:issueId`);
+                      }}
+                    />
+                    <SidebarItem
+                      defaultIcon={<img src={externalIcon} alt="External" />}
+                      hoverIcon={<img src={externalHoverIcon} alt="External" />}
+                      label="외부"
+                      onClick={() => {
+                        navigate(`/workspace/team/:teamId/ext`);
+                      }}
+                    />
+                  </div>
+                </DropdownMenu>
+              )}
+              onSorted={(newList: any) => console.log(newList)}
+            />
           </DropdownMenu>
         </div>
       </div>
