@@ -13,7 +13,7 @@ const SettingMyProfile = () => {
   const { openModal } = useModalActions();
   const [isAgree, setIsAgree] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [profileImage] = useState<string | null>(null);
 
   const handleDropdownToggle = () => {
     setDropdownOpen(!isDropdownOpen);
