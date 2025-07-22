@@ -5,13 +5,15 @@ import PencilIcon from '../../assets/icons/pencil.svg';
 import TrashIcon from '../../assets/icons/trash.svg';
 import CheckBoxIcon from '../../assets/icons/check-box-x.svg';
 import CheckBoxRedIcon from '../../assets/icons/check-box-o-red.svg';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useModalActions, useModalInfo } from '../../hooks/useModal.ts';
 const SettingMyProfile = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const { isOpen, content } = useModalInfo();
   const { openModal } = useModalActions();
   const [isAgree, setIsAgree] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
   const handleDropdownToggle = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -20,6 +22,20 @@ const SettingMyProfile = () => {
   const handleAgree = () => {
     setIsAgree(!isAgree);
     openModal({ name: 'withdraw' });
+  };
+
+  const handleProfileImageUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleProfileImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('profile', file);
+
+    // TODO: API 호출
   };
 
   return (
@@ -36,7 +52,18 @@ const SettingMyProfile = () => {
                   className="w-[4.2rem] h-[4.2rem] flex items-center justify-center cursor-pointer"
                   onClick={handleDropdownToggle}
                 >
-                  <img src={userCircleIcon} className="w-full h-full" alt="프로필 사진" />
+                  <img
+                    src={profileImage || userCircleIcon}
+                    className="w-full h-full"
+                    alt="프로필 사진"
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef}
+                    onChange={handleProfileImageChange}
+                    style={{ display: 'none' }}
+                  />
                 </button>
                 {isDropdownOpen && (
                   <div className="absolute top-[calc(100%+0.4rem)] left-[0.4rem]">
@@ -49,7 +76,7 @@ const SettingMyProfile = () => {
                         },
                         {
                           value: '수정',
-                          onClick: () => {},
+                          onClick: handleProfileImageUploadClick,
                           icon: <img src={PencilIcon} width={16} height={16} alt="수정" />,
                         },
                       ]}
