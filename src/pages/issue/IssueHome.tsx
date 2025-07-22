@@ -1,12 +1,6 @@
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useMemo, useState } from 'react';
-import {
-  PRIORITY_LABELS,
-  STATUS_LABELS,
-  type ItemFilter,
-  type PriorityCode,
-  type StatusCode,
-} from '../../types/listItem';
+import { PRIORITY_LABELS, STATUS_LABELS, type ItemFilter } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import TeamIcon from '../../components/ListView/TeamIcon';
@@ -138,18 +132,11 @@ const IssueHome = () => {
                   {/* 각 유형 별 요소 */}
                   {items.map((issue) => (
                     <IssueItem
-                      showCheckbox={isDeleteMode}
-                      checked={checkItems.includes(issue.id ?? '')}
-                      onCheckChange={(checked) => issue.id && handleCheck(issue.id, checked)}
                       key={issue.id}
-                      id={issue.id}
-                      name={issue.name}
-                      title={issue.title}
-                      status={issue.status as StatusCode}
-                      priority={issue.priority as PriorityCode}
-                      goaltitle={issue.goaltitle}
-                      deadline={issue.deadline}
-                      managers={issue.managers}
+                      {...issue}
+                      showCheckbox={isDeleteMode}
+                      checked={checkItems.includes(issue.id)}
+                      onCheckChange={(checked) => handleCheck(issue.id, checked)}
                       filter={filter}
                     />
                   ))}

@@ -49,6 +49,10 @@ export interface BaseItemProps {
   filter?: ItemFilter;
 }
 
-export interface GoalItemProps extends Goal, BaseItemProps {}
+export interface GoalItemProps extends Goal, BaseItemProps {
+  variant?: 'default' | 'notification';
+}
 
-export interface IssueItemProps extends Issue, BaseItemProps {}
+export interface IssueItemProps extends Issue, BaseItemProps {
+  variant?: 'default' | 'notification';
+}
