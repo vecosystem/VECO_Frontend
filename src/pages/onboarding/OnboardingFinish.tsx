@@ -9,7 +9,7 @@ const OnboardingFinish = () => {
   return (
     <div className="flex flex-col items-center gap-[3.2rem]">
       {/* 인디케이터 */}
-      <PageIndicator currentStep={2} steps={onboardingSteps} />
+      <PageIndicator currentStep={3} steps={onboardingSteps} />
       {/* 본문 */}
       <div className="flex flex-col items-center gap-[11.4rem]">
         <div className="flex flex-col gap-[3.2rem]">
