@@ -4,6 +4,7 @@ import vecologo from '../../assets/logos/vecologo.svg';
 import SocialLoginButton from '../../components/Onboarding/SocialLoginButton';
 
 const OnboardingSSOLogin = () => {
+  // useOnboardingGuard(0); API 연결 후 훅 사용 예정
   return (
     <div className="flex flex-col items-center gap-[3.2rem]">
       {/* 백호 로고 & 백호 텍스트*/}

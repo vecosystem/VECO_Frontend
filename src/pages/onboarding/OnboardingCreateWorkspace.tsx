@@ -7,6 +7,7 @@ import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 import WorkspaceNameInput from '../../components/Onboarding/WorkspaceNameInput';
 
 const OnboardingCreateWorkspace = () => {
+  // useOnboardingGuard(1); API 연결 후 훅 사용 예정
   const [workspaceUrl, setWorkspaceUrl] = useState('');
   return (
     <div className="flex flex-col items-center gap-[3.2rem]">
