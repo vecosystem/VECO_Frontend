@@ -3,18 +3,27 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import onboardingSteps from '../constants/onboardingSteps';
-import { create } from 'zustand'; // ustand로 온보딩 진행 상태 관리
+import { create } from 'zustand'; // zustand로 온보딩 진행 상태 관리
+import { persist } from 'zustand/middleware';
 
+// 온보딩 상태 타입 정의
 interface StepState {
   currentStep: number; // 사용자가 현재까지 도달한 최대 단계 (0 ~ 3)
   setStep: (step: number) => void; // 현재 페이지 진입 시 호출하여 최신 단계로 업데이트
 }
 
-export const useOnboardingStep = create<StepState>((set) => ({
-  currentStep: 0,
-  setStep: (step) => set({ currentStep: step }),
-}));
-
+// zustand + persist로 온보딩 진행 상태 관리
+export const useOnboardingStep = create<StepState>()(
+  persist(
+    (set) => ({
+      currentStep: 0,
+      setStep: (step) => set({ currentStep: step }),
+    }),
+    {
+      name: 'onboarding-step', // localStorage에 저장될 키 이름
+    }
+  )
+);
 /* 
     useOnboardingGuard
    - 각 페이지에서 호출하여 사용자의 직접 접근을 제어하는 훅
