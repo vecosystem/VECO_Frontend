@@ -608,7 +608,7 @@ export const dummyStatusExternalGroups: ExternalFilter[] = [
   {
     filterName: 'NONE',
     dataCnt: 1,
-    issues: [
+    externals: [
       {
         id: 1,
         name: 'Veco-e1',
@@ -631,7 +631,7 @@ export const dummyStatusExternalGroups: ExternalFilter[] = [
   {
     filterName: 'DOING',
     dataCnt: 2,
-    issues: [
+    externals: [
       {
         id: 2,
         name: 'Veco-e2',
@@ -664,7 +664,7 @@ export const dummyStatusExternalGroups: ExternalFilter[] = [
   {
     filterName: 'FINISH',
     dataCnt: 1,
-    issues: [
+    externals: [
       {
         id: 4,
         name: 'Veco-e4',
@@ -684,7 +684,7 @@ export const dummyStatusExternalGroups: ExternalFilter[] = [
   {
     filterName: 'REVIEW',
     dataCnt: 1,
-    issues: [
+    externals: [
       {
         id: 5,
         name: 'Veco-e5',
@@ -707,7 +707,7 @@ export const dummyPriorityExternalGroups: ExternalFilter[] = [
   {
     filterName: 'HIGH',
     dataCnt: 2,
-    issues: [
+    externals: [
       {
         id: 1,
         name: 'Veco-e1',
@@ -744,7 +744,7 @@ export const dummyPriorityExternalGroups: ExternalFilter[] = [
   {
     filterName: 'NORMAL',
     dataCnt: 1,
-    issues: [
+    externals: [
       {
         id: 3,
         name: 'Veco-e3',
@@ -764,7 +764,7 @@ export const dummyPriorityExternalGroups: ExternalFilter[] = [
   {
     filterName: 'URGENT',
     dataCnt: 1,
-    issues: [
+    externals: [
       {
         id: 4,
         name: 'Veco-e4',
@@ -784,7 +784,7 @@ export const dummyPriorityExternalGroups: ExternalFilter[] = [
   {
     filterName: 'LOW',
     dataCnt: 1,
-    issues: [
+    externals: [
       {
         id: 5,
         name: 'Veco-e5',
@@ -807,7 +807,7 @@ export const dummyManagerExternalGroups: ExternalFilter[] = [
   {
     filterName: '박유민',
     dataCnt: 2,
-    issues: [
+    externals: [
       {
         id: 2,
         name: 'Veco-e2',
@@ -833,7 +833,7 @@ export const dummyManagerExternalGroups: ExternalFilter[] = [
   {
     filterName: '김선화',
     dataCnt: 1,
-    issues: [
+    externals: [
       {
         id: 3,
         name: 'Veco-e3',
@@ -849,7 +849,7 @@ export const dummyManagerExternalGroups: ExternalFilter[] = [
   {
     filterName: '이가을',
     dataCnt: 1,
-    issues: [
+    externals: [
       {
         id: 4,
         name: 'Veco-e4',
@@ -865,7 +865,7 @@ export const dummyManagerExternalGroups: ExternalFilter[] = [
   {
     filterName: '없음',
     dataCnt: 2,
-    issues: [
+    externals: [
       {
         id: 1,
         name: 'Veco-e1',
@@ -894,7 +894,7 @@ export const dummyGoalTitleExternalGroups: ExternalFilter[] = [
   {
     filterName: '기획 및 요구사항 분석',
     dataCnt: 1,
-    issues: [
+    externals: [
       {
         id: 2,
         name: 'Veco-e2',
@@ -914,7 +914,7 @@ export const dummyGoalTitleExternalGroups: ExternalFilter[] = [
   {
     filterName: '없음',
     dataCnt: 4,
-    issues: [
+    externals: [
       {
         id: 1,
         name: 'Veco-e1',
@@ -979,7 +979,7 @@ export const dummyExternalToolExternalGroups: ExternalFilter[] = [
   {
     filterName: 'GITHUB',
     dataCnt: 3,
-    issues: [
+    externals: [
       {
         id: 1,
         name: 'Veco-e1',
@@ -1030,7 +1030,7 @@ export const dummyExternalToolExternalGroups: ExternalFilter[] = [
   {
     filterName: 'SLACK',
     dataCnt: 2,
-    issues: [
+    externals: [
       {
         id: 3,
         name: 'Veco-e3',

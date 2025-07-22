@@ -34,7 +34,7 @@ export type GroupedExternal = { key: string; items: External[] };
 export type ExternalFilter = {
   filterName: string;
   dataCnt: number;
-  issues: External[];
+  externals: External[];
 };
 
 export type ResponseExternalDto = CursorBasedResponse<ExternalFilter[]>;

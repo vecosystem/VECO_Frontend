@@ -50,7 +50,7 @@ const ExternalHome = () => {
     }
   }, [filter]);
 
-  const allExternalsFlat = dummyExternalGroups.flatMap((i) => i.issues);
+  const allExternalsFlat = dummyExternalGroups.flatMap((i) => i.externals);
 
   const {
     checkedIds: checkItems,
@@ -78,7 +78,7 @@ const ExternalHome = () => {
   // 그룹핑
   const grouped: GroupedExternal[] = dummyExternalGroups.map((i) => ({
     key: i.filterName,
-    items: i.issues,
+    items: i.externals,
   }));
 
   const sortedGrouped = getSortedGrouped(filter, grouped);
@@ -144,13 +144,13 @@ const ExternalHome = () => {
                     <img src={PlusIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
                   </div>
                   {/* 각 유형 별 요소 */}
-                  {items.map((issue) => (
+                  {items.map((externals) => (
                     <ExternalItem
-                      key={issue.id}
-                      {...issue}
+                      key={externals.id}
+                      {...externals}
                       showCheckbox={isDeleteMode}
-                      checked={checkItems.includes(issue.id)}
-                      onCheckChange={(checked) => handleCheck(issue.id, checked)}
+                      checked={checkItems.includes(externals.id)}
+                      onCheckChange={(checked) => handleCheck(externals.id, checked)}
                       filter={filter}
                     />
                   ))}
