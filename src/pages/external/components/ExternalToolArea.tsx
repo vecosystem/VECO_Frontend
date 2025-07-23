@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import LinkButton from '../../../assets/icons/link-button.svg';
 import GitIcon from '../../../assets/icons/github.svg';
-import SlackIcn from '../../../assets/icons/slack.svg';
+import SlackIcon from '../../../assets/icons/slack.svg';
 import PlusBlueIcon from '../../../assets/icons/plus-blue.svg';
 import ExternalToolModal from './ExternalToolModal';
 
@@ -24,7 +24,7 @@ const ExternalToolArea = () => {
       </button>
       <div className="flex gap-[2rem] ml-[3.2rem]">
         <img src={GitIcon} className="w-[2.4rem] h-[2.4rem]" alt="GitHub" />
-        <img src={SlackIcn} className="w-[2.4rem] h-[2.4rem]" alt="Slack" />
+        <img src={SlackIcon} className="w-[2.4rem] h-[2.4rem]" alt="Slack" />
       </div>
       <img
         src={PlusBlueIcon}
