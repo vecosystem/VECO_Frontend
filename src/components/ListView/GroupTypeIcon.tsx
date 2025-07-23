@@ -1,6 +1,7 @@
 import type { ItemFilter, PriorityCode, StatusCode } from '../../types/listItem';
 import GoalIcon from '../../assets/icons/goal.svg';
 import GoalGrayIcon from '../../assets/icons/goal-gray.svg';
+import profileIcon from '../../assets/icons/user-base.svg';
 import SlackIcon from '../../assets/icons/slack.svg';
 import GithubIcon from '../../assets/icons/github.svg';
 import { getPriorityIcon, getStatusColor } from '../../utils/listItemUtils';
@@ -31,9 +32,10 @@ const GroupTypeIcon = ({ filter, typeKey, profileImghUrl }: Props) => {
   }
   if (filter === '담당자') {
     return (
-      <span
-        className="inline-block w-[2.0rem] h-[2.0rem] rounded-full bg-gray-300 mr-[1.2rem] bg-center bg-cover"
-        style={{ backgroundImage: `url('${profileImghUrl}')` }}
+      <img
+        className="inline-block w-[2.4rem] h-[2.4rem] rounded-full mr-[1.2rem] bg-center bg-cover"
+        src={profileImghUrl || profileIcon}
+        alt="담당자"
       />
     );
   }
