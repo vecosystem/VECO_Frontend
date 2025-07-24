@@ -23,7 +23,7 @@ const DropdownHeader = ({
 }: DropdownHeaderProps) => {
   return (
     <div
-      className={`flex w-full items-center justify-between cursor-pointer mb-[1.6rem]`}
+      className={`flex w-full items-center justify-between cursor-pointer mb-[1.6rem] group`}
       onClick={onToggle}
     >
       <div className="flex items-center gap-[0.8rem]">
@@ -52,8 +52,11 @@ const DropdownHeader = ({
           )}
         </div>
       </div>
-      {/* 오른쪽: 드래그 핸들 영역 */}
-      {dragHandle && <div className="ml-auto">{dragHandle}</div>}
+      {dragHandle && (
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          {dragHandle}
+        </div>
+      )}
     </div>
   );
 };
