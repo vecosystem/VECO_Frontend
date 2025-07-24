@@ -2,6 +2,7 @@
 
 @theme {
   /* Gray Scale */
+  --color-gray-default: #2d2d2d;
   --color-gray-100: #ffffff;
   --color-gray-200: #f3f3f3;
   --color-gray-300: #dcdcdc;
@@ -10,12 +11,12 @@
   --color-gray-600: #111111;
 
   /* Error Scale */
-  --color-red-400: #D44242;
+  --color-red-400: #d44242;
 
   /* Primary Color */
   --color-primary-blue: #132650;
   --color-primary-variant-blue: #2e4475;
-  --color-calendar-blue: #4474E2;
+  --color-calendar-blue: #4474e2;
 }
 
 @font-face {
