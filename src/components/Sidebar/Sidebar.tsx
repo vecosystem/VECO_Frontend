@@ -118,10 +118,10 @@ const Sidebar = () => {
             {/* Team1 드롭다운 (내부 드롭다운) */}
             <SortableDropdownList
               items={teams}
-              renderContent={(team, { listeners, attributes }) => (
+              renderContent={(team, { listeners, attributes }, isOverlay) => (
                 <DropdownMenu
                   headerTitle={team.name}
-                  initialOpen={true}
+                  initialOpen={!isOverlay}
                   headerTeamIcon={team.icon}
                   isNested={true}
                   dragHandle={
@@ -130,38 +130,40 @@ const Sidebar = () => {
                     </button>
                   }
                 >
-                  <div className="flex flex-col justify-center items-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
-                    <SidebarItem
-                      defaultIcon={<img src={goalIcon} alt="Goal" />}
-                      hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
-                      label="목표"
-                      onClick={() => {
-                        navigate(`/workspace/team/:teamId/goal`);
-                      }}
-                      onAddClick={() => {
-                        navigate(`/workspace/team/:teamId/goal/:goalId`);
-                      }}
-                    />
-                    <SidebarItem
-                      defaultIcon={<img src={issueIcon} alt="Issue" />}
-                      hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
-                      label="이슈"
-                      onClick={() => {
-                        navigate(`/workspace/team/:teamId/issue`);
-                      }}
-                      onAddClick={() => {
-                        navigate(`/workspace/team/:teamId/issue/:issueId`);
-                      }}
-                    />
-                    <SidebarItem
-                      defaultIcon={<img src={externalIcon} alt="External" />}
-                      hoverIcon={<img src={externalHoverIcon} alt="External" />}
-                      label="외부"
-                      onClick={() => {
-                        navigate(`/workspace/team/:teamId/ext`);
-                      }}
-                    />
-                  </div>
+                  {!isOverlay && (
+                    <div className="flex flex-col justify-center items-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
+                      <SidebarItem
+                        defaultIcon={<img src={goalIcon} alt="Goal" />}
+                        hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
+                        label="목표"
+                        onClick={() => {
+                          navigate(`/workspace/team/:teamId/goal`);
+                        }}
+                        onAddClick={() => {
+                          navigate(`/workspace/team/:teamId/goal/:goalId`);
+                        }}
+                      />
+                      <SidebarItem
+                        defaultIcon={<img src={issueIcon} alt="Issue" />}
+                        hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
+                        label="이슈"
+                        onClick={() => {
+                          navigate(`/workspace/team/:teamId/issue`);
+                        }}
+                        onAddClick={() => {
+                          navigate(`/workspace/team/:teamId/issue/:issueId`);
+                        }}
+                      />
+                      <SidebarItem
+                        defaultIcon={<img src={externalIcon} alt="External" />}
+                        hoverIcon={<img src={externalHoverIcon} alt="External" />}
+                        label="외부"
+                        onClick={() => {
+                          navigate(`/workspace/team/:teamId/ext`);
+                        }}
+                      />
+                    </div>
+                  )}
                 </DropdownMenu>
               )}
               onSorted={(newList: any) => console.log(newList)}
