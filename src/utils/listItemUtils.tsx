@@ -10,15 +10,17 @@ import type { ItemFilter, DisplayField, StatusCode, PriorityCode } from '../type
 export const getFilter = (filter: ItemFilter = '상태'): DisplayField[] => {
   switch (filter) {
     case '상태':
-      return ['priority', 'manage', 'goal'];
+      return ['priority', 'manage', 'goal', 'external'];
     case '우선순위':
-      return ['status', 'manage', 'goal'];
+      return ['status', 'manage', 'goal', 'external'];
     case '담당자':
-      return ['status', 'priority', 'goal'];
+      return ['status', 'priority', 'goal', 'external'];
     case '목표':
-      return ['status', 'priority', 'manage'];
-    default:
+      return ['status', 'priority', 'manage', 'external'];
+    case '외부':
       return ['status', 'priority', 'manage', 'goal'];
+    default:
+      return ['status', 'priority', 'manage', 'goal', 'external'];
   }
 };
 

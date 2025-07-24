@@ -7,6 +7,7 @@ import Error404NotFound from '../pages/Error404NotFound';
 import SettingTeam from '../pages/setting/SettingTeam.tsx';
 import SettingMember from '../pages/setting/SettingMember.tsx';
 import SettingMyProfile from '../pages/setting/SettingMyProfile.tsx';
+import ExternalHome from '../pages/external/ExternalHome.tsx';
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -62,7 +63,7 @@ export const protectedRoutes: RouteObject[] = [
           { path: 'goal/:goalId', element: <div>Goal_Detail</div> },
           { path: 'issue', element: <IssueHome /> },
           { path: 'issue/:issueId', element: <div>Issue_Detail</div> },
-          { path: 'ext', element: <div>External_Home</div> },
+          { path: 'ext', element: <ExternalHome /> },
           { path: 'ext/:extId', element: <div>External_Detail</div> },
         ],
       },

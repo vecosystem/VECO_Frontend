@@ -1,6 +1,8 @@
 import type { ItemFilter, PriorityCode, StatusCode } from '../../types/listItem';
 import GoalIcon from '../../assets/icons/goal.svg';
 import GoalGrayIcon from '../../assets/icons/goal-gray.svg';
+import SlackIcon from '../../assets/icons/slack.svg';
+import GithubIcon from '../../assets/icons/github.svg';
 import { getPriorityIcon, getStatusColor } from '../../utils/listItemUtils';
 
 interface Props {
@@ -40,6 +42,15 @@ const GroupTypeIcon = ({ filter, typeKey, profileImghUrl }: Props) => {
       <img
         src={typeKey === '없음' ? GoalGrayIcon : GoalIcon}
         alt="삭제"
+        className="w-[2.4rem] h-[2.4rem] mr-[0.8rem]"
+      />
+    );
+  }
+  if (filter === '외부') {
+    return (
+      <img
+        src={typeKey === 'GITHUB' ? GithubIcon : SlackIcon}
+        alt="외부"
         className="w-[2.4rem] h-[2.4rem] mr-[0.8rem]"
       />
     );
