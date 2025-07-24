@@ -10,20 +10,21 @@ interface PageIndicatorProps {
 const PageIndicator = ({ currentStep, steps }: PageIndicatorProps) => {
   const navigate = useNavigate();
 
-  // 이전 단계 클릭 시만 이동 허용
-  const handleClick = (index: number) => {
-    if (index < currentStep) {
-      navigate(steps[index]);
+  // 이전 단계 클릭 시에만 이동 허용
+  const handleClick = (stepIndex: number) => {
+    if (stepIndex < currentStep) {
+      navigate(steps[stepIndex]);
     }
   };
 
   return (
     <div className="flex justify-center gap-[0.6rem] ">
-      {steps.map((_, idx) => {
-        // 현재 단계 여부
-        const isActive = idx === currentStep;
-        // 이미 지난 단계 여부
-        const isPast = idx < currentStep;
+      {/* 로그인 단계(index 0)는 제외하고 index 1~3만 인디케이터로 표시 */}
+      {steps.slice(1).map((_, idx) => {
+        const stepIndex = idx + 1;
+
+        const isActive = stepIndex === currentStep; // 현재 단계 여부
+        const isPast = stepIndex < currentStep; // 이미 지난 단계 여부
 
         // 바의 공통 스타일 (남색이면 길게, 회색이면 동그랗게)
         const baseStyle = `
@@ -41,8 +42,8 @@ const PageIndicator = ({ currentStep, steps }: PageIndicatorProps) => {
 
         return (
           <button
-            key={idx}
-            onClick={() => handleClick(idx)}
+            key={stepIndex}
+            onClick={() => handleClick(stepIndex)}
             className={`${baseStyle} ${cursorStyle}`}
           />
         );

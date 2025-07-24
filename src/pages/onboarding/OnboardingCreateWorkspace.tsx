@@ -7,11 +7,12 @@ import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 import WorkspaceNameInput from '../../components/Onboarding/WorkspaceNameInput';
 
 const OnboardingCreateWorkspace = () => {
+  // useOnboardingGuard(1); API 연결 후 훅 사용 예정
   const [workspaceUrl, setWorkspaceUrl] = useState('');
   return (
     <div className="flex flex-col items-center gap-[3.2rem]">
       {/* 인디케이터 */}
-      <PageIndicator currentStep={0} steps={onboardingSteps} />
+      <PageIndicator currentStep={1} steps={onboardingSteps} />
       {/* 본문 */}
       <div className="flex flex-col items-center gap-[5rem]">
         <div className="flex flex-col text-center gap-[1rem]">
