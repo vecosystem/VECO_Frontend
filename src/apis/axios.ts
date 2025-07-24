@@ -7,8 +7,8 @@ interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
 
-// refresh 요청 중복 방지를 위한 전역 변수
-let refreshPromise: Promise<string> | null = null;
+// accessToken 재발급 요청 중복 방지를 위한 전역 변수
+let tokenReissuePromise: Promise<string> | null = null;
 
 // 기본 axios 인스턴스
 export const axiosInstance = axios.create({
@@ -58,8 +58,8 @@ axiosInstance.interceptors.response.use(
       }
 
       // 이미 진행 중인 refresh 요청이 없으면 실행
-      if (!refreshPromise) {
-        refreshPromise = axiosInstance
+      if (!tokenReissuePromise) {
+        tokenReissuePromise = axiosInstance
           .post('/api/token/reissue', null, {
             withCredentials: true, // 쿠키 포함 (refreshToken)
           })
@@ -80,12 +80,12 @@ axiosInstance.interceptors.response.use(
           })
           .finally(() => {
             // 다음 요청에서 재시도 가능하도록 초기화
-            refreshPromise = null;
+            tokenReissuePromise = null;
           });
       }
 
       // 재발급 성공 시 -> 기존 요청에 새 accessToken 붙여서 재전송
-      return refreshPromise.then((newAccessToken) => {
+      return tokenReissuePromise.then((newAccessToken) => {
         originalRequest.headers = originalRequest.headers || {};
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
