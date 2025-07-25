@@ -7,9 +7,13 @@ import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import useCheckItems from '../../hooks/useCheckItems';
 import Modal from '../../components/Modal/Modal';
 import {
+  dummyExternalToolExternalGroups,
+  dummyGoalTitleExternalGroups,
   dummyGoalTitleIssueGroups,
+  dummyPriorityExternalGroups,
   dummyPriorityGoalGroups,
   dummyPriorityIssueGroups,
+  dummyStatusExternalGroups,
   dummyStatusGoalGroups,
   dummyStatusIssueGroups,
 } from '../../types/testDummy';
@@ -21,6 +25,8 @@ import type { IssueFilter } from '../../types/issue';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 import GroupTypeTab from '../../components/ListView/GroupTypeTab';
+import type { ExternalFilter } from '../../types/external';
+import { ExternalItem } from '../../components/ListView/ExternalItem';
 
 const TAB_LIST = ['goal', 'issue', 'external'] as const;
 type NotiTab = (typeof TAB_LIST)[number];
@@ -30,12 +36,15 @@ const NotiHome = () => {
   const [filter, setFilter] = useState<ItemFilter>('상태');
   const isGoal = tab === 'goal';
   const isIssue = tab === 'issue';
+  const isExternal = tab === 'external';
 
-  const filterOptions: ItemFilter[] = isGoal // 담당자필터 제거
+  const filterOptions: ItemFilter[] = isGoal
     ? ['상태', '우선순위']
     : isIssue
       ? ['상태', '우선순위', '목표']
-      : []; // TODO : 외부 데이터 필터링 옵션 추가
+      : isExternal
+        ? ['상태', '우선순위', '목표', '외부']
+        : [];
 
   const getDummyGroups = (tab: NotiTab, filter: ItemFilter) => {
     if (tab === 'goal') {
@@ -50,7 +59,10 @@ const NotiHome = () => {
       return [];
     }
     if (tab === 'external') {
-      // 외부 데이터는 아직 없음
+      if (filter === '상태') return dummyStatusExternalGroups;
+      if (filter === '우선순위') return dummyPriorityExternalGroups;
+      if (filter === '목표') return dummyGoalTitleExternalGroups;
+      if (filter === '외부') return dummyExternalToolExternalGroups;
       return [];
     }
     return [];
@@ -67,7 +79,9 @@ const NotiHome = () => {
     ? (dummyGroups as GoalFilter[]).flatMap((g) => g.goals)
     : isIssue
       ? (dummyGroups as IssueFilter[]).flatMap((g) => g.issues)
-      : [];
+      : isExternal
+        ? (dummyGroups as ExternalFilter[]).flatMap((g) => g.externals)
+        : [];
 
   const {
     checkedIds: checkItems,
@@ -94,10 +108,13 @@ const NotiHome = () => {
     }
   };
 
-  // TODO : 외부 데이터 필터링 옵션 추가
   const grouped = isGoal
     ? (dummyGroups as GoalFilter[]).map((g) => ({ key: g.filterName, items: g.goals }))
-    : (dummyGroups as IssueFilter[]).map((g) => ({ key: g.filterName, items: g.issues }));
+    : isIssue
+      ? (dummyGroups as IssueFilter[]).map((g) => ({ key: g.filterName, items: g.issues }))
+      : isExternal
+        ? (dummyGroups as ExternalFilter[]).map((g) => ({ key: g.filterName, items: g.externals }))
+        : [];
 
   const sortedGrouped = getSortedGrouped(filter, grouped);
 
@@ -164,8 +181,18 @@ const NotiHome = () => {
                       filter={filter}
                       variant="notification"
                     />
-                  ) : (
+                  ) : tab === 'issue' ? (
                     <IssueItem
+                      key={item.id}
+                      {...item}
+                      showCheckbox={isDeleteMode}
+                      checked={checkItems.includes(item.id)}
+                      onCheckChange={(checked) => handleCheck(item.id, checked)}
+                      filter={filter}
+                      variant="notification"
+                    />
+                  ) : (
+                    <ExternalItem
                       key={item.id}
                       {...item}
                       showCheckbox={isDeleteMode}

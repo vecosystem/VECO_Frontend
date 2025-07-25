@@ -7,6 +7,8 @@ import onboardingSteps from '../../constants/onboardingSteps';
 import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 
 const OnboardingInviteMember = () => {
+  // useOnboardingGuard(2); API 연결 후 훅 사용 예정
+
   // 사용자가 입력한 초대 URL과 암호를 저장하는 상태
   const [inviteText, setInviteText] = useState('');
 
@@ -23,7 +25,7 @@ const OnboardingInviteMember = () => {
   return (
     <div className="flex flex-col items-center gap-[3.2rem]">
       {/* 인디케이터 */}
-      <PageIndicator currentStep={1} steps={onboardingSteps} />
+      <PageIndicator currentStep={2} steps={onboardingSteps} />
       {/* 본문 */}
       <div className="flex flex-col items-center gap-[7.3rem]">
         <div className="flex flex-col items-center gap-[3.2rem]">

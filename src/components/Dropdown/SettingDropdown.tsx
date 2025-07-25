@@ -3,7 +3,7 @@ import useDropdownRef from '../../hooks/useDropdownRef.ts';
 import IcRightArrow from '../../assets/icons/right-arrow.svg';
 
 interface SettingDropdownProps {
-  options: { value: string; onClick: () => void }[];
+  options: { value: string; onClick: () => void; icon?: React.ReactNode }[];
 }
 
 const SettingDropdown = ({ options }: SettingDropdownProps) => {
@@ -20,14 +20,14 @@ const SettingDropdown = ({ options }: SettingDropdownProps) => {
       {options.map((option) => (
         <div
           key={option.value}
-          className={`flex justify-between hover:bg-gray-200 py-[0.75rem] ps-[1.2rem] pe-[0.8rem]`}
+          className={`flex justify-between hover:bg-gray-200 py-[0.75rem] ps-[1.2rem] pe-[0.8rem] rounded-[0.4rem] cursor-pointer`}
           onClick={() => {
             option.onClick();
             closeDropdown();
           }}
         >
-          <span className={`font-xsmall-r text-gray-600 me-[0.4rem]`}>{option.value}</span>
-          <img src={IcRightArrow} alt={option.value} />
+          <span className={`font-xsmall-r text-gray-default`}>{option.value}</span>
+          {option.icon ? option.icon : <img src={IcRightArrow} alt={option.value} />}
         </div>
       ))}
     </div>
