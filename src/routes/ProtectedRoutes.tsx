@@ -8,6 +8,9 @@ import SettingTeam from '../pages/setting/SettingTeam.tsx';
 import SettingMember from '../pages/setting/SettingMember.tsx';
 import SettingMyProfile from '../pages/setting/SettingMyProfile.tsx';
 import ExternalHome from '../pages/external/ExternalHome.tsx';
+import WorkspaceIssue from '../pages/workspace/WorkspaceIssue.tsx';
+import WorkspaceGoal from '../pages/workspace/WorkspaceGoal.tsx';
+import WorkspaceExternal from '../pages/workspace/WorkspaceExternal.tsx';
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -44,11 +47,11 @@ export const protectedRoutes: RouteObject[] = [
         children: [
           // 기본 경로는 이슈 페이지로 리다이렉트
           { index: true, element: <Navigate to="issue" replace /> },
-          { path: 'issue', element: <div>Workspace_Issue_Home</div> },
+          { path: 'issue', element: <WorkspaceIssue /> },
           { path: 'issue/:issueId', element: <div>Workspace_Issue_Detail</div> },
-          { path: 'goal', element: <div>Workspace_Goal_Home</div> },
+          { path: 'goal', element: <WorkspaceGoal /> },
           { path: 'goal/:goalId', element: <div>Workspace_Goal_Detail</div> },
-          { path: 'ext', element: <div>Workspace_External_Home</div> },
+          { path: 'ext', element: <WorkspaceExternal /> },
           { path: 'ext/:extId', element: <div>Workspace_External_Detail</div> },
         ],
       },
