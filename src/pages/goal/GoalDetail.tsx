@@ -9,7 +9,6 @@
 
 import DetailHeader from '../../components/DetailView/DetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
-import CompletionToggleButton from '../../components/DetailView/CompletionButton';
 
 // 우선순위 아이콘 svg import
 import pr1 from '../../assets/icons/pr-1.svg';
@@ -31,9 +30,12 @@ import IcNone from '../../assets/icons/status/none.svg';
 import IcDummyProfile from '../../assets/icons/gray.svg';
 import DetailTitle from '../../components/DetailView/DetailTitle';
 import { useState } from 'react';
+import CompletionButton from '../../components/DetailView/CompletionButton';
+import DetailTextEditor from '../../components/DetailView/DetailTextEditor';
 
 const GoalDetail = () => {
   const [title, setTitle] = useState('');
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const statusIconMap = {
     상태: IcNone,
@@ -61,6 +63,10 @@ const GoalDetail = () => {
     전시현: IcDummyProfile,
   };
 
+  const handleToggle = () => {
+    setIsCompleted((prev) => !prev);
+  };
+
   return (
     /* 주의 - 페이지 요소 최상단에 flex flex-1 추가해야 사이드바 오른쪽에 페이지를 꽉 채워 구성 가능 */
     <div className="flex flex-1 flex-col gap-[5.7rem] w-full p-[3.2rem]">
@@ -70,18 +76,15 @@ const GoalDetail = () => {
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full h-full">
         <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)]">
           {/* 상세페이지 제목 */}
-          <DetailTitle defaultTitle="목표를 생성하세요" title={title} setTitle={setTitle} />
+          <DetailTitle
+            defaultTitle="목표를 생성하세요"
+            title={title}
+            setTitle={setTitle}
+            isEditable={!isCompleted}
+          />
 
-          {/**
-           *  상세 설명 컴포넌트
-           * @todo
-           * - 현재는 textarea로 구현되어 있으나, 추후 리치 텍스트 에디터로 변경 예정
-           * - lexical editor로 구현 완료 후 컴포넌트화 예정
-           */}
-          <textarea
-            className="w-full h-[29.8rem] font-body-r placeholder-gray-400 text-gray-600 overflow-y-auto resize-none focus:outline-none pr-4"
-            placeholder="상세 설명 추가"
-          ></textarea>
+          {/* 상세 설명 작성 컴포넌트 */}
+          <DetailTextEditor isEditable={!isCompleted} />
 
           {/**
            * @todo
@@ -132,7 +135,11 @@ const GoalDetail = () => {
           </div>
 
           {/* 작성 완료 버튼 */}
-          <CompletionToggleButton />
+          <CompletionButton
+            isTitleFilled={title.trim().length > 0}
+            isCompleted={isCompleted}
+            onToggle={handleToggle}
+          />
         </div>
       </div>
     </div>

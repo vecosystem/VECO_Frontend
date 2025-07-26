@@ -58,7 +58,7 @@ export const protectedRoutes: RouteObject[] = [
           // 기본 경로는 이슈 페이지로 리다이렉트.
           { index: true, element: <Navigate to="issue" replace /> },
           { path: 'goal', element: <GoalHome /> },
-          { path: 'goal/:goalId', element: <GoalDetail /> },
+          { path: 'goal/:goalId', element: <div>Goal_Detail</div> },
           { path: 'issue', element: <IssueHome /> },
           { path: 'issue/:issueId', element: <div>Issue_Detail</div> },
           { path: 'ext', element: <div>External_Home</div> },
