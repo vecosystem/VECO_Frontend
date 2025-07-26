@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react';
 import { PRIORITY_LABELS, STATUS_LABELS, type ItemFilter } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
-import TeamIcon from '../../components/ListView/TeamIcon';
 import { IssueItem } from '../../components/ListView/IssueItem';
 import useCheckItems from '../../hooks/useCheckItems';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
@@ -17,10 +16,11 @@ import {
 } from '../../types/testDummy';
 import type { GroupedIssue, IssueFilter } from '../../types/issue';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
+import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
-const IssueHome = () => {
+const WorkspaceIssue = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
@@ -78,8 +78,8 @@ const IssueHome = () => {
   return (
     <>
       <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
-        {/* 팀 아이콘, 팀명, props로 요소 전달 가능 */}
-        <TeamIcon />
+        {/* 워크스페이스 아이콘, 워크스페이스명, props로 요소 전달 가능 */}
+        <WorkspaceIcon />
         <ListViewToolbar
           filter={filter}
           isDeleteMode={isDeleteMode}
@@ -150,4 +150,4 @@ const IssueHome = () => {
   );
 };
 
-export default IssueHome;
+export default WorkspaceIssue;

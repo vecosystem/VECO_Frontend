@@ -72,7 +72,7 @@ const ListViewToolbar = ({
               className="inline-block w-[2.4rem] h-[2.4rem]"
               alt=""
             />
-            <span className={`font-body-r ${isDeleteMode ? 'text-[#D44242]' : ''}`}>삭제</span>
+            <span className={`font-body-r ${isDeleteMode ? 'text-red-400' : ''}`}>삭제</span>
           </div>
         </div>
       </div>

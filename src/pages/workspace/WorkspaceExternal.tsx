@@ -1,47 +1,56 @@
 import PlusIcon from '../../assets/icons/plus.svg';
-import { useMemo, useState } from 'react';
-import { PRIORITY_LABELS, STATUS_LABELS, type ItemFilter } from '../../types/listItem';
-import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
-import TeamIcon from '../../components/ListView/TeamIcon';
-import { IssueItem } from '../../components/ListView/IssueItem';
-import useCheckItems from '../../hooks/useCheckItems';
-import ListViewToolbar from '../../components/ListView/ListViewToolbar';
-import { useModalActions, useModalInfo } from '../../hooks/useModal';
-import Modal from '../../components/Modal/Modal';
+import { useMemo, useState } from 'react';
 import {
-  dummyGoalTitleIssueGroups,
-  dummyManagerIssueGroups,
-  dummyPriorityIssueGroups,
-  dummyStatusIssueGroups,
+  EXTERNAL_LABELS,
+  PRIORITY_LABELS,
+  STATUS_LABELS,
+  type ItemFilter,
+} from '../../types/listItem';
+import useCheckItems from '../../hooks/useCheckItems';
+import { useModalActions, useModalInfo } from '../../hooks/useModal';
+import ListViewToolbar from '../../components/ListView/ListViewToolbar';
+import Modal from '../../components/Modal/Modal';
+import type { ExternalFilter, GroupedExternal } from '../../types/external';
+import {
+  dummyExternalToolExternalGroups,
+  dummyGoalTitleExternalGroups,
+  dummyManagerExternalGroups,
+  dummyPriorityExternalGroups,
+  dummyStatusExternalGroups,
 } from '../../types/testDummy';
-import type { GroupedIssue, IssueFilter } from '../../types/issue';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
+import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
+import { ExternalItem } from '../../components/ListView/ExternalItem';
+import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
+import ExternalToolArea from '../external/components/ExternalToolArea';
 
-const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
+const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
-const IssueHome = () => {
+const WorkspaceExternal = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
-  const dimmyIssueGroups = useMemo<IssueFilter[]>(() => {
+  const dummyExternalGroups = useMemo<ExternalFilter[]>(() => {
     switch (filter) {
       case '상태':
-        return dummyStatusIssueGroups;
+        return dummyStatusExternalGroups;
       case '우선순위':
-        return dummyPriorityIssueGroups;
+        return dummyPriorityExternalGroups;
       case '담당자':
-        return dummyManagerIssueGroups;
+        return dummyManagerExternalGroups;
       case '목표':
-        return dummyGoalTitleIssueGroups;
+        return dummyGoalTitleExternalGroups;
+      case '외부':
+        return dummyExternalToolExternalGroups;
       default:
         return [];
     }
   }, [filter]);
 
-  const allGoalsFlat = dimmyIssueGroups.flatMap((i) => i.issues);
+  const allExternalsFlat = dummyExternalGroups.flatMap((i) => i.externals);
 
   const {
     checkedIds: checkItems,
@@ -49,7 +58,7 @@ const IssueHome = () => {
     handleCheck,
     handleSelectAll,
     setCheckedIds,
-  } = useCheckItems(allGoalsFlat, 'id');
+  } = useCheckItems(allExternalsFlat, 'id');
 
   const [isDeleteMode, setIsDeleteMode] = useState(false);
 
@@ -67,9 +76,9 @@ const IssueHome = () => {
   };
 
   // 그룹핑
-  const grouped: GroupedIssue[] = dimmyIssueGroups.map((i) => ({
+  const grouped: GroupedExternal[] = dummyExternalGroups.map((i) => ({
     key: i.filterName,
-    items: i.issues,
+    items: i.externals,
   }));
 
   const sortedGrouped = getSortedGrouped(filter, grouped);
@@ -78,14 +87,17 @@ const IssueHome = () => {
   return (
     <>
       <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
-        {/* 팀 아이콘, 팀명, props로 요소 전달 가능 */}
-        <TeamIcon />
+        <div className="flex items-center">
+          <WorkspaceIcon />
+          {/* 아래 부분 연동 여부에 따라 다르게 보임. 추후 컴포넌트 분리*/}
+          <ExternalToolArea />
+        </div>
         <ListViewToolbar
           filter={filter}
           isDeleteMode={isDeleteMode}
           isAllChecked={isAllChecked}
-          showSelectAll={grouped.some(({ items }) => items.length > 0)}
-          filterOptions={FILTER_OPTIONS}
+          showSelectAll={dummyExternalGroups.length > 0}
+          filterOptions={[...FILTER_OPTIONS]}
           onFilterClick={() => openDropdown({ name: 'filter' })}
           onFilterSelect={(option) => {
             setFilter(option as ItemFilter);
@@ -98,7 +110,7 @@ const IssueHome = () => {
         {isModalOpen && modalContent && <Modal subtitle={modalContent.name} />}
         {isEmpty ? (
           <div className="flex flex-1 items-center justify-center">
-            <div className="font-body-r">목표를 생성하세요</div>
+            <div className="font-body-r">외부 연동이 없습니다</div>
           </div>
         ) : (
           /* 리스트뷰 */
@@ -122,7 +134,9 @@ const IssueHome = () => {
                           ? STATUS_LABELS[key as keyof typeof STATUS_LABELS] || key
                           : filter === '우선순위'
                             ? PRIORITY_LABELS[key as keyof typeof PRIORITY_LABELS] || key
-                            : key}
+                            : filter === '외부'
+                              ? EXTERNAL_LABELS[key as keyof typeof EXTERNAL_LABELS] || key
+                              : key}
                       </div>
                       <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
                     </div>
@@ -130,13 +144,13 @@ const IssueHome = () => {
                     <img src={PlusIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
                   </div>
                   {/* 각 유형 별 요소 */}
-                  {items.map((issue) => (
-                    <IssueItem
-                      key={issue.id}
-                      {...issue}
+                  {items.map((externals) => (
+                    <ExternalItem
+                      key={externals.id}
+                      {...externals}
                       showCheckbox={isDeleteMode}
-                      checked={checkItems.includes(issue.id)}
-                      onCheckChange={(checked) => handleCheck(issue.id, checked)}
+                      checked={checkItems.includes(externals.id)}
+                      onCheckChange={(checked) => handleCheck(externals.id, checked)}
                       filter={filter}
                     />
                   ))}
@@ -150,4 +164,4 @@ const IssueHome = () => {
   );
 };
 
-export default IssueHome;
+export default WorkspaceExternal;

@@ -2,10 +2,15 @@ import { Navigate, Outlet, type RouteObject } from 'react-router-dom';
 import ProtectedLayout from '../layouts/ProtectedLayout';
 import GoalHome from '../pages/goal/GoalHome';
 import IssueHome from '../pages/issue/IssueHome';
+import NotiHome from '../pages/notification/NotiHome';
 import Error404NotFound from '../pages/Error404NotFound';
 import SettingTeam from '../pages/setting/SettingTeam.tsx';
 import SettingMember from '../pages/setting/SettingMember.tsx';
-import GoalDetail from '../pages/goal/GoalDetail.tsx';
+import SettingMyProfile from '../pages/setting/SettingMyProfile.tsx';
+import ExternalHome from '../pages/external/ExternalHome.tsx';
+import WorkspaceIssue from '../pages/workspace/WorkspaceIssue.tsx';
+import WorkspaceGoal from '../pages/workspace/WorkspaceGoal.tsx';
+import WorkspaceExternal from '../pages/workspace/WorkspaceExternal.tsx';
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -20,7 +25,7 @@ export const protectedRoutes: RouteObject[] = [
       {
         path: 'noti',
         element: <Outlet />,
-        children: [{ index: true, element: <div>Notification</div> }],
+        children: [{ index: true, element: <NotiHome /> }],
       },
       /* 설정 페이지들 */
       {
@@ -32,7 +37,7 @@ export const protectedRoutes: RouteObject[] = [
           { path: 'ws-profile', element: <div>Setting_Workspace_Profile</div> },
           { path: 'team-list', element: <SettingTeam /> },
           { path: 'team-members', element: <SettingMember /> },
-          { path: 'my-profile', element: <div>Setting_My_Profile</div> },
+          { path: 'my-profile', element: <SettingMyProfile /> },
         ],
       },
       /* 워크스페이스 전체 팀 페이지들 */
@@ -42,11 +47,11 @@ export const protectedRoutes: RouteObject[] = [
         children: [
           // 기본 경로는 이슈 페이지로 리다이렉트
           { index: true, element: <Navigate to="issue" replace /> },
-          { path: 'issue', element: <div>Workspace_Issue_Home</div> },
+          { path: 'issue', element: <WorkspaceIssue /> },
           { path: 'issue/:issueId', element: <div>Workspace_Issue_Detail</div> },
-          { path: 'goal', element: <div>Workspace_Goal_Home</div> },
+          { path: 'goal', element: <WorkspaceGoal /> },
           { path: 'goal/:goalId', element: <div>Workspace_Goal_Detail</div> },
-          { path: 'ext', element: <div>Workspace_External_Home</div> },
+          { path: 'ext', element: <WorkspaceExternal /> },
           { path: 'ext/:extId', element: <div>Workspace_External_Detail</div> },
         ],
       },
@@ -61,7 +66,7 @@ export const protectedRoutes: RouteObject[] = [
           { path: 'goal/:goalId', element: <div>Goal_Detail</div> },
           { path: 'issue', element: <IssueHome /> },
           { path: 'issue/:issueId', element: <div>Issue_Detail</div> },
-          { path: 'ext', element: <div>External_Home</div> },
+          { path: 'ext', element: <ExternalHome /> },
           { path: 'ext/:extId', element: <div>External_Detail</div> },
         ],
       },

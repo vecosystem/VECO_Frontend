@@ -1,47 +1,44 @@
+import { GoalItem } from '../../components/ListView/GoalItem';
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useMemo, useState } from 'react';
 import { PRIORITY_LABELS, STATUS_LABELS, type ItemFilter } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
-import TeamIcon from '../../components/ListView/TeamIcon';
-import { IssueItem } from '../../components/ListView/IssueItem';
 import useCheckItems from '../../hooks/useCheckItems';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
 import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import Modal from '../../components/Modal/Modal';
 import {
-  dummyGoalTitleIssueGroups,
-  dummyManagerIssueGroups,
-  dummyPriorityIssueGroups,
-  dummyStatusIssueGroups,
+  dummyStatusGoalGroups,
+  dummyPriorityGoalGroups,
+  dummyManagerGoalGroups,
 } from '../../types/testDummy';
-import type { GroupedIssue, IssueFilter } from '../../types/issue';
+import type { GoalFilter, GroupedGoal } from '../../types/goal';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
+import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
 
-const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
+const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
-const IssueHome = () => {
+const WorkspaceGoal = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
-  const dimmyIssueGroups = useMemo<IssueFilter[]>(() => {
+  const dummyGoalGroups = useMemo<GoalFilter[]>(() => {
     switch (filter) {
       case '상태':
-        return dummyStatusIssueGroups;
+        return dummyStatusGoalGroups;
       case '우선순위':
-        return dummyPriorityIssueGroups;
+        return dummyPriorityGoalGroups;
       case '담당자':
-        return dummyManagerIssueGroups;
-      case '목표':
-        return dummyGoalTitleIssueGroups;
+        return dummyManagerGoalGroups;
       default:
         return [];
     }
   }, [filter]);
 
-  const allGoalsFlat = dimmyIssueGroups.flatMap((i) => i.issues);
+  const allGoalsFlat = dummyGoalGroups.flatMap((g) => g.goals);
 
   const {
     checkedIds: checkItems,
@@ -58,7 +55,7 @@ const IssueHome = () => {
   const handleDeleteClick = () => {
     if (isDeleteMode && checkItems.length > 0) {
       openModal({
-        name: `${checkItems.length}개의 이슈를 삭제하시겠습니까?`,
+        name: `${checkItems.length}개의 목표를 삭제하시겠습니까?`,
       });
     } else {
       setIsDeleteMode((prev) => !prev);
@@ -66,10 +63,9 @@ const IssueHome = () => {
     }
   };
 
-  // 그룹핑
-  const grouped: GroupedIssue[] = dimmyIssueGroups.map((i) => ({
-    key: i.filterName,
-    items: i.issues,
+  const grouped: GroupedGoal[] = dummyGoalGroups.map((g) => ({
+    key: g.filterName,
+    items: g.goals,
   }));
 
   const sortedGrouped = getSortedGrouped(filter, grouped);
@@ -78,8 +74,8 @@ const IssueHome = () => {
   return (
     <>
       <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
-        {/* 팀 아이콘, 팀명, props로 요소 전달 가능 */}
-        <TeamIcon />
+        {/* 워크스페이스 아이콘, 워크스페이스명, props로 요소 전달 가능 */}
+        <WorkspaceIcon />
         <ListViewToolbar
           filter={filter}
           isDeleteMode={isDeleteMode}
@@ -130,13 +126,13 @@ const IssueHome = () => {
                     <img src={PlusIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
                   </div>
                   {/* 각 유형 별 요소 */}
-                  {items.map((issue) => (
-                    <IssueItem
-                      key={issue.id}
-                      {...issue}
+                  {items.map((goal) => (
+                    <GoalItem
+                      key={goal.id}
+                      {...goal}
                       showCheckbox={isDeleteMode}
-                      checked={checkItems.includes(issue.id)}
-                      onCheckChange={(checked) => handleCheck(issue.id, checked)}
+                      checked={checkItems.includes(goal.id)}
+                      onCheckChange={(checked) => handleCheck(goal.id, checked)}
                       filter={filter}
                     />
                   ))}
@@ -150,4 +146,4 @@ const IssueHome = () => {
   );
 };
 
-export default IssueHome;
+export default WorkspaceGoal;
