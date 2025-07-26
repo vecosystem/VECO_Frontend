@@ -1,12 +1,22 @@
 import { useModalActions } from '../../hooks/useModal.ts';
 import { createPortal } from 'react-dom';
+import type { ReactNode } from 'react';
 
 interface ModalProps {
   title?: string;
-  subtitle: string;
+  subtitle?: ReactNode;
+  buttonText?: string;
+  buttonColor?: string;
+  onClick?: () => void;
 }
 
-const Modal = ({ title = '알림', subtitle }: ModalProps) => {
+const Modal = ({
+  title = '알림',
+  subtitle = <>정말로 삭제하시겠습니까?</>,
+  buttonText = '확인',
+  buttonColor = 'bg-primary-blue',
+  onClick = () => {},
+}: ModalProps) => {
   const { closeModal } = useModalActions();
 
   return createPortal(
@@ -19,10 +29,13 @@ const Modal = ({ title = '알림', subtitle }: ModalProps) => {
         <p className={`text-gray-600 font-body-r mb-[2.4rem]`}>{subtitle}</p>
         <div className={`flex justify-end`}>
           <button
-            className={`px-[1.6rem] py-[0.8rem] rounded-[0.6rem] bg-primary-blue text-zinc-50 font-small-b`}
-            onClick={closeModal}
+            className={`px-[1.6rem] py-[0.8rem] rounded-[0.6rem] ${buttonColor} text-zinc-50 font-small-b`}
+            onClick={() => {
+              onClick();
+              closeModal();
+            }}
           >
-            확인
+            {buttonText}
           </button>
         </div>
       </div>
