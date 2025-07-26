@@ -7,7 +7,7 @@ const Error404NotFound = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9FAFB]">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-onboard">
       <div className="h-[42rem] flex flex-col justify-end">
         <div className="flex flex-col items-center gap-[10.8rem]">
           {/* 에러 문구 */}

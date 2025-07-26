@@ -22,7 +22,7 @@ const InviteCodeInput = ({ inputCode, onChange, hasError }: InviteCodeInputProps
         className={`
       w-[40rem] h-[6.2rem] px-[2rem] py-[1.8rem] font-body-r rounded-[0.5rem]
       focus:outline-none text-gray-400 placeholder:text-gray-400
-      ${hasError ? 'border border-error-400 bg-[#F9FAFB]' : 'border bg-gray-200 border-transparent'}`}
+      ${hasError ? 'border border-error-400 bg-gray-onboard' : 'border bg-gray-200 border-transparent'}`}
       />
       {/* 에러 메시지 */}
       <span className={`font-xsmall-r ${hasError ? 'text-error-400' : 'text-transparent'}`}>
