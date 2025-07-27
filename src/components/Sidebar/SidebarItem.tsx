@@ -34,13 +34,9 @@ const SidebarItem = ({
         <button
           onClick={onAddClick}
           type="button"
-          className="group hover:bg-gray-400 rounded-[0.6rem] cursor-pointer transition-colors duration-150 ease-in-out"
+          className="group w-[2.4rem] h-[2.4rem] hover:bg-gray-400 rounded-[0.6rem] cursor-pointer transition-colors duration-150 ease-in-out"
         >
-          <img
-            src={plusIcon}
-            alt="Add"
-            className="w-[3.2rem] h-[3.2rem] p-[0.4rem] aspect-square"
-          />
+          <img src={plusIcon} alt="Add" className="w-full h-full aspect-square" />
         </button>
       )}
     </div>

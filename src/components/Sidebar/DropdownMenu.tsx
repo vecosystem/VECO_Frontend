@@ -9,6 +9,7 @@ interface DropdownMenuProps {
   headerTeamIcon?: React.ReactNode;
   headerHasToggleIcon?: boolean;
   isNested?: boolean;
+  dragHandle?: React.ReactNode;
 }
 
 const DropdownMenu = ({
@@ -18,6 +19,7 @@ const DropdownMenu = ({
   headerTeamIcon,
   headerHasToggleIcon = true,
   isNested = false,
+  dragHandle,
 }: DropdownMenuProps) => {
   const [isOpen, setIsOpen] = useState(initialOpen);
 
@@ -36,6 +38,7 @@ const DropdownMenu = ({
           teamIcon={headerTeamIcon}
           hasToggleIcon={headerHasToggleIcon}
           isNested={isNested}
+          dragHandle={dragHandle}
         />
       )}
 
