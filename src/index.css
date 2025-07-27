@@ -13,6 +13,9 @@
   /* Error Scale */
   --color-error-400: #d44242;
 
+  /* Onboarding Background Color */
+  --color-gray-onboard: #f9fafb;
+
   /* Primary Color */
   --color-primary-blue: #132650;
   --color-primary-variant-blue: #2e4475;
