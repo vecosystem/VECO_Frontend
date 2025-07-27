@@ -24,10 +24,12 @@ import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { ExternalItem } from '../../components/ListView/ExternalItem';
 import ExternalToolArea from './components/ExternalToolArea';
+import { useNavigate } from 'react-router-dom';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
 const ExternalHome = () => {
+  const navigate = useNavigate();
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
@@ -149,8 +151,14 @@ const ExternalHome = () => {
                       </div>
                       <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
                     </div>
-                    {/* TODO : 추가 버튼 라우터 연결 */}
-                    <img src={PlusIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
+                    {/* TODO : 추가 버튼 id 및 유형 상태 전달 */}
+                    <img
+                      src={PlusIcon}
+                      className="inline-block w-[2.4rem] h-[2.4rem]"
+                      alt=""
+                      onClick={() => navigate('/workspace/team/:teamId/ext/:extId')}
+                      // onClick={() => navigate(`/workspace/team/${teamId}/ext/${extId}`)}
+                    />
                   </div>
                   {/* 각 유형 별 요소 */}
                   {items.map((externals) => (
