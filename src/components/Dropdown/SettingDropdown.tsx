@@ -1,6 +1,7 @@
 import { useDropdownActions } from '../../hooks/useDropdown.ts';
 import useDropdownRef from '../../hooks/useDropdownRef.ts';
 import IcRightArrow from '../../assets/icons/right-arrow.svg';
+import React from 'react';
 
 interface SettingDropdownProps {
   options: { value: string; onClick: () => void; icon?: React.ReactNode }[];

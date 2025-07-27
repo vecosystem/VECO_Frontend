@@ -1,5 +1,6 @@
 import googlelogo from '../../assets/logos/googlelogo.png';
 import kakaologo from '../../assets/logos/kakaologo.svg';
+import { redirectToGoogleLogin, redirectToKakaoLogin } from '../../apis/auth';
 
 // 컴포넌트에 넘길 props 정의
 interface SocialLoginButtonProps {
@@ -8,18 +9,24 @@ interface SocialLoginButtonProps {
 
 // SocialLoginButton 컴포넌트 정의
 const SocialLoginButton = ({ provider }: SocialLoginButtonProps) => {
-  // 버튼 클릭 시 실행되는 함수: provider에 따라 백엔드 로그인 URL로 이동
-  const handleClick = () => {
-    const baseUrl = 'https://your-api.com/api/auth/login'; // 백엔드 로그인 라우트 (명세서에 따라 수정)
-    const targetUrl = provider === 'google' ? `${baseUrl}/google` : `${baseUrl}/kakao`;
-    window.location.href = targetUrl; // 해당 URL로 리디렉션 (현재 창에서 이동)
+  // provider에 따라 리다이렉트
+  const handleClick = async () => {
+    try {
+      if (provider === 'google') {
+        redirectToGoogleLogin();
+      } else {
+        redirectToKakaoLogin();
+      }
+    } catch (error) {
+      console.error('소셜 로그인 리다이렉트 실패:', error);
+    }
   };
 
   // 구글 로그인 버튼 렌더링
   if (provider === 'google') {
     return (
       <button
-        onClick={handleClick} // 버튼 클릭 시 리디렉트
+        onClick={handleClick}
         className="pl-[2rem] w-[40rem] h-[6.2rem] rounded-[0.5rem] bg-gray-200 cursor-pointer hover:opacity-90"
       >
         {/* 내부 콘텐츠 영역: 로고 + 텍스트 */}

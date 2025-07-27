@@ -62,7 +62,7 @@ const WorkspaceNameInput = ({ onUrlGenerated }: WorkspaceNameInputProps) => {
       <div className="relative w-full h-[6.2rem]">
         <div
           className={`flex items-center justify-between h-full w-full rounded-[0.5rem] px-[2rem] ${
-            error ? 'border border-[#D44242]' : 'bg-gray-200'
+            error ? 'border border-error-400' : 'bg-gray-200'
           }`}
         >
           {/* 워크스페이스 이름 입력 필드 */}
@@ -88,7 +88,7 @@ const WorkspaceNameInput = ({ onUrlGenerated }: WorkspaceNameInputProps) => {
 
         {/* 에러 메시지 (입력창 아래에 고정, 조건부 빨간색) */}
         <p
-          className={`absolute mt-[1rem] font-xsmall-r ${error ? 'text-[#D44242]' : 'text-transparent'}`}
+          className={`absolute mt-[1rem] font-xsmall-r ${error ? 'text-error-400' : 'text-transparent'}`}
         >
           {error || '입력 정보를 다시 확인하세요'}
         </p>
