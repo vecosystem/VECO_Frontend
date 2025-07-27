@@ -8,7 +8,8 @@
  * - 화면 가로 길이 줄여도 줄어들지 않게 처리
  *
  * @description
- * - 속성 드롭다운은 성 완료 여부에 영향을 받지 않도록 구현.
+ * - 속성 드롭다운은 작성 완료 여부에 영향을 받지 않도록 구현.
+ * - 기한 드롭다운은 이 컴포넌트로 관리하지 않음 (별도로 필요한 상세페이지에서 구현)
  */
 
 import { useState } from 'react';
@@ -39,9 +40,9 @@ const PropertyItem = ({ defaultValue, options, iconMap, getColor }: PropertyItem
     <div
       className={`flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200`}
     >
-      {/* '상태' 속성과 다른 속성의 아이콘 적용 방식을 구분하여 적용 */}
+      {/* 속성 아이콘 */}
       {getColor ? (
-        // '상태' 속성의 아이콘: 색상 원을 적용
+        // (1) '상태' 속성의 아이콘: 색상 원을 적용
         <div className="w-[2.4rem] h-[2.4rem] flex items-center justify-center">
           <span
             className="rounded-full w-[1.6rem] h-[1.6rem]"
@@ -49,16 +50,18 @@ const PropertyItem = ({ defaultValue, options, iconMap, getColor }: PropertyItem
           />
         </div>
       ) : (
-        // '상태'가 아닌 다른 속성 아이콘: 아이콘 이미지 import하여 적용
+        // (2) '상태'가 아닌 다른 속성 아이콘: 아이콘 이미지 import하여 적용
         <img src={icon} alt={value} />
       )}
 
+      {/* 속성 이름 */}
       <div className={`flex relative cursor-pointer`}>
         <span className="flex items-center" onClick={() => setIsOpen((open) => !isOpen)}>
           {/* 속성 항목명 */}
           <div className="font-body-r text-gray-600">{value}</div>
         </span>
 
+        {/* 속성 항목명을 눌러 드롭다운 오픈 */}
         {isOpen && (
           <Dropdown
             value={value}

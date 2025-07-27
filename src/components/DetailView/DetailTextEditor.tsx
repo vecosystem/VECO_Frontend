@@ -3,10 +3,7 @@
  * 상세페이지 설명 작성 컴포넌트
  *
  * @todo
- * - 최대20자, 20자 넘길 경우 토스트 뜨게 해야 함
- * - lexical 프레임워크 공부하여 적용
- * - 스크롤 필요시: 스크롤바 나타나도록
- * - 스크롤 끝까지 내렸을 때 끝임을 알리는 배경 그라디언트 적용
+ * - lexical 프레임워크 공부하여 적용 예정
  */
 
 interface DetailTextEditorProps {
@@ -17,7 +14,7 @@ const DetailTextEditor = ({ isEditable }: DetailTextEditorProps) => {
   return (
     <textarea
       disabled={!isEditable}
-      className="w-full h-[29.8rem] font-body-r placeholder-gray-400 text-gray-600 overflow-y-auto resize-none focus:outline-none pr-4 ${!isEditable ? 'cursor-not-allowed text-gray-600' : ''}"
+      className="w-full h-full font-body-r placeholder-gray-400 text-gray-600 overflow-y-scroll basic-scroll resize-none focus:outline-none pr-4 ${!isEditable ? 'cursor-not-allowed text-gray-600' : ''}"
       placeholder="상세 설명 추가"
     ></textarea>
   );
