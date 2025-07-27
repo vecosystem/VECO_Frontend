@@ -56,7 +56,7 @@ const PropertyItem = ({ defaultValue, options, iconMap, getColor }: PropertyItem
 
       {/* 속성 이름 */}
       <div className={`flex relative cursor-pointer`}>
-        <span className="flex items-center" onClick={() => setIsOpen((open) => !isOpen)}>
+        <span className="flex items-center" onClick={() => setIsOpen(!isOpen)}>
           {/* 속성 항목명 */}
           <div className="font-body-r text-gray-600">{value}</div>
         </span>
