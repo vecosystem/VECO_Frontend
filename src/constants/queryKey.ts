@@ -1,3 +1,4 @@
 export const queryKey = {
-  TEAMS: 'teams',
+  WORKSPACE_TEAMS: 'workspace_teams',
+  WORKSPACE_MEMBERS: 'workspace_members',
 };
