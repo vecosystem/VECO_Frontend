@@ -34,7 +34,14 @@ const GoalDetail = () => {
     긴급: pr4,
   };
 
-  const userIconMap = IcDummyProfile; // '담당자' 속성 아이콘 매핑 (나중에 API로부터 받아온 데이터로 대체 예정)
+  // '담당자' 속성 아이콘 매핑 (나중에 API로부터 받아온 데이터로 대체 예정)
+  const userIconMap = {
+    담당자: IcDummyProfile,
+    없음: IcDummyProfile,
+    전채운: IcDummyProfile,
+    전시현: IcDummyProfile,
+  };
+
   // const dateIconMap = IcDate; // '기한' 속성 아이콘 매핑
   // const issueIconMap = IcIssue; // '이슈' 속성 아이콘 매핑
 
@@ -95,7 +102,7 @@ const GoalDetail = () => {
                 <PropertyItem
                   defaultValue="담당자"
                   options={['없음', '전채운', '전시현']}
-                  iconMap={{ 담당자: userIconMap }}
+                  iconMap={userIconMap}
                 />
               </div>
 
