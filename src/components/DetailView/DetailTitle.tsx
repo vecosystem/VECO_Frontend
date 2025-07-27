@@ -4,6 +4,7 @@
  *
  * @todo
  * - 최대20자, 20자 넘길 경우 토스트 뜨게 해야 함
+ * - 제목 0자 작성 시 토스트 뜨게 해야 함
  */
 
 import { useEffect, useRef } from 'react';
