@@ -59,7 +59,7 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
     onCheckChange?.(!checked);
   };
 
-  const dateColor = variant === 'notification' ? (checked ? '' : 'text-red-400') : '';
+  const dateColor = variant === 'notification' ? (checked ? '' : 'text-error-400') : '';
 
   return (
     <div
