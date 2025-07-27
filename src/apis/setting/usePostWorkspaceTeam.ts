@@ -1,0 +1,38 @@
+import type { TeamCreateResponse } from '../../types/setting.ts';
+import { axiosInstance } from '../axios.ts';
+import type { CommonResponse } from '../../types/common.ts';
+import { END_POINT } from '../../constants/api.ts';
+import { useMutation } from '@tanstack/react-query';
+import queryClient from '../../utils/queryClient.ts';
+import { queryKey } from '../../constants/queryKey.ts';
+
+interface PostWorkspaceTeamResponse {
+  teams: TeamCreateResponse;
+}
+
+const postWorkspaceTeam = async (
+  name: string,
+  memberId: number[]
+): Promise<PostWorkspaceTeamResponse> => {
+  try {
+    const response = await axiosInstance.post<CommonResponse<PostWorkspaceTeamResponse>>(
+      END_POINT.POST_WORKSPACE_TEAM,
+      { name: name, memberId: memberId }
+    );
+    return response.data.result;
+  } catch (error) {
+    console.error('워크스페이스 팀 생성 실패', error);
+    throw error;
+  }
+};
+
+export const usePostWorkspaceTeam = (name: string, memberId: number[]) => {
+  return useMutation({
+    mutationFn: () => postWorkspaceTeam(name, memberId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: [queryKey.WORKSPACE_TEAMS],
+      });
+    },
+  });
+};
