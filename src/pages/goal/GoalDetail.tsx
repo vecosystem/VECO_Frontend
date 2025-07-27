@@ -19,6 +19,7 @@ import IcDummyProfile from '../../assets/icons/user-circle-sm.svg';
 
 import { getStatusColor } from '../../utils/listItemUtils';
 import { statusLabelToCode } from '../../types/detailitem';
+import CommentSection from '../../components/DetailView/Comment/CommentSection';
 
 const GoalDetail = () => {
   const [title, setTitle] = useState('');
@@ -68,6 +69,13 @@ const GoalDetail = () => {
 
           {/* 상세 설명 작성 컴포넌트 */}
           <DetailTextEditor isEditable={!isCompleted} />
+
+          {/**
+           * 댓글 영역
+           * - 상세페이지 작성 중일 때는 댓글 영역이 보이지 않음
+           * - '작성 완료' 버튼 클릭하여 완료 시 댓글 영역이 나타남 (다시 '수정하기' 버튼 누르면 안 보임)
+           */}
+          {isCompleted && <CommentSection />}
         </div>
 
         {/* 상세페이지 우측 영역 - 속성 탭 & 하단의 작성 완료 버튼 */}
