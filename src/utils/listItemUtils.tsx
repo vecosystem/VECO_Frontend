@@ -40,7 +40,7 @@ export const getPriorityIcon = (priority: PriorityCode): string => {
 export const getStatusIcon = (status: StatusCode) => {
   const colorMap: Record<StatusCode, string> = {
     NONE: '#DCDCDC',
-    DOING: '#D4B042',
+    IN_PROGRESS: '#D4B042',
     TODO: '#D44242',
     FINISH: '#75D564',
     REVIEW: '#2e4475',
@@ -58,7 +58,7 @@ export const getStatusIcon = (status: StatusCode) => {
 export const getStatusColor = (status: StatusCode): string => {
   const colorMap: Record<StatusCode, string> = {
     NONE: '#DCDCDC',
-    DOING: '#D4B042',
+    IN_PROGRESS: '#D4B042',
     TODO: '#D44242',
     FINISH: '#75D564',
     REVIEW: '#2e4475',

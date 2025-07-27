@@ -3,11 +3,11 @@ import type { Goal } from './goal';
 import type { Issue } from './issue';
 
 // 상태 코드
-export const STATUS_CODES = ['NONE', 'DOING', 'TODO', 'FINISH', 'REVIEW', 'DELETE'] as const;
+export const STATUS_CODES = ['NONE', 'IN_PROGRESS', 'TODO', 'FINISH', 'REVIEW', 'DELETE'] as const;
 export type StatusCode = (typeof STATUS_CODES)[number];
 export const STATUS_LABELS: Record<StatusCode, string> = {
   NONE: '없음',
-  DOING: '진행중',
+  IN_PROGRESS: '진행중',
   TODO: '해야할 일',
   FINISH: '완료',
   REVIEW: '검토',
