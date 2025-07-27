@@ -142,7 +142,16 @@ const NotiHome = () => {
       />
       {/* 탭 버튼 */}
       <GroupTypeTab currentTab={tab} onTabChange={handleTabChange} />
-      {isModalOpen && modalContent && <Modal subtitle={modalContent.name} />}
+      {isModalOpen && modalContent && (
+        <Modal
+          title="알림"
+          subtitle="복구할 수 없습니다. 정말 삭제하시겠습니까?"
+          buttonText="삭제"
+          buttonColor="bg-error-400"
+          // 삭제 요소 전달
+          onClick={() => {}}
+        />
+      )}
       {isEmpty ? (
         <div className="flex flex-1 items-center justify-center">
           <div className="font-body-r">새로운 알림이 없습니다</div>
