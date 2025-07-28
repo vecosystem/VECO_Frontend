@@ -24,7 +24,19 @@ export const reissueAccessToken = async (): Promise<string> => {
  * Google OAuth2 로그인 URL로 리다이렉트
  */
 export const redirectToGoogleLogin = () => {
-  window.location.href = `${import.meta.env.VITE_SERVER_API_URL}/oauth2/authorization/google`;
+  const baseURL = import.meta.env.VITE_SERVER_API_URL;
+  if (!baseURL) {
+    console.error('서버 주소가 정의되지 않았습니다.');
+    alert('서버 연결에 문제가 있어 Google 로그인을 진행할 수 없습니다.');
+    return;
+  }
+
+  try {
+    window.location.href = `${baseURL}/oauth2/authorization/google`;
+  } catch (error) {
+    console.error('Google 로그인 리다이렉트 실패:', error);
+    alert('Google 로그인 중 문제가 발생했습니다.');
+  }
 };
 
 /**
@@ -32,5 +44,17 @@ export const redirectToGoogleLogin = () => {
  * - 명세서 X, 임시 구조
  */
 export const redirectToKakaoLogin = () => {
-  window.location.href = `${import.meta.env.VITE_SERVER_API_URL}/oauth2/authorization/kakao`;
+  const baseURL = import.meta.env.VITE_SERVER_API_URL;
+  if (!baseURL) {
+    console.error('서버 주소가 정의되지 않았습니다.');
+    alert('서버 연결에 문제가 있어 Kakao 로그인을 진행할 수 없습니다.');
+    return;
+  }
+
+  try {
+    window.location.href = `${baseURL}/oauth2/authorization/kakao`;
+  } catch (error) {
+    console.error('Kakao 로그인 리다이렉트 실패:', error);
+    alert('Kakao 로그인 중 문제가 발생했습니다.');
+  }
 };
