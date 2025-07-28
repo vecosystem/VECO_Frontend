@@ -6,8 +6,9 @@ import CommentInput from './CommentInput';
 import CommentItem from './CommentItem';
 
 interface Comment {
-  content: string;
-  createAt: Date;
+  author: string; // 댓글 작성자
+  content: string; // 댓글 내용
+  createAt: Date; // 댓글 작성 날짜
 }
 
 const CommentSection = () => {
@@ -15,6 +16,7 @@ const CommentSection = () => {
 
   const handleAddComment = (content: string) => {
     const newComment: Comment = {
+      author: '전채운', // 추후 로그인 유저로 대체
       content,
       createAt: new Date(),
     };
@@ -39,8 +41,8 @@ const CommentSection = () => {
               <div className="font-body-r text-gray-600">댓글을 작성하세요.</div>
             </div>
           ) : (
-            comments.map(({ content, createAt }) => (
-              <CommentItem content={content} createAt={createAt} />
+            comments.map(({ author, content, createAt }) => (
+              <CommentItem author={author} content={content} createAt={createAt} />
             ))
           )}
         </div>

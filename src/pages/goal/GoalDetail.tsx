@@ -13,7 +13,7 @@ import pr1 from '../../assets/icons/pr-1-sm.svg';
 import pr2 from '../../assets/icons/pr-2-sm.svg';
 import pr3 from '../../assets/icons/pr-3-sm.svg';
 import pr4 from '../../assets/icons/pr-4-sm.svg';
-import IcDummyProfile from '../../assets/icons/user-circle-sm.svg';
+import IcProfile from '../../assets/icons/user-circle-sm.svg';
 // import IcDate from '../../assets/icons/date-lg.svg';
 // import IcIssue from '../../assets/icons/issue.svg';
 
@@ -37,10 +37,10 @@ const GoalDetail = () => {
 
   // '담당자' 속성 아이콘 매핑 (나중에 API로부터 받아온 데이터로 대체 예정)
   const userIconMap = {
-    담당자: IcDummyProfile,
-    없음: IcDummyProfile,
-    전채운: IcDummyProfile,
-    전시현: IcDummyProfile,
+    담당자: IcProfile,
+    없음: IcProfile,
+    전채운: IcProfile,
+    전시현: IcProfile,
   };
 
   // const dateIconMap = IcDate; // '기한' 속성 아이콘 매핑
