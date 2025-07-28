@@ -23,14 +23,14 @@ const CompletionButton = ({ isTitleFilled, isCompleted, onToggle }: CompletionBu
   // 작성 완료하지 않았을 때: 배경&텍스트 색상 비활성화 상태
   // 작성 완료 시: 활성화 상태
   const bgColor = isDisabled ? 'bg-gray-200' : 'bg-primary-blue';
-  const textColor = isDisabled ? 'text-gray-400' : 'text-white';
+  const textColor = isDisabled ? 'text-gray-400' : 'text-gray-100';
 
   return (
-    <div className="flex items-end justify-end mb-[1.6rem]">
+    <div className="flex items-end justify-end">
       <button
         onClick={isDisabled ? undefined : onToggle}
         disabled={isDisabled}
-        className={`flex items-center justify-center gap-[0.8rem] h-[3.6rem] py-[0.8rem] pl-[1.2rem] pr-[1.6rem] bg-gray-200 rounded-md ${cursorClass} ${bgColor} transition-colors duration-300 ease-in-out`}
+        className={`flex items-center justify-center gap-[0.8rem] h-[3.6rem] py-[0.8rem] pl-[1.2rem] pr-[1.6rem] rounded-md ${cursorClass} ${bgColor} transition-colors duration-300 ease-in-out`}
       >
         {/* 버튼 아이콘 */}
         <img
