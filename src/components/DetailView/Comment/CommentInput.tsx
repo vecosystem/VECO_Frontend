@@ -4,12 +4,22 @@
 import { useState } from 'react';
 import CommentCompletionButton from './CommentCompletionButton';
 
-const CommentInput = () => {
+interface CommentIntputProps {
+  onAdd: (content: string) => void;
+}
+
+const CommentInput = ({ onAdd }: CommentIntputProps) => {
   const [comment, setComment] = useState('');
 
   // 입력 시
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (comment.trim().length === 0) return;
+    onAdd(comment.trim());
+    setComment('');
   };
 
   return (
@@ -27,13 +37,7 @@ const CommentInput = () => {
         className="w-full h-full font-body-r placeholder-gray-400 text-gray-600 focus:outline-none resize-none basic-scroll"
       ></textarea>
       {/* 댓글 작성 완료 버튼 */}
-      <CommentCompletionButton
-        isCommentFilled={comment.trim().length > 0}
-        onClick={() => {
-          // 댓글 전송 로직
-          setComment('');
-        }}
-      />
+      <CommentCompletionButton isCommentFilled={comment.trim().length > 0} onClick={handleSubmit} />
     </div>
   );
 };

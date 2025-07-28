@@ -6,22 +6,28 @@
  * - 버튼 누르면 이 아이템이 목록에 생성되게
  */
 
-const CommentItem = () => {
+interface CommentItemProps {
+  content: string;
+  createAt: Date;
+}
+
+const CommentItem = ({ content, createAt }: CommentItemProps) => {
   return (
-    <div>
+    <div className="flex gap-[1.6rem] w-full">
       {/* 댓글 작성자 프로필 */}
       <div></div>
-      <div>
+
+      <div className="flex flex-col">
         {/* 작성자 정보 */}
-        <div>
+        <div className="flex gap-[0.8rem]">
           {/* 작성자 이름 */}
-          <div></div>
+          <span>전채운</span>
           {/* 작성 시간 */}
-          <div></div>
+          <span>{createAt.toLocaleString()}</span>
         </div>
 
         {/* 댓글 내용 */}
-        <div></div>
+        <div>{content}</div>
       </div>
     </div>
   );
