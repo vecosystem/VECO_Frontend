@@ -25,11 +25,11 @@ const MemberItem = (props: MemberItemProps) => {
 
   return (
     <div
-      className={`flex w-full items-center text-gray-600 font-body-r ps-[4.3rem] pe-[4.9rem] ${props.className}`}
+      className={`flex w-full items-center text-gray-600 font-body-r ps-[4.3rem] pe-[4.9rem] whitespace-nowrap ${props.className}`}
     >
       <ProfileImage profileImage={props.profileImage} className={'p-[0.4rem]'} />
       <span className={`ms-[4.1rem] text-start w-[6.4rem] truncate`}>{props.name}</span>
-      <span className={`flex-1 ms-[2.8rem] text-start`}>{props.email}</span>
+      <span className={`flex-1 ms-[2.8rem] text-start truncate`}>{props.email}</span>
       <div className={`flex gap-x-[1.8rem]`}>
         <section className={`relative`}>
           <ProfileLayout teams={props.teams} onClick={() => openDropdown({ name: props.name })} />
@@ -44,7 +44,7 @@ const MemberItem = (props: MemberItemProps) => {
         </section>
         <div className={`flex gap-x-[0.8rem] items-center`}>
           <img src={IcDate} alt={'생성일'} />
-          <span>{props.date}</span>
+          <span className={`truncate`}>{props.date}</span>
         </div>
       </div>
     </div>
