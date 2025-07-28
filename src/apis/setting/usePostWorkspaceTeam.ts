@@ -1,7 +1,6 @@
 import type { TeamCreateResponse } from '../../types/setting.ts';
 import { axiosInstance } from '../axios.ts';
 import type { CommonResponse } from '../../types/common.ts';
-import { END_POINT } from '../../constants/api.ts';
 import { useMutation } from '@tanstack/react-query';
 import queryClient from '../../utils/queryClient.ts';
 import { queryKey } from '../../constants/queryKey.ts';
@@ -16,7 +15,7 @@ const postWorkspaceTeam = async (
 ): Promise<PostWorkspaceTeamResponse> => {
   try {
     const response = await axiosInstance.post<CommonResponse<PostWorkspaceTeamResponse>>(
-      END_POINT.POST_WORKSPACE_TEAM,
+      '/api/workspace/setting/teams',
       { name: name, memberId: memberId }
     );
     return response.data.result;
