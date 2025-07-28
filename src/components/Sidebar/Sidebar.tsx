@@ -19,8 +19,8 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const teams = [
-    { id: 2, name: 'Team1', icon: <img src={vecocirclewhite} /> },
-    { id: 3, name: 'Team2', icon: <img src={vecocirclewhite} /> },
+    { id: 2, name: 'Team1', icon: <img src={vecocirclewhite} alt={'Team1'} /> },
+    { id: 3, name: 'Team2', icon: <img src={vecocirclewhite} alt={'Team2'} /> },
   ];
 
   return (
