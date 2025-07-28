@@ -4,6 +4,8 @@ import GithubIcon from '../../../assets/icons/github.svg';
 import GithubWhiteIcon from '../../../assets/icons/github-white.svg';
 import SlackIcon from '../../../assets/icons/slack.svg';
 import ExternalToolButton from './ExternalToolButton';
+import { useLocalStorage } from '../../../hooks/useLocalStorage.ts';
+import { LOCAL_STORAGE_KEY } from '../../../constants/key.ts';
 
 const TOOL_LIST = [
   {
@@ -34,6 +36,13 @@ interface ExternalToolModalProps {
 
 const ExternalToolModal = ({ onClose }: ExternalToolModalProps) => {
   const [selected, setSelected] = useState<string | null>(null);
+  const handleSlackLogin = () => {
+    const scope = 'channels:join,chat:write';
+    const accessToken = useLocalStorage(LOCAL_STORAGE_KEY.accessToken).getItem();
+    window.location.href = `https://slack.com/oauth/v2/authorize?client_id=${
+      import.meta.env.VITE_SLACK_CLIENT_ID
+    }&scope=${scope}&redirect_uri=${import.meta.env.VITE_SLACK_REDIRECT_URI}&state=${accessToken}`;
+  };
 
   return createPortal(
     <div
@@ -66,7 +75,12 @@ const ExternalToolModal = ({ onClose }: ExternalToolModalProps) => {
                 : 'bg-gray-300 text-gray-400 cursor-not-allowed'
             }
           `}
-          onClick={onClose}
+          onClick={() => {
+            if (selected === 'SLACK') {
+              handleSlackLogin();
+            }
+            onClose();
+          }}
           disabled={!selected}
         >
           외부 연동하기
