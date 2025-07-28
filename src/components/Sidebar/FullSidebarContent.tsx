@@ -13,7 +13,7 @@ import externalHoverIcon from '../../assets/icons/external-hover.svg';
 import collapseIcon from '../../assets/icons/collapse.svg';
 import { useNavigate } from 'react-router-dom';
 import hamburgerIcon from '../../assets/icons/hamburger.svg';
-import SortableDropdownList from './SortableDropDownList';
+import SortableDropdownList from './SortableDropdownList';
 
 interface FullSidebarContentProps {
   setExpanded: (value: boolean) => void;

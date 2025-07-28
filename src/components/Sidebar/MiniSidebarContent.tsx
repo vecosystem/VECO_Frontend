@@ -11,7 +11,7 @@ import externalIcon from '../../assets/icons/external.svg';
 import externalHoverIcon from '../../assets/icons/external-hover.svg';
 import DropdownMenu from './DropdownMenu';
 import SidebarItem from './SidebarItem';
-import SortableDropdownList from './SortableDropDownList';
+import SortableDropdownList from './SortableDropdownList';
 
 interface MiniSidebarContentProps {
   setExpanded: (value: boolean) => void;
