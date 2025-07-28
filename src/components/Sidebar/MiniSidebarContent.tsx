@@ -21,7 +21,7 @@ interface MiniSidebarContentProps {
 const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => {
   const navigate = useNavigate();
   return (
-    <div className="w-full p-[3.2rem] min-h-screen">
+    <div className="w-full p-[3.2rem] pe-[2rem] min-h-screen">
       <div className="flex flex-col items-start gap-[3.2rem] self-stretch">
         <div className="flex items-center gap-[1.6rem] self-stretch">
           <button

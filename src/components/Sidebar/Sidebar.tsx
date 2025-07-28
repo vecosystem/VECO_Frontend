@@ -16,7 +16,7 @@ const Sidebar = () => {
     <div
       className={clsx(
         'bg-gray-200 transition-all duration-300 ease-in-out',
-        isExpanded ? 'w-[32rem]' : 'w-[12.8rem]',
+        isExpanded ? 'w-[30.8rem]' : 'w-[12.8rem]',
         'h-screen flex flex-col'
       )}
     >
