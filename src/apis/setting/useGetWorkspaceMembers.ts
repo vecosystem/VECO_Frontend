@@ -4,6 +4,7 @@ import type { CommonResponse } from '../../types/common.ts';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '../../constants/queryKey.ts';
 
+// 설정 - 워크스페이스 멤버 조회
 const getWorkspaceMembers = async (): Promise<MemberListResponse[]> => {
   try {
     const response = await axiosInstance.get<CommonResponse<MemberListResponse[]>>(

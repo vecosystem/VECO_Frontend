@@ -9,6 +9,7 @@ interface PostWorkspaceTeamResponse {
   teams: TeamCreateResponse;
 }
 
+// 설정 - 팀 생성
 const postWorkspaceTeam = async (
   name: string,
   memberId: number[]
