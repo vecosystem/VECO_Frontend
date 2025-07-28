@@ -19,7 +19,7 @@ const FullSettingSidebarContent = ({ setExpanded }: FullSettingSidebarContentPro
   const navigate = useNavigate();
 
   return (
-    <div className="w-[32rem] bg-gray-200 p-[3.2rem] min-h-screen">
+    <div className="w-full bg-gray-200 p-[3.2rem] min-h-screen">
       <div className="flex flex-col items-start gap-[3.2rem] self-stretch">
         <div className="flex justify-between items-center self-stretch">
           <button
