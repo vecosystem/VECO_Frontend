@@ -51,13 +51,13 @@ const GoalDetail = () => {
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-[5.7rem] w-full p-[3.2rem]">
+    <div className="flex flex-1 flex-col gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem] pb-[5.3rem]">
       {/* 상세페이지 헤더 */}
       <DetailHeader defaultTitle="목표를 생성하세요" title={title} />
 
       {/* 상세페이지 메인 */}
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full h-full">
-        {/* 상세페이지 좌측 영역 - 제목 & 상세 설명 & 댓글 영역 */}
+        {/* 상세페이지 좌측 영역 - 제목 & 상세설명 & 댓글 */}
         <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)]">
           {/* 상세페이지 제목 */}
           <DetailTitle
@@ -70,11 +70,7 @@ const GoalDetail = () => {
           {/* 상세 설명 작성 컴포넌트 */}
           <DetailTextEditor isEditable={!isCompleted} />
 
-          {/**
-           * 댓글 영역
-           * - 상세페이지 작성 중일 때는 댓글 영역이 보이지 않음
-           * - '작성 완료' 버튼 클릭하여 완료 시 댓글 영역이 나타남 (다시 '수정하기' 버튼 누르면 안 보임)
-           */}
+          {/* 댓글 영역 */}
           {isCompleted && <CommentSection />}
         </div>
 
@@ -118,6 +114,10 @@ const GoalDetail = () => {
               {/* <PropertyItem defaultValue="기한" iconMap={{ 기한: dateIconMap }} /> */}
 
               {/* (5) 이슈 */}
+              {/**
+               * @todo
+               * - 이슈 많아질 경우 '외 n개'로 축약되게 하기
+               */}
               {/*
                 <PropertyItem
                   defaultValue="이슈"

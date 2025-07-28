@@ -49,7 +49,7 @@ const DetailTitle = ({ defaultTitle, title, setTitle, isEditable }: DetailTitleP
       disabled={!isEditable}
       // 각 페이지별 placeholder를 서로 다르게 할 수 있도록 defaultTitle로 처리
       placeholder={defaultTitle}
-      className="w-full font-bigtitle-b placeholder-gray-400 text-gray-600 focus:outline-none resize-none overflow-hidden break-keep ${!isEditable ? '' : 'cursor-not-allowed'}"
+      className="w-full font-bigtitle-b placeholder-gray-400 text-gray-600 focus:outline-none resize-none overflow-hidden"
     ></textarea>
   );
 };
