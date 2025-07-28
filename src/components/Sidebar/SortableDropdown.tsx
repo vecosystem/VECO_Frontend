@@ -5,7 +5,7 @@ import { CSS } from '@dnd-kit/utilities';
 import React from 'react';
 
 interface SortableDropdownProps {
-  id: string;
+  id: number;
   children: (props: {
     listeners: any;
     attributes: any;
