@@ -6,6 +6,8 @@ import SlackIcon from '../../../assets/icons/slack.svg';
 import ExternalToolButton from './ExternalToolButton';
 import { useLocalStorage } from '../../../hooks/useLocalStorage.ts';
 import { LOCAL_STORAGE_KEY } from '../../../constants/key.ts';
+import { useParams } from 'react-router-dom';
+import { useGetGithubConnect } from '../../../apis/external/useGetGithubConnect.ts';
 
 const TOOL_LIST = [
   {
@@ -35,7 +37,10 @@ interface ExternalToolModalProps {
 }
 
 const ExternalToolModal = ({ onClose }: ExternalToolModalProps) => {
+  const teamId = useParams().teamId;
+  const { mutate: connectGithub } = useGetGithubConnect(Number(teamId));
   const [selected, setSelected] = useState<string | null>(null);
+
   const handleSlackLogin = () => {
     const scope = 'channels:join,chat:write';
     const accessToken = useLocalStorage(LOCAL_STORAGE_KEY.accessToken).getItem();
@@ -78,6 +83,8 @@ const ExternalToolModal = ({ onClose }: ExternalToolModalProps) => {
           onClick={() => {
             if (selected === 'SLACK') {
               handleSlackLogin();
+            } else if (selected === 'GITHUB') {
+              connectGithub();
             }
             onClose();
           }}
