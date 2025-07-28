@@ -31,7 +31,7 @@ const Sidebar = () => {
             type="button"
             className="flex items-center gap-[0.8rem] cursor-pointer"
             onClick={() =>
-              navigate('/workspace/default/team/:teamId/issue'.replace(':teamId', String(0)))
+              navigate('/workspace/default/team/:teamId/issue'.replace(':teamId', String(1)))
             }
           >
             <img src={vecocirclenavy} className="w-[3.2rem] h-[3.2rem]" alt="Workspace" />
@@ -149,12 +149,12 @@ const Sidebar = () => {
                         hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
                         label="목표"
                         onClick={() => {
-                          navigate(`/workspace/team/:teamId/goal`.replace(':teamId', String(1)));
+                          navigate(`/workspace/team/:teamId/goal`.replace(':teamId', String(2)));
                         }}
                         onAddClick={() => {
                           navigate(
                             `/workspace/team/:teamId/goal/:goalId`
-                              .replace(':teamId', String(1))
+                              .replace(':teamId', String(2))
                               .replace(':goalId', String(123))
                           );
                         }}
@@ -164,12 +164,12 @@ const Sidebar = () => {
                         hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
                         label="이슈"
                         onClick={() => {
-                          navigate(`/workspace/team/:teamId/issue`.replace(':teamId', String(1)));
+                          navigate(`/workspace/team/:teamId/issue`.replace(':teamId', String(2)));
                         }}
                         onAddClick={() => {
                           navigate(
                             `/workspace/team/:teamId/issue/:issueId`
-                              .replace(':teamId', String(1))
+                              .replace(':teamId', String(2))
                               .replace(':issueId', String(123))
                           );
                         }}
@@ -179,7 +179,7 @@ const Sidebar = () => {
                         hoverIcon={<img src={externalHoverIcon} alt="External" />}
                         label="외부"
                         onClick={() => {
-                          navigate(`/workspace/team/:teamId/ext`.replace(':teamId', String(1)));
+                          navigate(`/workspace/team/:teamId/ext`.replace(':teamId', String(2)));
                         }}
                       />
                     </div>
