@@ -23,7 +23,7 @@ interface FullSidebarContentProps {
 const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => {
   const navigate = useNavigate();
   return (
-    <div className="w-[32rem] p-[3.2rem] min-h-screen">
+    <div className="w-full p-[3.2rem] min-h-screen">
       <div className="flex flex-col items-start gap-[3.2rem] self-stretch">
         <div className="flex justify-between items-start self-stretch">
           <button
