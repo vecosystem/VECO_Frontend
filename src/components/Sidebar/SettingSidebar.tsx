@@ -1,16 +1,16 @@
-import { useState } from 'react';
 import FullSettingSidebarContent from './FullSettingSidebarContent';
 import MiniSettingSidebarContent from './MiniSettingSidebarContent';
 import clsx from 'clsx';
+import { useSidebarStore } from '../../stores/useSidebarStore';
 
 const SettingSidebar = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const { isOpen, toggle } = useSidebarStore();
 
   return (
     <div
       className={clsx(
         'bg-gray-200 transition-all duration-300 ease-in-out',
-        isExpanded ? 'w-[30.8rem]' : 'w-[12.8rem]',
+        isOpen ? 'w-[30.8rem]' : 'w-[12.8rem]',
         'h-screen flex flex-col'
       )}
     >
@@ -20,11 +20,11 @@ const SettingSidebar = () => {
         <div
           className={clsx(
             'absolute inset-0 h-full w-full transition-opacity duration-300',
-            isExpanded ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
+            isOpen ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
           )}
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
-            <FullSettingSidebarContent setExpanded={setIsExpanded} />
+            <FullSettingSidebarContent setExpanded={toggle} />
           </div>
         </div>
 
@@ -32,11 +32,11 @@ const SettingSidebar = () => {
         <div
           className={clsx(
             'absolute inset-0 h-full w-full transition-opacity duration-300',
-            !isExpanded ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
+            !isOpen ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
           )}
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
-            <MiniSettingSidebarContent setExpanded={setIsExpanded} />
+            <MiniSettingSidebarContent setExpanded={toggle} />
           </div>
         </div>
       </div>

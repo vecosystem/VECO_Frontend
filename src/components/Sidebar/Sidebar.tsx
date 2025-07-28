@@ -1,11 +1,11 @@
-import { useState } from 'react';
 import MiniSidebarContent from './MiniSidebarContent';
 import FullSidebarContent from './FullSidebarContent';
 import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
 import clsx from 'clsx';
+import { useSidebarStore } from '../../stores/useSidebarStore';
 
 const Sidebar = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const { isOpen, toggle } = useSidebarStore();
 
   const teams = [
     { id: 'team1', name: 'Team1', icon: <img src={vecocirclewhite} alt="team1" /> },
@@ -16,7 +16,7 @@ const Sidebar = () => {
     <div
       className={clsx(
         'bg-gray-200 transition-all duration-300 ease-in-out',
-        isExpanded ? 'w-[30.8rem]' : 'w-[12.8rem]',
+        isOpen ? 'w-[30.8rem]' : 'w-[12.8rem]',
         'h-screen flex flex-col'
       )}
     >
@@ -26,11 +26,11 @@ const Sidebar = () => {
         <div
           className={clsx(
             'absolute inset-0 h-full w-full transition-opacity duration-300',
-            isExpanded ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
+            isOpen ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
           )}
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
-            <FullSidebarContent setExpanded={setIsExpanded} teams={teams} />
+            <FullSidebarContent setExpanded={toggle} teams={teams} />
           </div>
         </div>
 
@@ -38,11 +38,11 @@ const Sidebar = () => {
         <div
           className={clsx(
             'absolute inset-0 h-full w-full transition-opacity duration-300',
-            !isExpanded ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
+            !isOpen ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
           )}
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
-            <MiniSidebarContent setExpanded={setIsExpanded} teams={teams} />
+            <MiniSidebarContent setExpanded={toggle} teams={teams} />
           </div>
         </div>
       </div>
