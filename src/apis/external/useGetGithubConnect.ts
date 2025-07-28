@@ -7,6 +7,7 @@ interface GetGithubConnectResponse {
   installationId: number;
 }
 
+// Github App 설치 플로우
 const getGithubConnect = async (teamId: number): Promise<GetGithubConnectResponse> => {
   try {
     const response = await axiosInstance.get<CommonResponse<GetGithubConnectResponse>>(
