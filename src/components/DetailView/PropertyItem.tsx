@@ -5,7 +5,10 @@
  * @description
  * - 속성 항목 수정은 상세페이지 내의 작성 완료 버튼 클릭 여부에 영향을 받지 않도록 구현.
  *   (즉, 속성은 언제나 수정 가능함)
- * - 기한 드롭다운은 이 컴포넌트로 관리하지 않음 (별도로 필요한 상세페이지에서 구현)
+ *
+ * @todo
+ * - 현재는 '기한' 속성과 '이슈' 속성의 드롭다운은 이 컴포넌트에서 관리하지 않음.
+ * - 추후 더 나은 컴포넌트 연결 방식 고민해보고 리팩토링 예정.
  */
 
 import { useState } from 'react';
@@ -23,8 +26,8 @@ const PropertyItem = ({ defaultValue, options, iconMap, getColor }: PropertyItem
   const initialValue = defaultValue && iconMap && iconMap[defaultValue] ? defaultValue : options[0];
 
   const [value, setValue] = useState(defaultValue);
-  const [isOpen, setIsOpen] = useState(false);
   const [icon, setIcon] = useState(iconMap ? iconMap[initialValue] : undefined);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = (option: string) => {
     setValue(option);
@@ -53,10 +56,10 @@ const PropertyItem = ({ defaultValue, options, iconMap, getColor }: PropertyItem
 
       {/* 속성 이름 */}
       <div className={`flex relative`}>
-        <span className="flex items-center">
+        <div className="flex items-center">
           {/* 속성 항목명 */}
           <div className="font-body-r text-gray-600">{value}</div>
-        </span>
+        </div>
 
         {/* 드롭다운 오픈 */}
         {isOpen && (

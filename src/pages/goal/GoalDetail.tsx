@@ -15,7 +15,7 @@ import pr3 from '../../assets/icons/pr-3-sm.svg';
 import pr4 from '../../assets/icons/pr-4-sm.svg';
 import IcProfile from '../../assets/icons/user-circle-sm.svg';
 import IcCalendar from '../../assets/icons/date-lg.svg';
-// import IcIssue from '../../assets/icons/issue.svg';
+import IcIssue from '../../assets/icons/issue.svg';
 
 import { getStatusColor } from '../../utils/listItemUtils';
 import { statusLabelToCode } from '../../types/detailitem';
@@ -23,6 +23,7 @@ import CommentSection from '../../components/DetailView/Comment/CommentSection';
 import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
+import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
 
 const GoalDetail = () => {
   const [title, setTitle] = useState('');
@@ -31,9 +32,9 @@ const GoalDetail = () => {
   // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]);
 
-  // 달력 드롭다운 열림/닫힘 관리
+  const [option, setOption] = useState<string>('이슈');
   const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
-  const { openDropdown } = useDropdownActions();
+  const { openDropdown, closeDropdown } = useDropdownActions();
 
   // '기한' 속성의 텍스트(시작일, 종료일) 결정하는 함수
   const getDisplayText = () => {
@@ -138,12 +139,11 @@ const GoalDetail = () => {
               >
                 {/* '기한' 속성 아이콘 */}
                 <img src={IcCalendar} alt="date" />
-
-                {/* 항목명 */}
                 <div className="relative">
+                  {/* '기한' 항목명 - 날짜 설정하면 반영됨 */}
                   <span className={`font-body-r text-gray-600`}>{getDisplayText()}</span>
-
-                  {isOpen && content && (
+                  {/* 달력 드롭다운 오픈 */}
+                  {isOpen && content?.name === 'date' && (
                     <CalendarDropdown
                       selectedDate={selectedDate}
                       onSelect={(date) => setSelectedDate(date)}
@@ -153,13 +153,37 @@ const GoalDetail = () => {
               </div>
 
               {/* (5) 이슈 */}
-              <div onClick={(e) => e.stopPropagation()}>
-                {/*
-                  <PropertyItem
-                    defaultValue="이슈"
-                    iconMap={{ 이슈: issueIconMap }}
-                  />
-                */}
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openDropdown({ name: '이슈' });
+                }}
+                className={`flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200 cursor-pointer`}
+              >
+                {/* 속성 아이콘 */}
+                <img src={IcIssue} alt="이슈" />
+
+                {/* 속성 이름 */}
+                <div className="flex relative">
+                  <div className="flex items-center">
+                    {/* 속성 항목명 */}
+                    <div className="font-body-r text-gray-600">{option}</div>
+                  </div>
+
+                  {/* 드롭다운 오픈 */}
+                  {isOpen && content?.name === '이슈' && (
+                    <ArrowDropdown
+                      defaultValue={'이슈'}
+                      options={[
+                        '기능 정의: 구현할 핵심 기능과 어쩌구 저쩌구 텍스트가 길어지면 이렇게 표시',
+                        '와이어프레임 디자인',
+                        '컴포넌트 정리',
+                      ]}
+                      onSelect={(value: string) => setOption(value)}
+                      onClose={closeDropdown}
+                    />
+                  )}
+                </div>
               </div>
             </div>
           </div>

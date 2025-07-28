@@ -24,7 +24,7 @@ const CommentSection = () => {
   };
 
   return (
-    <div className="flex flex-col gap-[3.2rem] w-full h-[41rem]">
+    <div className="flex flex-col gap-[3.2rem] w-full">
       {/* 댓글 목록 헤더 */}
       <div className="flex gap-[0.8rem]">
         <div className="font-title-sub-r text-gray-600">댓글</div>
