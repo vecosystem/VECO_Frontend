@@ -14,7 +14,7 @@ const CommentInput = () => {
 
   return (
     <div
-      className="absolute bottom-0 flex flex-end items-end gap-[0.8rem] w-full h-[13rem] p-[2.4rem] bg-gray-100 rounded-lg"
+      className="flex flex-end items-end gap-[0.8rem] w-full h-[13rem] p-[2.4rem] bg-gray-100 rounded-lg"
       style={{
         boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
       }}
