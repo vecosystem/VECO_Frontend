@@ -2,9 +2,6 @@
  * PropertyItem.tsx
  * 상세페이지 내 속성 항목 컴포넌트
  *
- * @todo
- * - 화면 가로 길이 줄여도 줄어들지 않게 처리
- *
  * @description
  * - 속성 항목 수정은 상세페이지 내의 작성 완료 버튼 클릭 여부에 영향을 받지 않도록 구현.
  *   (즉, 속성은 언제나 수정 가능함)
@@ -37,7 +34,8 @@ const PropertyItem = ({ defaultValue, options, iconMap, getColor }: PropertyItem
 
   return (
     <div
-      className={`flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200`}
+      onClick={() => setIsOpen(!isOpen)}
+      className={`flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200 cursor-pointer`}
     >
       {/* 속성 아이콘 */}
       {getColor ? (
@@ -54,13 +52,13 @@ const PropertyItem = ({ defaultValue, options, iconMap, getColor }: PropertyItem
       )}
 
       {/* 속성 이름 */}
-      <div className={`flex relative cursor-pointer`}>
-        <span className="flex items-center" onClick={() => setIsOpen(!isOpen)}>
+      <div className={`flex relative`}>
+        <span className="flex items-center">
           {/* 속성 항목명 */}
           <div className="font-body-r text-gray-600">{value}</div>
         </span>
 
-        {/* 속성 항목명을 눌러 드롭다운 오픈 */}
+        {/* 드롭다운 오픈 */}
         {isOpen && (
           <Dropdown
             value={value}
