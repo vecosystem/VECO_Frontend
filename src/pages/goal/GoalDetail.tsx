@@ -13,12 +13,13 @@ import pr1 from '../../assets/icons/pr-1-sm.svg';
 import pr2 from '../../assets/icons/pr-2-sm.svg';
 import pr3 from '../../assets/icons/pr-3-sm.svg';
 import pr4 from '../../assets/icons/pr-4-sm.svg';
-import IcDummyProfile from '../../assets/icons/user-circle-sm.svg';
+import IcProfile from '../../assets/icons/user-circle-sm.svg';
 // import IcDate from '../../assets/icons/date-lg.svg';
 // import IcIssue from '../../assets/icons/issue.svg';
 
 import { getStatusColor } from '../../utils/listItemUtils';
 import { statusLabelToCode } from '../../types/detailitem';
+import CommentSection from '../../components/DetailView/Comment/CommentSection';
 
 const GoalDetail = () => {
   const [title, setTitle] = useState('');
@@ -36,10 +37,10 @@ const GoalDetail = () => {
 
   // '담당자' 속성 아이콘 매핑 (나중에 API로부터 받아온 데이터로 대체 예정)
   const userIconMap = {
-    담당자: IcDummyProfile,
-    없음: IcDummyProfile,
-    전채운: IcDummyProfile,
-    전시현: IcDummyProfile,
+    담당자: IcProfile,
+    없음: IcProfile,
+    전채운: IcProfile,
+    전시현: IcProfile,
   };
 
   // const dateIconMap = IcDate; // '기한' 속성 아이콘 매핑
@@ -50,13 +51,13 @@ const GoalDetail = () => {
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-[5.7rem] w-full p-[3.2rem]">
+    <div className="flex flex-1 flex-col gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem] pb-[5.3rem]">
       {/* 상세페이지 헤더 */}
       <DetailHeader defaultTitle="목표를 생성하세요" title={title} />
 
       {/* 상세페이지 메인 */}
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full h-full">
-        {/* 상세페이지 좌측 영역 - 제목 & 상세 설명 & 댓글 영역 */}
+        {/* 상세페이지 좌측 영역 - 제목 & 상세설명 & 댓글 */}
         <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)]">
           {/* 상세페이지 제목 */}
           <DetailTitle
@@ -68,6 +69,9 @@ const GoalDetail = () => {
 
           {/* 상세 설명 작성 컴포넌트 */}
           <DetailTextEditor isEditable={!isCompleted} />
+
+          {/* 댓글 영역 */}
+          {isCompleted && <CommentSection />}
         </div>
 
         {/* 상세페이지 우측 영역 - 속성 탭 & 하단의 작성 완료 버튼 */}
@@ -110,6 +114,10 @@ const GoalDetail = () => {
               {/* <PropertyItem defaultValue="기한" iconMap={{ 기한: dateIconMap }} /> */}
 
               {/* (5) 이슈 */}
+              {/**
+               * @todo
+               * - 이슈 많아질 경우 '외 n개'로 축약되게 하기
+               */}
               {/*
                 <PropertyItem
                   defaultValue="이슈"
