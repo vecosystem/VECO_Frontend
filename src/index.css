@@ -191,14 +191,20 @@ body {
 
 /* 3. 스크롤바 썸 (움직이는 막대) */
 .sidebar-scroll::-webkit-scrollbar-thumb {
-  background-color: var(--color-gray-400);
+  background-color: transparent;
   border-radius: 1rem;
 
   box-shadow: inset 0 0 0 0.4rem var(--color-gray-200); /* 스크롤을 적용할 영역 색깔과 border 색상을 똑같이 맞춘다 */
 }
 
 /* 4. 스크롤바 썸 호버 시 색상 변경 */
-.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+/* Hover 했을 때만 보이게 */
+.sidebar-scroll:hover::-webkit-scrollbar-thumb {
+  background-color: var(--color-gray-400);
+  box-shadow: inset 0 0 0 0.4rem var(--color-gray-200);
+}
+/* Hover + 마우스 오버 시 더 진하게 */
+.sidebar-scroll:hover::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-gray-500); /* 마우스 오버 시 색상 변경 */
 }
 
