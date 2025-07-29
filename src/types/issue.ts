@@ -21,7 +21,7 @@ export type Issue = {
   id: number;
   name: string;
   title: string;
-  status?: string;
+  state?: string;
   priority?: string;
   goaltitle?: string;
   deadline: Deadline;

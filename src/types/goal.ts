@@ -19,7 +19,7 @@ export type Goal = {
   id: number;
   name: string;
   title: string;
-  status?: string;
+  state?: string;
   priority?: string;
   deadline: Deadline;
   managers?: Manager;

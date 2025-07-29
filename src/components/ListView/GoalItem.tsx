@@ -25,9 +25,9 @@ import ManagerAvatar from './ManagerAvartar';
  */
 
 export const GoalItem = (props: Partial<GoalItemProps>) => {
-  const status: StatusCode =
-    props.status && STATUS_CODES.includes(props.status as StatusCode)
-      ? (props.status as StatusCode)
+  const state: StatusCode =
+    props.state && STATUS_CODES.includes(props.state as StatusCode)
+      ? (props.state as StatusCode)
       : ('NONE' as StatusCode);
 
   const priority: PriorityCode =
@@ -98,10 +98,10 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
       </div>
       <div className="flex gap-[3.2rem] items-center">
         {/* 상태 */}
-        {displayFields.includes('status') && (
+        {displayFields.includes('state') && (
           <div className="flex gap-[0.8rem] items-center">
-            {getStatusIcon(status)}
-            <div className="truncate">{STATUS_LABELS[status]}</div>
+            {getStatusIcon(state)}
+            <div className="truncate">{STATUS_LABELS[state]}</div>
           </div>
         )}
         {/* 우선순위 */}

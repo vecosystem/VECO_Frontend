@@ -111,7 +111,7 @@ export const ExternalItem = (props: Partial<ExternalItemProps>) => {
       </div>
       <div className="flex gap-[3.2rem] items-center">
         {/* 상태 */}
-        {displayFields.includes('status') && (
+        {displayFields.includes('state') && (
           <div className="flex gap-[0.8rem] items-center">
             {getStatusIcon(status)}
             <div className="truncate">{STATUS_LABELS[status]}</div>

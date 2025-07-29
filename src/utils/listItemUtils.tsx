@@ -12,15 +12,15 @@ export const getFilter = (filter: ItemFilter = '상태'): DisplayField[] => {
     case '상태':
       return ['priority', 'manage', 'goal', 'external'];
     case '우선순위':
-      return ['status', 'manage', 'goal', 'external'];
+      return ['state', 'manage', 'goal', 'external'];
     case '담당자':
-      return ['status', 'priority', 'goal', 'external'];
+      return ['state', 'priority', 'goal', 'external'];
     case '목표':
-      return ['status', 'priority', 'manage', 'external'];
+      return ['state', 'priority', 'manage', 'external'];
     case '외부':
-      return ['status', 'priority', 'manage', 'goal'];
+      return ['state', 'priority', 'manage', 'goal'];
     default:
-      return ['status', 'priority', 'manage', 'goal', 'external'];
+      return ['state', 'priority', 'manage', 'goal', 'external'];
   }
 };
 

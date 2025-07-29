@@ -49,7 +49,7 @@ export const FILTER_MAP = {
 export type ItemFilter = keyof typeof FILTER_MAP;
 
 // 공통 타입
-export type DisplayField = 'status' | 'priority' | 'deadline' | 'manage' | 'goal' | 'external';
+export type DisplayField = 'state' | 'priority' | 'deadline' | 'manage' | 'goal' | 'external';
 
 // 공통 props
 export interface BaseItemProps {
