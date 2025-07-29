@@ -1,4 +1,5 @@
 import type { CommonResponse } from './common';
+import type { AlarmType } from './listItem';
 
 export type NotiList = {
   alarmId: number;
@@ -12,15 +13,19 @@ export type NotiList = {
 };
 
 export type GroupedList = {
-  groupTitle: string;
+  groupTitle: string; // 필터명
   notiList: NotiList[];
 };
 
 export type AlarmFilter = {
-  type: string;
+  type: AlarmType;
   deadline: string;
   groupedList: GroupedList[];
   totalSize: number;
 };
 
 export type ResponseAlarmDto = CommonResponse<AlarmFilter[]>;
+
+export type RequestAlarmLFilterDto = {
+  alarmtype: string;
+};
