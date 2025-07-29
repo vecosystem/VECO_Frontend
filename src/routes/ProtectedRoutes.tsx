@@ -12,6 +12,7 @@ import WorkspaceIssue from '../pages/workspace/WorkspaceIssue.tsx';
 import WorkspaceGoal from '../pages/workspace/WorkspaceGoal.tsx';
 import WorkspaceExternal from '../pages/workspace/WorkspaceExternal.tsx';
 import GoalDetail from '../pages/goal/GoalDetail.tsx';
+import SettingWorkspaceProfile from '../pages/setting/SettingWorkspaceProfile.tsx';
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -35,7 +36,7 @@ export const protectedRoutes: RouteObject[] = [
         children: [
           // 기본 경로는 워크스페이스 프로필 페이지로 리다이렉트.
           { index: true, element: <Navigate to="ws-profile" replace /> },
-          { path: 'ws-profile', element: <div>Setting_Workspace_Profile</div> },
+          { path: 'ws-profile', element: <SettingWorkspaceProfile /> },
           { path: 'team-list', element: <SettingTeam /> },
           { path: 'team-members', element: <SettingMember /> },
           { path: 'my-profile', element: <SettingMyProfile /> },
