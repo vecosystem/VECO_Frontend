@@ -7,6 +7,8 @@ import CheckBoxIcon from '../../assets/icons/check-box-x.svg';
 import CheckBoxRedIcon from '../../assets/icons/check-box-o-red.svg';
 import { useState, useRef } from 'react';
 import { useModalActions, useModalInfo } from '../../hooks/useModal.ts';
+import InputSection from './components/InputSection.tsx';
+
 const SettingMyProfile = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const { isOpen, content } = useModalInfo();
@@ -86,24 +88,8 @@ const SettingMyProfile = () => {
               </div>
             </section>
             <div className="flex flex-col gap-[3.2rem]">
-              <section className="flex flex-col gap-[0.8rem]">
-                <span className="font-body-r text-gray-600">이름</span>
-                <input
-                  type="text"
-                  placeholder="박진주"
-                  className="w-full h-[3.6rem] px-[1.2rem] py-[0.8rem] bg-gray-200 border-[0.1rem] border-gray-300 rounded-md font-body-r placeholder:text-gray-300"
-                  disabled
-                />
-              </section>
-              <section className="flex flex-col gap-[0.8rem]">
-                <span className="font-body-r text-gray-600">이메일</span>
-                <input
-                  type="text"
-                  placeholder="park@naver.com"
-                  className="w-full h-[3.6rem] px-[1.2rem] py-[0.8rem] bg-gray-200 border-[0.1rem] border-gray-300 rounded-md font-body-r placeholder:text-gray-300"
-                  disabled
-                />
-              </section>
+              <InputSection label="이름" placeholder="박진주" disabled />
+              <InputSection label="이메일" placeholder="park@naver.com" disabled />
             </div>
           </div>
           <div className="flex flex-col gap-[2.4rem]">
