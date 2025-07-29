@@ -15,7 +15,7 @@ import SortableDropdownList from './SortableDropdownList';
 
 interface MiniSidebarContentProps {
   setExpanded: (value: boolean) => void;
-  teams: { id: string; name: string; icon: React.ReactNode }[];
+  teams: { id: number; name: string; icon: React.ReactNode }[];
 }
 
 const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => {

@@ -17,7 +17,7 @@ import SortableDropdownList from './SortableDropdownList';
 
 interface FullSidebarContentProps {
   setExpanded: (value: boolean) => void;
-  teams: { id: string; name: string; icon: React.ReactNode }[];
+  teams: { id: number; name: string; icon: React.ReactNode }[];
 }
 
 const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => {
@@ -29,7 +29,9 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
           <button
             type="button"
             className="flex items-center gap-[0.8rem] cursor-pointer"
-            onClick={() => navigate('/workspace/team/default/issue')}
+            onClick={() =>
+              navigate('/workspace/default/team/:teamId/issue'.replace(':teamId', String(1)))
+            }
           >
             <img src={vecocirclenavy} className="w-[3.2rem] h-[3.2rem]" alt="Workspace" />
             <span className="font-body-b text-gray-600 letter-spacing-[-0.032rem]">Workspace</span>
@@ -90,10 +92,16 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                     hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
                     label="목표"
                     onClick={() => {
-                      navigate(`/workspace/team/default/goal`);
+                      navigate(
+                        `/workspace/default/team/:teamId/goal`.replace(':teamId', String(1))
+                      );
                     }}
                     onAddClick={() => {
-                      navigate(`/workspace/team/default/goal/:goalId`);
+                      navigate(
+                        `/workspace/default/team/:teamId/goal/:goalId`
+                          .replace(':teamId', String(1))
+                          .replace(':goalId', String(123))
+                      );
                     }}
                   />
                   <SidebarItem
@@ -101,10 +109,16 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                     hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
                     label="이슈"
                     onClick={() => {
-                      navigate(`/workspace/team/default/issue`);
+                      navigate(
+                        `/workspace/default/team/:teamId/issue`.replace(':teamId', String(1))
+                      );
                     }}
                     onAddClick={() => {
-                      navigate(`/workspace/team/default/issue/:issueId`);
+                      navigate(
+                        `/workspace/default/team/:teamId/issue/:issueId`
+                          .replace(':teamId', String(1))
+                          .replace(':issueId', String(123))
+                      );
                     }}
                   />
                   <SidebarItem
@@ -112,7 +126,7 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                     hoverIcon={<img src={externalHoverIcon} alt="External" />}
                     label="외부"
                     onClick={() => {
-                      navigate(`/workspace/team/default/ext`);
+                      navigate(`/workspace/default/team/:teamId/ext`.replace(':teamId', String(1)));
                     }}
                   />
                 </div>
@@ -145,10 +159,16 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                         hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
                         label="목표"
                         onClick={() => {
-                          navigate(`/workspace/team/:teamId/goal`);
+                          navigate(
+                            `/workspace/team/:teamId/goal`.replace(':teamId', String(team.id))
+                          );
                         }}
                         onAddClick={() => {
-                          navigate(`/workspace/team/:teamId/goal/:goalId`);
+                          navigate(
+                            `/workspace/team/:teamId/goal/:goalId`
+                              .replace(':teamId', String(team.id))
+                              .replace(':goalId', String(123))
+                          );
                         }}
                       />
                       <SidebarItem
@@ -156,10 +176,16 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                         hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
                         label="이슈"
                         onClick={() => {
-                          navigate(`/workspace/team/:teamId/issue`);
+                          navigate(
+                            `/workspace/team/:teamId/issue`.replace(':teamId', String(team.id))
+                          );
                         }}
                         onAddClick={() => {
-                          navigate(`/workspace/team/:teamId/issue/:issueId`);
+                          navigate(
+                            `/workspace/team/:teamId/issue/:issueId`
+                              .replace(':teamId', String(team.id))
+                              .replace(':issueId', String(123))
+                          );
                         }}
                       />
                       <SidebarItem
@@ -167,7 +193,9 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                         hoverIcon={<img src={externalHoverIcon} alt="External" />}
                         label="외부"
                         onClick={() => {
-                          navigate(`/workspace/team/:teamId/ext`);
+                          navigate(
+                            `/workspace/team/:teamId/ext`.replace(':teamId', String(team.id))
+                          );
                         }}
                       />
                     </div>
