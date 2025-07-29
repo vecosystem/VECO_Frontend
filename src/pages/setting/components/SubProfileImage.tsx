@@ -1,18 +1,20 @@
+import IcUser from '../../../assets/icons/user-base.svg';
+
 interface SubProfileImageProps {
   profileImage: string | null;
 }
 
 const SubProfileImage = ({ profileImage }: SubProfileImageProps) => {
   return (
-    <div className={`relative left-[-0.3rem] z-5`}>
+    <div className={`relative left-[-1rem] z-5`}>
       {profileImage ? (
         <img
-          className={`rounded-full w-[1.6rem] h-[1.6rem] object-cover`}
+          className={`rounded-full w-[2rem] h-[2rem] object-cover`}
           src={profileImage}
           alt={profileImage}
         />
       ) : (
-        <div className={`rounded-full bg-gray-400 w-[1.6rem] h-[1.6rem]`} />
+        <img src={IcUser} alt={'기본 프로필 이미지'} />
       )}
     </div>
   );
