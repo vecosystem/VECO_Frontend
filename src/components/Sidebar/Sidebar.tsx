@@ -8,8 +8,8 @@ const Sidebar = () => {
   const { isOpen, toggle } = useSidebarStore();
 
   const teams = [
-    { id: 'team1', name: 'Team1', icon: <img src={vecocirclewhite} alt="team1" /> },
-    { id: 'team2', name: 'Team2', icon: <img src={vecocirclewhite} alt="team2" /> },
+    { id: 2, name: 'Team1', icon: <img src={vecocirclewhite} alt={'Team1'} /> },
+    { id: 3, name: 'Team2', icon: <img src={vecocirclewhite} alt={'Team2'} /> },
   ];
 
   return (
