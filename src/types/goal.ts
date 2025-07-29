@@ -33,4 +33,9 @@ export type GoalFilter = {
   goals: Goal[];
 };
 
+export type RequestGoalListDto = {
+  teamId: string;
+  goalIds?: number[];
+};
+
 export type ResponseGoalDto = CursorBasedResponse<GoalFilter[]>;
