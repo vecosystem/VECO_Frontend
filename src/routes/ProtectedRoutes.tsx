@@ -21,7 +21,7 @@ export const protectedRoutes: RouteObject[] = [
     errorElement: <Error404NotFound />,
 
     children: [
-      { index: true, element: <WorkspaceIssue /> }, // 기본 경로는 default/team/:teamId/issue로 리다이렉트
+      { index: true, element: <WorkspaceIssue /> },
       /* 알람 페이지 */
       {
         path: 'noti',
