@@ -1,4 +1,5 @@
 import vecocirclenavy from '../../assets/logos/veco-circle-logo-bg-navy.svg';
+import InputSection from './components/InputSection.tsx';
 
 const SettingWorkspaceProfile = () => {
   return (
@@ -16,24 +17,8 @@ const SettingWorkspaceProfile = () => {
               </button>
             </section>
             <div className="flex flex-col gap-[3.2rem]">
-              <section className="flex flex-col gap-[0.8rem]">
-                <span className="font-body-r text-gray-600">이름</span>
-                <input
-                  type="text"
-                  placeholder="Veco"
-                  className="w-full h-[3.6rem] px-[1.2rem] py-[0.8rem] bg-gray-200 border-[0.1rem] border-gray-300 rounded-md font-body-r placeholder:text-gray-300"
-                  disabled
-                />
-              </section>
-              <section className="flex flex-col gap-[0.8rem]">
-                <span className="font-body-r text-gray-600">URL</span>
-                <input
-                  type="text"
-                  placeholder="veco.app/veco"
-                  className="w-full h-[3.6rem] px-[1.2rem] py-[0.8rem] bg-gray-200 border-[0.1rem] border-gray-300 rounded-md font-body-r placeholder:text-gray-300"
-                  disabled
-                />
-              </section>
+              <InputSection label="이름" placeholder="Veco" disabled />
+              <InputSection label="URL" placeholder="veco.app/veco" disabled />
             </div>
           </div>
         </div>
