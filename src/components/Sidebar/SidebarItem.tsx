@@ -16,7 +16,7 @@ const SidebarItem = ({
   onAddClick,
 }: SidebarItemProps) => {
   return (
-    <div className="group flex w-full min-h-[3.2rem] items-center self-stretch hover:bg-gray-300 rounded-[0.6rem] transition-colors duration-150 ease-in-out">
+    <div className="group flex min-w-[6.4rem] p-[0.4rem] min-h-[3.2rem] items-center self-stretch hover:bg-gray-300 rounded-[0.6rem] transition-colors duration-150 ease-in-out">
       <button
         onClick={onClick}
         type="button"
