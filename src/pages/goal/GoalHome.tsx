@@ -100,7 +100,11 @@ const GoalHome = () => {
             buttonText="삭제"
             buttonColor="bg-error-400"
             // 삭제 요소 전달
-            onClick={() => {}}
+            onClick={() => {
+              console.log('삭제할 ID 리스트:', checkItems);
+              // TODO: 실제 삭제 API mutation화
+              // deleteGoalItem({ teamId, goalIds: checkItems });
+            }}
           />
         )}
         {isEmpty ? (
