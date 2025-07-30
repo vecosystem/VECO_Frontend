@@ -37,4 +37,8 @@ export type ExternalFilter = {
   externals: External[];
 };
 
+export type RequestExternalListDto = {
+  teamId: string;
+};
+
 export type ResponseExternalDto = CursorBasedResponse<ExternalFilter[]>;
