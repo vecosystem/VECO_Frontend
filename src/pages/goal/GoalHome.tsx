@@ -9,38 +9,47 @@ import useCheckItems from '../../hooks/useCheckItems';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
 import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import Modal from '../../components/Modal/Modal';
-import {
-  dummyStatusGoalGroups,
-  dummyPriorityGoalGroups,
-  dummyManagerGoalGroups,
-} from '../../types/testDummy';
-import type { GoalFilter, GroupedGoal } from '../../types/goal';
+import type { GroupedGoal } from '../../types/goal';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGetGoalList } from '../../apis/goal/useGetGoalList';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
 const GoalHome = () => {
+  const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
-  // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
-  const dummyGoalGroups = useMemo<GoalFilter[]>(() => {
+  const filterToQuery = (filter: ItemFilter) => {
     switch (filter) {
       case '상태':
-        return dummyStatusGoalGroups;
+        return 'state';
       case '우선순위':
-        return dummyPriorityGoalGroups;
+        return 'priority';
       case '담당자':
-        return dummyManagerGoalGroups;
+        return 'manager';
       default:
-        return [];
+        return '';
     }
-  }, [filter]);
+  };
 
-  const allGoalsFlat = dummyGoalGroups.flatMap((g) => g.goals);
+  const params = useMemo(
+    () => ({
+      // 우선 기본값 설정
+      cursor: '-1',
+      size: 10,
+      query: filterToQuery(filter),
+    }),
+    [filter]
+  );
+
+  // isLoading, isError 로직 추가
+  const { data } = useGetGoalList(teamId ?? '', params);
+  const goalGroups = data?.result?.data ?? [];
+  const allGoalsFlat = goalGroups.flatMap((g) => g.goals);
 
   const {
     checkedIds: checkItems,
@@ -65,7 +74,7 @@ const GoalHome = () => {
     }
   };
 
-  const grouped: GroupedGoal[] = dummyGoalGroups.map((g) => ({
+  const grouped: GroupedGoal[] = goalGroups.map((g) => ({
     key: g.filterName,
     items: g.goals,
   }));
