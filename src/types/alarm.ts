@@ -8,8 +8,9 @@ export type NotiList = {
   title: string;
   state: string;
   priority: string;
-  goalTitle: string;
+  goalTitle?: string;
   read: boolean;
+  // TODO : 담당자(본인) 정보 추가
 };
 
 export type GroupedList = {
