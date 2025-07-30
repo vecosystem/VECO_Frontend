@@ -11,7 +11,8 @@ interface GetGithubConnectResponse {
 const getGithubConnect = async (teamId: number): Promise<GetGithubConnectResponse> => {
   try {
     const response = await axiosInstance.get<CommonResponse<GetGithubConnectResponse>>(
-      `/github/connect/${teamId}`
+      `/github/connect`,
+      { params: teamId }
     );
     return response.data.result;
   } catch (error) {
