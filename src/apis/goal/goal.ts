@@ -1,6 +1,6 @@
-import type { CommonResponse, PaginationDto } from '../types/common';
-import type { RequestGoalListDto, ResponseGoalDto } from '../types/goal';
-import { axiosInstance } from './axios';
+import type { CommonResponse, PaginationDto } from '../../types/common';
+import type { RequestGoalListDto, ResponseGoalDto } from '../../types/goal';
+import { axiosInstance } from '../axios';
 
 // goal/GoalHome.tsx
 export const getGoalList = async (
