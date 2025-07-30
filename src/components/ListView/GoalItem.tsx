@@ -114,7 +114,11 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
         {/* 기한 */}
         <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
           <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
-          <div className={`${dateColor}`}>{formatGoalDate(deadline?.start, deadline?.end)}</div>
+          <div className={dateColor}>
+            {typeof deadline === 'string'
+              ? formatGoalDate(deadline, deadline)
+              : formatGoalDate(deadline.start, deadline.end)}
+          </div>
         </div>
         {/* 담당자 */}
         {displayFields.includes('manage') && <ManagerAvatar managers={managers.info} />}

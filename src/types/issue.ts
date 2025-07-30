@@ -29,7 +29,7 @@ export type Issue = {
   state?: string;
   priority?: string;
   goal?: Goal;
-  deadline: Deadline;
+  deadline: Deadline | string;
   managers?: Manager;
 };
 

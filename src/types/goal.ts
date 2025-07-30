@@ -21,7 +21,7 @@ export type Goal = {
   title: string;
   state?: string;
   priority?: string;
-  deadline: Deadline;
+  deadline: Deadline | string;
   managers?: Manager;
 };
 

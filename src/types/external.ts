@@ -24,7 +24,7 @@ export type External = {
   status?: string;
   priority?: string;
   goaltitle?: string;
-  deadline: Deadline;
+  deadline: Deadline | string;
   managers?: Manager;
   externalTool?: string;
 };
