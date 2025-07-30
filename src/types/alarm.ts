@@ -24,7 +24,7 @@ export type AlarmFilter = {
   totalSize: number;
 };
 
-export type ResponseAlarmDto = CommonResponse<AlarmFilter[]>;
+export type ResponseAlarmDto = CommonResponse<AlarmFilter>;
 
 export type RequestAlarmLFilterDto = {
   alarmtype: string;
