@@ -59,11 +59,14 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
     onCheckChange?.(!checked);
   };
 
-  const dateColor = variant === 'notification' ? (checked ? '' : 'text-error-400') : '';
+  const dateColor = variant === 'notification' ? 'text-error-400' : '';
 
   return (
     <div
-      className={`font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
+      className={`
+        font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem]
+        ${checked ? 'bg-gray-300' : variant === 'read' ? 'bg-gray-200' : ''}
+      `}
       onClick={handleItemClick}
       tabIndex={showCheckbox ? 0 : -1}
       style={{ cursor: showCheckbox ? 'pointer' : 'default' }}
