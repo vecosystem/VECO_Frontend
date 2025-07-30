@@ -1,7 +1,7 @@
-import type { ResponseAlarmDto } from '../types/alarm';
-import type { PaginationDto } from '../types/common';
-import type { AlarmType } from '../types/listItem';
-import { axiosInstance } from './axios';
+import type { ResponseAlarmDto } from '../../types/alarm';
+import type { PaginationDto } from '../../types/common';
+import type { AlarmType } from '../../types/listItem';
+import { axiosInstance } from '../axios';
 
 export const getAlarmList = async (
   alarmtype: AlarmType,
