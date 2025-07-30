@@ -3,6 +3,7 @@ import type { ReIssueTokenResponse } from '../types/auth';
 
 /**
  * accessToken 재발급 요청 함수
+ * - pages/onboarding/GoogleLoginRedirect.tsx
  */
 export const postReIssueAccessToken = async (): Promise<string> => {
   const { data }: { data: ReIssueTokenResponse } = await axiosInstance.post(
@@ -22,6 +23,7 @@ export const postReIssueAccessToken = async (): Promise<string> => {
 
 /**
  * Google OAuth2 로그인 URL로 리다이렉트
+ * - components/Onboarding/SocialLoginButton.tsx
  */
 export const redirectToGoogleLogin = () => {
   const baseURL = import.meta.env.VITE_SERVER_API_URL;
@@ -42,6 +44,7 @@ export const redirectToGoogleLogin = () => {
 /**
  * Kakao OAuth2 로그인 URL로 리다이렉트
  * - 명세서 X, 임시 구조
+ * - components/Onboarding/SocialLoginButton.tsx
  */
 export const redirectToKakaoLogin = () => {
   const baseURL = import.meta.env.VITE_SERVER_API_URL;
