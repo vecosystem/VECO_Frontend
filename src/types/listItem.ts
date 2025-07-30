@@ -64,13 +64,13 @@ export const ALARM_TYPES = ['GOAL', 'ISSUE', 'EXTERNAL'] as const;
 export type AlarmType = (typeof ALARM_TYPES)[number];
 
 export interface GoalItemProps extends Goal, BaseItemProps {
-  variant?: 'default' | 'notification';
+  variant?: 'default' | 'notification' | 'read';
 }
 
 export interface IssueItemProps extends Issue, BaseItemProps {
-  variant?: 'default' | 'notification';
+  variant?: 'default' | 'notification' | 'read';
 }
 
 export interface ExternalItemProps extends External, BaseItemProps {
-  variant?: 'default' | 'notification';
+  variant?: 'default' | 'notification' | 'read';
 }
