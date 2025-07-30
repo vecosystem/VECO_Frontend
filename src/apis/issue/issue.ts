@@ -1,10 +1,11 @@
-import type { CommonResponse, PaginationDto } from '../types/common';
-import type { RequestIssueListDto, ResponseIssueDto } from '../types/issue';
-import { axiosInstance } from './axios';
+import type { RequestIssueListDto, ResponseIssueDto } from '../../types/issue';
+import type { CommonResponse, PaginationDto } from '../../types/common';
+import { axiosInstance } from '../axios';
 
 //issue/IssueHome.tsx
 export const getIssueList = async (
   { teamId }: RequestIssueListDto,
+
   paginationDto: PaginationDto
 ): Promise<ResponseIssueDto> => {
   try {
