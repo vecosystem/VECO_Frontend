@@ -17,7 +17,7 @@ const CommentItem = ({ author, content, createAt }: CommentItemProps) => {
 
       <div className="flex flex-col gap-[0.8rem]">
         {/* 작성자 정보 */}
-        <div className="flex gap-[0.8rem]">
+        <div className="flex items-center gap-[0.8rem]">
           {/* 작성자 이름 */}
           <span className="font-body-b text-gray-600">{author}</span>
           {/* 작성 시간 */}
