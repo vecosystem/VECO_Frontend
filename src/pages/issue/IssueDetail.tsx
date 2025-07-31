@@ -24,7 +24,7 @@ import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
 
-const GoalDetail = () => {
+const IssueDetail = () => {
   const [title, setTitle] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
 
@@ -181,4 +181,4 @@ const GoalDetail = () => {
   );
 };
 
-export default GoalDetail;
+export default IssueDetail;
