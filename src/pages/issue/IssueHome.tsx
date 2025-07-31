@@ -9,41 +9,49 @@ import useCheckItems from '../../hooks/useCheckItems';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
 import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import Modal from '../../components/Modal/Modal';
-import {
-  dummyGoalTitleIssueGroups,
-  dummyManagerIssueGroups,
-  dummyPriorityIssueGroups,
-  dummyStatusIssueGroups,
-} from '../../types/testDummy';
-import type { GroupedIssue, IssueFilter } from '../../types/issue';
+import type { GroupedIssue } from '../../types/issue';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGetIssueList } from '../../apis/issue/useGetIssueList';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
 const IssueHome = () => {
+  const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
-  // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
-  const dimmyIssueGroups = useMemo<IssueFilter[]>(() => {
+  const filterToQuery = (filter: ItemFilter) => {
     switch (filter) {
       case '상태':
-        return dummyStatusIssueGroups;
+        return 'state';
       case '우선순위':
-        return dummyPriorityIssueGroups;
+        return 'priority';
       case '담당자':
-        return dummyManagerIssueGroups;
+        return 'manager';
       case '목표':
-        return dummyGoalTitleIssueGroups;
+        return 'goal';
       default:
-        return [];
+        return '';
     }
-  }, [filter]);
+  };
 
-  const allGoalsFlat = dimmyIssueGroups.flatMap((i) => i.issues);
+  const params = useMemo(
+    () => ({
+      // 우선 기본값 설정
+      cursor: '-1',
+      size: 10,
+      query: filterToQuery(filter),
+    }),
+    [filter]
+  );
+
+  // isLoading, isError 로직 추가
+  const { data } = useGetIssueList(teamId ?? '', params);
+  const issueGroups = data?.result?.data ?? [];
+  const allIssuesFlat = issueGroups.flatMap((g) => g.issues);
 
   const {
     checkedIds: checkItems,
@@ -51,7 +59,7 @@ const IssueHome = () => {
     handleCheck,
     handleSelectAll,
     setCheckedIds,
-  } = useCheckItems(allGoalsFlat, 'id');
+  } = useCheckItems(allIssuesFlat, 'id');
 
   const [isDeleteMode, setIsDeleteMode] = useState(false);
 
@@ -69,7 +77,7 @@ const IssueHome = () => {
   };
 
   // 그룹핑
-  const grouped: GroupedIssue[] = dimmyIssueGroups.map((i) => ({
+  const grouped: GroupedIssue[] = issueGroups.map((i) => ({
     key: i.filterName,
     items: i.issues,
   }));
