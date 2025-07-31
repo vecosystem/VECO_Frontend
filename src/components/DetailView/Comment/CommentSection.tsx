@@ -40,15 +40,21 @@ const CommentSection = () => {
             <div className="font-body-r text-gray-600">댓글을 작성하세요.</div>
           </div>
         ) : (
-          // 댓글이 있을 때: 댓글 목록을 렌더링
+          // 댓글이 있을 때: 댓글 목록 렌더링
           <>
             <div className="absolute bottom-[14.6rem] w-full z-10 pr-[1.2rem]">
               {/* 댓글 목록 위에 옅은 흰색 그라디언트 처리 */}
               <div className="w-full h-[6.4rem] bg-gradient-to-b from-white/0 to-white pointer-events-none" />
             </div>
+            {/* 댓글을 순서대로 목록에 추가 */}
             <div className="flex flex-col gap-y-[2.4rem] mb-[14.6rem] w-full overflow-y-scroll basic-scroll">
               {comments.map(({ author, content, createAt }) => (
-                <CommentItem author={author} content={content} createAt={createAt} />
+                <CommentItem
+                  key={`${createAt.getTime()}-${author}`} // Date를 밀리초 숫자로 변환
+                  author={author}
+                  content={content}
+                  createAt={createAt}
+                />
               ))}
             </div>
           </>

@@ -31,6 +31,8 @@ const CommentInput = ({ onAdd }: CommentIntputProps) => {
     >
       {/* 댓글 입력창 영역 */}
       <textarea
+        name="commentInput"
+        id="commentInput"
         value={comment}
         onChange={handleChange}
         placeholder="댓글을 작성하세요."

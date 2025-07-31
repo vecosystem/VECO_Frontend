@@ -42,6 +42,8 @@ const DetailTitle = ({ defaultTitle, title, setTitle, isEditable }: DetailTitleP
 
   return (
     <textarea
+      name="detailTitle"
+      id="detailTitle"
       ref={textarea}
       value={title}
       rows={1}

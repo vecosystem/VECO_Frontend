@@ -13,6 +13,8 @@ interface DetailTextEditorProps {
 const DetailTextEditor = ({ isEditable }: DetailTextEditorProps) => {
   return (
     <textarea
+      name="detailTextEditor"
+      id="detailTextEditor"
       disabled={!isEditable}
       className="w-full flex-1 font-body-r placeholder-gray-400 text-gray-600 overflow-y-scroll basic-scroll resize-none focus:outline-none pr-4 ${!isEditable ? 'cursor-not-allowed text-gray-600' : ''}"
       placeholder="상세 설명 추가"
