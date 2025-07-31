@@ -19,9 +19,9 @@ const CommentItem = ({ author, content, createAt }: CommentItemProps) => {
         {/* 작성자 정보 */}
         <div className="flex items-center gap-[0.8rem]">
           {/* 작성자 이름 */}
-          <span className="font-body-b text-gray-600">{author}</span>
+          <span className="font-body-b text-gray-600 truncate">{author}</span>
           {/* 작성 시간 */}
-          <span className="font-small-r text-gray-500">{createAt.toLocaleString()}</span>
+          <span className="font-small-r text-gray-500 truncate">{createAt.toLocaleString()}</span>
         </div>
 
         {/* 댓글 내용 */}
