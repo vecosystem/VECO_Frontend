@@ -9,7 +9,7 @@ import type {
 /**
  * 워크스페이스 생성 요청 함수
  */
-export const createWorkspace = async (
+export const postCreateWorkspace = async (
   data: CreateWorkspaceRequest
 ): Promise<CreateWorkspaceResponse> => {
   const response = await axiosInstance.post<CreateWorkspaceResponse>('/api/workspace', data);
@@ -19,7 +19,7 @@ export const createWorkspace = async (
 /**
  * 워크스페이스 URL 생성 요청 함수
  */
-export const createWorkspaceUrl = async (
+export const postCreateWorkspaceUrl = async (
   data: CreateWorkspaceUrlRequest
 ): Promise<CreateWorkspaceUrlResponse> => {
   const response = await axiosInstance.post<CreateWorkspaceUrlResponse>(
