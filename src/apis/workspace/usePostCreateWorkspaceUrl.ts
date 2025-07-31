@@ -7,6 +7,7 @@ import type {
 
 /**
  * 워크스페이스 URL 생성 요청 함수
+ * - components/WorkspaceNameInput.tsx
  */
 export const postCreateWorkspaceUrl = async (
   data: CreateWorkspaceUrlRequest
