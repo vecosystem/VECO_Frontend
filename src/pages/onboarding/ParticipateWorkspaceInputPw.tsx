@@ -17,7 +17,7 @@ const ParticipateWorkspaceInputPw = () => {
     if (inputCode === correctCode) {
       // 옳은 코드 - 에러 제거 및 워크스페이스 홈으로 이동
       setHasError(false);
-      navigate('/workspace/team/default');
+      navigate('/workspace/default/team/:teamId');
     } else {
       // 잘못된 코드 - 에러 표시
       setHasError(true);
