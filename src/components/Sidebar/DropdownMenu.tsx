@@ -30,17 +30,15 @@ const DropdownMenu = ({
   return (
     <div className={`flex flex-col w-full`}>
       {/* headerTitle ex: 작업실, 나의 팀, Team1 */}
-      {headerTitle && (
-        <DropdownHeader
-          title={headerTitle}
-          isOpen={isOpen}
-          onToggle={handleToggle}
-          teamIcon={headerTeamIcon}
-          hasToggleIcon={headerHasToggleIcon}
-          isNested={isNested}
-          dragHandle={dragHandle}
-        />
-      )}
+      <DropdownHeader
+        title={headerTitle}
+        isOpen={isOpen}
+        onToggle={handleToggle}
+        teamIcon={headerTeamIcon}
+        hasToggleIcon={headerHasToggleIcon}
+        isNested={isNested}
+        dragHandle={dragHandle}
+      />
 
       {isOpen && <div className="">{children}</div>}
     </div>

@@ -15,10 +15,8 @@ const WorkspaceNameInput = ({ onUrlGenerated }: WorkspaceNameInputProps) => {
 
   // 체크 버튼 클릭 시 호출되는 함수 (유효성 검사 + 중복 확인 + URL 생성)
   const handleCheck = async () => {
-    const name = workspaceName.trim();
-
     // 유효성 검사 함수 호출
-    const validationError = validateWorkspaceName(name);
+    const validationError = validateWorkspaceName(workspaceName);
     if (validationError) {
       setError(validationError);
       setWorkspaceUrl('');

@@ -13,7 +13,7 @@ import React, { useState } from 'react';
 import SortableDropdown from './SortableDropdown';
 
 export interface SortableItem {
-  id: string;
+  id: number;
   name: string;
   icon?: React.ReactNode;
 }

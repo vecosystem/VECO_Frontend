@@ -39,7 +39,7 @@ const WithdrawModal = ({
         {children}
         <div className={`flex justify-end`}>
           <button
-            className={`px-[1.6rem] py-[0.8rem] rounded-[0.6rem] bg-gray-300 text-gray-100 font-small-b ${disabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-400 cursor-pointer'}`}
+            className={`px-[1.6rem] py-[0.8rem] rounded-[0.6rem] text-gray-100 font-small-b ${disabled ? 'bg-gray-300 cursor-not-allowed' : 'bg-error-400 cursor-pointer'}`}
             onClick={handleClose}
             disabled={disabled}
           >

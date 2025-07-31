@@ -20,7 +20,10 @@ const Modal = ({
   const { closeModal } = useModalActions();
 
   return createPortal(
-    <div className={`fixed inset-0 flex items-center justify-center bg-black/66 z-50`}>
+    <div
+      className={`fixed inset-0 flex items-center justify-center bg-black/66 z-50`}
+      onClick={closeModal}
+    >
       <div
         className={`flex flex-col bg-white rounded-[0.8rem] p-[2.4rem] w-[36rem]`}
         onClick={(e) => e.stopPropagation()}
@@ -29,7 +32,7 @@ const Modal = ({
         <p className={`text-gray-600 font-body-r mb-[2.4rem]`}>{subtitle}</p>
         <div className={`flex justify-end`}>
           <button
-            className={`px-[1.6rem] py-[0.8rem] rounded-[0.6rem] ${buttonColor} text-zinc-50 font-small-b`}
+            className={`px-[1.6rem] py-[0.8rem] rounded-[0.6rem] ${buttonColor} text-gray-100 font-small-b cursor-pointer`}
             onClick={() => {
               onClick();
               closeModal();

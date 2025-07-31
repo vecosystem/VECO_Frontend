@@ -7,6 +7,9 @@ import CheckBoxIcon from '../../assets/icons/check-box-x.svg';
 import CheckBoxRedIcon from '../../assets/icons/check-box-o-red.svg';
 import { useState, useRef } from 'react';
 import { useModalActions, useModalInfo } from '../../hooks/useModal.ts';
+import InputSection from './components/InputSection.tsx';
+import Modal from '../../components/Modal/Modal.tsx';
+
 const SettingMyProfile = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const { isOpen, content } = useModalInfo();
@@ -86,24 +89,8 @@ const SettingMyProfile = () => {
               </div>
             </section>
             <div className="flex flex-col gap-[3.2rem]">
-              <section className="flex flex-col gap-[0.8rem]">
-                <span className="font-body-r text-gray-600">이름</span>
-                <input
-                  type="text"
-                  placeholder="박진주"
-                  className="w-full h-[3.6rem] px-[1.2rem] py-[0.8rem] bg-gray-200 border-[0.1rem] border-gray-300 rounded-md font-body-r placeholder:text-gray-300"
-                  disabled
-                />
-              </section>
-              <section className="flex flex-col gap-[0.8rem]">
-                <span className="font-body-r text-gray-600">이메일</span>
-                <input
-                  type="text"
-                  placeholder="park@naver.com"
-                  className="w-full h-[3.6rem] px-[1.2rem] py-[0.8rem] bg-gray-200 border-[0.1rem] border-gray-300 rounded-md font-body-r placeholder:text-gray-300"
-                  disabled
-                />
-              </section>
+              <InputSection label="이름" placeholder="박진주" disabled />
+              <InputSection label="이메일" placeholder="park@naver.com" disabled />
             </div>
           </div>
           <div className="flex flex-col gap-[2.4rem]">
@@ -118,14 +105,17 @@ const SettingMyProfile = () => {
             </section>
             <section className="flex justify-between">
               <span className="font-title-sub-r text-gray-600">로그아웃</span>
-              <button className="w-[12.8rem] px-[1.6rem] py-[0.8rem] justify-center items-center rounded-md bg-gray-200 font-small-r text-[#F00] cursor-pointer">
+              <button
+                className="w-[12.8rem] px-[1.6rem] py-[0.8rem] justify-center items-center rounded-md bg-gray-200 font-small-r text-[#F00] cursor-pointer"
+                onClick={() => openModal({ name: 'logout' })}
+              >
                 로그아웃
               </button>
             </section>
           </div>
         </div>
       </div>
-      {isOpen && content && (
+      {isOpen && content?.name === 'withdraw' && (
         <WithdrawModal
           title="정말로 탈퇴하시겠어요?"
           subtitle="탈퇴 시 모든 데이터가 즉시 삭제되며, 복구가 불가능합니다."
@@ -144,6 +134,15 @@ const SettingMyProfile = () => {
           }
           disabled={!isAgree}
           onClose={() => setIsAgree(false)}
+        />
+      )}
+      {isOpen && content?.name === 'logout' && (
+        <Modal
+          title="로그아웃"
+          subtitle="정말로 로그아웃하시겠습니까?"
+          buttonText="로그아웃"
+          buttonColor="bg-error-400"
+          onClick={() => console.log('Modal Button Clicked')}
         />
       )}
     </div>
