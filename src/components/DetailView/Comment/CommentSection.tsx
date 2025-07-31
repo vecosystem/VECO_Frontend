@@ -41,16 +41,22 @@ const CommentSection = () => {
           </div>
         ) : (
           // 댓글이 있을 때: 댓글 목록을 렌더링
-          <div className="flex flex-col gap-y-[2.4rem] mb-[13rem] w-full overflow-scroll basic-scroll">
-            {comments.map(({ author, content, createAt }) => (
-              <CommentItem author={author} content={content} createAt={createAt} />
-            ))}
-          </div>
+          <>
+            <div className="absolute bottom-[14.6rem] w-full z-10 pr-[1.2rem]">
+              {/* 댓글 목록 위에 옅은 흰색 그라디언트 처리 */}
+              <div className="w-full h-[6.4rem] bg-gradient-to-b from-white/0 to-white pointer-events-none" />
+            </div>
+            <div className="flex flex-col gap-y-[2.4rem] mb-[14.6rem] w-full overflow-y-scroll basic-scroll">
+              {comments.map(({ author, content, createAt }) => (
+                <CommentItem author={author} content={content} createAt={createAt} />
+              ))}
+            </div>
+          </>
         )}
-
-        {/* 댓글 입력창 */}
-        <CommentInput onAdd={handleAddComment} />
       </div>
+
+      {/* 댓글 입력창 */}
+      <CommentInput onAdd={handleAddComment} />
     </div>
   );
 };
