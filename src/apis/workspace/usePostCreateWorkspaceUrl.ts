@@ -13,7 +13,7 @@ export const postCreateWorkspaceUrl = async (
 ): Promise<CreateWorkspaceUrlResponse> => {
   try {
     const response = await axiosInstance.post<CreateWorkspaceUrlResponse>(
-      '/api/workspace/create-url',
+      '/workspace/create-url',
       data
     );
     return response.data;

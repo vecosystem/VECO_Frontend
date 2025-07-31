@@ -7,7 +7,7 @@ import type { ReIssueTokenResponse } from '../types/auth';
  */
 export const postReIssueAccessToken = async (): Promise<string> => {
   const { data }: { data: ReIssueTokenResponse } = await axiosInstance.post(
-    '/api/token/reissue',
+    '/token/reissue',
     null,
     {
       withCredentials: true, // 쿠키 포함 (refreshToken 전송)
