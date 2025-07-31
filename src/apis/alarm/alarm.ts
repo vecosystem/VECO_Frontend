@@ -19,9 +19,7 @@ export const getAlarmList = async (
   }
 };
 
-export const deleteAlarmItem = async ({
-  alarmIds,
-}: RequestAlarmListDto): Promise<CommonResponse> => {
+export const deleteAlarmItem = async (alarmIds: RequestAlarmListDto): Promise<CommonResponse> => {
   try {
     const { data } = await axiosInstance.delete(`api/alarms`, {
       data: alarmIds,
@@ -29,6 +27,16 @@ export const deleteAlarmItem = async ({
     return data;
   } catch (error) {
     console.error('Error deleting alarm item:', error);
+    throw error;
+  }
+};
+
+export const patchAlarmItem = async ({ alarmId }: RequestAlarmListDto): Promise<CommonResponse> => {
+  try {
+    const { data } = await axiosInstance.patch(`api/alarms/${alarmId}`);
+    return data;
+  } catch (error) {
+    console.error('Error patching alarm item:', error);
     throw error;
   }
 };

@@ -26,7 +26,8 @@ export type AlarmFilter = {
 };
 
 export type RequestAlarmListDto = {
-  alarmIds: number[];
+  alarmId?: number;
+  alarmIds?: number[];
 };
 
 export type ResponseAlarmDto = CommonResponse<AlarmFilter>;
