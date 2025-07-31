@@ -1,5 +1,5 @@
-import type { ResponseAlarmDto } from '../../types/alarm';
-import type { PaginationDto } from '../../types/common';
+import type { RequestAlarmListDto, ResponseAlarmDto } from '../../types/alarm';
+import type { CommonResponse, PaginationDto } from '../../types/common';
 import type { AlarmType } from '../../types/listItem';
 import { axiosInstance } from '../axios';
 
@@ -15,6 +15,20 @@ export const getAlarmList = async (
     return data;
   } catch (error) {
     console.error('Error fetching alarm list:', error);
+    throw error;
+  }
+};
+
+export const deleteAlarmItem = async ({
+  alarmIds,
+}: RequestAlarmListDto): Promise<CommonResponse> => {
+  try {
+    const { data } = await axiosInstance.delete(`api/alarms`, {
+      data: alarmIds,
+    });
+    return data;
+  } catch (error) {
+    console.error('Error deleting alarm item:', error);
     throw error;
   }
 };
