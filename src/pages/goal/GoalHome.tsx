@@ -13,6 +13,7 @@ import type { GroupedGoal } from '../../types/goal';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetGoalList } from '../../apis/goal/useGetGoalList';
+import { useDeleteGoals } from '../../apis/goal/useDeleteGoals';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
@@ -74,6 +75,22 @@ const GoalHome = () => {
     }
   };
 
+  const { mutate: deleteGoalItem } = useDeleteGoals();
+  const handleDeleteItem = () => {
+    deleteGoalItem(
+      {
+        teamId: teamId ?? '',
+        goalIds: checkItems.map(Number),
+      },
+      {
+        onSuccess: () => {
+          setIsDeleteMode(false);
+          setCheckedIds([]);
+        },
+      }
+    );
+  };
+
   const grouped: GroupedGoal[] = goalGroups.map((g) => ({
     key: g.filterName,
     items: g.goals,
@@ -111,8 +128,7 @@ const GoalHome = () => {
             // 삭제 요소 전달
             onClick={() => {
               console.log('삭제할 ID 리스트:', checkItems);
-              // TODO: 실제 삭제 API mutation화
-              // deleteGoalItem({ teamId, goalIds: checkItems });
+              handleDeleteItem();
             }}
           />
         )}
