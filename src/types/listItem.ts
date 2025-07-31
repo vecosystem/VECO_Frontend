@@ -58,19 +58,15 @@ export interface BaseItemProps {
   onCheckChange?: (checked: boolean) => void;
   displayFields?: DisplayField[];
   filter?: ItemFilter;
+  variant?: 'default' | 'notification' | 'read';
+  onClick?: (e: React.MouseEvent) => void;
 }
 
 export const ALARM_TYPES = ['GOAL', 'ISSUE', 'EXTERNAL'] as const;
 export type AlarmType = (typeof ALARM_TYPES)[number];
 
-export interface GoalItemProps extends Goal, BaseItemProps {
-  variant?: 'default' | 'notification' | 'read';
-}
+export interface GoalItemProps extends Goal, BaseItemProps {}
 
-export interface IssueItemProps extends Issue, BaseItemProps {
-  variant?: 'default' | 'notification' | 'read';
-}
+export interface IssueItemProps extends Issue, BaseItemProps {}
 
-export interface ExternalItemProps extends External, BaseItemProps {
-  variant?: 'default' | 'notification' | 'read';
-}
+export interface ExternalItemProps extends External, BaseItemProps {}
