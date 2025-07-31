@@ -48,8 +48,7 @@ const DetailTitle = ({ defaultTitle, title, setTitle, isEditable }: DetailTitleP
       onChange={handleChange}
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
-          e.preventDefault(); // ✅ 줄바꿈 막기
-          console.log('Enter blocked');
+          e.preventDefault(); // 엔터 키를 눌러 직접 줄바꿈하는 것 방지
         }
       }}
       disabled={!isEditable}
