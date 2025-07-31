@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import whitecheck from '../../assets/icons/whitecheck.svg';
 import { validateWorkspaceName } from '../../utils/validateWorkspaceName.ts';
+import { usePostCreateWorkspaceUrl } from '../../apis/workspace/usePostCreateWorkspaceUrl.ts';
 
 // 부모 컴포넌트에서 전달되는 props 타입 정의
 interface WorkspaceNameInputProps {
@@ -13,9 +14,11 @@ const WorkspaceNameInput = ({ onUrlGenerated }: WorkspaceNameInputProps) => {
   const [workspaceUrl, setWorkspaceUrl] = useState(''); // 백엔드에서 생성된 URL
   const [error, setError] = useState(''); // 유효성 검사 또는 서버 에러 메시지
 
-  // 체크 버튼 클릭 시 호출되는 함수 (유효성 검사 + 중복 확인 + URL 생성)
+  // react-query mutation 훅 사용
+  const { mutateAsync: createUrl } = usePostCreateWorkspaceUrl();
+
   const handleCheck = async () => {
-    // 유효성 검사 함수 호출
+    // 입력값 유효성 검사
     const validationError = validateWorkspaceName(workspaceName);
     if (validationError) {
       setError(validationError);
@@ -24,34 +27,16 @@ const WorkspaceNameInput = ({ onUrlGenerated }: WorkspaceNameInputProps) => {
       return;
     }
 
-    // 백엔드로 중복 체크 및 URL 생성 요청
-    try {
-      setError(''); // 에러 초기화
-      // 명세서 확정되면 아래 코드 수정
-      const response = await fetch(`https://your-api.com/api/workspace/check?name=${name}`);
-      const data = await response.json();
+    // 서버 요청
+    const res = await createUrl({ workspaceName });
 
-      if (data.exists) {
-        // 이미 존재하는 이름일 경우
-        setError('이미 존재하는 워크스페이스 이름입니다.');
-        setWorkspaceUrl('');
-        onUrlGenerated('');
-      } else if (data.url) {
-        // 백엔드에서 생성된 URL을 받아 저장 및 상위로 전달
-        setWorkspaceUrl(data.url);
-        onUrlGenerated(data.url);
-      } else {
-        // URL이 정상적으로 생성되지 않았을 경우
-        setError('워크스페이스 URL을 생성하지 못했습니다.');
-        setWorkspaceUrl('');
-        onUrlGenerated('');
-      }
-    } catch {
-      // 서버 요청 실패 시
-      setError('서버 요청 중 오류가 발생했습니다.');
-      setWorkspaceUrl('');
-      onUrlGenerated('');
-    }
+    // workspaceUrl 추출
+    const url = res.result?.workspaceUrl ?? '';
+
+    // 에러 초기화 및 상태 업데이트
+    setError('');
+    setWorkspaceUrl(url);
+    onUrlGenerated(url);
   };
 
   return (
