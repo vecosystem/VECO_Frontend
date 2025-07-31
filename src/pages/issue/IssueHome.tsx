@@ -13,6 +13,7 @@ import type { GroupedIssue } from '../../types/issue';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetIssueList } from '../../apis/issue/useGetIssueList';
+import { useDeleteIssues } from '../../apis/issue/useDeleteIssues';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
@@ -76,7 +77,22 @@ const IssueHome = () => {
     }
   };
 
-  // 그룹핑
+  const { mutate: deleteIssueItem } = useDeleteIssues();
+  const handleDeleteItem = () => {
+    deleteIssueItem(
+      {
+        teamId: teamId ?? '',
+        issueIds: checkItems.map(Number),
+      },
+      {
+        onSuccess() {
+          setIsDeleteMode(false);
+          setCheckedIds([]);
+        },
+      }
+    );
+  };
+
   const grouped: GroupedIssue[] = issueGroups.map((i) => ({
     key: i.filterName,
     items: i.issues,
@@ -114,8 +130,7 @@ const IssueHome = () => {
             // 삭제 요소 전달
             onClick={() => {
               console.log('삭제할 ID 리스트:', checkItems);
-              // TODO: 실제 삭제 API mutation화
-              // deleteIssueItem({ teamId, issueIds: checkItems });
+              handleDeleteItem();
             }}
           />
         )}
