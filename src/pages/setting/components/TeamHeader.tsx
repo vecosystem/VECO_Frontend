@@ -7,7 +7,7 @@ interface TeamHeaderProps {
 
 const TeamHeader = (props: TeamHeaderProps) => {
   return (
-    <section className={`flex flex-col px-[3.2rem] pt-[3.2rem] pb-[1rem]`}>
+    <section className={`flex flex-col px-[3.2rem] pt-[3.2rem] pb-[1rem] whitespace-nowrap`}>
       <h1 className={`text-gray-600 font-title-b mb-[1.6rem]`}>{props.title}</h1>
       <div className={`flex justify-end`}>
         <button
