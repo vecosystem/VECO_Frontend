@@ -77,7 +77,7 @@ const GoalDetail = () => {
       {/* 상세페이지 메인 */}
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full h-full">
         {/* 상세페이지 좌측 영역 - 제목 & 상세설명 & 댓글 */}
-        <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)]">
+        <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)] h-full">
           {/* 상세페이지 제목 */}
           <DetailTitle
             defaultTitle="목표를 생성하세요"

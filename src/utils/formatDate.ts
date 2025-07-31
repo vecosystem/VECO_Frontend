@@ -5,8 +5,8 @@ export const formatDate = (date: Date) => {
 };
 
 export const formatDateDot = (date: Date): string => {
-  const yyyy = date.getFullYear();
+  const yy = date.getFullYear().toString().slice(-2); // 연도 뒤 2자리만 사용
   const mm = String(date.getMonth() + 1).padStart(2, '0');
   const dd = String(date.getDate()).padStart(2, '0');
-  return `${yyyy}.${mm}.${dd}`;
+  return `${yy}.${mm}.${dd}`;
 };
