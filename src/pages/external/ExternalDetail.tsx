@@ -16,6 +16,7 @@ import pr4 from '../../assets/icons/pr-4-sm.svg';
 import IcProfile from '../../assets/icons/user-circle-sm.svg';
 import IcCalendar from '../../assets/icons/date-lg.svg';
 import IcGoal from '../../assets/icons/goal.svg';
+import IcExt from '../../assets/icons/external.svg';
 
 import { getStatusColor } from '../../utils/listItemUtils';
 import { statusLabelToCode } from '../../types/detailitem';
@@ -67,6 +68,13 @@ const ExternalDetail = () => {
     '기획 및 요구사항 분석': IcGoal,
   };
 
+  const externalIconMap = {
+    외부: IcExt,
+    Slack: IcExt,
+    Notion: IcExt,
+    Github: IcExt,
+  };
+
   const handleToggle = () => {
     setIsCompleted((prev) => !prev);
   };
@@ -74,7 +82,7 @@ const ExternalDetail = () => {
   return (
     <div className="flex flex-1 flex-col gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem] pb-[5.3rem]">
       {/* 상세페이지 헤더 */}
-      <DetailHeader defaultTitle="이슈를 생성하세요" title={title} />
+      <DetailHeader defaultTitle="제목을 작성해보세요" title={title} />
 
       {/* 상세페이지 메인 */}
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full h-full">
@@ -82,7 +90,7 @@ const ExternalDetail = () => {
         <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)] h-full">
           {/* 상세페이지 제목 */}
           <DetailTitle
-            defaultTitle="이슈를 생성하세요"
+            defaultTitle="제목을 작성해보세요"
             title={title}
             setTitle={setTitle}
             isEditable={!isCompleted}
@@ -164,6 +172,15 @@ const ExternalDetail = () => {
                     '기획 및 요구사항 분석',
                   ]}
                   iconMap={goalIconMap}
+                />
+              </div>
+
+              {/* (6) 외부 */}
+              <div onClick={(e) => e.stopPropagation()}>
+                <PropertyItem
+                  defaultValue="외부"
+                  options={['Slack', 'Notion', 'Github']}
+                  iconMap={externalIconMap}
                 />
               </div>
             </div>
