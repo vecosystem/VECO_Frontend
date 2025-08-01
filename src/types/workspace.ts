@@ -20,5 +20,5 @@ export interface CreateWorkspaceUrlRequest {
 }
 
 export type CreateWorkspaceUrlResponse = CommonResponse<{
-  inviteUrl: string;
+  workspaceUrl: string;
 }>;
