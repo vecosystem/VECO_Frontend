@@ -3,18 +3,13 @@ import ProfileImage from './ProfileImage.tsx';
 import SubProfileImage from './SubProfileImage.tsx';
 import { useDropdownActions, useDropdownInfo } from '../../../hooks/useDropdown.ts';
 import Dropdown from '../../../components/Dropdown/Dropdown.tsx';
-
-type SettingMemberTeam = {
-  id: number;
-  name: string;
-  teamProfileImage: string | null;
-};
+import type { Team } from '../../../types/setting.ts';
 
 interface MemberItemProps {
   profileImage: string | null;
   name: string;
   email: string;
-  teams?: SettingMemberTeam[];
+  teams?: Team[];
   date: string;
   className?: string;
 }
@@ -35,7 +30,7 @@ const MemberItem = (props: MemberItemProps) => {
           <ProfileLayout teams={props.teams} onClick={() => openDropdown({ name: props.name })} />
           {isOpen && content?.name == props.name && (
             <Dropdown
-              options={props.teams?.map((team) => team.name) || []}
+              options={props.teams?.map((team) => team.teamName) || []}
               onSelect={() => {}}
               onClose={closeDropdown}
               className={`right-0 top-[2.4rem]`}
@@ -51,26 +46,20 @@ const MemberItem = (props: MemberItemProps) => {
   );
 };
 
-const ProfileLayout = ({
-  teams,
-  onClick,
-}: {
-  teams?: SettingMemberTeam[];
-  onClick: () => void;
-}) => {
+const ProfileLayout = ({ teams, onClick }: { teams?: Team[]; onClick: () => void }) => {
   return (
     <div className={`flex w-[6.2rem] justify-start items-center`} onClick={onClick}>
-      {teams && teams.length === 1 && <ProfileImage profileImage={teams[0].teamProfileImage} />}
+      {teams && teams.length === 1 && <ProfileImage profileImage={teams[0].teamProfileUrl} />}
       {teams && teams.length === 2 && (
         <div className={`flex relative items-center`}>
-          <ProfileImage profileImage={teams[0].teamProfileImage} />
-          <SubProfileImage profileImage={teams[1].teamProfileImage} />
+          <ProfileImage profileImage={teams[0].teamProfileUrl} />
+          <SubProfileImage profileImage={teams[1].teamProfileUrl} />
         </div>
       )}
       {teams && teams.length >= 3 && (
         <div className={`flex relative items-center`}>
-          <ProfileImage profileImage={teams[0].teamProfileImage} />
-          <SubProfileImage profileImage={teams[1].teamProfileImage} />
+          <ProfileImage profileImage={teams[0].teamProfileUrl} />
+          <SubProfileImage profileImage={teams[1].teamProfileUrl} />
           <span className="ms-[0.8rem] text-gray-600 font-body-r me-[0.86rem]">...</span>
         </div>
       )}

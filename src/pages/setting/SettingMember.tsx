@@ -2,6 +2,7 @@ import TeamHeader from './components/TeamHeader.tsx';
 import MemberItem from './components/MemberItem.tsx';
 import { useState } from 'react';
 import MemberInviteModal from './components/modal/MemberInviteModal.tsx';
+// import { useGetWorkspaceMembers } from '../../apis/setting/useGetWorkspaceMembers.ts';
 
 const DUMMY_MEMBERS = [
   {
@@ -10,11 +11,10 @@ const DUMMY_MEMBERS = [
     name: '이가을',
     email: 'gaeulzzang@gmail.com',
     teams: [
-      { id: 1, name: 'veco1', teamProfileImage: null },
       {
-        id: 2,
-        name: 'veco2',
-        teamProfileImage: 'https://avatars.githubusercontent.com/u/91470334?v=4',
+        teamId: 1,
+        teamName: '백호',
+        teamProfileUrl: 'https://avatars.githubusercontent.com/u/91470334?v=4',
       },
     ],
     date: '25.01.01',
@@ -24,7 +24,18 @@ const DUMMY_MEMBERS = [
     profileImage: null,
     name: '선우정아',
     email: 'mymelody@naver.com',
-    teams: [],
+    teams: [
+      {
+        teamId: 2,
+        teamName: '하늘',
+        teamProfileUrl: 'https://avatars.githubusercontent.com/u/91470334?v=4',
+      },
+      {
+        teamId: 3,
+        teamName: '바다',
+        teamProfileUrl: '',
+      },
+    ],
     date: '25.02.01',
   },
   {
@@ -32,7 +43,23 @@ const DUMMY_MEMBERS = [
     profileImage: null,
     name: '가응가',
     email: 'gaeullee@gmail.com',
-    teams: [{ id: 1, name: 'veco1', teamProfileImage: null }],
+    teams: [
+      {
+        teamId: 1,
+        teamName: '백호',
+        teamProfileUrl: '',
+      },
+      {
+        teamId: 2,
+        teamName: '바다',
+        teamProfileUrl: '',
+      },
+      {
+        teamId: 3,
+        teamName: '가을리',
+        teamProfileUrl: '',
+      },
+    ],
     date: '25.03.01',
   },
   {
@@ -40,20 +67,13 @@ const DUMMY_MEMBERS = [
     profileImage: null,
     name: '가을리',
     email: 'gaeulzzang11@naver.com',
-    teams: [
-      {
-        id: 1,
-        name: 'veco1',
-        teamProfileImage: 'https://avatars.githubusercontent.com/u/91470334?v=4',
-      },
-      { id: 2, name: 'veco2', teamProfileImage: null },
-      { id: 3, name: 'veco3', teamProfileImage: null },
-    ],
+    teams: [],
     date: '25.04.01',
   },
 ];
 
 const SettingMember = () => {
+  // const { data: members } = useGetWorkspaceMembers();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -65,6 +85,34 @@ const SettingMember = () => {
         onClick={() => setIsModalOpen(!isModalOpen)}
       />
       <hr className={`w-full text-gray-300`} />
+      {/*TODO: 멤버 조회 api 연동 시 주석 해제*/}
+      {/*{members && members.length > 0 && (*/}
+      {/*  <>*/}
+      {/*    <MemberItem*/}
+      {/*      key={members[0].memberId}*/}
+      {/*      profileImage={members[0].profileUrl}*/}
+      {/*      name={members[0].name}*/}
+      {/*      email={members[0].email}*/}
+      {/*      teams={members[0].teams}*/}
+      {/*      date={members[0].joinedAt}*/}
+      {/*      className={`py-[2.4rem]`}*/}
+      {/*    />*/}
+      {/*    <hr className={`w-full text-gray-300 mb-[2.4rem]`} />*/}
+      {/*    {members.length > 1 &&*/}
+      {/*      members*/}
+      {/*        .slice(1)*/}
+      {/*        .map((member, index) => (*/}
+      {/*          <MemberItem*/}
+      {/*            key={index}*/}
+      {/*            profileImage={member.profileUrl}*/}
+      {/*            name={member.name}*/}
+      {/*            email={member.email}*/}
+      {/*            teams={member.teams}*/}
+      {/*            date={member.joinedAt}*/}
+      {/*          />*/}
+      {/*        ))}*/}
+      {/*  </>*/}
+      {/*)}*/}
       <MemberItem
         profileImage={DUMMY_MEMBERS[0].profileImage}
         name={DUMMY_MEMBERS[0].name}

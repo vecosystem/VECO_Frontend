@@ -12,7 +12,7 @@ const getGithubConnect = async (teamId: number): Promise<GetGithubConnectRespons
   try {
     const response = await axiosInstance.get<CommonResponse<GetGithubConnectResponse>>(
       `/github/connect`,
-      { params: teamId }
+      { params: { teamId: teamId } }
     );
     return response.data.result;
   } catch (error) {

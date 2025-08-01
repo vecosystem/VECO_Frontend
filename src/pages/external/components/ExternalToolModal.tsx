@@ -41,14 +41,6 @@ const ExternalToolModal = ({ onClose }: ExternalToolModalProps) => {
   const { mutate: connectSlack } = useGetSlackConnect(teamId);
   const [selected, setSelected] = useState<string | null>(null);
 
-  // const handleSlackLogin = () => {
-  //   const scope = 'channels:join,chat:write';
-  //   const accessToken = useLocalStorage(LOCAL_STORAGE_KEY.accessToken).getItem();
-  //   window.location.href = `https://slack.com/oauth/v2/authorize?client_id=${
-  //     import.meta.env.VITE_SLACK_CLIENT_ID
-  //   }&scope=${scope}&redirect_uri=${import.meta.env.VITE_SLACK_REDIRECT_URI}&state=${accessToken}`;
-  // };
-
   return createPortal(
     <div
       className="fixed inset-0 flex items-center justify-center bg-black/66 z-50"
