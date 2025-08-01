@@ -31,5 +31,5 @@ export interface JoinWorkspaceRequest {
 
 export type JoinWorkspaceResponse = CommonResponse<{
   workspaceId: number;
-  joinedAt: string | null;
-}>;
+  joinedAt: string;
+} | null>;
