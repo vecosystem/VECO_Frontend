@@ -37,6 +37,7 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
 
   const {
     variant = 'default',
+    onItemClick,
     showCheckbox,
     checked,
     onCheckChange,
@@ -52,7 +53,10 @@ export const GoalItem = (props: Partial<GoalItemProps>) => {
   const displayFields = getFilter(filter);
 
   const handleItemClick = (e: React.MouseEvent) => {
-    if (!showCheckbox) return;
+    if (!showCheckbox) {
+      onItemClick?.(e);
+      return;
+    }
     if ((e.target as HTMLElement).closest('label')) return;
     onCheckChange?.(!checked);
   };

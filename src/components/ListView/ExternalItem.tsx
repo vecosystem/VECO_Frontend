@@ -48,6 +48,7 @@ export const ExternalItem = (props: Partial<ExternalItemProps>) => {
 
   const {
     variant = 'default',
+    onItemClick,
     showCheckbox,
     checked,
     onCheckChange,
@@ -65,7 +66,10 @@ export const ExternalItem = (props: Partial<ExternalItemProps>) => {
   const displayFields = getFilter(filter);
 
   const handleItemClick = (e: React.MouseEvent) => {
-    if (!showCheckbox) return;
+    if (!showCheckbox) {
+      onItemClick?.(e);
+      return;
+    }
     if ((e.target as HTMLElement).closest('label')) return;
     onCheckChange?.(!checked);
   };

@@ -59,7 +59,7 @@ export interface BaseItemProps {
   displayFields?: DisplayField[];
   filter?: ItemFilter;
   variant?: 'default' | 'notification' | 'read';
-  onClick?: (e: React.MouseEvent) => void;
+  onItemClick?: (e: React.MouseEvent) => void; // 외부 클릭 이벤트
 }
 
 export const ALARM_TYPES = ['GOAL', 'ISSUE', 'EXTERNAL'] as const;
