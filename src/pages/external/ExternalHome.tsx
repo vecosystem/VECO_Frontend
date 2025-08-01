@@ -19,6 +19,7 @@ import { ExternalItem } from '../../components/ListView/ExternalItem';
 import ExternalToolArea from './components/ExternalToolArea';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetExternalList } from '../../apis/external/useGetExternalList';
+import { useDeleteExternals } from '../../apis/external/useDeleteExternals';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
@@ -84,6 +85,22 @@ const ExternalHome = () => {
     }
   };
 
+  const { mutate: deleteGoalItem } = useDeleteExternals();
+  const handleDeleteItem = () => {
+    deleteGoalItem(
+      {
+        teamId: teamId ?? '',
+        externalIds: checkItems.map(Number),
+      },
+      {
+        onSuccess: () => {
+          setIsDeleteMode(false);
+          setCheckedIds([]);
+        },
+      }
+    );
+  };
+
   // 그룹핑
   const grouped: GroupedExternal[] = externalGroups.map((e) => ({
     key: e.filterName,
@@ -123,7 +140,10 @@ const ExternalHome = () => {
             buttonText="삭제"
             buttonColor="bg-error-400"
             // 삭제 요소 전달
-            onClick={() => {}}
+            onClick={() => {
+              console.log('삭제할 ID 리스트:', checkItems);
+              handleDeleteItem();
+            }}
           />
         )}
         {isEmpty ? (
