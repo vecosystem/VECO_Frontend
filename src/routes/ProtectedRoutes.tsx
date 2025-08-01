@@ -17,6 +17,7 @@ import SettingWorkspaceProfile from '../pages/setting/SettingWorkspaceProfile.ts
 import ExternalDetail from '../pages/external/ExternalDetail.tsx';
 import WorkspaceGoalDetail from '../pages/workspace/WorkspaceGoalDetail.tsx';
 import WorkspaceIssueDetail from '../pages/workspace/WorkspaceIssueDetail.tsx';
+import WorkspaceExternalDetail from '../pages/workspace/WorkspaceExternalDetail.tsx';
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -58,7 +59,7 @@ export const protectedRoutes: RouteObject[] = [
           { path: 'goal', element: <WorkspaceGoal /> },
           { path: 'goal/:goalId', element: <WorkspaceGoalDetail /> },
           { path: 'ext', element: <WorkspaceExternal /> },
-          { path: 'ext/:extId', element: <div>Workspace_External_Detail</div> },
+          { path: 'ext/:extId', element: <WorkspaceExternalDetail /> },
         ],
       },
       /* 팀별 페이지들 */

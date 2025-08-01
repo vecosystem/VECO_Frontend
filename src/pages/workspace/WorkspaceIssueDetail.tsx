@@ -2,6 +2,7 @@
 // 워크스페이스 전체 팀 - 이슈 상세페이지
 
 import { useState } from 'react';
+import WorkspaceDetailHeader from '../../components/DetailView/WorkspaceDetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
 import CompletionButton from '../../components/DetailView/CompletionButton';
@@ -22,7 +23,6 @@ import CommentSection from '../../components/DetailView/Comment/CommentSection';
 import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
-import WorkspaceDetailHeader from '../../components/DetailView/WorkspaceDetailHeader';
 
 const WorkspaceIssueDetail = () => {
   const [title, setTitle] = useState('');
