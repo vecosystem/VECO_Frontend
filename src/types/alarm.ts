@@ -10,7 +10,7 @@ export type NotiList = {
   priority: string;
   goalTitle?: string;
   isRead: boolean;
-  // TODO : 담당자(본인) 정보 추가
+  // TODO : teamId 정보 추가, 명세서 확인 후 수정
   managerList?: {
     profileUrl: string;
     name: string;
