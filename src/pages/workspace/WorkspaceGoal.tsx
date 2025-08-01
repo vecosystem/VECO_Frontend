@@ -16,11 +16,12 @@ import {
 import type { GoalFilter, GroupedGoal } from '../../types/goal';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
 const WorkspaceGoal = () => {
+  const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
@@ -163,6 +164,7 @@ const WorkspaceGoal = () => {
                       checked={checkItems.includes(goal.id)}
                       onCheckChange={(checked) => handleCheck(goal.id, checked)}
                       filter={filter}
+                      onItemClick={() => navigate(`/workspace/team/${teamId}/ext/${goal.id}`)}
                     />
                   ))}
                 </div>

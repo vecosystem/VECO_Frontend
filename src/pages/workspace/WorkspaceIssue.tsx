@@ -17,11 +17,12 @@ import {
 import type { GroupedIssue, IssueFilter } from '../../types/issue';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
 const WorkspaceIssue = () => {
+  const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
@@ -167,6 +168,7 @@ const WorkspaceIssue = () => {
                       checked={checkItems.includes(issue.id)}
                       onCheckChange={(checked) => handleCheck(issue.id, checked)}
                       filter={filter}
+                      onItemClick={() => navigate(`/workspace/team/${teamId}/ext/${issue.id}`)}
                     />
                   ))}
                 </div>

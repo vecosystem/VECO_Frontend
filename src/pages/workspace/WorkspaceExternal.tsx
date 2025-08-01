@@ -24,11 +24,12 @@ import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { ExternalItem } from '../../components/ListView/ExternalItem';
 import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
 import ExternalToolArea from '../external/components/ExternalToolArea';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
 const WorkspaceExternal = () => {
+  const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
@@ -181,6 +182,7 @@ const WorkspaceExternal = () => {
                       checked={checkItems.includes(externals.id)}
                       onCheckChange={(checked) => handleCheck(externals.id, checked)}
                       filter={filter}
+                      onItemClick={() => navigate(`/workspace/team/${teamId}/ext/${externals.id}`)}
                     />
                   ))}
                 </div>
