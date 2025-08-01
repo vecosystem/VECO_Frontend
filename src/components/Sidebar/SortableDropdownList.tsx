@@ -11,22 +11,17 @@ import {
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import React, { useState } from 'react';
 import SortableDropdown from './SortableDropdown';
-
-export interface SortableItem {
-  teamId: number;
-  name: string;
-  profileUrl?: string;
-}
+import type { Team } from './types';
 
 interface SortableDropdownListProps {
-  items: SortableItem[];
-  renderContent: (item: SortableItem, dragProps: any, isOverlay?: boolean) => React.ReactNode;
-  onSorted?: (sortedItems: SortableItem[]) => void;
+  items: Team[];
+  renderContent: (item: Team, dragProps: any, isOverlay?: boolean) => React.ReactNode;
+  onSorted?: (sortedItems: Team[]) => void;
 }
 
 const SortableDropdownList = ({ items, renderContent, onSorted }: SortableDropdownListProps) => {
   const [list, setList] = useState(items);
-  const [activeItem, setActiveItem] = useState<SortableItem | null>(null);
+  const [activeItem, setActiveItem] = useState<Team | null>(null);
   const [overlaySize, setOverlaySize] = useState<{ width: number; height: number }>({
     width: 0,
     height: 0,

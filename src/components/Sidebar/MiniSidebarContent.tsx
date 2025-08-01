@@ -12,10 +12,11 @@ import externalHoverIcon from '../../assets/icons/external-hover.svg';
 import DropdownMenu from './DropdownMenu';
 import SidebarItem from './SidebarItem';
 import SortableDropdownList from './SortableDropdownList';
+import type { Team } from './types';
 
 interface MiniSidebarContentProps {
   setExpanded: (value: boolean) => void;
-  teams: { teamId: number; name: string; profileUrl?: string }[];
+  teams: Team[];
 }
 
 const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => {

@@ -14,14 +14,20 @@ import collapseIcon from '../../assets/icons/collapse.svg';
 import { useNavigate } from 'react-router-dom';
 import hamburgerIcon from '../../assets/icons/hamburger.svg';
 import SortableDropdownList from './SortableDropdownList';
+import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
+// import { usePatchWorkspaceTeams } from '../../apis/setting/usePatchWorkspaceTeams';
+import type { Team } from './types';
 
 interface FullSidebarContentProps {
   setExpanded: (value: boolean) => void;
-  teams: { teamId: number; name: string; profileUrl?: string }[];
+  teams: Team[];
 }
 
 const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => {
   const navigate = useNavigate();
+  // todo: 팀 순서 변경 API 연동
+  // const { mutate: patchWorkspaceTeams } = usePatchWorkspaceTeams();
+
   return (
     <div className="w-full p-[3.2rem] pe-[2rem] min-h-screen">
       <div className="flex flex-col items-start gap-[3.2rem] self-stretch">
@@ -144,7 +150,7 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                 <DropdownMenu
                   headerTitle={team.name}
                   initialOpen={!isOverlay}
-                  headerTeamIcon={<img src={team.profileUrl} alt={team.name} />}
+                  headerTeamIcon={<img src={team.profileUrl || vecocirclewhite} alt={team.name} />}
                   isNested={true}
                   dragHandle={
                     <button {...attributes} {...listeners} type="button" className="cursor-grab">
@@ -202,7 +208,11 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                   )}
                 </DropdownMenu>
               )}
-              onSorted={(newList: any) => console.log(newList)}
+              onSorted={(newList: Team[]) => {
+                const teamIdList = newList.map((item: Team) => item.teamId);
+                console.log(teamIdList);
+                // patchWorkspaceTeams(teamIdList);
+              }}
             />
           </DropdownMenu>
         </div>
