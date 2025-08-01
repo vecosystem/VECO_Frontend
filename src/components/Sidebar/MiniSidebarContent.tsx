@@ -15,7 +15,7 @@ import SortableDropdownList from './SortableDropdownList';
 
 interface MiniSidebarContentProps {
   setExpanded: (value: boolean) => void;
-  teams: { id: number; name: string; icon: React.ReactNode }[];
+  teams: { teamId: number; name: string; profileUrl?: string }[];
 }
 
 const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => {
@@ -115,7 +115,7 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                 <DropdownMenu
                   headerTitle=""
                   initialOpen={!isOverlay}
-                  headerTeamIcon={team.icon}
+                  headerTeamIcon={team.profileUrl}
                   isNested={true}
                 >
                   {!isOverlay && (

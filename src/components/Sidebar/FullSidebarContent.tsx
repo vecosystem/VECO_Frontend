@@ -17,7 +17,7 @@ import SortableDropdownList from './SortableDropdownList';
 
 interface FullSidebarContentProps {
   setExpanded: (value: boolean) => void;
-  teams: { id: number; name: string; icon: React.ReactNode }[];
+  teams: { teamId: number; name: string; profileUrl?: string }[];
 }
 
 const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => {
@@ -137,14 +137,14 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
         {/* 두 번째 드롭다운: 나의 팀 (내부에 드롭다운 또 포함) */}
         <div className="flex flex-col items-start self-stretch">
           <DropdownMenu headerTitle="나의 팀" initialOpen={true}>
-            {/* Team1 드롭다운 (내부 드롭다운) */}
+            {/* Team 드롭다운 (내부 드롭다운) */}
             <SortableDropdownList
               items={teams}
               renderContent={(team, { listeners, attributes }, isOverlay) => (
                 <DropdownMenu
                   headerTitle={team.name}
                   initialOpen={!isOverlay}
-                  headerTeamIcon={team.icon}
+                  headerTeamIcon={<img src={team.profileUrl} alt={team.name} />}
                   isNested={true}
                   dragHandle={
                     <button {...attributes} {...listeners} type="button" className="cursor-grab">
@@ -160,13 +160,13 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                         label="목표"
                         onClick={() => {
                           navigate(
-                            `/workspace/team/:teamId/goal`.replace(':teamId', String(team.id))
+                            `/workspace/team/:teamId/goal`.replace(':teamId', String(team.teamId))
                           );
                         }}
                         onAddClick={() => {
                           navigate(
                             `/workspace/team/:teamId/goal/:goalId`
-                              .replace(':teamId', String(team.id))
+                              .replace(':teamId', String(team.teamId))
                               .replace(':goalId', String(123))
                           );
                         }}
@@ -177,13 +177,13 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                         label="이슈"
                         onClick={() => {
                           navigate(
-                            `/workspace/team/:teamId/issue`.replace(':teamId', String(team.id))
+                            `/workspace/team/:teamId/issue`.replace(':teamId', String(team.teamId))
                           );
                         }}
                         onAddClick={() => {
                           navigate(
                             `/workspace/team/:teamId/issue/:issueId`
-                              .replace(':teamId', String(team.id))
+                              .replace(':teamId', String(team.teamId))
                               .replace(':issueId', String(123))
                           );
                         }}
@@ -194,7 +194,7 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                         label="외부"
                         onClick={() => {
                           navigate(
-                            `/workspace/team/:teamId/ext`.replace(':teamId', String(team.id))
+                            `/workspace/team/:teamId/ext`.replace(':teamId', String(team.teamId))
                           );
                         }}
                       />
