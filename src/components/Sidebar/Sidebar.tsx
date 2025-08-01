@@ -3,13 +3,28 @@ import FullSidebarContent from './FullSidebarContent';
 import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
 import clsx from 'clsx';
 import { useSidebarStore } from '../../stores/useSidebarStore';
+// import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams';
 
 const Sidebar = () => {
   const { isOpen, toggle } = useSidebarStore();
+  // todo: 팀 목록 조회 API 연동
+  // const { data: teams = [] } = useGetWorkspaceTeams();
 
   const teams = [
-    { id: 2, name: 'Team1', icon: <img src={vecocirclewhite} alt={'Team1'} /> },
-    { id: 3, name: 'Team2', icon: <img src={vecocirclewhite} alt={'Team2'} /> },
+    {
+      teamId: 2,
+      name: 'Team1',
+      profileUrl: vecocirclewhite,
+      memberCount: 2,
+      createdAt: '2025-01-01',
+    },
+    {
+      teamId: 3,
+      name: 'Team2',
+      profileUrl: vecocirclewhite,
+      memberCount: 2,
+      createdAt: '2025-01-01',
+    },
   ];
 
   return (

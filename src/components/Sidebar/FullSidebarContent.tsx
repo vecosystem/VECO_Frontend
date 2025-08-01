@@ -14,14 +14,20 @@ import collapseIcon from '../../assets/icons/collapse.svg';
 import { useNavigate } from 'react-router-dom';
 import hamburgerIcon from '../../assets/icons/hamburger.svg';
 import SortableDropdownList from './SortableDropdownList';
+import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
+// import { usePatchWorkspaceTeams } from '../../apis/setting/usePatchWorkspaceTeams';
+import type { Team } from './types';
 
 interface FullSidebarContentProps {
   setExpanded: (value: boolean) => void;
-  teams: { id: number; name: string; icon: React.ReactNode }[];
+  teams: Team[];
 }
 
 const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => {
   const navigate = useNavigate();
+  // todo: 팀 순서 변경 API 연동
+  // const { mutate: patchWorkspaceTeams } = usePatchWorkspaceTeams();
+
   return (
     <div className="w-full p-[3.2rem] pe-[2rem] min-h-screen">
       <div className="flex flex-col items-start gap-[3.2rem] self-stretch">
@@ -137,14 +143,14 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
         {/* 두 번째 드롭다운: 나의 팀 (내부에 드롭다운 또 포함) */}
         <div className="flex flex-col items-start self-stretch">
           <DropdownMenu headerTitle="나의 팀" initialOpen={true}>
-            {/* Team1 드롭다운 (내부 드롭다운) */}
+            {/* Team 드롭다운 (내부 드롭다운) */}
             <SortableDropdownList
               items={teams}
               renderContent={(team, { listeners, attributes }, isOverlay) => (
                 <DropdownMenu
                   headerTitle={team.name}
                   initialOpen={!isOverlay}
-                  headerTeamIcon={team.icon}
+                  headerTeamIcon={<img src={team.profileUrl || vecocirclewhite} alt={team.name} />}
                   isNested={true}
                   dragHandle={
                     <button {...attributes} {...listeners} type="button" className="cursor-grab">
@@ -160,13 +166,13 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                         label="목표"
                         onClick={() => {
                           navigate(
-                            `/workspace/team/:teamId/goal`.replace(':teamId', String(team.id))
+                            `/workspace/team/:teamId/goal`.replace(':teamId', String(team.teamId))
                           );
                         }}
                         onAddClick={() => {
                           navigate(
                             `/workspace/team/:teamId/goal/:goalId`
-                              .replace(':teamId', String(team.id))
+                              .replace(':teamId', String(team.teamId))
                               .replace(':goalId', String(123))
                           );
                         }}
@@ -177,13 +183,13 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                         label="이슈"
                         onClick={() => {
                           navigate(
-                            `/workspace/team/:teamId/issue`.replace(':teamId', String(team.id))
+                            `/workspace/team/:teamId/issue`.replace(':teamId', String(team.teamId))
                           );
                         }}
                         onAddClick={() => {
                           navigate(
                             `/workspace/team/:teamId/issue/:issueId`
-                              .replace(':teamId', String(team.id))
+                              .replace(':teamId', String(team.teamId))
                               .replace(':issueId', String(123))
                           );
                         }}
@@ -194,7 +200,7 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                         label="외부"
                         onClick={() => {
                           navigate(
-                            `/workspace/team/:teamId/ext`.replace(':teamId', String(team.id))
+                            `/workspace/team/:teamId/ext`.replace(':teamId', String(team.teamId))
                           );
                         }}
                       />
@@ -202,7 +208,11 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                   )}
                 </DropdownMenu>
               )}
-              onSorted={(newList: any) => console.log(newList)}
+              onSorted={(newList: Team[]) => {
+                const teamIdList = newList.map((item: Team) => item.teamId);
+                console.log(teamIdList);
+                // patchWorkspaceTeams(teamIdList);
+              }}
             />
           </DropdownMenu>
         </div>
