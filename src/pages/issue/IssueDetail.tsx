@@ -1,5 +1,5 @@
-// GoalDetail.tsx
-// 목표 상세페이지
+// IssueDetail.tsx
+// 이슈 상세페이지
 
 import { useState } from 'react';
 import DetailHeader from '../../components/DetailView/DetailHeader';
@@ -15,7 +15,7 @@ import pr3 from '../../assets/icons/pr-3-sm.svg';
 import pr4 from '../../assets/icons/pr-4-sm.svg';
 import IcProfile from '../../assets/icons/user-circle-sm.svg';
 import IcCalendar from '../../assets/icons/date-lg.svg';
-import IcIssue from '../../assets/icons/issue.svg';
+import IcGoal from '../../assets/icons/goal.svg';
 
 import { getStatusColor } from '../../utils/listItemUtils';
 import { statusLabelToCode } from '../../types/detailitem';
@@ -23,18 +23,16 @@ import CommentSection from '../../components/DetailView/Comment/CommentSection';
 import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
-import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
 
-const GoalDetail = () => {
+const IssueDetail = () => {
   const [title, setTitle] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
 
   // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]);
 
-  const [option, setOption] = useState<string>('이슈');
   const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
-  const { openDropdown, closeDropdown } = useDropdownActions();
+  const { openDropdown } = useDropdownActions();
 
   // '기한' 속성의 텍스트(시작일, 종료일) 결정하는 함수
   const getDisplayText = () => {
@@ -62,8 +60,12 @@ const GoalDetail = () => {
     전시현: IcProfile,
   };
 
-  // const dateIconMap = IcDate; // '기한' 속성 아이콘 매핑
-  // const issueIconMap = IcIssue; // '이슈' 속성 아이콘 매핑
+  const goalIconMap = {
+    목표: IcGoal,
+    없음: IcGoal,
+    '백호를 사용해서 다른 사람들과 협업해보기': IcGoal,
+    '기획 및 요구사항 분석': IcGoal,
+  };
 
   const handleToggle = () => {
     setIsCompleted((prev) => !prev);
@@ -72,7 +74,7 @@ const GoalDetail = () => {
   return (
     <div className="flex flex-1 flex-col gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem] pb-[5.3rem]">
       {/* 상세페이지 헤더 */}
-      <DetailHeader defaultTitle="목표를 생성하세요" title={title} />
+      <DetailHeader defaultTitle="이슈를 생성하세요" title={title} />
 
       {/* 상세페이지 메인 */}
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full h-full">
@@ -80,7 +82,7 @@ const GoalDetail = () => {
         <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)] h-full">
           {/* 상세페이지 제목 */}
           <DetailTitle
-            defaultTitle="목표를 생성하세요"
+            defaultTitle="이슈를 생성하세요"
             title={title}
             setTitle={setTitle}
             isEditable={!isCompleted}
@@ -152,36 +154,17 @@ const GoalDetail = () => {
                 </div>
               </div>
 
-              {/* (5) 이슈 */}
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openDropdown({ name: '이슈' });
-                }}
-                className={`flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200 cursor-pointer`}
-              >
-                {/* 속성 아이콘 */}
-                <img src={IcIssue} alt="이슈" />
-
-                {/* 속성 이름 */}
-                <div className="flex relative">
-                  {/* 속성 항목명 */}
-                  <p className="font-body-r text-gray-600 max-w-[27.4rem] truncate">{option}</p>
-
-                  {/* 드롭다운 오픈 */}
-                  {isOpen && content?.name === '이슈' && (
-                    <ArrowDropdown
-                      defaultValue={'이슈'}
-                      options={[
-                        '기능 정의: 구현할 핵심 기능과 어쩌구 저쩌구 텍스트가 길어지면 이렇게 표시',
-                        '와이어프레임 디자인',
-                        '컴포넌트 정리',
-                      ]}
-                      onSelect={(value: string) => setOption(value)}
-                      onClose={closeDropdown}
-                    />
-                  )}
-                </div>
+              {/* (5) 목표 */}
+              <div onClick={(e) => e.stopPropagation()}>
+                <PropertyItem
+                  defaultValue="목표"
+                  options={[
+                    '없음',
+                    '백호를 사용해서 다른 사람들과 협업해보기',
+                    '기획 및 요구사항 분석',
+                  ]}
+                  iconMap={goalIconMap}
+                />
               </div>
             </div>
           </div>
@@ -198,4 +181,4 @@ const GoalDetail = () => {
   );
 };
 
-export default GoalDetail;
+export default IssueDetail;

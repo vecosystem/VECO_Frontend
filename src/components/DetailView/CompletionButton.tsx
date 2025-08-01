@@ -26,7 +26,7 @@ const CompletionButton = ({ isTitleFilled, isCompleted, onToggle }: CompletionBu
   const textColor = isDisabled ? 'text-gray-400' : 'text-gray-100';
 
   return (
-    <div className="flex items-end justify-end">
+    <div className="flex items-end justify-end fixed bottom-[5.3rem] right-[6.4rem] z-20">
       <button
         onClick={isDisabled ? undefined : onToggle}
         disabled={isDisabled}

@@ -42,10 +42,17 @@ const DetailTitle = ({ defaultTitle, title, setTitle, isEditable }: DetailTitleP
 
   return (
     <textarea
+      name="detailTitle"
+      id="detailTitle"
       ref={textarea}
       value={title}
       rows={1}
       onChange={handleChange}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault(); // 엔터 키를 눌러 직접 줄바꿈하는 것 방지
+        }
+      }}
       disabled={!isEditable}
       // 각 페이지별 placeholder를 서로 다르게 할 수 있도록 defaultTitle로 처리
       placeholder={defaultTitle}
