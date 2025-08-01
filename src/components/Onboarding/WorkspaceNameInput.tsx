@@ -15,9 +15,12 @@ const WorkspaceNameInput = ({ onUrlGenerated }: WorkspaceNameInputProps) => {
   const [error, setError] = useState(''); // 유효성 검사 또는 서버 에러 메시지
 
   // react-query mutation 훅 사용
-  const { mutateAsync: createUrl } = usePostCreateWorkspaceUrl();
+  const { mutateAsync: createUrl, isPending } = usePostCreateWorkspaceUrl();
 
   const handleCheck = async () => {
+    if (isPending) return; // 중복 요청 방지
+    if (workspaceUrl) return; // 이미 URL 있으면 재요청 막기
+
     // 입력값 유효성 검사
     const validationError = validateWorkspaceName(workspaceName);
     if (validationError) {
