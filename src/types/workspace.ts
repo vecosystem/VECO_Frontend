@@ -22,3 +22,14 @@ export interface CreateWorkspaceUrlRequest {
 export type CreateWorkspaceUrlResponse = CommonResponse<{
   workspaceUrl: string;
 }>;
+
+// 워크스페이스 참여
+export interface JoinWorkspaceRequest {
+  token: string;
+  password: string;
+}
+
+export type JoinWorkspaceResponse = CommonResponse<{
+  workspaceId: number;
+  joinedAt: string | null;
+}>;
