@@ -2,6 +2,8 @@ import TeamItem from './components/TeamItem.tsx';
 import TeamHeader from './components/TeamHeader.tsx';
 import { useState } from 'react';
 import TeamCreateModal from './components/modal/TeamCreateModal.tsx';
+// import { useInView } from 'react-intersection-observer';
+// import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams.ts';
 
 const DUMMY_TEAMS = [
   {
@@ -35,7 +37,14 @@ const DUMMY_TEAMS = [
 ];
 
 const SettingTeam = () => {
+  // TODO: 팀 목록 조회 API 연동
+  // const { ref, inView } = useInView();
+  // const { data: teams, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetWorkspaceTeams();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // useEffect(() => {
+  //   if (inView && hasNextPage && !isFetchingNextPage) fetchNextPage();
+  // }, [inView, hasNextPage, isFetchingNextPage]);
 
   return (
     <div className={`flex flex-col w-full`}>
@@ -65,6 +74,7 @@ const SettingTeam = () => {
         />
       ))}
       {isModalOpen && <TeamCreateModal onClick={() => setIsModalOpen(!isModalOpen)} />}
+      {/*<div ref={ref} className={'h-[1rem]'} />*/}
     </div>
   );
 };
