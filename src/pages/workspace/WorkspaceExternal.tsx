@@ -33,7 +33,6 @@ const WorkspaceExternal = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
-  const navigate = useNavigate();
 
   const handleClick = () => {
     navigate(':extId');

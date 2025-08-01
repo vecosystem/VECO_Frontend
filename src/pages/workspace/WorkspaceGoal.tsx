@@ -17,7 +17,6 @@ import type { GoalFilter, GroupedGoal } from '../../types/goal';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
 import { useNavigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
@@ -26,7 +25,6 @@ const WorkspaceGoal = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
-  const navigate = useNavigate();
 
   const handleClick = () => {
     navigate(':goalId');
