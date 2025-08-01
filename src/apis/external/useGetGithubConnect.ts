@@ -11,8 +11,10 @@ interface GetGithubConnectResponse {
 const getGithubConnect = async (teamId: number): Promise<GetGithubConnectResponse> => {
   try {
     const response = await axiosInstance.get<CommonResponse<GetGithubConnectResponse>>(
-      `/github/connect/${teamId}`
+      `/github/connect`,
+      { params: { teamId: teamId } }
     );
+    if (!response.data.result) return Promise.reject(response);
     return response.data.result;
   } catch (error) {
     console.error('Github 연동 실패', error);
