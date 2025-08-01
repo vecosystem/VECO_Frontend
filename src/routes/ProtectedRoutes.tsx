@@ -12,7 +12,12 @@ import WorkspaceIssue from '../pages/workspace/WorkspaceIssue.tsx';
 import WorkspaceGoal from '../pages/workspace/WorkspaceGoal.tsx';
 import WorkspaceExternal from '../pages/workspace/WorkspaceExternal.tsx';
 import GoalDetail from '../pages/goal/GoalDetail.tsx';
+import IssueDetail from '../pages/issue/IssueDetail.tsx';
 import SettingWorkspaceProfile from '../pages/setting/SettingWorkspaceProfile.tsx';
+import ExternalDetail from '../pages/external/ExternalDetail.tsx';
+import WorkspaceGoalDetail from '../pages/workspace/WorkspaceGoalDetail.tsx';
+import WorkspaceIssueDetail from '../pages/workspace/WorkspaceIssueDetail.tsx';
+import WorkspaceExternalDetail from '../pages/workspace/WorkspaceExternalDetail.tsx';
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -50,11 +55,11 @@ export const protectedRoutes: RouteObject[] = [
           // 기본 경로는 이슈 페이지로 리다이렉트
           { index: true, element: <Navigate to="issue" replace /> },
           { path: 'issue', element: <WorkspaceIssue /> },
-          { path: 'issue/:issueId', element: <div>Workspace_Issue_Detail</div> },
+          { path: 'issue/:issueId', element: <WorkspaceIssueDetail /> },
           { path: 'goal', element: <WorkspaceGoal /> },
-          { path: 'goal/:goalId', element: <div>Workspace_Goal_Detail</div> },
+          { path: 'goal/:goalId', element: <WorkspaceGoalDetail /> },
           { path: 'ext', element: <WorkspaceExternal /> },
-          { path: 'ext/:extId', element: <div>Workspace_External_Detail</div> },
+          { path: 'ext/:extId', element: <WorkspaceExternalDetail /> },
         ],
       },
       /* 팀별 페이지들 */
@@ -67,9 +72,9 @@ export const protectedRoutes: RouteObject[] = [
           { path: 'goal', element: <GoalHome /> },
           { path: 'goal/:goalId', element: <GoalDetail /> },
           { path: 'issue', element: <IssueHome /> },
-          { path: 'issue/:issueId', element: <div>Issue_Detail</div> },
+          { path: 'issue/:issueId', element: <IssueDetail /> },
           { path: 'ext', element: <ExternalHome /> },
-          { path: 'ext/:extId', element: <div>External_Detail</div> },
+          { path: 'ext/:extId', element: <ExternalDetail /> },
         ],
       },
     ],

@@ -17,6 +17,7 @@ import {
 } from '../../types/testDummy';
 import type { GroupedIssue, IssueFilter } from '../../types/issue';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
+import { useNavigate } from 'react-router-dom';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
@@ -24,6 +25,11 @@ const IssueHome = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(':issueId');
+  };
 
   // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
   const dimmyIssueGroups = useMemo<IssueFilter[]>(() => {
@@ -126,8 +132,13 @@ const IssueHome = () => {
                       </div>
                       <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
                     </div>
-                    {/* TODO : 추가 버튼 라우터 연결 */}
-                    <img src={PlusIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
+                    {/* 추가 버튼 */}
+                    <img
+                      src={PlusIcon}
+                      className="inline-block w-[2.4rem] h-[2.4rem]"
+                      alt=""
+                      onClick={handleClick}
+                    />
                   </div>
                   {/* 각 유형 별 요소 */}
                   {items.map((issue) => (

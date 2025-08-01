@@ -24,6 +24,7 @@ import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { ExternalItem } from '../../components/ListView/ExternalItem';
 import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
 import ExternalToolArea from '../external/components/ExternalToolArea';
+import { useNavigate } from 'react-router-dom';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
@@ -31,6 +32,11 @@ const WorkspaceExternal = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(':extId');
+  };
 
   // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
   const dummyExternalGroups = useMemo<ExternalFilter[]>(() => {
@@ -140,8 +146,13 @@ const WorkspaceExternal = () => {
                       </div>
                       <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
                     </div>
-                    {/* TODO : 추가 버튼 라우터 연결 */}
-                    <img src={PlusIcon} className="inline-block w-[2.4rem] h-[2.4rem]" alt="" />
+                    {/* 추가 버튼 */}
+                    <img
+                      src={PlusIcon}
+                      className="inline-block w-[2.4rem] h-[2.4rem]"
+                      alt=""
+                      onClick={handleClick}
+                    />
                   </div>
                   {/* 각 유형 별 요소 */}
                   {items.map((externals) => (
