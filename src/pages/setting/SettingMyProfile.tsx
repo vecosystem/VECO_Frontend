@@ -9,6 +9,9 @@ import { useState, useRef } from 'react';
 import { useModalActions, useModalInfo } from '../../hooks/useModal.ts';
 import InputSection from './components/InputSection.tsx';
 import Modal from '../../components/Modal/Modal.tsx';
+// import { useGetMyProfile } from '../../apis/setting/useGetMyProfile.ts';
+// import { usePatchMyProfileImage } from '../../apis/setting/usePatchMyProfileImage.ts';
+// import { useDeleteMyProfileImage } from '../../apis/setting/useDeleteMyProfileImage.ts';
 
 const SettingMyProfile = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -16,7 +19,14 @@ const SettingMyProfile = () => {
   const { openModal } = useModalActions();
   const [isAgree, setIsAgree] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [profileImage] = useState<string | null>(null);
+
+  // TODO: 나의 프로필 조회 API 호출
+  // const { data: userData } = useGetMyProfile();
+  const userData = {
+    name: '박진주',
+    email: 'vecocircle@gmail.com',
+    profileImage: '',
+  };
 
   const handleDropdownToggle = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -36,9 +46,17 @@ const SettingMyProfile = () => {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append('profile', file);
+    formData.append('image', file);
 
-    // TODO: API 호출
+    // TODO: 프로필 이미지 변경 API 호출
+    // const { mutate: patchMyProfileImage } = usePatchMyProfileImage();
+    // patchMyProfileImage(formData);
+  };
+
+  const handleProfileImageDelete = () => {
+    // TODO: 프로필 이미지 삭제 API 호출
+    // const { mutate: deleteMyProfileImage } = useDeleteMyProfileImage();
+    // deleteMyProfileImage();
   };
 
   return (
@@ -56,7 +74,7 @@ const SettingMyProfile = () => {
                   onClick={handleDropdownToggle}
                 >
                   <img
-                    src={profileImage || userCircleIcon}
+                    src={userData?.profileImage || userCircleIcon}
                     className="w-full h-full"
                     alt="프로필 사진"
                   />
@@ -74,7 +92,7 @@ const SettingMyProfile = () => {
                       options={[
                         {
                           value: '삭제',
-                          onClick: () => {},
+                          onClick: handleProfileImageDelete,
                           icon: <img src={TrashIcon} width={16} height={16} alt="삭제" />,
                         },
                         {
@@ -89,8 +107,8 @@ const SettingMyProfile = () => {
               </div>
             </section>
             <div className="flex flex-col gap-[3.2rem]">
-              <InputSection label="이름" placeholder="박진주" disabled />
-              <InputSection label="이메일" placeholder="park@naver.com" disabled />
+              <InputSection label="이름" placeholder={userData?.name || ''} disabled />
+              <InputSection label="이메일" placeholder={userData?.email || ''} disabled />
             </div>
           </div>
           <div className="flex flex-col gap-[2.4rem]">

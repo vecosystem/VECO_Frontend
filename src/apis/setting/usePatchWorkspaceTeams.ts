@@ -7,10 +7,7 @@ import { queryKey } from '../../constants/queryKey';
 // 사이드바, 설정 - 팀 순서 변경
 const patchWorkspaceTeams = async (body: { teamIdList: number[] }): Promise<CommonResponse<{}>> => {
   try {
-    const response = await axiosInstance.patch<CommonResponse<{}>>(
-      '/api/workspace/setting/teams',
-      body
-    );
+    const response = await axiosInstance.patch('/api/workspace/setting/teams', body);
     return response.data;
   } catch (error) {
     console.error('워크스페이스 팀 순서 변경 실패', error);

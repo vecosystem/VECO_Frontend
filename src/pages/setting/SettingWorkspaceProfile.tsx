@@ -1,7 +1,15 @@
 import vecocirclenavy from '../../assets/logos/veco-circle-logo-bg-navy.svg';
 import InputSection from './components/InputSection.tsx';
+// import { useGetWorkspaceProfile } from '../../apis/setting/useGetWorkspaceProfile.ts';
 
 const SettingWorkspaceProfile = () => {
+  // TODO: 워크스페이스 프로필 조회 API 호출
+  // const { data: workspaceData } = useGetWorkspaceProfile();
+  const workspaceData = {
+    name: 'Veco',
+    workspaceUrl: 'veco.app/veco',
+  };
+
   return (
     <div className="flex w-full h-full pt-[10rem] justify-center">
       <div className="flex flex-col w-[62.8rem]">
@@ -17,8 +25,12 @@ const SettingWorkspaceProfile = () => {
               </button>
             </section>
             <div className="flex flex-col gap-[3.2rem]">
-              <InputSection label="이름" placeholder="Veco" disabled />
-              <InputSection label="URL" placeholder="veco.app/veco" disabled />
+              <InputSection label="이름" placeholder={workspaceData?.name || 'Veco'} disabled />
+              <InputSection
+                label="URL"
+                placeholder={workspaceData?.workspaceUrl || 'veco.app/veco'}
+                disabled
+              />
             </div>
           </div>
         </div>
