@@ -24,6 +24,8 @@ import {
   dummyIssueAlarmByState,
 } from '../../types/testNotiDummy';
 import type { AlarmFilter } from '../../types/alarm';
+import { usePatchAlarms } from '../../apis/alarm/usePatchAlarms';
+import { useParams } from 'react-router-dom';
 
 const TAB_LIST = ['goal', 'issue', 'external'] as const;
 type NotiTab = (typeof TAB_LIST)[number];
@@ -35,6 +37,7 @@ const FILTER_OPTIONS: Record<NotiTab, ItemFilter[]> = {
 };
 
 const NotiHome = () => {
+  const { teamId } = useParams<{ teamId: string }>(); // 팀 id api 에서 가져오기
   const [tab, setTab] = useState<NotiTab>('goal');
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
@@ -111,6 +114,43 @@ const NotiHome = () => {
     }
   };
 
+  const { mutate: patchAlarm } = usePatchAlarms();
+
+  const handleItemClick = (isRead: boolean, typeId: number, alarmId: number, pageType: string) => {
+    if (!isRead) {
+      // 읽지 않은 알림
+      // 읽음 처리 API 호출 후 상세 페이지로 이동
+      patchAlarm(
+        {
+          alarmId,
+        },
+        {
+          onSuccess: () => {
+            console.log('알림 읽음 처리 성공');
+            // 상세 페이지 새 창 열기
+            if (pageType === 'goal') {
+              window.open(`/workspace/team/${teamId}/goal/${typeId}`, '_blank');
+            } else if (pageType === 'issue') {
+              window.open(`/workspace/team/${teamId}/issue/${typeId}`, '_blank');
+            } else if (pageType === 'external') {
+              window.open(`/workspace/team/${teamId}/ext/${typeId}`, '_blank');
+            }
+          },
+        }
+      );
+    } else {
+      // 읽은 알림
+      // 상세 페이지로 이동
+      if (pageType === 'goal') {
+        window.location.href = `/workspace/team/${teamId}/goal/${typeId}`;
+      } else if (pageType === 'issue') {
+        window.location.href = `/workspace/team/${teamId}/issue/${typeId}`;
+      } else if (pageType === 'external') {
+        window.location.href = `/workspace/team/${teamId}/ext/${typeId}`;
+      }
+    }
+  };
+
   return (
     <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
       {/* 알림 아이콘/텍스트 */}
@@ -175,7 +215,7 @@ const NotiHome = () => {
                 </div>
                 {/* 리스트 아이템 */}
                 {items.map((item) => {
-                  const isRead = item.read === true;
+                  const isRead = item.isRead === true;
                   const showCheckbox = isDeleteMode;
                   const isChecked = checkItems.includes(item.alarmId);
 
@@ -190,6 +230,13 @@ const NotiHome = () => {
                         filter={filter}
                         variant={isRead ? 'read' : 'notification'}
                         deadline={item.deadline}
+                        managers={{
+                          cnt: item.managerList?.length || 0,
+                          info: item.managerList || [],
+                        }}
+                        onItemClick={() =>
+                          handleItemClick(isRead, item.typeId, item.alarmId, 'goal')
+                        }
                       />
                     );
                   }
@@ -204,6 +251,13 @@ const NotiHome = () => {
                         filter={filter}
                         variant={isRead ? 'read' : 'notification'}
                         deadline={item.deadline}
+                        managers={{
+                          cnt: item.managerList?.length || 0,
+                          info: item.managerList || [],
+                        }}
+                        onItemClick={() =>
+                          handleItemClick(isRead, item.typeId, item.alarmId, 'issue')
+                        }
                       />
                     );
                   }
@@ -217,6 +271,13 @@ const NotiHome = () => {
                       filter={filter}
                       variant={isRead ? 'read' : 'notification'}
                       deadline={item.deadline}
+                      managers={{
+                        cnt: item.managerList?.length || 0,
+                        info: item.managerList || [],
+                      }}
+                      onItemClick={() =>
+                        handleItemClick(isRead, item.typeId, item.alarmId, 'external')
+                      }
                     />
                   );
                 })}
