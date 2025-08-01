@@ -165,10 +165,8 @@ const WorkspaceGoalDetail = () => {
 
                 {/* 속성 이름 */}
                 <div className="flex relative">
-                  <div className="flex items-center">
-                    {/* 속성 항목명 */}
-                    <div className="font-body-r text-gray-600">{option}</div>
-                  </div>
+                  {/* 속성 항목명 */}
+                  <p className="font-body-r text-gray-600 max-w-[27.4rem] truncate">{option}</p>
 
                   {/* 드롭다운 오픈 */}
                   {isOpen && content?.name === '이슈' && (
