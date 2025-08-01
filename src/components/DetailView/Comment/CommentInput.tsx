@@ -24,13 +24,15 @@ const CommentInput = ({ onAdd }: CommentIntputProps) => {
 
   return (
     <div
-      className="flex flex-end items-end gap-[0.8rem] w-full h-[13rem] p-[2.4rem] bg-gray-100 rounded-lg"
+      className="absolute bottom-0 z-20 w-full flex items-end gap-[0.8rem] h-[13rem] p-[2.4rem] bg-gray-100 rounded-lg"
       style={{
         boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
       }}
     >
       {/* 댓글 입력창 영역 */}
       <textarea
+        name="commentInput"
+        id="commentInput"
         value={comment}
         onChange={handleChange}
         placeholder="댓글을 작성하세요."
