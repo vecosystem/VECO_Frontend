@@ -11,22 +11,17 @@ import {
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import React, { useState } from 'react';
 import SortableDropdown from './SortableDropdown';
-
-export interface SortableItem {
-  id: number;
-  name: string;
-  icon?: React.ReactNode;
-}
+import type { Team } from './types';
 
 interface SortableDropdownListProps {
-  items: SortableItem[];
-  renderContent: (item: SortableItem, dragProps: any, isOverlay?: boolean) => React.ReactNode;
-  onSorted?: (sortedItems: SortableItem[]) => void;
+  items: Team[];
+  renderContent: (item: Team, dragProps: any, isOverlay?: boolean) => React.ReactNode;
+  onSorted?: (sortedItems: Team[]) => void;
 }
 
 const SortableDropdownList = ({ items, renderContent, onSorted }: SortableDropdownListProps) => {
   const [list, setList] = useState(items);
-  const [activeItem, setActiveItem] = useState<SortableItem | null>(null);
+  const [activeItem, setActiveItem] = useState<Team | null>(null);
   const [overlaySize, setOverlaySize] = useState<{ width: number; height: number }>({
     width: 0,
     height: 0,
@@ -35,13 +30,13 @@ const SortableDropdownList = ({ items, renderContent, onSorted }: SortableDropdo
   const sensors = useSensors(useSensor(PointerSensor));
 
   const handleDragStart = (event: DragStartEvent) => {
-    const dragged = list.find((item) => item.id === event.active.id);
+    const dragged = list.find((item) => item.teamId === event.active.id);
     if (!dragged) return;
 
     setActiveItem(dragged);
 
     // 드래그 시작 시 DOM 요소 크기 측정
-    const node = document.querySelector(`[data-id="${dragged.id}"]`) as HTMLElement;
+    const node = document.querySelector(`[data-id="${dragged.teamId}"]`) as HTMLElement;
     if (node) {
       const { width, height } = node.getBoundingClientRect();
       setOverlaySize({ width, height });
@@ -55,8 +50,8 @@ const SortableDropdownList = ({ items, renderContent, onSorted }: SortableDropdo
       return;
     }
 
-    const oldIndex = list.findIndex((item) => item.id === active.id);
-    const newIndex = list.findIndex((item) => item.id === over.id);
+    const oldIndex = list.findIndex((item) => item.teamId === active.id);
+    const newIndex = list.findIndex((item) => item.teamId === over.id);
     const newList = arrayMove(list, oldIndex, newIndex);
     setList(newList);
     onSorted?.(newList);
@@ -70,10 +65,12 @@ const SortableDropdownList = ({ items, renderContent, onSorted }: SortableDropdo
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <SortableContext items={list.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+      <SortableContext items={list.map((i) => i.teamId)} strategy={verticalListSortingStrategy}>
         {list.map((item) => (
-          <SortableDropdown key={item.id} id={item.id}>
-            {(dragProps) => <div data-id={item.id}>{renderContent(item, dragProps, false)}</div>}
+          <SortableDropdown key={item.teamId} id={item.teamId}>
+            {(dragProps) => (
+              <div data-id={item.teamId}>{renderContent(item, dragProps, false)}</div>
+            )}
           </SortableDropdown>
         ))}
       </SortableContext>
