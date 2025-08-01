@@ -30,3 +30,11 @@ export type Member = {
   memberId: number;
   memberName: string;
 };
+
+export type Workspace = {
+  workspaceId: number;
+  name: string;
+  profileUrl: string;
+  workspaceUrl: string;
+  defaultTeamId: number;
+};
