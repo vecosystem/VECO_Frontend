@@ -12,6 +12,7 @@ export type MemberListResponse = {
   name: string;
   profileUrl: string;
   teams: Team[];
+  joinedAt: string;
 };
 
 export type TeamCreateResponse = {

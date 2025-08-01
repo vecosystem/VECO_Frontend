@@ -36,9 +36,9 @@ interface ExternalToolModalProps {
 }
 
 const ExternalToolModal = ({ onClose }: ExternalToolModalProps) => {
-  const teamId = useParams().teamId;
-  const { mutate: connectGithub } = useGetGithubConnect(Number(teamId));
-  const { mutate: connectSlack } = useGetSlackConnect(Number(teamId));
+  const teamId = Number(useParams().teamId);
+  const { mutate: connectGithub } = useGetGithubConnect(teamId);
+  const { mutate: connectSlack } = useGetSlackConnect(teamId);
   const [selected, setSelected] = useState<string | null>(null);
 
   // const handleSlackLogin = () => {
