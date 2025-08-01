@@ -34,7 +34,7 @@ const WorkspaceNameInput = ({ onUrlGenerated }: WorkspaceNameInputProps) => {
     const res = await createUrl({ workspaceName });
 
     // workspaceUrl 추출
-    const url = res.result?.workspaceUrl ?? '';
+    const url = res.result?.inviteUrl ?? '';
 
     // 에러 초기화 및 상태 업데이트
     setError('');
