@@ -7,7 +7,7 @@ export const getExternalList = async (
   paginationDto: PaginationDto
 ): Promise<ResponseExternalDto> => {
   try {
-    const { data } = await axiosInstance.get(`/api/${teamId}/externals/`, {
+    const { data } = await axiosInstance.get(`/api/teams/${teamId}/externals`, {
       params: paginationDto,
     });
 
