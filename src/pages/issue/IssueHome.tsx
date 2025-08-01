@@ -182,6 +182,7 @@ const IssueHome = () => {
                       checked={checkItems.includes(issue.id)}
                       onCheckChange={(checked) => handleCheck(issue.id, checked)}
                       filter={filter}
+                      onItemClick={() => navigate(`/workspace/team/${teamId}/issue/${issue.id}`)}
                     />
                   ))}
                 </div>

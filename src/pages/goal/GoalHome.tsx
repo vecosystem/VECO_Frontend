@@ -180,6 +180,7 @@ const GoalHome = () => {
                       checked={checkItems.includes(goal.id)}
                       onCheckChange={(checked) => handleCheck(goal.id, checked)}
                       filter={filter}
+                      onItemClick={() => navigate(`/workspace/team/${teamId}/goal/${goal.id}`)}
                     />
                   ))}
                 </div>

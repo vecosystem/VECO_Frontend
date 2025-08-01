@@ -50,7 +50,7 @@ const ExternalHome = () => {
   const params = useMemo(
     () => ({
       // 우선 기본값 설정
-      cursor: '-1',
+      // cursor: '-1',
       size: 10,
       query: filterToQuery(filter),
     }),
@@ -196,6 +196,7 @@ const ExternalHome = () => {
                       checked={checkItems.includes(externals.id)}
                       onCheckChange={(checked) => handleCheck(externals.id, checked)}
                       filter={filter}
+                      onItemClick={() => navigate(`/workspace/team/${teamId}/ext/${externals.id}`)}
                     />
                   ))}
                 </div>
