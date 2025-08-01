@@ -33,6 +33,7 @@ const ArrowDropdown = ({
       style={{ boxShadow: '0px 4px 12px 0px rgba(0, 0, 0, 0.15)' }}
       className={`absolute z-30 top-0 left-0 flex flex-col w-[27.4rem]
       border border-gray-400 bg-white rounded-[0.4rem] ${className}`}
+      onClick={(e) => e.stopPropagation()}
     >
       <div
         className={`flex border-b border-gray-200 justify-between items-center py-[0.4rem] ps-[1.2rem] pe-[0.8rem]`}
