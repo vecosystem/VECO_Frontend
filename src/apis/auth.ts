@@ -34,7 +34,7 @@ export const redirectToGoogleLogin = () => {
   }
 
   try {
-    window.location.href = `${baseURL}/oauth2/authorization/google/google`;
+    window.location.href = `${baseURL}/oauth2/authorization/google`;
   } catch (error) {
     console.error('Google 로그인 리다이렉트 실패:', error);
     alert('Google 로그인 중 문제가 발생했습니다.');
