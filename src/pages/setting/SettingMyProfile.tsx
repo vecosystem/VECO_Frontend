@@ -36,7 +36,7 @@ const SettingMyProfile = () => {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append('profile', file);
+    formData.append('image', file);
 
     // TODO: API 호출
   };

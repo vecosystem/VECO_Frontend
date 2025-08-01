@@ -38,3 +38,15 @@ export type Workspace = {
   workspaceUrl: string;
   defaultTeamId: number;
 };
+
+export type MyProfile = {
+  memberId: number;
+  name: string;
+  email: string;
+  profileImage: string;
+};
+
+export type MyProfileImage = {
+  memberId: number;
+  imageUrl: string;
+};
