@@ -1,8 +1,8 @@
-// GoalDetail.tsx
-// 목표 상세페이지
+// WorkspaceGoalDetail.tsx
+// 워크스페이스 전체 팀 목표 상세페이지
 
 import { useState } from 'react';
-import DetailHeader from '../../components/DetailView/DetailHeader';
+import WorkspaceDetailHeader from '../../components/DetailView/WorkspaceDetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
 import CompletionButton from '../../components/DetailView/CompletionButton';
@@ -25,7 +25,7 @@ import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
 import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
 
-const GoalDetail = () => {
+const WorkspaceGoalDetail = () => {
   const [title, setTitle] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
 
@@ -72,7 +72,7 @@ const GoalDetail = () => {
   return (
     <div className="flex flex-1 flex-col gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem] pb-[5.3rem]">
       {/* 상세페이지 헤더 */}
-      <DetailHeader defaultTitle="목표를 생성하세요" title={title} />
+      <WorkspaceDetailHeader defaultTitle="목표를 생성하세요" title={title} />
 
       {/* 상세페이지 메인 */}
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full h-full">
@@ -198,4 +198,4 @@ const GoalDetail = () => {
   );
 };
 
-export default GoalDetail;
+export default WorkspaceGoalDetail;

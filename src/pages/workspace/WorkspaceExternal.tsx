@@ -33,6 +33,11 @@ const WorkspaceExternal = () => {
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(':extId');
+  };
 
   // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
   const dummyExternalGroups = useMemo<ExternalFilter[]>(() => {
@@ -142,13 +147,12 @@ const WorkspaceExternal = () => {
                       </div>
                       <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
                     </div>
-                    {/* TODO : 추가 버튼 id 및 유형 상태 전달 */}
+                    {/* 추가 버튼 */}
                     <img
                       src={PlusIcon}
                       className="inline-block w-[2.4rem] h-[2.4rem]"
                       alt=""
-                      onClick={() => navigate('/workspace/team/default/ext/:extId')}
-                      // onClick={() => navigate(`/workspace/team/default/ext/${extId}`)}
+                      onClick={handleClick}
                     />
                   </div>
                   {/* 각 유형 별 요소 */}

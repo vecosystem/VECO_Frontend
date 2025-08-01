@@ -2,13 +2,13 @@
  * PropertyItem.tsx
  * 상세페이지 내 속성 항목 컴포넌트
  *
- * @todo
- * - 화면 가로 길이 줄여도 줄어들지 않게 처리
- *
  * @description
  * - 속성 항목 수정은 상세페이지 내의 작성 완료 버튼 클릭 여부에 영향을 받지 않도록 구현.
  *   (즉, 속성은 언제나 수정 가능함)
- * - 기한 드롭다운은 이 컴포넌트로 관리하지 않음 (별도로 필요한 상세페이지에서 구현)
+ *
+ * @todo
+ * - 현재는 '기한' 속성과 '이슈', '목표' 속성의 드롭다운은 이 컴포넌트에서 관리하지 않음.
+ * - 추후 더 나은 컴포넌트 연결 방식 고민해보고 리팩토링 예정.
  */
 
 import { useState } from 'react';
@@ -26,8 +26,8 @@ const PropertyItem = ({ defaultValue, options, iconMap, getColor }: PropertyItem
   const initialValue = defaultValue && iconMap && iconMap[defaultValue] ? defaultValue : options[0];
 
   const [value, setValue] = useState(defaultValue);
-  const [isOpen, setIsOpen] = useState(false);
   const [icon, setIcon] = useState(iconMap ? iconMap[initialValue] : undefined);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = (option: string) => {
     setValue(option);
@@ -37,7 +37,8 @@ const PropertyItem = ({ defaultValue, options, iconMap, getColor }: PropertyItem
 
   return (
     <div
-      className={`flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200`}
+      onClick={() => setIsOpen(!isOpen)}
+      className={`flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200 cursor-pointer`}
     >
       {/* 속성 아이콘 */}
       {getColor ? (
@@ -54,13 +55,11 @@ const PropertyItem = ({ defaultValue, options, iconMap, getColor }: PropertyItem
       )}
 
       {/* 속성 이름 */}
-      <div className={`flex relative cursor-pointer`}>
-        <span className="flex items-center" onClick={() => setIsOpen(!isOpen)}>
-          {/* 속성 항목명 */}
-          <div className="font-body-r text-gray-600">{value}</div>
-        </span>
+      <div className={`flex relative`}>
+        {/* 속성 항목명 */}
+        <p className="font-body-r text-gray-600 max-w-[27.4rem] truncate">{value}</p>
 
-        {/* 속성 항목명을 눌러 드롭다운 오픈 */}
+        {/* 드롭다운 오픈 */}
         {isOpen && (
           <Dropdown
             value={value}

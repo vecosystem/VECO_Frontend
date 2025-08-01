@@ -27,6 +27,10 @@ const WorkspaceIssue = () => {
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
+  const handleClick = () => {
+    navigate(':issueId');
+  };
+
   // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
   const dimmyIssueGroups = useMemo<IssueFilter[]>(() => {
     switch (filter) {
@@ -128,13 +132,12 @@ const WorkspaceIssue = () => {
                       </div>
                       <div className="text-gray-500 ml-[0.8rem]">{items.length}</div>
                     </div>
-                    {/* TODO : 추가 버튼 id 및 유형 상태 전달 */}
+                    {/* 추가 버튼 */}
                     <img
                       src={PlusIcon}
                       className="inline-block w-[2.4rem] h-[2.4rem]"
                       alt=""
-                      onClick={() => navigate('/workspace/team/default/issue/:issueId')}
-                      // onClick={() => navigate(`/workspace/team/default/issue/${issueId}`)}
+                      onClick={handleClick}
                     />
                   </div>
                   {/* 각 유형 별 요소 */}
