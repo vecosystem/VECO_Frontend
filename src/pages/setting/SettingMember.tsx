@@ -2,6 +2,7 @@ import TeamHeader from './components/TeamHeader.tsx';
 import MemberItem from './components/MemberItem.tsx';
 import { useState } from 'react';
 import MemberInviteModal from './components/modal/MemberInviteModal.tsx';
+import { LOCAL_STORAGE_KEY } from '../../constants/key.ts';
 // import { useGetWorkspaceMembers } from '../../apis/setting/useGetWorkspaceMembers.ts';
 
 const DUMMY_MEMBERS = [
@@ -74,6 +75,8 @@ const DUMMY_MEMBERS = [
 
 const SettingMember = () => {
   // const { data: members } = useGetWorkspaceMembers();
+  const inviteUrl = localStorage.getItem(LOCAL_STORAGE_KEY.inviteUrl) || '';
+  const invitePassword = localStorage.getItem(LOCAL_STORAGE_KEY.invitePassword) || '';
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -135,8 +138,10 @@ const SettingMember = () => {
       ))}
       {isModalOpen && (
         <MemberInviteModal
-          url={'https://veco-eight.vercel.app/invite'}
-          password={'1234'}
+          // memberName={members[0].name || ''}
+          memberName={''}
+          url={inviteUrl}
+          password={invitePassword}
           onClick={() => setIsModalOpen(!isModalOpen)}
         />
       )}
