@@ -19,7 +19,7 @@ const postWorkspaceTeam = async (
       '/api/workspace/setting/teams',
       { name: name, memberId: memberId }
     );
-    if (!response.data.result) throw new Error('팀 생성 실패');
+    if (!response.data.result) return Promise.reject(response);
     return response.data.result;
   } catch (error) {
     console.error('워크스페이스 팀 생성 실패', error);
