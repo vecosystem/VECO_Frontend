@@ -81,6 +81,12 @@ const WorkspaceExternal = () => {
     }
   };
 
+  const handleDeleteItem = () => {
+    // TODO: 실제 삭제 로직 구현
+    setIsDeleteMode(false);
+    setCheckedIds([]);
+  };
+
   // 그룹핑
   const grouped: GroupedExternal[] = dummyExternalGroups.map((i) => ({
     key: i.filterName,
@@ -113,7 +119,19 @@ const WorkspaceExternal = () => {
           onSelectAllChange={handleSelectAll}
           dropdownProps={{ isOpen, content, closeDropdown }}
         />
-        {isModalOpen && modalContent && <Modal subtitle={modalContent.name} />}
+        {isModalOpen && modalContent && (
+          <Modal
+            title="알림"
+            subtitle="복구할 수 없습니다. 정말 삭제하시겠습니까?"
+            buttonText="삭제"
+            buttonColor="bg-error-400"
+            // 삭제 요소 전달
+            onClick={() => {
+              console.log('삭제할 ID 리스트:', checkItems);
+              handleDeleteItem();
+            }}
+          />
+        )}{' '}
         {isEmpty ? (
           <div className="flex flex-1 items-center justify-center">
             <div className="font-body-r">외부 연동이 없습니다</div>
