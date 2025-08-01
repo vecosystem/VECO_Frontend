@@ -14,16 +14,35 @@ import pr2 from '../../assets/icons/pr-2-sm.svg';
 import pr3 from '../../assets/icons/pr-3-sm.svg';
 import pr4 from '../../assets/icons/pr-4-sm.svg';
 import IcProfile from '../../assets/icons/user-circle-sm.svg';
-// import IcDate from '../../assets/icons/date-lg.svg';
-// import IcIssue from '../../assets/icons/issue.svg';
+import IcCalendar from '../../assets/icons/date-lg.svg';
+import IcIssue from '../../assets/icons/issue.svg';
 
 import { getStatusColor } from '../../utils/listItemUtils';
 import { statusLabelToCode } from '../../types/detailitem';
 import CommentSection from '../../components/DetailView/Comment/CommentSection';
+import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
+import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
+import { formatDateDot } from '../../utils/formatDate';
+import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
 
 const GoalDetail = () => {
   const [title, setTitle] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
+
+  // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
+  const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]);
+
+  const [option, setOption] = useState<string>('이슈');
+  const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
+  const { openDropdown, closeDropdown } = useDropdownActions();
+
+  // '기한' 속성의 텍스트(시작일, 종료일) 결정하는 함수
+  const getDisplayText = () => {
+    const [start, end] = selectedDate;
+    if (start && end) return `${formatDateDot(start)} - ${formatDateDot(end)}`; // 시작일과 종료일 둘 다 있을 경우
+    if (start || end) return formatDateDot(start ?? end!); // 날짜 하나만 선택된 경우
+    return '기한'; // 날짜 선택 안 된 경우: default로 '기한' 글씨가 그대로 보이도록
+  };
 
   // '우선순위' 속성 아이콘 매핑
   const priorityIconMap = {
@@ -58,7 +77,7 @@ const GoalDetail = () => {
       {/* 상세페이지 메인 */}
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full h-full">
         {/* 상세페이지 좌측 영역 - 제목 & 상세설명 & 댓글 */}
-        <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)]">
+        <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)] h-full">
           {/* 상세페이지 제목 */}
           <DetailTitle
             defaultTitle="목표를 생성하세요"
@@ -111,19 +130,59 @@ const GoalDetail = () => {
               </div>
 
               {/* (4) 기한 */}
-              {/* <PropertyItem defaultValue="기한" iconMap={{ 기한: dateIconMap }} /> */}
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openDropdown({ name: 'date' });
+                }}
+                className="flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200 cursor-pointer"
+              >
+                {/* '기한' 속성 아이콘 */}
+                <img src={IcCalendar} alt="date" />
+                <div className="relative">
+                  {/* '기한' 항목명 - 날짜 설정하면 반영됨 */}
+                  <span className={`font-body-r text-gray-600`}>{getDisplayText()}</span>
+                  {/* 달력 드롭다운 오픈 */}
+                  {isOpen && content?.name === 'date' && (
+                    <CalendarDropdown
+                      selectedDate={selectedDate}
+                      onSelect={(date) => setSelectedDate(date)}
+                    />
+                  )}
+                </div>
+              </div>
 
               {/* (5) 이슈 */}
-              {/**
-               * @todo
-               * - 이슈 많아질 경우 '외 n개'로 축약되게 하기
-               */}
-              {/*
-                <PropertyItem
-                  defaultValue="이슈"
-                  iconMap={{ 이슈: issueIconMap }}
-                />
-              */}
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openDropdown({ name: '이슈' });
+                }}
+                className={`flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200 cursor-pointer`}
+              >
+                {/* 속성 아이콘 */}
+                <img src={IcIssue} alt="이슈" />
+
+                {/* 속성 이름 */}
+                <div className="flex relative">
+                  {/* 속성 항목명 */}
+                  <p className="font-body-r text-gray-600 max-w-[27.4rem] truncate">{option}</p>
+
+                  {/* 드롭다운 오픈 */}
+                  {isOpen && content?.name === '이슈' && (
+                    <ArrowDropdown
+                      defaultValue={'이슈'}
+                      options={[
+                        '기능 정의: 구현할 핵심 기능과 어쩌구 저쩌구 텍스트가 길어지면 이렇게 표시',
+                        '와이어프레임 디자인',
+                        '컴포넌트 정리',
+                      ]}
+                      onSelect={(value: string) => setOption(value)}
+                      onClose={closeDropdown}
+                    />
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
