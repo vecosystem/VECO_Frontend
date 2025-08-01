@@ -14,6 +14,7 @@ import WorkspaceExternal from '../pages/workspace/WorkspaceExternal.tsx';
 import GoalDetail from '../pages/goal/GoalDetail.tsx';
 import IssueDetail from '../pages/issue/IssueDetail.tsx';
 import SettingWorkspaceProfile from '../pages/setting/SettingWorkspaceProfile.tsx';
+import ExternalDetail from '../pages/external/ExternalDetail.tsx';
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -70,7 +71,7 @@ export const protectedRoutes: RouteObject[] = [
           { path: 'issue', element: <IssueHome /> },
           { path: 'issue/:issueId', element: <IssueDetail /> },
           { path: 'ext', element: <ExternalHome /> },
-          { path: 'ext/:extId', element: <div>External_Detail</div> },
+          { path: 'ext/:extId', element: <ExternalDetail /> },
         ],
       },
     ],
