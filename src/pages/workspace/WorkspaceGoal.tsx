@@ -16,15 +16,16 @@ import {
 import type { GoalFilter, GroupedGoal } from '../../types/goal';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
 const WorkspaceGoal = () => {
+  const { teamId } = useParams<{ teamId: string }>();
+  const navigate = useNavigate();
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
-  const navigate = useNavigate();
 
   const handleClick = () => {
     navigate(':goalId');
@@ -69,6 +70,12 @@ const WorkspaceGoal = () => {
     }
   };
 
+  const handleDeleteItem = () => {
+    // TODO: 실제 삭제 로직 구현
+    setIsDeleteMode(false);
+    setCheckedIds([]);
+  };
+
   const grouped: GroupedGoal[] = dummyGoalGroups.map((g) => ({
     key: g.filterName,
     items: g.goals,
@@ -97,7 +104,19 @@ const WorkspaceGoal = () => {
           onSelectAllChange={handleSelectAll}
           dropdownProps={{ isOpen, content, closeDropdown }}
         />
-        {isModalOpen && modalContent && <Modal subtitle={modalContent.name} />}
+        {isModalOpen && modalContent && (
+          <Modal
+            title="알림"
+            subtitle="복구할 수 없습니다. 정말 삭제하시겠습니까?"
+            buttonText="삭제"
+            buttonColor="bg-error-400"
+            // 삭제 요소 전달
+            onClick={() => {
+              console.log('삭제할 ID 리스트:', checkItems);
+              handleDeleteItem();
+            }}
+          />
+        )}{' '}
         {isEmpty ? (
           <div className="flex flex-1 items-center justify-center">
             <div className="font-body-r">목표를 생성하세요</div>
@@ -145,6 +164,7 @@ const WorkspaceGoal = () => {
                       checked={checkItems.includes(goal.id)}
                       onCheckChange={(checked) => handleCheck(goal.id, checked)}
                       filter={filter}
+                      onItemClick={() => navigate(`/workspace/team/${teamId}/ext/${goal.id}`)}
                     />
                   ))}
                 </div>

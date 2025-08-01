@@ -4,7 +4,7 @@ import type { StatusCode } from './listItem';
 export const statusLabelToCode: Record<string, StatusCode> = {
   없음: 'NONE',
   '해야할 일': 'TODO',
-  진행중: 'DOING',
+  진행중: 'IN_PROGRESS',
   완료: 'FINISH',
   검토: 'REVIEW',
 };

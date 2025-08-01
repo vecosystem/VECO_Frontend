@@ -12,51 +12,59 @@ import useCheckItems from '../../hooks/useCheckItems';
 import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
 import Modal from '../../components/Modal/Modal';
-import type { ExternalFilter, GroupedExternal } from '../../types/external';
-import {
-  dummyExternalToolExternalGroups,
-  dummyGoalTitleExternalGroups,
-  dummyManagerExternalGroups,
-  dummyPriorityExternalGroups,
-  dummyStatusExternalGroups,
-} from '../../types/testDummy';
+import type { GroupedExternal } from '../../types/external';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { ExternalItem } from '../../components/ListView/ExternalItem';
 import ExternalToolArea from './components/ExternalToolArea';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGetExternalList } from '../../apis/external/useGetExternalList';
+import { useDeleteExternals } from '../../apis/external/useDeleteExternals';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
 const ExternalHome = () => {
+  const { teamId } = useParams<{ teamId: string }>();
+  const navigate = useNavigate();
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
-  const navigate = useNavigate();
 
   const handleClick = () => {
     navigate(':extId');
   };
 
-  // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
-  const dummyExternalGroups = useMemo<ExternalFilter[]>(() => {
+  const filterToQuery = (filter: ItemFilter) => {
     switch (filter) {
       case '상태':
-        return dummyStatusExternalGroups;
+        return 'state';
       case '우선순위':
-        return dummyPriorityExternalGroups;
+        return 'priority';
       case '담당자':
-        return dummyManagerExternalGroups;
+        return 'manager';
       case '목표':
-        return dummyGoalTitleExternalGroups;
+        return 'goal';
       case '외부':
-        return dummyExternalToolExternalGroups;
+        return 'external';
       default:
-        return [];
+        return '';
     }
-  }, [filter]);
+  };
 
-  const allExternalsFlat = dummyExternalGroups.flatMap((i) => i.externals);
+  const params = useMemo(
+    () => ({
+      // 우선 기본값 설정
+      // cursor: '-1',
+      size: 10,
+      query: filterToQuery(filter),
+    }),
+    [filter]
+  );
+
+  // isLoading, isError 로직 추가
+  const { data } = useGetExternalList(teamId ?? '', params);
+  const externalGroups = data?.result?.data ?? [];
+  const allExternalsFlat = externalGroups.flatMap((g) => g.externals);
 
   const {
     checkedIds: checkItems,
@@ -81,10 +89,26 @@ const ExternalHome = () => {
     }
   };
 
+  const { mutate: deleteGoalItem } = useDeleteExternals();
+  const handleDeleteItem = () => {
+    deleteGoalItem(
+      {
+        teamId: teamId ?? '',
+        externalIds: checkItems.map(Number),
+      },
+      {
+        onSuccess: () => {
+          setIsDeleteMode(false);
+          setCheckedIds([]);
+        },
+      }
+    );
+  };
+
   // 그룹핑
-  const grouped: GroupedExternal[] = dummyExternalGroups.map((i) => ({
-    key: i.filterName,
-    items: i.externals,
+  const grouped: GroupedExternal[] = externalGroups.map((e) => ({
+    key: e.filterName,
+    items: e.externals,
   }));
 
   const sortedGrouped = getSortedGrouped(filter, grouped);
@@ -102,7 +126,7 @@ const ExternalHome = () => {
           filter={filter}
           isDeleteMode={isDeleteMode}
           isAllChecked={isAllChecked}
-          showSelectAll={dummyExternalGroups.length > 0}
+          showSelectAll={grouped.some(({ items }) => items.length > 0)}
           filterOptions={[...FILTER_OPTIONS]}
           onFilterClick={() => openDropdown({ name: 'filter' })}
           onFilterSelect={(option) => {
@@ -113,7 +137,19 @@ const ExternalHome = () => {
           onSelectAllChange={handleSelectAll}
           dropdownProps={{ isOpen, content, closeDropdown }}
         />
-        {isModalOpen && modalContent && <Modal subtitle={modalContent.name} />}
+        {isModalOpen && modalContent && (
+          <Modal
+            title="알림"
+            subtitle="복구할 수 없습니다. 정말 삭제하시겠습니까?"
+            buttonText="삭제"
+            buttonColor="bg-error-400"
+            // 삭제 요소 전달
+            onClick={() => {
+              console.log('삭제할 ID 리스트:', checkItems);
+              handleDeleteItem();
+            }}
+          />
+        )}
         {isEmpty ? (
           <div className="flex flex-1 items-center justify-center">
             <div className="font-body-r">외부 연동이 없습니다</div>
@@ -163,6 +199,7 @@ const ExternalHome = () => {
                       checked={checkItems.includes(externals.id)}
                       onCheckChange={(checked) => handleCheck(externals.id, checked)}
                       filter={filter}
+                      onItemClick={() => navigate(`/workspace/team/${teamId}/ext/${externals.id}`)}
                     />
                   ))}
                 </div>

@@ -7,6 +7,11 @@ export type Deadline = {
   end: string;
 };
 
+export type Goal = {
+  id: number;
+  title: string;
+};
+
 export type ManagerInfo = {
   profileUrl: string;
   name: string;
@@ -21,10 +26,10 @@ export type Issue = {
   id: number;
   name: string;
   title: string;
-  status?: string;
+  state?: string;
   priority?: string;
-  goaltitle?: string;
-  deadline: Deadline;
+  goal?: Goal;
+  deadline: Deadline | string;
   managers?: Manager;
 };
 
@@ -34,6 +39,11 @@ export type IssueFilter = {
   filterName: string;
   dataCnt: number;
   issues: Issue[];
+};
+
+export type RequestIssueListDto = {
+  teamId: string;
+  issueIds?: number[];
 };
 
 export type ResponseIssueDto = CursorBasedResponse<IssueFilter[]>;

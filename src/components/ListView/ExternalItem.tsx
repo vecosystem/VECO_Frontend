@@ -48,6 +48,7 @@ export const ExternalItem = (props: Partial<ExternalItemProps>) => {
 
   const {
     variant = 'default',
+    onItemClick,
     showCheckbox,
     checked,
     onCheckChange,
@@ -65,16 +66,21 @@ export const ExternalItem = (props: Partial<ExternalItemProps>) => {
   const displayFields = getFilter(filter);
 
   const handleItemClick = (e: React.MouseEvent) => {
-    if (!showCheckbox) return;
+    if (!showCheckbox) {
+      onItemClick?.(e);
+      return;
+    }
     if ((e.target as HTMLElement).closest('label')) return;
     onCheckChange?.(!checked);
   };
 
-  const dateColor = variant === 'notification' ? (checked ? '' : 'text-red-400') : '';
-
+  const dateColor = variant === 'notification' ? 'text-error-400' : '';
   return (
     <div
-      className={`font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem] ${showCheckbox && checked ? 'bg-gray-300' : ''}`}
+      className={`
+        font-body-r flex justify-between items-center h-[5.6rem] px-[3.2rem] -mx-[3.2rem]
+        ${checked ? 'bg-gray-300' : variant === 'read' ? 'bg-gray-200' : ''}
+      `}
       onClick={handleItemClick}
       tabIndex={showCheckbox ? 0 : -1}
       style={{ cursor: showCheckbox ? 'pointer' : 'default' }}
@@ -111,7 +117,7 @@ export const ExternalItem = (props: Partial<ExternalItemProps>) => {
       </div>
       <div className="flex gap-[3.2rem] items-center">
         {/* 상태 */}
-        {displayFields.includes('status') && (
+        {displayFields.includes('state') && (
           <div className="flex gap-[0.8rem] items-center">
             {getStatusIcon(status)}
             <div className="truncate">{STATUS_LABELS[status]}</div>
@@ -136,7 +142,11 @@ export const ExternalItem = (props: Partial<ExternalItemProps>) => {
         {/* 기한 */}
         <div className="flex gap-[0.8rem] items-center whitespace-nowrap">
           <img src={dateIcon} alt="date" className="w-[1.6rem] h-[1.6rem] m-[0.4rem]" />
-          <div className={`${dateColor}`}>{formatGoalDate(deadline?.start, deadline?.end)}</div>
+          <div className={dateColor}>
+            {typeof deadline === 'string'
+              ? formatGoalDate(deadline, deadline)
+              : formatGoalDate(deadline.start, deadline.end)}
+          </div>
         </div>
         {/* 담당자 */}
         {displayFields.includes('manage') && <ManagerAvatar managers={managers.info} />}

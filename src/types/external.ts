@@ -24,7 +24,7 @@ export type External = {
   status?: string;
   priority?: string;
   goaltitle?: string;
-  deadline: Deadline;
+  deadline: Deadline | string;
   managers?: Manager;
   externalTool?: string;
 };
@@ -35,6 +35,11 @@ export type ExternalFilter = {
   filterName: string;
   dataCnt: number;
   externals: External[];
+};
+
+export type RequestExternalListDto = {
+  teamId: string;
+  externalIds?: number[];
 };
 
 export type ResponseExternalDto = CursorBasedResponse<ExternalFilter[]>;
