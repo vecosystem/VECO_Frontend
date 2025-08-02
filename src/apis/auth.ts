@@ -6,13 +6,7 @@ import type { ReIssueTokenResponse } from '../types/auth';
  * - pages/onboarding/GoogleLoginRedirect.tsx
  */
 export const postReIssueAccessToken = async (): Promise<string> => {
-  const { data }: { data: ReIssueTokenResponse } = await axiosInstance.post(
-    '/api/token/reissue',
-    null,
-    {
-      withCredentials: true, // 쿠키 포함 (refreshToken 전송)
-    }
-  );
+  const { data }: { data: ReIssueTokenResponse } = await axiosInstance.post('/api/token/reissue');
 
   if (!data.result?.accessToken) {
     throw new Error('accessToken 재발급 실패');
