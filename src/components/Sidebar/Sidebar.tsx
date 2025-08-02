@@ -13,15 +13,15 @@ const Sidebar = () => {
   const teams = [
     {
       teamId: 2,
-      name: 'Team1',
-      profileUrl: vecocirclewhite,
+      teamName: 'Team1',
+      teamImageUrl: vecocirclewhite,
       memberCount: 2,
       createdAt: '2025-01-01',
     },
     {
       teamId: 3,
-      name: 'Team2',
-      profileUrl: vecocirclewhite,
+      teamName: 'Team2',
+      teamImageUrl: vecocirclewhite,
       memberCount: 2,
       createdAt: '2025-01-01',
     },

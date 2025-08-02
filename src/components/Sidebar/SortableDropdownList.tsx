@@ -11,7 +11,7 @@ import {
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import React, { useState } from 'react';
 import SortableDropdown from './SortableDropdown';
-import type { Team } from './types';
+import type { Team } from '../../types/setting';
 
 interface SortableDropdownListProps {
   items: Team[];
