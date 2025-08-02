@@ -19,9 +19,9 @@ export type Goal = {
   id: number;
   name: string;
   title: string;
-  status?: string;
+  state?: string;
   priority?: string;
-  deadline: Deadline;
+  deadline: Deadline | string;
   managers?: Manager;
 };
 
@@ -31,6 +31,11 @@ export type GoalFilter = {
   filterName: string;
   dataCnt: number;
   goals: Goal[];
+};
+
+export type RequestGoalListDto = {
+  teamId: string;
+  goalIds?: number[];
 };
 
 export type ResponseGoalDto = CursorBasedResponse<GoalFilter[]>;

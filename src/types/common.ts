@@ -1,8 +1,8 @@
-export type CommonResponse<T> = {
+export type CommonResponse<T = null> = {
   isSuccess: boolean;
   code: string;
   message: string;
-  result: T;
+  result?: T;
 };
 
 export type CursorBasedResponse<T> = CommonResponse<{
@@ -11,3 +11,9 @@ export type CursorBasedResponse<T> = CommonResponse<{
   nextCursor: string | null;
   pageSize: number;
 }>;
+
+export type PaginationDto = {
+  cursor?: string;
+  size?: number;
+  query?: string;
+};

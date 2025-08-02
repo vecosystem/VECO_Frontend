@@ -14,6 +14,7 @@ const getGithubConnect = async (teamId: number): Promise<GetGithubConnectRespons
       `/github/connect`,
       { params: { teamId: teamId } }
     );
+    if (!response.data.result) return Promise.reject(response);
     return response.data.result;
   } catch (error) {
     console.error('Github 연동 실패', error);

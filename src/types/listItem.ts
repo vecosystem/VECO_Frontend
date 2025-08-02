@@ -3,11 +3,11 @@ import type { Goal } from './goal';
 import type { Issue } from './issue';
 
 // 상태 코드
-export const STATUS_CODES = ['NONE', 'DOING', 'TODO', 'FINISH', 'REVIEW', 'DELETE'] as const;
+export const STATUS_CODES = ['NONE', 'IN_PROGRESS', 'TODO', 'FINISH', 'REVIEW', 'DELETE'] as const;
 export type StatusCode = (typeof STATUS_CODES)[number];
 export const STATUS_LABELS: Record<StatusCode, string> = {
   NONE: '없음',
-  DOING: '진행중',
+  IN_PROGRESS: '진행중',
   TODO: '해야할 일',
   FINISH: '완료',
   REVIEW: '검토',
@@ -49,7 +49,7 @@ export const FILTER_MAP = {
 export type ItemFilter = keyof typeof FILTER_MAP;
 
 // 공통 타입
-export type DisplayField = 'status' | 'priority' | 'deadline' | 'manage' | 'goal' | 'external';
+export type DisplayField = 'state' | 'priority' | 'deadline' | 'manage' | 'goal' | 'external';
 
 // 공통 props
 export interface BaseItemProps {
@@ -58,16 +58,15 @@ export interface BaseItemProps {
   onCheckChange?: (checked: boolean) => void;
   displayFields?: DisplayField[];
   filter?: ItemFilter;
+  variant?: 'default' | 'notification' | 'read';
+  onItemClick?: (e: React.MouseEvent) => void; // 외부 클릭 이벤트
 }
 
-export interface GoalItemProps extends Goal, BaseItemProps {
-  variant?: 'default' | 'notification';
-}
+export const ALARM_TYPES = ['GOAL', 'ISSUE', 'EXTERNAL'] as const;
+export type AlarmType = (typeof ALARM_TYPES)[number];
 
-export interface IssueItemProps extends Issue, BaseItemProps {
-  variant?: 'default' | 'notification';
-}
+export interface GoalItemProps extends Goal, BaseItemProps {}
 
-export interface ExternalItemProps extends External, BaseItemProps {
-  variant?: 'default' | 'notification';
-}
+export interface IssueItemProps extends Issue, BaseItemProps {}
+
+export interface ExternalItemProps extends External, BaseItemProps {}
