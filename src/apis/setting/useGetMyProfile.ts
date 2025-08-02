@@ -1,10 +1,10 @@
 import { axiosInstance } from '../axios';
-import type { MyProfile } from '../../types/setting';
+import type { MyProfileResponse } from '../../types/setting';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '../../constants/queryKey';
 
 // 설정 - 나의 프로필 조회
-const getMyProfile = async (): Promise<MyProfile> => {
+const getMyProfile = async (): Promise<MyProfileResponse> => {
   try {
     const response = await axiosInstance.get('/api/workspace/setting/my-profile');
     return response.data.result;
