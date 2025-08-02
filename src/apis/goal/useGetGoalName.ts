@@ -8,6 +8,7 @@ const getGoalName = async (teamId: number): Promise<string> => {
     const response = await axiosInstance.get<CommonResponse<string>>(
       `/api/teams/${teamId}/goal-name`
     );
+    if (!response.data.result) return Promise.reject(response);
     return response.data.result;
   } catch (error) {
     console.error('생성될 목표 이름 조회 실패', error);

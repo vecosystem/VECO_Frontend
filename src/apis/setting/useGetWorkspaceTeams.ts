@@ -24,6 +24,7 @@ const getWorkspaceTeams = async (
       '/api/workspace/setting/teams',
       hasPagination ? { params: { page: page, size: size } } : {}
     );
+    if (!response.data.result) return Promise.reject(response);
     return response.data.result;
   } catch (error) {
     console.error('워크스페이스 팀 조회 실패', error);

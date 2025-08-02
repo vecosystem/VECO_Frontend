@@ -4,6 +4,7 @@ import { useState } from 'react';
 import TeamCreateModal from './components/modal/TeamCreateModal.tsx';
 // import { useInView } from 'react-intersection-observer';
 // import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams.ts';
+// import TeamItemSkeleton from './components/TeamItemSkeleton.tsx';
 
 const DUMMY_TEAMS = [
   {
@@ -39,7 +40,16 @@ const DUMMY_TEAMS = [
 const SettingTeam = () => {
   // TODO: 팀 목록 조회 API 연동
   // const { ref, inView } = useInView();
-  // const { data: teams, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetWorkspaceTeams();
+  // const {
+  //   data: teams,
+  //   fetchNextPage,
+  //   hasNextPage,
+  //   isFetchingNextPage,
+  //   isLoading,
+  // } = useGetWorkspaceTeams();
+  // const allTeams = teams?.pages.flatMap((page) => page.teamList) || [];
+  // const firstTeam = allTeams[0];
+  // const restTeams = allTeams.slice(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // useEffect(() => {
@@ -55,6 +65,38 @@ const SettingTeam = () => {
         onClick={() => setIsModalOpen(!isModalOpen)}
       />
       <hr className={`w-full text-gray-300`} />
+      {/*{isLoading ? (*/}
+      {/*  <TeamItemSkeleton />*/}
+      {/*) : (*/}
+      {/*  <>*/}
+      {/*    {firstTeam && (*/}
+      {/*      <TeamItem*/}
+      {/*        teamImageUrl={firstTeam.teamImageUrl}*/}
+      {/*        teamName={firstTeam.teamName}*/}
+      {/*        memberCount={firstTeam.memberCount}*/}
+      {/*        createdAt={firstTeam.createdAt}*/}
+      {/*      />*/}
+      {/*    )}*/}
+      {/*    <hr className={`w-full text-gray-300 mb-[2.4rem]`} />*/}
+      {/*    {restTeams &&*/}
+      {/*      restTeams.map((team, index) => (*/}
+      {/*        <TeamItem*/}
+      {/*          teamImageUrl={team.teamImageUrl}*/}
+      {/*          key={index}*/}
+      {/*          teamName={team.teamName}*/}
+      {/*          memberCount={team.memberCount}*/}
+      {/*          createdAt={team.createdAt}*/}
+      {/*          className={`mb-[3.2rem]`}*/}
+      {/*        />*/}
+      {/*      ))}*/}
+      {/*  </>*/}
+      {/*)}*/}
+      {/*{isFetchingNextPage && (*/}
+      {/*  <>*/}
+      {/*    <TeamItemSkeleton />*/}
+      {/*    <TeamItemSkeleton />*/}
+      {/*  </>*/}
+      {/*)}*/}
       <TeamItem
         teamImageUrl={DUMMY_TEAMS[0].teamImageUrl}
         teamName={DUMMY_TEAMS[0].teamName}
@@ -62,7 +104,7 @@ const SettingTeam = () => {
         createdAt={DUMMY_TEAMS[0].createdAt}
         className={`py-[2.4rem]`}
       />
-      <hr className={`w-full text-gray-300 mb-[2.4rem]`} />
+
       {DUMMY_TEAMS.slice(1).map((team, index) => (
         <TeamItem
           teamImageUrl={team.teamImageUrl}

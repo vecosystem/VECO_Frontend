@@ -12,7 +12,7 @@ const DUMMY_MEMBERS = [
     name: '이가을',
     email: 'gaeulzzang@gmail.com',
     teams: [
-      { teamId: 1, teamName: 'veco1', teamImageUrl: null },
+      { teamId: 1, teamName: 'veco1', teamImageUrl: '' },
       {
         teamId: 2,
         teamName: 'veco2',
@@ -23,7 +23,7 @@ const DUMMY_MEMBERS = [
   },
   {
     memberId: 2,
-    profileImageUrl: null,
+    profileImageUrl: '',
     name: '선우정아',
     email: 'mymelody@naver.com',
     teams: [],
@@ -31,15 +31,15 @@ const DUMMY_MEMBERS = [
   },
   {
     memberId: 3,
-    profileImageUrl: null,
+    profileImageUrl: '',
     name: '가응가',
     email: 'gaeullee@gmail.com',
-    teams: [{ teamId: 1, teamName: 'veco1', teamImageUrl: null }],
+    teams: [{ teamId: 1, teamName: 'veco1', teamImageUrl: '' }],
     joinedAt: '25.03.01',
   },
   {
     memberId: 4,
-    profileImageUrl: null,
+    profileImageUrl: '',
     name: '가을리',
     email: 'gaeulzzang11@naver.com',
     teams: [
@@ -48,8 +48,8 @@ const DUMMY_MEMBERS = [
         teamName: 'veco1',
         teamImageUrl: 'https://avatars.githubusercontent.com/u/91470334?v=4',
       },
-      { teamId: 2, teamName: 'veco2', teamImageUrl: null },
-      { teamId: 3, teamName: 'veco3', teamImageUrl: null },
+      { teamId: 2, teamName: 'veco2', teamImageUrl: '' },
+      { teamId: 3, teamName: 'veco3', teamImageUrl: '' },
     ],
     joinedAt: '25.04.01',
   },
@@ -75,11 +75,11 @@ const SettingMember = () => {
       {/*  <>*/}
       {/*    <MemberItem*/}
       {/*      key={members[0].memberId}*/}
-      {/*      profileImage={members[0].profileUrl}*/}
+      {/*      profileImageUrl={members[0].profileImageUrl}*/}
       {/*      name={members[0].name}*/}
       {/*      email={members[0].email}*/}
       {/*      teams={members[0].teams}*/}
-      {/*      date={members[0].joinedAt}*/}
+      {/*      joinedAt={members[0].joinedAt}*/}
       {/*      className={`py-[2.4rem]`}*/}
       {/*    />*/}
       {/*    <hr className={`w-full text-gray-300 mb-[2.4rem]`} />*/}
@@ -89,11 +89,11 @@ const SettingMember = () => {
       {/*        .map((member, index) => (*/}
       {/*          <MemberItem*/}
       {/*            key={index}*/}
-      {/*            profileImage={member.profileUrl}*/}
+      {/*            profileImageUrl={member.profileImageUrl}*/}
       {/*            name={member.name}*/}
       {/*            email={member.email}*/}
       {/*            teams={member.teams}*/}
-      {/*            date={member.joinedAt}*/}
+      {/*            joinedAt={member.joinedAt}*/}
       {/*          />*/}
       {/*        ))}*/}
       {/*  </>*/}

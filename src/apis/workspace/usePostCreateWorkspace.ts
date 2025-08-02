@@ -22,8 +22,10 @@ export const usePostCreateWorkspace = () => {
   return useMutation<CreateWorkspaceResponse, Error, CreateWorkspaceRequest>({
     mutationFn: postCreateWorkspace,
     onSuccess: (data) => {
-      localStorage.setItem(LOCAL_STORAGE_KEY.inviteUrl, data.result.inviteUrl);
-      localStorage.setItem(LOCAL_STORAGE_KEY.invitePassword, data.result.invitePassWord);
+      if (data.result) {
+        localStorage.setItem(LOCAL_STORAGE_KEY.inviteUrl, data.result.inviteUrl);
+        localStorage.setItem(LOCAL_STORAGE_KEY.invitePassword, data.result.invitePassWord);
+      }
     },
   });
 };

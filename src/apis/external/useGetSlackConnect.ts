@@ -13,6 +13,7 @@ const getSlackConnect = async (workspaceId: number): Promise<GetSlackConnectResp
       '/slack/connect',
       { params: workspaceId }
     );
+    if (!response.data.result) return Promise.reject(response);
     return response.data.result;
   } catch (error) {
     console.error('Slack 연동 조회 실패', error);

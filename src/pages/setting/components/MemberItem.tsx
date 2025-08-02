@@ -3,18 +3,13 @@ import ProfileImage from './ProfileImage.tsx';
 import SubProfileImage from './SubProfileImage.tsx';
 import { useDropdownActions, useDropdownInfo } from '../../../hooks/useDropdown.ts';
 import Dropdown from '../../../components/Dropdown/Dropdown.tsx';
-
-type SettingMemberTeam = {
-  teamId: number;
-  teamName: string;
-  teamImageUrl: string | null;
-};
+import type { Team } from '../../../types/setting.ts';
 
 interface MemberItemProps {
   profileImageUrl: string | null;
   name: string;
   email: string;
-  teams?: SettingMemberTeam[];
+  teams: Team[];
   joinedAt: string;
   className?: string;
 }
@@ -51,13 +46,7 @@ const MemberItem = (props: MemberItemProps) => {
   );
 };
 
-const ProfileLayout = ({
-  teams,
-  onClick,
-}: {
-  teams?: SettingMemberTeam[];
-  onClick: () => void;
-}) => {
+const ProfileLayout = ({ teams, onClick }: { teams: Team[]; onClick: () => void }) => {
   return (
     <div className={`flex w-[6.2rem] justify-start items-center`} onClick={onClick}>
       {teams && teams.length === 1 && <ProfileImage profileImage={teams[0].teamImageUrl} />}

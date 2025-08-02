@@ -8,6 +8,7 @@ const getIssueName = async (teamId: number): Promise<string> => {
     const response = await axiosInstance.get<CommonResponse<string>>(
       `/api/teams/${teamId}/issue-name`
     );
+    if (!response.data.result) return Promise.reject(response);
     return response.data.result;
   } catch (error) {
     console.error('생성될 이슈 이름 조회 실패', error);

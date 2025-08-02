@@ -29,6 +29,7 @@ const DUMMY_MEMBERS = [
 const TeamCreateModal = (props: TeamCreateModalProps) => {
   const [teamName, setTeamName] = useState<string>('');
   const [selectedMemberIds, setSelectedMemberIds] = useState<number[]>([]);
+  // TODO: 팀 생성 API 연동
   // const { data: members } = useGetWorkspaceMembers();
   // const { mutate: createTeam } = usePostWorkspaceTeam(teamName, selectedMemberIds);
 
