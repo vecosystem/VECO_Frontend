@@ -2,6 +2,8 @@ import TeamHeader from './components/TeamHeader.tsx';
 import MemberItem from './components/MemberItem.tsx';
 import { useState } from 'react';
 import MemberInviteModal from './components/modal/MemberInviteModal.tsx';
+import { LOCAL_STORAGE_KEY } from '../../constants/key.ts';
+// import { useGetWorkspaceMembers } from '../../apis/setting/useGetWorkspaceMembers.ts';
 
 const DUMMY_MEMBERS = [
   {
@@ -10,7 +12,7 @@ const DUMMY_MEMBERS = [
     name: '이가을',
     email: 'gaeulzzang@gmail.com',
     teams: [
-      { teamId: 1, teamName: 'veco1', teamImageUrl: null },
+      { teamId: 1, teamName: 'veco1', teamImageUrl: '' },
       {
         teamId: 2,
         teamName: 'veco2',
@@ -21,7 +23,7 @@ const DUMMY_MEMBERS = [
   },
   {
     memberId: 2,
-    profileImageUrl: null,
+    profileImageUrl: '',
     name: '선우정아',
     email: 'mymelody@naver.com',
     teams: [],
@@ -29,15 +31,15 @@ const DUMMY_MEMBERS = [
   },
   {
     memberId: 3,
-    profileImageUrl: null,
+    profileImageUrl: '',
     name: '가응가',
     email: 'gaeullee@gmail.com',
-    teams: [{ teamId: 1, teamName: 'veco1', teamImageUrl: null }],
+    teams: [{ teamId: 1, teamName: 'veco1', teamImageUrl: '' }],
     joinedAt: '25.03.01',
   },
   {
     memberId: 4,
-    profileImageUrl: null,
+    profileImageUrl: '',
     name: '가을리',
     email: 'gaeulzzang11@naver.com',
     teams: [
@@ -46,14 +48,17 @@ const DUMMY_MEMBERS = [
         teamName: 'veco1',
         teamImageUrl: 'https://avatars.githubusercontent.com/u/91470334?v=4',
       },
-      { teamId: 2, teamName: 'veco2', teamImageUrl: null },
-      { teamId: 3, teamName: 'veco3', teamImageUrl: null },
+      { teamId: 2, teamName: 'veco2', teamImageUrl: '' },
+      { teamId: 3, teamName: 'veco3', teamImageUrl: '' },
     ],
     joinedAt: '25.04.01',
   },
 ];
 
 const SettingMember = () => {
+  // const { data: members } = useGetWorkspaceMembers();
+  const inviteUrl = localStorage.getItem(LOCAL_STORAGE_KEY.inviteUrl) || '';
+  const invitePassword = localStorage.getItem(LOCAL_STORAGE_KEY.invitePassword) || '';
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -65,6 +70,34 @@ const SettingMember = () => {
         onClick={() => setIsModalOpen(!isModalOpen)}
       />
       <hr className={`w-full text-gray-300`} />
+      {/*TODO: 멤버 조회 api 연동 시 주석 해제*/}
+      {/*{members && members.length > 0 && (*/}
+      {/*  <>*/}
+      {/*    <MemberItem*/}
+      {/*      key={members[0].memberId}*/}
+      {/*      profileImageUrl={members[0].profileImageUrl}*/}
+      {/*      name={members[0].name}*/}
+      {/*      email={members[0].email}*/}
+      {/*      teams={members[0].teams}*/}
+      {/*      joinedAt={members[0].joinedAt}*/}
+      {/*      className={`py-[2.4rem]`}*/}
+      {/*    />*/}
+      {/*    <hr className={`w-full text-gray-300 mb-[2.4rem]`} />*/}
+      {/*    {members.length > 1 &&*/}
+      {/*      members*/}
+      {/*        .slice(1)*/}
+      {/*        .map((member, index) => (*/}
+      {/*          <MemberItem*/}
+      {/*            key={index}*/}
+      {/*            profileImageUrl={member.profileImageUrl}*/}
+      {/*            name={member.name}*/}
+      {/*            email={member.email}*/}
+      {/*            teams={member.teams}*/}
+      {/*            joinedAt={member.joinedAt}*/}
+      {/*          />*/}
+      {/*        ))}*/}
+      {/*  </>*/}
+      {/*)}*/}
       <MemberItem
         profileImageUrl={DUMMY_MEMBERS[0].profileImageUrl}
         name={DUMMY_MEMBERS[0].name}
@@ -87,8 +120,10 @@ const SettingMember = () => {
       ))}
       {isModalOpen && (
         <MemberInviteModal
-          url={'https://veco-eight.vercel.app/invite'}
-          password={'1234'}
+          // memberName={members[0].name || ''}
+          memberName={''}
+          url={inviteUrl}
+          password={invitePassword}
           onClick={() => setIsModalOpen(!isModalOpen)}
         />
       )}

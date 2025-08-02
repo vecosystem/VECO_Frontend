@@ -4,6 +4,8 @@ import MemberCheckbox from '../MemberCheckbox.tsx';
 import { createPortal } from 'react-dom';
 import { TEAM_NAME_REGEX } from '../../../../constants/regex.ts';
 import ModalButton from './ModalButton.tsx';
+// import { usePostWorkspaceTeam } from '../../../../apis/setting/usePostWorkspaceTeam.ts';
+// import { useGetWorkspaceMembers } from '../../../../apis/setting/useGetWorkspaceMembers.ts';
 
 interface TeamCreateModalProps {
   onClick: () => void;
@@ -27,6 +29,10 @@ const DUMMY_MEMBERS = [
 const TeamCreateModal = (props: TeamCreateModalProps) => {
   const [teamName, setTeamName] = useState<string>('');
   const [selectedMemberIds, setSelectedMemberIds] = useState<number[]>([]);
+  // TODO: 팀 생성 API 연동
+  // const { data: members } = useGetWorkspaceMembers();
+  // const { mutate: createTeam } = usePostWorkspaceTeam(teamName, selectedMemberIds);
+
   const isNameValid = useMemo(() => TEAM_NAME_REGEX.test(teamName), [teamName]);
   const handleSelect = (memberId: number, checked: boolean) => {
     setSelectedMemberIds((prev) =>
@@ -36,6 +42,7 @@ const TeamCreateModal = (props: TeamCreateModalProps) => {
 
   const handleSubmit = () => {
     console.log(selectedMemberIds);
+    // createTeam();
     props.onClick();
   };
 
@@ -65,6 +72,16 @@ const TeamCreateModal = (props: TeamCreateModalProps) => {
           className={`grid grid-cols-3 items-start content-start w-full border border-gray-300 
           gap-y-[1.6rem] rounded-[0.6rem] p-[2rem] h-[32.2rem] overflow-y-auto`}
         >
+          {/*{members?.map((member) => (*/}
+          {/*  <MemberCheckbox*/}
+          {/*    key={member.memberId}*/}
+          {/*    name={member.name}*/}
+          {/*    checked={selectedMemberIds.includes(member.memberId)}*/}
+          {/*    onSelect={(checked) => handleSelect(member.memberId, checked)}*/}
+          {/*  />*/}
+          {/*))}*/}
+
+          {/* Fallback for dummy members if no members are fetched */}
           {DUMMY_MEMBERS.map((member) => (
             <MemberCheckbox
               key={member.id}

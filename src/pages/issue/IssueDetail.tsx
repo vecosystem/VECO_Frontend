@@ -74,7 +74,7 @@ const IssueDetail = () => {
   return (
     <div className="flex flex-1 flex-col gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem] pb-[5.3rem]">
       {/* 상세페이지 헤더 */}
-      <DetailHeader defaultTitle="이슈를 생성하세요" title={title} />
+      <DetailHeader type={'issue'} defaultTitle="이슈를 생성하세요" title={title} />
 
       {/* 상세페이지 메인 */}
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full h-full">

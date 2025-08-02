@@ -4,10 +4,10 @@ import GithubIcon from '../../../assets/icons/github.svg';
 import GithubWhiteIcon from '../../../assets/icons/github-white.svg';
 import SlackIcon from '../../../assets/icons/slack.svg';
 import ExternalToolButton from './ExternalToolButton';
-import { useLocalStorage } from '../../../hooks/useLocalStorage.ts';
-import { LOCAL_STORAGE_KEY } from '../../../constants/key.ts';
-import { useParams } from 'react-router-dom';
-import { useGetGithubConnect } from '../../../apis/external/useGetGithubConnect.ts';
+// import { useGetWorkspaceProfile } from '../../../apis/setting/useGetWorkspaceProfile.ts';
+// import { useParams } from 'react-router-dom';
+// import { useGetGithubConnect } from '../../../apis/external/useGetGithubConnect.ts';
+// import { useGetSlackConnect } from '../../../apis/external/useGetSlackConnect.ts';
 
 const TOOL_LIST = [
   {
@@ -37,17 +37,12 @@ interface ExternalToolModalProps {
 }
 
 const ExternalToolModal = ({ onClose }: ExternalToolModalProps) => {
-  const teamId = useParams().teamId;
-  const { mutate: connectGithub } = useGetGithubConnect(Number(teamId));
+  // TODO: 외부 연동 API 호출 시 주석 해제
+  // const teamId = Number(useParams().teamId);
+  // const { mutate: connectGithub } = useGetGithubConnect(teamId);
+  // const workspaceId = useGetWorkspaceProfile().data?.workspaceId || 0;
+  // const { mutate: connectSlack } = useGetSlackConnect(workspaceId);
   const [selected, setSelected] = useState<string | null>(null);
-
-  const handleSlackLogin = () => {
-    const scope = 'channels:join,chat:write';
-    const accessToken = useLocalStorage(LOCAL_STORAGE_KEY.accessToken).getItem();
-    window.location.href = `https://slack.com/oauth/v2/authorize?client_id=${
-      import.meta.env.VITE_SLACK_CLIENT_ID
-    }&scope=${scope}&redirect_uri=${import.meta.env.VITE_SLACK_REDIRECT_URI}&state=${accessToken}`;
-  };
 
   return createPortal(
     <div
@@ -82,9 +77,9 @@ const ExternalToolModal = ({ onClose }: ExternalToolModalProps) => {
           `}
           onClick={() => {
             if (selected === 'SLACK') {
-              handleSlackLogin();
+              // connectSlack();
             } else if (selected === 'GITHUB') {
-              connectGithub();
+              // connectGithub();
             }
             onClose();
           }}

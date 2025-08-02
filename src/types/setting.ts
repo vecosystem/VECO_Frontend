@@ -12,6 +12,7 @@ export type MemberListResponse = {
   name: string;
   profileImageUrl: string;
   teams: Team[];
+  joinedAt: string;
 };
 
 export type TeamCreateResponse = {
