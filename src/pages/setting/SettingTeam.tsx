@@ -7,30 +7,30 @@ import TeamCreateModal from './components/modal/TeamCreateModal.tsx';
 
 const DUMMY_TEAMS = [
   {
-    id: 1,
-    profileImage: 'https://avatars.githubusercontent.com/u/91470334?v=4',
-    name: 'Workspace',
+    teamId: 1,
+    teamImageUrl: 'https://avatars.githubusercontent.com/u/91470334?v=4',
+    teamName: 'Workspace',
     memberCount: 10,
     createdAt: '25.01.01',
   },
   {
-    id: 2,
-    profileImage: null,
-    name: 'Team A',
+    teamId: 2,
+    teamImageUrl: null,
+    teamName: 'Team A',
     memberCount: 5,
     createdAt: '25.02.01',
   },
   {
-    id: 3,
-    profileImage: null,
-    name: 'Team B',
+    teamId: 3,
+    teamImageUrl: null,
+    teamName: 'Team B',
     memberCount: 8,
     createdAt: '25.03.01',
   },
   {
-    id: 4,
-    profileImage: null,
-    name: 'Team C',
+    teamId: 4,
+    teamImageUrl: null,
+    teamName: 'Team C',
     memberCount: 3,
     createdAt: '25.04.01',
   },
@@ -56,8 +56,8 @@ const SettingTeam = () => {
       />
       <hr className={`w-full text-gray-300`} />
       <TeamItem
-        profileImage={DUMMY_TEAMS[0].profileImage}
-        name={DUMMY_TEAMS[0].name}
+        teamImageUrl={DUMMY_TEAMS[0].teamImageUrl}
+        teamName={DUMMY_TEAMS[0].teamName}
         memberCount={DUMMY_TEAMS[0].memberCount}
         createdAt={DUMMY_TEAMS[0].createdAt}
         className={`py-[2.4rem]`}
@@ -65,9 +65,9 @@ const SettingTeam = () => {
       <hr className={`w-full text-gray-300 mb-[2.4rem]`} />
       {DUMMY_TEAMS.slice(1).map((team, index) => (
         <TeamItem
-          profileImage={team.profileImage}
+          teamImageUrl={team.teamImageUrl}
           key={index}
-          name={team.name}
+          teamName={team.teamName}
           memberCount={team.memberCount}
           createdAt={team.createdAt}
           className={`mb-[3.2rem]`}

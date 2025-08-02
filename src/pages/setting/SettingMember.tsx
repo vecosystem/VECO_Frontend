@@ -7,69 +7,51 @@ import { LOCAL_STORAGE_KEY } from '../../constants/key.ts';
 
 const DUMMY_MEMBERS = [
   {
-    id: 1,
-    profileImage: 'https://avatars.githubusercontent.com/u/91470334?v=4',
+    memberId: 1,
+    profileImageUrl: 'https://avatars.githubusercontent.com/u/91470334?v=4',
     name: '이가을',
     email: 'gaeulzzang@gmail.com',
     teams: [
+      { teamId: 1, teamName: 'veco1', teamImageUrl: null },
       {
-        teamId: 1,
-        teamName: '백호',
-        teamProfileUrl: 'https://avatars.githubusercontent.com/u/91470334?v=4',
+        teamId: 2,
+        teamName: 'veco2',
+        teamImageUrl: 'https://avatars.githubusercontent.com/u/91470334?v=4',
       },
     ],
-    date: '25.01.01',
+    joinedAt: '25.01.01',
   },
   {
-    id: 2,
-    profileImage: null,
+    memberId: 2,
+    profileImageUrl: null,
     name: '선우정아',
     email: 'mymelody@naver.com',
-    teams: [
-      {
-        teamId: 2,
-        teamName: '하늘',
-        teamProfileUrl: 'https://avatars.githubusercontent.com/u/91470334?v=4',
-      },
-      {
-        teamId: 3,
-        teamName: '바다',
-        teamProfileUrl: '',
-      },
-    ],
-    date: '25.02.01',
+    teams: [],
+    joinedAt: '25.02.01',
   },
   {
-    id: 3,
-    profileImage: null,
+    memberId: 3,
+    profileImageUrl: null,
     name: '가응가',
     email: 'gaeullee@gmail.com',
+    teams: [{ teamId: 1, teamName: 'veco1', teamImageUrl: null }],
+    joinedAt: '25.03.01',
+  },
+  {
+    memberId: 4,
+    profileImageUrl: null,
+    name: '가을리',
+    email: 'gaeulzzang11@naver.com',
     teams: [
       {
         teamId: 1,
-        teamName: '백호',
-        teamProfileUrl: '',
+        teamName: 'veco1',
+        teamImageUrl: 'https://avatars.githubusercontent.com/u/91470334?v=4',
       },
-      {
-        teamId: 2,
-        teamName: '바다',
-        teamProfileUrl: '',
-      },
-      {
-        teamId: 3,
-        teamName: '가을리',
-        teamProfileUrl: '',
-      },
+      { teamId: 2, teamName: 'veco2', teamImageUrl: null },
+      { teamId: 3, teamName: 'veco3', teamImageUrl: null },
     ],
-    date: '25.03.01',
-  },
-  {
-    id: 4,
-    profileImage: null,
-    name: '가을리',
-    email: 'gaeulzzang11@naver.com',
-    teams: [],
-    date: '25.04.01',
+    joinedAt: '25.04.01',
   },
 ];
 
@@ -117,22 +99,22 @@ const SettingMember = () => {
       {/*  </>*/}
       {/*)}*/}
       <MemberItem
-        profileImage={DUMMY_MEMBERS[0].profileImage}
+        profileImageUrl={DUMMY_MEMBERS[0].profileImageUrl}
         name={DUMMY_MEMBERS[0].name}
         email={DUMMY_MEMBERS[0].email}
         teams={DUMMY_MEMBERS[0].teams}
-        date={DUMMY_MEMBERS[0].date}
+        joinedAt={DUMMY_MEMBERS[0].joinedAt}
         className={`py-[2.4rem]`}
       />
       <hr className={`w-full text-gray-300 mb-[2.4rem]`} />
       {DUMMY_MEMBERS.slice(1).map((member, index) => (
         <MemberItem
           key={index}
-          profileImage={member.profileImage}
+          profileImageUrl={member.profileImageUrl}
           name={member.name}
           email={member.email}
           teams={member.teams}
-          date={member.date}
+          joinedAt={member.joinedAt}
           className={`mb-[3.2rem]`}
         />
       ))}

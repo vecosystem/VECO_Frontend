@@ -1,7 +1,7 @@
 export type TeamListResponse = {
   teamId: number;
-  name: string;
-  profileUrl: string;
+  teamName: string;
+  teamImageUrl: string;
   memberCount: number;
   createdAt: string;
 };
@@ -10,7 +10,7 @@ export type MemberListResponse = {
   memberId: number;
   email: string;
   name: string;
-  profileUrl: string;
+  profileImageUrl: string;
   teams: Team[];
   joinedAt: string;
 };
@@ -24,30 +24,30 @@ export type TeamCreateResponse = {
 export type Team = {
   teamId: number;
   teamName: string;
-  teamProfileUrl: string;
+  teamImageUrl: string;
 };
 
 export type Member = {
   memberId: number;
-  memberName: string;
+  name: string;
 };
 
-export type Workspace = {
+export type WorkspaceResponse = {
   workspaceId: number;
-  name: string;
-  profileUrl: string;
+  workspaceName: string;
+  workspaceImageUrl: string;
   workspaceUrl: string;
   defaultTeamId: number;
 };
 
-export type MyProfile = {
+export type MyProfileResponse = {
   memberId: number;
   name: string;
   email: string;
-  profileImage: string;
+  profileImageUrl: string;
 };
 
-export type MyProfileImage = {
+export type MyProfileImageResponse = {
   memberId: number;
-  imageUrl: string;
+  profileImageUrl: string;
 };
