@@ -7,12 +7,7 @@ import OnboardingInviteMember from '../pages/onboarding/OnboardingInviteMember';
 import OnboardingFinish from '../pages/onboarding/OnboardingFinish';
 import Error404NotFound from '../pages/Error404NotFound';
 import ParticipateWorkspaceInputPw from '../pages/onboarding/ParticipateWorkspaceInputPw';
-<<<<<<< HEAD
-=======
-import GoogleLoginRedirect from '../pages/onboarding/GoogleLoginRedirect';
-import KakaoLoginRedirect from '../pages/onboarding/KakaoLoginRedirect';
 import { HomePage } from '../pages/home/HomePage.tsx';
->>>>>>> 53b8f96328d4bd925572b8aab2c27367753089b6
 
 export const publicRoutes: RouteObject[] = [
   {
