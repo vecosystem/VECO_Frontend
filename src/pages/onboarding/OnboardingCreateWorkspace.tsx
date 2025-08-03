@@ -1,14 +1,32 @@
 // src/pages/onboarding/OnboardingCreateWorkspace.tsx
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageIndicator from '../../components/Onboarding/PageIndicator';
 import onboardingSteps from '../../constants/onboardingSteps';
 import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 import WorkspaceNameInput from '../../components/Onboarding/WorkspaceNameInput';
+import { postReIssueAccessToken } from '../../apis/auth';
 
 const OnboardingCreateWorkspace = () => {
   // useOnboardingGuard(1); API 연결 후 훅 사용 예정
   const [workspaceUrl, setWorkspaceUrl] = useState('');
+
+  useEffect(() => {
+    const fetchAccessToken = async () => {
+      try {
+        const token = await postReIssueAccessToken();
+        console.log('✅ accessToken:', token);
+
+        localStorage.setItem('accessToken', JSON.stringify(token));
+        console.log('🧪 직접 저장 테스트 완료');
+      } catch (error) {
+        console.error('❌ accessToken 재발급 실패:', error);
+      }
+    };
+
+    fetchAccessToken();
+  }, []);
+
   return (
     <div className="flex flex-col items-center gap-[3.2rem]">
       {/* 인디케이터 */}
