@@ -7,15 +7,21 @@ import OnboardingInviteMember from '../pages/onboarding/OnboardingInviteMember';
 import OnboardingFinish from '../pages/onboarding/OnboardingFinish';
 import Error404NotFound from '../pages/Error404NotFound';
 import ParticipateWorkspaceInputPw from '../pages/onboarding/ParticipateWorkspaceInputPw';
+<<<<<<< HEAD
+=======
+import GoogleLoginRedirect from '../pages/onboarding/GoogleLoginRedirect';
+import KakaoLoginRedirect from '../pages/onboarding/KakaoLoginRedirect';
+import { HomePage } from '../pages/home/HomePage.tsx';
+>>>>>>> 53b8f96328d4bd925572b8aab2c27367753089b6
 
 export const publicRoutes: RouteObject[] = [
   {
     path: '/',
-    element: <div>HomeLayout</div>,
+    element: <HomePage />,
     errorElement: <Error404NotFound />,
     children: [
       // 도메인 최상위: 백호 랜딩페이지
-      { index: true, element: <div>VECO Landing Page</div> },
+      { index: true, element: <HomePage /> },
       // '시작하기'를 눌렀을 때 AuthRedirect 컴포넌트로 리다이렉트.
       // 사용자 인증 여부에 따라 protected 또는 public 경로로 리다이렉트됨.
       { path: 'entry', element: <AuthRedirect /> },
