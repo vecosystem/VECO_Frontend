@@ -6,6 +6,8 @@ import onboardingSteps from '../../constants/onboardingSteps';
 import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 import WorkspaceNameInput from '../../components/Onboarding/WorkspaceNameInput';
 import { postReIssueAccessToken } from '../../apis/auth';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { LOCAL_STORAGE_KEY } from '../../constants/key';
 
 const OnboardingCreateWorkspace = () => {
   // useOnboardingGuard(1); API 연결 후 훅 사용 예정
@@ -13,17 +15,10 @@ const OnboardingCreateWorkspace = () => {
 
   useEffect(() => {
     const fetchAccessToken = async () => {
-      try {
-        const token = await postReIssueAccessToken();
-        console.log('✅ accessToken:', token);
-
-        localStorage.setItem('accessToken', JSON.stringify(token));
-        console.log('🧪 직접 저장 테스트 완료');
-      } catch (error) {
-        console.error('❌ accessToken 재발급 실패:', error);
-      }
+      const accesstoken = await postReIssueAccessToken();
+      const { setItem } = useLocalStorage(LOCAL_STORAGE_KEY.accessToken);
+      setItem(accesstoken);
     };
-
     fetchAccessToken();
   }, []);
 
