@@ -3,6 +3,7 @@ import type { CommonResponse } from '../../types/common.ts';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '../../constants/queryKey.ts';
 
+// 생성될 이슈 이름 조회
 const getIssueName = async (teamId: number): Promise<string> => {
   try {
     const response = await axiosInstance.get<CommonResponse<string>>(
