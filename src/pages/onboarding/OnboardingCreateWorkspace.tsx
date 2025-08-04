@@ -11,6 +11,7 @@ import { LOCAL_STORAGE_KEY } from '../../constants/key';
 
 const OnboardingCreateWorkspace = () => {
   // useOnboardingGuard(1); API 연결 후 훅 사용 예정
+  const [workspaceName, setWorkspaceName] = useState('');
   const [workspaceUrl, setWorkspaceUrl] = useState('');
 
   useEffect(() => {
@@ -36,7 +37,12 @@ const OnboardingCreateWorkspace = () => {
         </div>
 
         {/* 워크스페이스 이름 & 워크스페이스 URL */}
-        <WorkspaceNameInput onUrlGenerated={setWorkspaceUrl} />
+        <WorkspaceNameInput
+          setWorkspaceName={setWorkspaceName}
+          setWorkspaceUrl={setWorkspaceUrl}
+          workspaceUrl={workspaceUrl}
+          workspaceName={workspaceName}
+        />
 
         {/* 워크스페이스 생성하기 버튼 */}
         <PrimaryButton
