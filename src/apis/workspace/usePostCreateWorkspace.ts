@@ -24,7 +24,8 @@ export const usePostCreateWorkspace = () => {
     onSuccess: (data) => {
       if (data.result) {
         localStorage.setItem(LOCAL_STORAGE_KEY.inviteUrl, data.result.inviteUrl);
-        localStorage.setItem(LOCAL_STORAGE_KEY.invitePassword, data.result.invitePassWord);
+        localStorage.setItem(LOCAL_STORAGE_KEY.invitePassword, data.result.invitePassword);
+        localStorage.setItem(LOCAL_STORAGE_KEY.name, data.result.name);
       }
     },
   });

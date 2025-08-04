@@ -8,10 +8,14 @@ import WorkspaceNameInput from '../../components/Onboarding/WorkspaceNameInput';
 import { postReIssueAccessToken } from '../../apis/auth';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { LOCAL_STORAGE_KEY } from '../../constants/key';
+import { usePostCreateWorkspace } from '../../apis/workspace/usePostCreateWorkspace';
+import { useNavigate } from 'react-router-dom';
 
 const OnboardingCreateWorkspace = () => {
   // useOnboardingGuard(1); API 연결 후 훅 사용 예정
+  const [workspaceName, setWorkspaceName] = useState('');
   const [workspaceUrl, setWorkspaceUrl] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAccessToken = async () => {
@@ -21,6 +25,18 @@ const OnboardingCreateWorkspace = () => {
     };
     fetchAccessToken();
   }, []);
+
+  const { mutateAsync } = usePostCreateWorkspace();
+
+  const handleButtonClick = async () => {
+    try {
+      const res = await mutateAsync({ workspaceName: workspaceName });
+      console.log(res);
+      navigate('/onboarding/invite');
+    } catch (error) {
+      console.error('에러 발생:', error);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center gap-[3.2rem]">
@@ -36,13 +52,18 @@ const OnboardingCreateWorkspace = () => {
         </div>
 
         {/* 워크스페이스 이름 & 워크스페이스 URL */}
-        <WorkspaceNameInput onUrlGenerated={setWorkspaceUrl} />
+        <WorkspaceNameInput
+          setWorkspaceName={setWorkspaceName}
+          setWorkspaceUrl={setWorkspaceUrl}
+          workspaceUrl={workspaceUrl}
+          workspaceName={workspaceName}
+        />
 
         {/* 워크스페이스 생성하기 버튼 */}
         <PrimaryButton
           text="워크스페이스 생성하기"
           disabled={!workspaceUrl}
-          to="/onboarding/invite"
+          onClick={handleButtonClick}
         />
       </div>
     </div>
