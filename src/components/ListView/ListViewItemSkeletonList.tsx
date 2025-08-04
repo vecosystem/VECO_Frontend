@@ -1,9 +1,9 @@
 import ListItemSkeleton from './ListViewItemSkeleton';
 
-const ListViewItemSkeletonList = () => {
+const ListViewItemSkeletonList = ({ count = 10 }: { count?: number }) => {
   return (
     <>
-      {new Array(10).fill(0).map((_, idx) => (
+      {new Array(count).fill(0).map((_, idx) => (
         <ListItemSkeleton key={idx} />
       ))}
     </>
