@@ -8,6 +8,7 @@ import WorkspaceNameInput from '../../components/Onboarding/WorkspaceNameInput';
 import { postReIssueAccessToken } from '../../apis/auth';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { LOCAL_STORAGE_KEY } from '../../constants/key';
+import { usePostCreateWorkspace } from '../../apis/workspace/usePostCreateWorkspace';
 
 const OnboardingCreateWorkspace = () => {
   // useOnboardingGuard(1); API 연결 후 훅 사용 예정
@@ -22,6 +23,8 @@ const OnboardingCreateWorkspace = () => {
     };
     fetchAccessToken();
   }, []);
+
+  const handleButtonClick = () => {};
 
   return (
     <div className="flex flex-col items-center gap-[3.2rem]">
@@ -48,7 +51,7 @@ const OnboardingCreateWorkspace = () => {
         <PrimaryButton
           text="워크스페이스 생성하기"
           disabled={!workspaceUrl}
-          to="/onboarding/invite"
+          onClick={handleButtonClick}
         />
       </div>
     </div>
