@@ -16,7 +16,6 @@ const OnboardingInviteMember = () => {
   // 텍스트 영역의 DOM 요소에 접근하기 위한 ref (복사 기능용)
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // 임시로 하드코딩된 초대 정보 세팅
   useEffect(() => {
     setInviteText(
       `팀원 URL : ${localStorage.getItem(LOCAL_STORAGE_KEY.inviteUrl)}\n\n암호 : ${localStorage.getItem(LOCAL_STORAGE_KEY.invitePassword)}`
@@ -36,7 +35,6 @@ const OnboardingInviteMember = () => {
             <p className="font-title-sub-r text-gray-600">
               팀원을 {localStorage.getItem(LOCAL_STORAGE_KEY.name)}님의 팀에 초대해봐요
             </p>
-            {/* 백엔드 연동 후 사용자 이름을 동적으로 바인딩 할 것 */}
           </div>
           <div className="flex items-start gap-[1rem]">
             {/* 입력창 */}
