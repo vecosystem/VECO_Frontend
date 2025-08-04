@@ -1,5 +1,5 @@
 import PlusIcon from '../../assets/icons/plus.svg';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PRIORITY_LABELS, STATUS_LABELS, type ItemFilter } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
@@ -12,8 +12,11 @@ import Modal from '../../components/Modal/Modal';
 import type { GroupedIssue } from '../../types/issue';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGetIssueList } from '../../apis/issue/useGetIssueList';
+import { useGetInfiniteIssueList } from '../../apis/issue/useGetIssueList';
 import { useDeleteIssues } from '../../apis/issue/useDeleteIssues';
+import { mergeGroups } from '../../components/ListView/MergeGroup';
+import { useInView } from 'react-intersection-observer';
+import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
@@ -47,16 +50,37 @@ const IssueHome = () => {
     () => ({
       // 우선 기본값 설정
       cursor: '-1',
-      size: 10,
+      size: 3,
       query: filterToQuery(filter),
     }),
     [filter]
   );
 
-  // isLoading, isError 로직 추가
-  const { data } = useGetIssueList(teamId ?? '', params);
-  const issueGroups = data?.result?.data ?? [];
-  const allIssuesFlat = issueGroups.flatMap((g) => g.issues);
+  const { data, isFetchingNextPage, isLoading, isError, hasNextPage, fetchNextPage } =
+    useGetInfiniteIssueList(teamId ?? '', params);
+
+  const issueGroups = data?.pages ?? [];
+  const allIssuesFlat = issueGroups.flatMap((i) => i.issues);
+
+  const rawIssueGroups = data?.pages ?? [];
+  const allGroups: GroupedIssue[] = rawIssueGroups.map((i) => ({
+    key: i.filterName,
+    items: i.issues,
+  }));
+
+  const grouped = mergeGroups(allGroups);
+  const sortedGrouped = getSortedGrouped(filter, grouped);
+  const isEmpty = grouped.every(({ items }) => items.length === 0);
+
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
   const {
     checkedIds: checkItems,
@@ -97,13 +121,9 @@ const IssueHome = () => {
     );
   };
 
-  const grouped: GroupedIssue[] = issueGroups.map((i) => ({
-    key: i.filterName,
-    items: i.issues,
-  }));
-
-  const sortedGrouped = getSortedGrouped(filter, grouped);
-  const isEmpty = grouped.every(({ items }) => items.length === 0);
+  if (isError) {
+    return <div>Error...</div>; // 임시 에러페이지
+  }
 
   return (
     <>
@@ -142,8 +162,9 @@ const IssueHome = () => {
           <div className="flex flex-1 items-center justify-center">
             <div className="font-body-r">목표를 생성하세요</div>
           </div>
+        ) : isLoading ? (
+          <ListViewItemSkeletonList />
         ) : (
-          /* 리스트뷰 */
           <div className="flex flex-col gap-[4.8rem]">
             {sortedGrouped.map(({ key, items }) =>
               /* 해당 요소 존재할 때만 생성 */
@@ -191,6 +212,7 @@ const IssueHome = () => {
                 </div>
               ) : null
             )}
+            <div ref={ref}>{isFetchingNextPage && <ListViewItemSkeletonList count={3} />}</div>
           </div>
         )}
       </div>
