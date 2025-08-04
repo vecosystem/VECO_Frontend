@@ -45,7 +45,7 @@ const WorkspaceNameInput = ({
     // 에러 초기화 및 상태 업데이트
     setError('');
     setWorkspaceUrl(url);
-    setWorkspaceName('');
+    setWorkspaceName(workspaceName);
   };
 
   return (
