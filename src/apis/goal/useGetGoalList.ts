@@ -31,7 +31,7 @@ export const useGetGoalList = (teamId: string, params: PaginationDto) => {
 export const useGetInfiniteGoalList = (teamId: string, params: PaginationDto) => {
   return useInfiniteQuery({
     queryKey: [queryKey.GOAL_LIST, teamId, params.query],
-    queryFn: ({ pageParam = '0' }) =>
+    queryFn: ({ pageParam = '-1' }) =>
       getGoalList({ teamId }, { ...params, cursor: pageParam, size: 3 }), // 한 번에 불러올 데이터 개수
     initialPageParam: '-1',
     getNextPageParam: (lastPage: ResponseGoalDto) => {
