@@ -65,15 +65,13 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
               <DropdownMenu
                 headerTitle=""
                 initialOpen={true}
-                headerTeamIcon={
-                  <img src={vecocirclenavy} className="w-[2.4rem] h-[2.4rem]" alt="Workspace" />
-                }
+                headerTeamIcon={vecocirclenavy}
                 isNested={true}
               >
                 <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pb-[1.6rem]">
                   <SidebarItem
-                    defaultIcon={<img src={goalIcon} alt="Goal" />}
-                    hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
+                    defaultIcon={goalIcon}
+                    hoverIcon={goalHoverIcon}
                     label=""
                     onClick={() => {
                       navigate(`/workspace/team/default/goal`);
@@ -83,8 +81,8 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                     }}
                   />
                   <SidebarItem
-                    defaultIcon={<img src={issueIcon} alt="Issue" />}
-                    hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
+                    defaultIcon={issueIcon}
+                    hoverIcon={issueHoverIcon}
                     label=""
                     onClick={() => {
                       navigate(`/workspace/team/default/issue`);
@@ -94,8 +92,8 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                     }}
                   />
                   <SidebarItem
-                    defaultIcon={<img src={externalIcon} alt="External" />}
-                    hoverIcon={<img src={externalHoverIcon} alt="External" />}
+                    defaultIcon={externalIcon}
+                    hoverIcon={externalHoverIcon}
                     label=""
                     onClick={() => {
                       navigate(`/workspace/team/default/ext`);
@@ -122,8 +120,8 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                   {!isOverlay && (
                     <div className="flex flex-col justify-center items-start gap-[1.6rem] pb-[1.6rem]">
                       <SidebarItem
-                        defaultIcon={<img src={goalIcon} alt="Goal" />}
-                        hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
+                        defaultIcon={goalIcon}
+                        hoverIcon={goalHoverIcon}
                         label=""
                         onClick={() => {
                           navigate(`/workspace/team/:teamId/goal`);
@@ -133,8 +131,8 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                         }}
                       />
                       <SidebarItem
-                        defaultIcon={<img src={issueIcon} alt="Issue" />}
-                        hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
+                        defaultIcon={issueIcon}
+                        hoverIcon={issueHoverIcon}
                         label=""
                         onClick={() => {
                           navigate(`/workspace/team/:teamId/issue`);
@@ -144,8 +142,8 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                         }}
                       />
                       <SidebarItem
-                        defaultIcon={<img src={externalIcon} alt="External" />}
-                        hoverIcon={<img src={externalHoverIcon} alt="External" />}
+                        defaultIcon={externalIcon}
+                        hoverIcon={externalHoverIcon}
                         label=""
                         onClick={() => {
                           navigate(`/workspace/team/:teamId/ext`);

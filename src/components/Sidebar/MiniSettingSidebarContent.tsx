@@ -44,7 +44,7 @@ const MiniSettingSidebarContent = ({ setExpanded }: MiniSettingSidebarContentPro
           <DropdownMenu headerTitle="워크" initialOpen={true}>
             <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pb-[1.6rem]">
               <SidebarItem
-                defaultIcon={<img src={vecocirclenavy} alt="Workspace Profile" />}
+                defaultIcon={vecocirclenavy}
                 label=""
                 onClick={() => {
                   navigate('/workspace/setting');
@@ -57,16 +57,16 @@ const MiniSettingSidebarContent = ({ setExpanded }: MiniSettingSidebarContentPro
           <DropdownMenu headerTitle="팀" initialOpen={true}>
             <div className="flex flex-col justify-center items-start gap-[1.6rem] pb-[1.6rem]">
               <SidebarItem
-                defaultIcon={<img src={tableIcon} alt="Team List" />}
-                hoverIcon={<img src={tableHoverIcon} alt="Team List" />}
+                defaultIcon={tableIcon}
+                hoverIcon={tableHoverIcon}
                 label=""
                 onClick={() => {
                   navigate('/workspace/setting/team-list');
                 }}
               />
               <SidebarItem
-                defaultIcon={<img src={usersIcon} alt="Workspace Members" />}
-                hoverIcon={<img src={usersHoverIcon} alt="Workspace Members" />}
+                defaultIcon={usersIcon}
+                hoverIcon={usersHoverIcon}
                 label=""
                 onClick={() => {
                   navigate('/workspace/setting/team-members');
@@ -79,8 +79,8 @@ const MiniSettingSidebarContent = ({ setExpanded }: MiniSettingSidebarContentPro
           <DropdownMenu headerTitle="계정" initialOpen={true}>
             <div className="flex flex-col justify-center items-start gap-[1.6rem] pb-[1.6rem]">
               <SidebarItem
-                defaultIcon={<img src={userProfileIcon} alt="My Profile" />}
-                hoverIcon={<img src={userProfileHoverIcon} alt="My Profile" />}
+                defaultIcon={userProfileIcon}
+                hoverIcon={userProfileHoverIcon}
                 label=""
                 onClick={() => {
                   navigate('/workspace/setting/my-profile');
