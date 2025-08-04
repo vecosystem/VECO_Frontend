@@ -17,6 +17,7 @@ import { useDeleteIssues } from '../../apis/issue/useDeleteIssues';
 import { mergeGroups } from '../../components/ListView/MergeGroup';
 import { useInView } from 'react-intersection-observer';
 import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
+import Server500Error from '../Server500Error';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
@@ -122,7 +123,7 @@ const IssueHome = () => {
   };
 
   if (isError) {
-    return <div>Error...</div>; // 임시 에러페이지
+    return <Server500Error />;
   }
 
   return (
