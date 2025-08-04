@@ -5,6 +5,7 @@ import { LOCAL_STORAGE_KEY } from '../../constants/key.ts';
 
 /**
  * 워크스페이스 생성 요청 함수
+ * - pages/onboarding/OnboardingCreateWorkspace.tsx
  */
 export const postCreateWorkspace = async (
   data: CreateWorkspaceRequest
