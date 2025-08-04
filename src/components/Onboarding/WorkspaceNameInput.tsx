@@ -18,8 +18,8 @@ const WorkspaceNameInput = ({ onUrlGenerated }: WorkspaceNameInputProps) => {
   const { mutateAsync: createUrl, isPending } = usePostCreateWorkspaceUrl();
 
   const handleCheck = async () => {
-    if (isPending) return; // 중복 요청 방지
-    if (workspaceUrl) return; // 이미 URL 있으면 재요청 막기
+    // 중복 요청 혹은 이미 URL 있으면 재요청 막기
+    if (isPending || workspaceUrl) return;
 
     // 입력값 유효성 검사
     const validationError = validateWorkspaceName(workspaceName);

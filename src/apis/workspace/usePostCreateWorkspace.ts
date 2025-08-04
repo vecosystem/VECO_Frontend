@@ -10,7 +10,7 @@ export const postCreateWorkspace = async (
   data: CreateWorkspaceRequest
 ): Promise<CreateWorkspaceResponse> => {
   try {
-    const response = await axiosInstance.post<CreateWorkspaceResponse>('/workspace', data);
+    const response = await axiosInstance.post<CreateWorkspaceResponse>('/api/workspace', data);
     return response.data;
   } catch (error) {
     console.error('워크스페이스 생성 요청 실패:', error);

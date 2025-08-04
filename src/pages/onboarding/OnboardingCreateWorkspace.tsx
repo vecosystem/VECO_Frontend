@@ -1,14 +1,27 @@
 // src/pages/onboarding/OnboardingCreateWorkspace.tsx
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageIndicator from '../../components/Onboarding/PageIndicator';
 import onboardingSteps from '../../constants/onboardingSteps';
 import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 import WorkspaceNameInput from '../../components/Onboarding/WorkspaceNameInput';
+import { postReIssueAccessToken } from '../../apis/auth';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { LOCAL_STORAGE_KEY } from '../../constants/key';
 
 const OnboardingCreateWorkspace = () => {
   // useOnboardingGuard(1); API 연결 후 훅 사용 예정
   const [workspaceUrl, setWorkspaceUrl] = useState('');
+
+  useEffect(() => {
+    const fetchAccessToken = async () => {
+      const accesstoken = await postReIssueAccessToken();
+      const { setItem } = useLocalStorage(LOCAL_STORAGE_KEY.accessToken);
+      setItem(accesstoken);
+    };
+    fetchAccessToken();
+  }, []);
+
   return (
     <div className="flex flex-col items-center gap-[3.2rem]">
       {/* 인디케이터 */}
