@@ -10,3 +10,8 @@ export const formatDateDot = (date: Date): string => {
   const dd = String(date.getDate()).padStart(2, '0');
   return `${yy}.${mm}.${dd}`;
 };
+
+export const formatIsoToDot = (isoString: string): string => {
+  const date = new Date(isoString);
+  return formatDateDot(date);
+};

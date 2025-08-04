@@ -25,7 +25,7 @@ const MemberInviteModal = (props: MemberInviteModalProps) => {
             <img src={IcX} alt={'닫기'} onClick={props.onClick} />
           </div>
           <p className={`mt-[0.8rem] text-gray-500 font-body-r`}>
-            팀원을 ${props.memberName}님의 팀에 초대해봐요
+            {`팀원을 ${props.memberName}님의 팀에 초대해봐요`}
           </p>
         </section>
 
