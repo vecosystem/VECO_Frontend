@@ -1,6 +1,6 @@
 import { GoalItem } from '../../components/ListView/GoalItem';
 import PlusIcon from '../../assets/icons/plus.svg';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PRIORITY_LABELS, STATUS_LABELS, type ItemFilter } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
@@ -12,8 +12,11 @@ import Modal from '../../components/Modal/Modal';
 import type { GroupedGoal } from '../../types/goal';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGetGoalList } from '../../apis/goal/useGetGoalList';
+import { useInView } from 'react-intersection-observer';
+import { useGetInfiniteGoalList } from '../../apis/goal/useGetGoalList';
 import { useDeleteGoals } from '../../apis/goal/useDeleteGoals';
+import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
+import { mergeGroups } from '../../components/ListView/MergeGroup';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
@@ -45,16 +48,37 @@ const GoalHome = () => {
     () => ({
       // 우선 기본값 설정
       cursor: '-1',
-      size: 10,
+      size: 3,
       query: filterToQuery(filter),
     }),
     [filter]
   );
 
-  // isLoading, isError 로직 추가
-  const { data } = useGetGoalList(teamId ?? '', params);
-  const goalGroups = data?.result?.data ?? [];
+  const { data, isFetchingNextPage, isLoading, isError, hasNextPage, fetchNextPage } =
+    useGetInfiniteGoalList(teamId ?? '', params);
+
+  const goalGroups = data?.pages ?? [];
   const allGoalsFlat = goalGroups.flatMap((g) => g.goals);
+
+  const rawGoalGroups = data?.pages ?? [];
+  const allGroups: GroupedGoal[] = rawGoalGroups.map((g) => ({
+    key: g.filterName,
+    items: g.goals,
+  }));
+
+  const grouped = mergeGroups(allGroups);
+  const sortedGrouped = getSortedGrouped(filter, grouped);
+  const isEmpty = grouped.every(({ items }) => items.length === 0);
+
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
   const {
     checkedIds: checkItems,
@@ -95,13 +119,9 @@ const GoalHome = () => {
     );
   };
 
-  const grouped: GroupedGoal[] = goalGroups.map((g) => ({
-    key: g.filterName,
-    items: g.goals,
-  }));
-
-  const sortedGrouped = getSortedGrouped(filter, grouped);
-  const isEmpty = grouped.every(({ items }) => items.length === 0);
+  if (isError) {
+    return <div>Error...</div>; // 임시 에러페이지
+  }
 
   return (
     <>
@@ -140,8 +160,9 @@ const GoalHome = () => {
           <div className="flex flex-1 items-center justify-center">
             <div className="font-body-r">목표를 생성하세요</div>
           </div>
+        ) : isLoading ? (
+          <ListViewItemSkeletonList />
         ) : (
-          /* 리스트뷰 */
           <div className="flex flex-col gap-[4.8rem]">
             {sortedGrouped.map(({ key, items }) =>
               /* 해당 요소 존재할 때만 생성 */
@@ -189,6 +210,7 @@ const GoalHome = () => {
                 </div>
               ) : null
             )}
+            <div ref={ref}>{isFetchingNextPage && <ListViewItemSkeletonList count={3} />}</div>
           </div>
         )}
       </div>
