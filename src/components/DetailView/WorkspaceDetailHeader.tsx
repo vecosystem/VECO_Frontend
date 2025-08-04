@@ -1,20 +1,23 @@
-// WorkspaceDetailHeader.tsx
-// 워크스페이스 전체 팀 - 상세페이지 헤더 컴포넌트
-
-import { dummyStatusGoalGroups } from '../../types/testDummy';
 import WorkspaceIcon from '../ListView/WorkspaceIcon';
+import { useParams } from 'react-router-dom';
+import { useGetGoalName } from '../../apis/goal/useGetGoalName.ts';
+import { useGetIssueName } from '../../apis/issue/useGetIssueName.ts';
+import { useGetExternalName } from '../../apis/external/useGetExternalName.ts';
 
 interface WorkspaceDetailHeaderProps {
+  type: 'goal' | 'issue' | 'external';
   defaultTitle: string; // 상세페이지 제목에 아무것도 입력되지 않았을 때 기본 타이틀
   title: string; // 상세페이지 제목으로부터 전달받아올 타이틀
 }
 
-const WorkspaceDetailHeader = ({ defaultTitle, title }: WorkspaceDetailHeaderProps) => {
-  // 상세페이지의 ID 체계 : 일단 dummy 데이터 첫번째를 임의로 가져옴.
-  // 추후 실제 API 연결하면서 다시 작성할 예정
-  const groupIndex = 0;
-  const goalIndex = 0;
-  const detailId = dummyStatusGoalGroups[groupIndex]?.goals[goalIndex]?.name;
+const WorkspaceDetailHeader = ({ type, defaultTitle, title }: WorkspaceDetailHeaderProps) => {
+  const teamId = Number(useParams<{ teamId: string }>().teamId);
+  const { data: detailId } =
+    type === 'goal'
+      ? useGetGoalName(teamId)
+      : type === 'issue'
+        ? useGetIssueName(teamId)
+        : useGetExternalName(teamId);
 
   return (
     <div className="flex gap-[3.2rem] flex-nowrap">
