@@ -13,7 +13,7 @@ let tokenReissuePromise: Promise<string> | null = null;
 // 기본 axios 인스턴스
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_SERVER_API_URL,
-  withCredentials: false, // 기본적으로 쿠키 전송 X
+  withCredentials: true,
 });
 
 /**

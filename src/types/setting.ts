@@ -10,7 +10,7 @@ export type MemberListResponse = {
   memberId: number;
   email: string;
   name: string;
-  profileImageUrl: string;
+  profileImageUrl: string | null;
   teams: Team[];
   joinedAt: string;
 };

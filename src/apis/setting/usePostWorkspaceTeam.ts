@@ -17,7 +17,7 @@ const postWorkspaceTeam = async (
   try {
     const response = await axiosInstance.post<CommonResponse<PostWorkspaceTeamResponse>>(
       '/api/workspace/setting/teams',
-      { name: name, memberId: memberId }
+      { teamName: name, memberId: memberId }
     );
     if (!response.data.result) return Promise.reject(response);
     return response.data.result;

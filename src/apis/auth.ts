@@ -6,13 +6,7 @@ import type { ReIssueTokenResponse } from '../types/auth';
  * - pages/onboarding/GoogleLoginRedirect.tsx
  */
 export const postReIssueAccessToken = async (): Promise<string> => {
-  const { data }: { data: ReIssueTokenResponse } = await axiosInstance.post(
-    '/api/token/reissue',
-    null,
-    {
-      withCredentials: true, // 쿠키 포함 (refreshToken 전송)
-    }
-  );
+  const { data }: { data: ReIssueTokenResponse } = await axiosInstance.post('/api/token/reissue');
 
   if (!data.result?.accessToken) {
     throw new Error('accessToken 재발급 실패');
@@ -34,7 +28,7 @@ export const redirectToGoogleLogin = () => {
   }
 
   try {
-    window.location.href = `${baseURL}/oauth2/authorization/google/google`;
+    window.location.href = `${baseURL}/oauth2/authorization/google`;
   } catch (error) {
     console.error('Google 로그인 리다이렉트 실패:', error);
     alert('Google 로그인 중 문제가 발생했습니다.');

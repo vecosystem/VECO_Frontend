@@ -7,8 +7,6 @@ import OnboardingInviteMember from '../pages/onboarding/OnboardingInviteMember';
 import OnboardingFinish from '../pages/onboarding/OnboardingFinish';
 import Error404NotFound from '../pages/Error404NotFound';
 import ParticipateWorkspaceInputPw from '../pages/onboarding/ParticipateWorkspaceInputPw';
-import GoogleLoginRedirect from '../pages/onboarding/GoogleLoginRedirect';
-import KakaoLoginRedirect from '../pages/onboarding/KakaoLoginRedirect';
 import { HomePage } from '../pages/home/HomePage.tsx';
 
 export const publicRoutes: RouteObject[] = [
@@ -65,14 +63,6 @@ export const publicRoutes: RouteObject[] = [
       {
         path: 'input-pw',
         element: <ParticipateWorkspaceInputPw />,
-      },
-      {
-        path: 'google',
-        element: <GoogleLoginRedirect />,
-      },
-      {
-        path: 'kakao',
-        element: <KakaoLoginRedirect />,
       },
     ],
   },
