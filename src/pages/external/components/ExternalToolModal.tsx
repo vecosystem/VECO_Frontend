@@ -4,7 +4,6 @@ import GithubIcon from '../../../assets/icons/github.svg';
 import GithubWhiteIcon from '../../../assets/icons/github-white.svg';
 import SlackIcon from '../../../assets/icons/slack.svg';
 import ExternalToolButton from './ExternalToolButton';
-import { useGetWorkspaceProfile } from '../../../apis/setting/useGetWorkspaceProfile.ts';
 import { useParams } from 'react-router-dom';
 import { useGetGithubConnect } from '../../../apis/external/useGetGithubConnect.ts';
 import { useGetSlackConnect } from '../../../apis/external/useGetSlackConnect.ts';
@@ -39,8 +38,7 @@ interface ExternalToolModalProps {
 const ExternalToolModal = ({ onClose }: ExternalToolModalProps) => {
   const teamId = Number(useParams().teamId);
   const { mutate: connectGithub } = useGetGithubConnect(teamId);
-  const workspaceId = useGetWorkspaceProfile().data?.workspaceId || 0;
-  const { mutate: connectSlack } = useGetSlackConnect(workspaceId);
+  const { mutate: connectSlack } = useGetSlackConnect();
   const [selected, setSelected] = useState<string | null>(null);
 
   return createPortal(

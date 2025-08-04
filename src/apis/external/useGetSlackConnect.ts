@@ -7,12 +7,10 @@ interface GetSlackConnectResponse {
   linkedAt: string;
 }
 
-const getSlackConnect = async (workspaceId: number): Promise<GetSlackConnectResponse> => {
+const getSlackConnect = async (): Promise<GetSlackConnectResponse> => {
   try {
-    const response = await axiosInstance.get<CommonResponse<GetSlackConnectResponse>>(
-      '/slack/connect',
-      { params: workspaceId }
-    );
+    const response =
+      await axiosInstance.get<CommonResponse<GetSlackConnectResponse>>('/slack/connect');
     if (!response.data.result) return Promise.reject(response);
     return response.data.result;
   } catch (error) {
@@ -21,9 +19,9 @@ const getSlackConnect = async (workspaceId: number): Promise<GetSlackConnectResp
   }
 };
 
-export const useGetSlackConnect = (workspaceId: number) => {
+export const useGetSlackConnect = () => {
   return useMutation({
-    mutationFn: () => getSlackConnect(workspaceId),
+    mutationFn: () => getSlackConnect(),
     onSuccess: () => {
       console.log('Slack 연동 조회 성공');
     },
