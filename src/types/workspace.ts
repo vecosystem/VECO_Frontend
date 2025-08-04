@@ -11,7 +11,7 @@ export type CreateWorkspaceResponse = CommonResponse<{
   workspaceName: string;
   workspaceUrl: string;
   inviteUrl: string;
-  invitePassWord: string;
+  invitePassword: string;
   defaultTeamId: number;
 }>;
 
