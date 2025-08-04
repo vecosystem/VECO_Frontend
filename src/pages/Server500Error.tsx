@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../components/Onboarding/PrimaryButton.tsx';
 
-const Error = () => {
+const Server500Error = () => {
   const navigate = useNavigate();
 
   return (
@@ -30,4 +30,4 @@ const Error = () => {
   );
 };
 
-export default Error;
+export default Server500Error;
