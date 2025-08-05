@@ -1,7 +1,7 @@
 import type { MemberListResponse } from '../../types/setting.ts';
 import { axiosInstance } from '../axios.ts';
 import type { CommonResponse } from '../../types/common.ts';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { queryKey } from '../../constants/queryKey.ts';
 
 // 설정 - 워크스페이스 멤버 조회
@@ -19,7 +19,7 @@ const getWorkspaceMembers = async (): Promise<MemberListResponse[]> => {
 };
 
 export const useGetWorkspaceMembers = () => {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: [queryKey.WORKSPACE_MEMBERS],
     queryFn: getWorkspaceMembers,
   });

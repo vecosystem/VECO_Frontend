@@ -1,12 +1,8 @@
-// DetailHeader.tsx
-// 상세페이지 헤더 컴포넌트
-
-import { dummyStatusGoalGroups } from '../../types/testDummy';
 import TeamIcon from '../ListView/TeamIcon';
-// import { useGetGoalName } from '../../apis/goal/useGetGoalName.ts';
-// import { useGetExternalName } from '../../apis/external/useGetExternalName.ts';
-// import { useGetIssueName } from '../../apis/issue/useGetIssueName.ts';
-// import { useParams } from 'react-router-dom';
+import { useGetGoalName } from '../../apis/goal/useGetGoalName.ts';
+import { useGetExternalName } from '../../apis/external/useGetExternalName.ts';
+import { useGetIssueName } from '../../apis/issue/useGetIssueName.ts';
+import { useParams } from 'react-router-dom';
 
 interface DetailHeaderProps {
   type: 'goal' | 'issue' | 'external';
@@ -15,23 +11,13 @@ interface DetailHeaderProps {
 }
 
 const DetailHeader = ({ type, defaultTitle, title }: DetailHeaderProps) => {
-  // 상세페이지의 ID 체계 : 일단 dummy 데이터 첫번째를 임의로 가져옴.
-  // 추후 실제 API 연결하면서 다시 작성할 예정
-  const groupIndex = 0;
-  const goalIndex = 0;
-  console.log(type);
-
-  // TODO: 추후 API 연결 시 아래 주석 해제
-  // const teamId = Number(useParams<{ teamId: string }>().teamId);
-  // const getDetailId =
-  //   type === 'goal'
-  //     ? useGetGoalName(teamId)
-  //     : type === 'issue'
-  //       ? useGetIssueName(teamId)
-  //       : useGetExternalName(teamId);
-  // console.log(getDetailId);
-
-  const detailId = dummyStatusGoalGroups[groupIndex]?.goals[goalIndex]?.name;
+  const teamId = Number(useParams<{ teamId: string }>().teamId);
+  const { data: detailId } =
+    type === 'goal'
+      ? useGetGoalName(teamId)
+      : type === 'issue'
+        ? useGetIssueName(teamId)
+        : useGetExternalName(teamId);
 
   return (
     <div className="flex gap-[3.2rem] flex-nowrap">

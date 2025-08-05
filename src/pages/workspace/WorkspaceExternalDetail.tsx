@@ -82,7 +82,7 @@ const WorkspaceExternalDetail = () => {
   return (
     <div className="flex flex-1 flex-col gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem] pb-[5.3rem]">
       {/* 상세페이지 헤더 */}
-      <WorkspaceDetailHeader defaultTitle="제목을 작성해보세요" title={title} />
+      <WorkspaceDetailHeader type={'external'} defaultTitle="제목을 작성해보세요" title={title} />
 
       {/* 상세페이지 메인 */}
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full h-full">

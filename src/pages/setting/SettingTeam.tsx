@@ -35,7 +35,10 @@ const SettingTeam = () => {
       />
       <hr className={`w-full text-gray-300`} />
       {isLoading ? (
-        <TeamItemSkeleton />
+        <>
+          <TeamItemSkeleton />
+          <TeamItemSkeleton />
+        </>
       ) : (
         <>
           {firstTeam && (
