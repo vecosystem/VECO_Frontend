@@ -57,9 +57,11 @@ const IssueHome = () => {
     [filter]
   );
 
+  // 데이터 불러오기
   const { data, isFetchingNextPage, isLoading, isError, hasNextPage, fetchNextPage } =
     useGetInfiniteIssueList(teamId ?? '', params);
 
+  // 그룹화
   const issueGroups = data?.pages ?? [];
   const allIssuesFlat = issueGroups.flatMap((i) => i.issues);
 
@@ -73,6 +75,7 @@ const IssueHome = () => {
   const sortedGrouped = getSortedGrouped(filter, grouped);
   const isEmpty = grouped.every(({ items }) => items.length === 0);
 
+  // 무한스크롤 fetching
   const { ref, inView } = useInView({
     threshold: 0,
   });
@@ -83,6 +86,7 @@ const IssueHome = () => {
     }
   }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
+  // 삭제 관련 상태 및 함수
   const {
     checkedIds: checkItems,
     isAllChecked,
