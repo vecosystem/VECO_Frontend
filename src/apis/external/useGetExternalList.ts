@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { queryKey } from '../../constants/queryKey';
 import type { PaginationDto } from '../../types/common';
 import type { RequestExternalListDto, ResponseExternalDto } from '../../types/external';
@@ -26,5 +26,25 @@ export const useGetExternalList = (teamId: string, params: PaginationDto) => {
   return useQuery({
     queryKey: [queryKey.EXTERNAL_LIST, teamId, params],
     queryFn: () => getExternalList({ teamId }, params),
+  });
+};
+
+export const useGetInfiniteExternalList = (teamId: string, params: PaginationDto) => {
+  return useInfiniteQuery({
+    queryKey: [queryKey.EXTERNAL_LIST, teamId, params.query],
+    queryFn: ({ pageParam = '-1' }) =>
+      getExternalList({ teamId }, { ...params, cursor: pageParam, size: 3 }), // 한 번에 불러올 데이터 개수
+    initialPageParam: '-1',
+    getNextPageParam: (lastPage: ResponseExternalDto) => {
+      if (lastPage.result?.hasNext) {
+        return lastPage.result.nextCursor;
+      }
+      return undefined;
+    },
+    select: (data) => ({
+      pages: data.pages.flatMap((page) => page.result?.data ?? []),
+      pageParams: data.pageParams,
+    }),
+    enabled: !!teamId,
   });
 };
