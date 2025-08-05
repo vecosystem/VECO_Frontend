@@ -26,7 +26,7 @@ const FullSettingSidebarContent = ({ setExpanded }: FullSettingSidebarContentPro
             type="button"
             className="flex items-center gap-[0.8rem] cursor-pointer"
             onClick={() => {
-              navigate('/workspace/team/default/issue');
+              navigate('/workspace');
             }}
           >
             <img src={leftArrowIcon} className="w-[3.2rem] h-[3.2rem]" alt="Workspace" />
