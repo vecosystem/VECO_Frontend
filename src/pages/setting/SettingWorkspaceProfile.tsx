@@ -6,7 +6,8 @@ const SettingWorkspaceProfile = () => {
   // TODO: 워크스페이스 프로필 조회 API 호출
   // const { data: workspaceData } = useGetWorkspaceProfile();
   const workspaceData = {
-    name: 'Veco',
+    workspaceName: 'Veco',
+    workspaceImageUrl: '',
     workspaceUrl: 'veco.app/veco',
   };
 
@@ -21,11 +22,19 @@ const SettingWorkspaceProfile = () => {
               <h2 className="font-title-sub-r text-gray-600">워크스페이스 로고</h2>
 
               <button className="w-[4.2rem] h-[4.2rem] flex items-center justify-center">
-                <img src={vecocirclenavy} className="w-full h-full" alt="프로필 사진" />
+                <img
+                  src={workspaceData?.workspaceImageUrl || vecocirclenavy}
+                  className="w-full h-full"
+                  alt="프로필 사진"
+                />
               </button>
             </section>
             <div className="flex flex-col gap-[3.2rem]">
-              <InputSection label="이름" placeholder={workspaceData?.name || 'Veco'} disabled />
+              <InputSection
+                label="이름"
+                placeholder={workspaceData?.workspaceName || 'Veco'}
+                disabled
+              />
               <InputSection
                 label="URL"
                 placeholder={workspaceData?.workspaceUrl || 'veco.app/veco'}

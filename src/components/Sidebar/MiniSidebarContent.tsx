@@ -12,7 +12,7 @@ import externalHoverIcon from '../../assets/icons/external-hover.svg';
 import DropdownMenu from './DropdownMenu';
 import SidebarItem from './SidebarItem';
 import SortableDropdownList from './SortableDropdownList';
-import type { Team } from './types';
+import type { Team } from '../../types/setting';
 
 interface MiniSidebarContentProps {
   setExpanded: (value: boolean) => void;
@@ -114,7 +114,7 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                 <DropdownMenu
                   headerTitle=""
                   initialOpen={!isOverlay}
-                  headerTeamIcon={team.profileUrl}
+                  headerTeamIcon={team.teamImageUrl}
                   isNested={true}
                 >
                   {!isOverlay && (

@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import ModalButton from './ModalButton.tsx';
 
 interface MemberInviteModalProps {
+  memberName: string;
   url: string;
   password: string;
   onClick: () => void;
@@ -23,7 +24,9 @@ const MemberInviteModal = (props: MemberInviteModalProps) => {
             <h2 className={`text-gray-600 font-title-sub-b`}>팀원 초대</h2>
             <img src={IcX} alt={'닫기'} onClick={props.onClick} />
           </div>
-          <p className={`mt-[0.8rem] text-gray-500 font-body-r`}>팀원을 00님의 팀에 초대해봐요</p>
+          <p className={`mt-[0.8rem] text-gray-500 font-body-r`}>
+            {`팀원을 ${props.memberName}님의 팀에 초대해봐요`}
+          </p>
         </section>
 
         <section className={`flex justify-between items-start gap-x-[0.8rem]`}>

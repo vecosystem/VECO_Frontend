@@ -8,4 +8,6 @@ export const queryKey = {
   ISSUE_LIST: 'issue_list',
   EXTERNAL_LIST: 'external_list',
   NOTI_LIST: 'noti_list',
+  GOAL: 'goal',
+  EXTERNAL: 'external',
 };

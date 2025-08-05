@@ -7,10 +7,11 @@ export interface CreateWorkspaceRequest {
 
 export type CreateWorkspaceResponse = CommonResponse<{
   workspaceId: number;
+  name: string;
   workspaceName: string;
   workspaceUrl: string;
   inviteUrl: string;
-  invitePassWord: string;
+  invitePassword: string;
   defaultTeamId: number;
 }>;
 

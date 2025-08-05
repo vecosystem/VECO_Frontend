@@ -16,7 +16,7 @@ import hamburgerIcon from '../../assets/icons/hamburger.svg';
 import SortableDropdownList from './SortableDropdownList';
 import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
 // import { usePatchWorkspaceTeams } from '../../apis/setting/usePatchWorkspaceTeams';
-import type { Team } from './types';
+import type { Team } from '../../types/setting';
 
 interface FullSidebarContentProps {
   setExpanded: (value: boolean) => void;
@@ -146,9 +146,9 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
               items={teams}
               renderContent={(team, { listeners, attributes }, isOverlay) => (
                 <DropdownMenu
-                  headerTitle={team.name}
+                  headerTitle={team.teamName}
                   initialOpen={!isOverlay}
-                  headerTeamIcon={team.profileUrl || vecocirclewhite}
+                  headerTeamIcon={team.teamImageUrl || vecocirclewhite}
                   isNested={true}
                   dragHandle={
                     <button {...attributes} {...listeners} type="button" className="cursor-grab">

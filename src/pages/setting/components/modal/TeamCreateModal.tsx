@@ -4,29 +4,19 @@ import MemberCheckbox from '../MemberCheckbox.tsx';
 import { createPortal } from 'react-dom';
 import { TEAM_NAME_REGEX } from '../../../../constants/regex.ts';
 import ModalButton from './ModalButton.tsx';
+import { usePostWorkspaceTeam } from '../../../../apis/setting/usePostWorkspaceTeam.ts';
+import { useGetWorkspaceMembers } from '../../../../apis/setting/useGetWorkspaceMembers.ts';
 
 interface TeamCreateModalProps {
   onClick: () => void;
 }
 
-const DUMMY_MEMBERS = [
-  { id: 1, name: '전채운' },
-  { id: 2, name: '이가을' },
-  { id: 3, name: '박유민' },
-  { id: 4, name: '염주원' },
-  { id: 5, name: '김선화' },
-  { id: 6, name: '박진주' },
-  { id: 7, name: '이승현' },
-  { id: 8, name: '최지우' },
-  { id: 9, name: '김민수' },
-  { id: 10, name: '홍길동' },
-  { id: 11, name: '이영희' },
-  { id: 12, name: '김철수' },
-];
-
 const TeamCreateModal = (props: TeamCreateModalProps) => {
   const [teamName, setTeamName] = useState<string>('');
   const [selectedMemberIds, setSelectedMemberIds] = useState<number[]>([]);
+  const { data: members } = useGetWorkspaceMembers();
+  const { mutate: createTeam } = usePostWorkspaceTeam(teamName, selectedMemberIds);
+
   const isNameValid = useMemo(() => TEAM_NAME_REGEX.test(teamName), [teamName]);
   const handleSelect = (memberId: number, checked: boolean) => {
     setSelectedMemberIds((prev) =>
@@ -36,6 +26,7 @@ const TeamCreateModal = (props: TeamCreateModalProps) => {
 
   const handleSubmit = () => {
     console.log(selectedMemberIds);
+    createTeam();
     props.onClick();
   };
 
@@ -65,12 +56,12 @@ const TeamCreateModal = (props: TeamCreateModalProps) => {
           className={`grid grid-cols-3 items-start content-start w-full border border-gray-300 
           gap-y-[1.6rem] rounded-[0.6rem] p-[2rem] h-[32.2rem] overflow-y-auto`}
         >
-          {DUMMY_MEMBERS.map((member) => (
+          {members?.map((member) => (
             <MemberCheckbox
-              key={member.id}
+              key={member.memberId}
               name={member.name}
-              checked={selectedMemberIds.includes(member.id)}
-              onSelect={(checked) => handleSelect(member.id, checked)}
+              checked={selectedMemberIds.includes(member.memberId)}
+              onSelect={(checked) => handleSelect(member.memberId, checked)}
             />
           ))}
         </section>

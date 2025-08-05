@@ -5,28 +5,34 @@ import { usePostCreateWorkspaceUrl } from '../../apis/workspace/usePostCreateWor
 
 // 부모 컴포넌트에서 전달되는 props 타입 정의
 interface WorkspaceNameInputProps {
-  onUrlGenerated: (url: string) => void; // 생성된 URL을 상위 컴포넌트에 전달
+  setWorkspaceName: (url: string) => void; // 생성된 URL을 상위 컴포넌트에 전달
+  setWorkspaceUrl: (url: string) => void; // 생성된 URL을 상위 컴포넌트에 전달
+  workspaceUrl: string;
+  workspaceName: string;
 }
 
 // 워크스페이스 이름 입력 및 URL 생성 컴포넌트
-const WorkspaceNameInput = ({ onUrlGenerated }: WorkspaceNameInputProps) => {
-  const [workspaceName, setWorkspaceName] = useState(''); // 사용자가 입력한 워크스페이스 이름
-  const [workspaceUrl, setWorkspaceUrl] = useState(''); // 백엔드에서 생성된 URL
+const WorkspaceNameInput = ({
+  setWorkspaceName,
+  setWorkspaceUrl,
+  workspaceUrl,
+  workspaceName,
+}: WorkspaceNameInputProps) => {
   const [error, setError] = useState(''); // 유효성 검사 또는 서버 에러 메시지
 
   // react-query mutation 훅 사용
   const { mutateAsync: createUrl, isPending } = usePostCreateWorkspaceUrl();
 
   const handleCheck = async () => {
-    if (isPending) return; // 중복 요청 방지
-    if (workspaceUrl) return; // 이미 URL 있으면 재요청 막기
+    // 중복 요청 혹은 이미 URL 있으면 재요청 막기
+    if (isPending || workspaceUrl) return;
 
     // 입력값 유효성 검사
     const validationError = validateWorkspaceName(workspaceName);
     if (validationError) {
       setError(validationError);
       setWorkspaceUrl('');
-      onUrlGenerated('');
+      setWorkspaceName('');
       return;
     }
 
@@ -39,7 +45,7 @@ const WorkspaceNameInput = ({ onUrlGenerated }: WorkspaceNameInputProps) => {
     // 에러 초기화 및 상태 업데이트
     setError('');
     setWorkspaceUrl(url);
-    onUrlGenerated(url);
+    setWorkspaceName(workspaceName);
   };
 
   return (

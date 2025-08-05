@@ -1,41 +1,29 @@
 import TeamItem from './components/TeamItem.tsx';
 import TeamHeader from './components/TeamHeader.tsx';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TeamCreateModal from './components/modal/TeamCreateModal.tsx';
-
-const DUMMY_TEAMS = [
-  {
-    id: 1,
-    profileImage: 'https://avatars.githubusercontent.com/u/91470334?v=4',
-    name: 'Workspace',
-    memberCount: 10,
-    createdAt: '25.01.01',
-  },
-  {
-    id: 2,
-    profileImage: null,
-    name: 'Team A',
-    memberCount: 5,
-    createdAt: '25.02.01',
-  },
-  {
-    id: 3,
-    profileImage: null,
-    name: 'Team B',
-    memberCount: 8,
-    createdAt: '25.03.01',
-  },
-  {
-    id: 4,
-    profileImage: null,
-    name: 'Team C',
-    memberCount: 3,
-    createdAt: '25.04.01',
-  },
-];
+import { useInView } from 'react-intersection-observer';
+import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams.ts';
+import TeamItemSkeleton from './components/TeamItemSkeleton.tsx';
+import { formatIsoToDot } from '../../utils/formatDate.ts';
 
 const SettingTeam = () => {
+  const { ref, inView } = useInView();
+  const {
+    data: teams,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useGetWorkspaceTeams();
+  const allTeams = teams?.pages.flatMap((page) => page.teamList) || [];
+  const firstTeam = allTeams[0];
+  const restTeams = allTeams.slice(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [inView, hasNextPage, isFetchingNextPage]);
 
   return (
     <div className={`flex flex-col w-full`}>
@@ -46,25 +34,44 @@ const SettingTeam = () => {
         onClick={() => setIsModalOpen(!isModalOpen)}
       />
       <hr className={`w-full text-gray-300`} />
-      <TeamItem
-        profileImage={DUMMY_TEAMS[0].profileImage}
-        name={DUMMY_TEAMS[0].name}
-        memberCount={DUMMY_TEAMS[0].memberCount}
-        createdAt={DUMMY_TEAMS[0].createdAt}
-        className={`py-[2.4rem]`}
-      />
-      <hr className={`w-full text-gray-300 mb-[2.4rem]`} />
-      {DUMMY_TEAMS.slice(1).map((team, index) => (
-        <TeamItem
-          profileImage={team.profileImage}
-          key={index}
-          name={team.name}
-          memberCount={team.memberCount}
-          createdAt={team.createdAt}
-          className={`mb-[3.2rem]`}
-        />
-      ))}
+      {isLoading ? (
+        <>
+          <TeamItemSkeleton />
+          <TeamItemSkeleton />
+        </>
+      ) : (
+        <>
+          {firstTeam && (
+            <TeamItem
+              teamImageUrl={firstTeam.teamImageUrl}
+              teamName={firstTeam.teamName}
+              memberCount={firstTeam.memberCount}
+              createdAt={formatIsoToDot(firstTeam.createdAt)}
+              className={'py-[2.4rem]'}
+            />
+          )}
+          <hr className={`w-full text-gray-300 mb-[2.4rem]`} />
+          {restTeams &&
+            restTeams.map((team, index) => (
+              <TeamItem
+                teamImageUrl={team.teamImageUrl}
+                key={index}
+                teamName={team.teamName}
+                memberCount={team.memberCount}
+                createdAt={formatIsoToDot(team.createdAt)}
+                className={`mb-[3.2rem]`}
+              />
+            ))}
+        </>
+      )}
+      {isFetchingNextPage && (
+        <>
+          <TeamItemSkeleton />
+          <TeamItemSkeleton />
+        </>
+      )}
       {isModalOpen && <TeamCreateModal onClick={() => setIsModalOpen(!isModalOpen)} />}
+      <div ref={ref} className={'h-[1rem]'} />
     </div>
   );
 };

@@ -6,18 +6,14 @@ import type { JoinWorkspaceRequest, JoinWorkspaceResponse } from '../../types/wo
  * 워크스페이스 참여 요청 함수
  */
 export const postJoinWorkspace = async (
-  slug: string,
   data: JoinWorkspaceRequest
 ): Promise<JoinWorkspaceResponse> => {
-  const response = await axiosInstance.post<JoinWorkspaceResponse>(
-    `/api/workspace/${slug}/join`,
-    data
-  );
+  const response = await axiosInstance.post<JoinWorkspaceResponse>(`/api/workspace/join`, data);
   return response.data;
 };
 
-export const usePostJoinWorkspace = (slug: string) => {
+export const usePostJoinWorkspace = () => {
   return useMutation<JoinWorkspaceResponse, Error, JoinWorkspaceRequest>({
-    mutationFn: (data) => postJoinWorkspace(slug, data),
+    mutationFn: postJoinWorkspace,
   });
 };
