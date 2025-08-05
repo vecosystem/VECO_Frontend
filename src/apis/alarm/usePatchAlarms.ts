@@ -8,7 +8,7 @@ import { axiosInstance } from '../axios';
 // notification/NotiHome.tsx
 const patchAlarmItem = async ({ alarmId }: RequestAlarmListDto): Promise<CommonResponse> => {
   try {
-    const { data } = await axiosInstance.patch(`api/alarms/${alarmId}`);
+    const { data } = await axiosInstance.patch(`/api/alarms/${alarmId}`);
     return data;
   } catch (error) {
     console.error('Error patching alarm item:', error);

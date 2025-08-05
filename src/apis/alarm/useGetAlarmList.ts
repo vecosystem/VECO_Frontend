@@ -12,7 +12,7 @@ const getAlarmList = async (
 ): Promise<ResponseAlarmDto> => {
   try {
     const { query } = paginationDto;
-    const { data } = await axiosInstance.get(`api/alarms/${alarmtype}`, {
+    const { data } = await axiosInstance.get(`/api/alarms/${alarmtype}`, {
       params: { query },
     });
     return data;

@@ -8,7 +8,7 @@ import { axiosInstance } from '../axios';
 // notification/NotiHome.tsx
 const deleteAlarmItem = async (alarmIds: RequestAlarmListDto): Promise<CommonResponse> => {
   try {
-    const { data } = await axiosInstance.delete(`api/alarms`, {
+    const { data } = await axiosInstance.delete(`/api/alarms`, {
       data: alarmIds,
     });
     return data;
