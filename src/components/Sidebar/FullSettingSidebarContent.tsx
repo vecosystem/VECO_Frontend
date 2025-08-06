@@ -26,7 +26,7 @@ const FullSettingSidebarContent = ({ setExpanded }: FullSettingSidebarContentPro
             type="button"
             className="flex items-center gap-[0.8rem] cursor-pointer"
             onClick={() => {
-              navigate('/workspace/team/default/issue');
+              navigate('/workspace');
             }}
           >
             <img src={leftArrowIcon} className="w-[3.2rem] h-[3.2rem]" alt="Workspace" />
@@ -45,7 +45,7 @@ const FullSettingSidebarContent = ({ setExpanded }: FullSettingSidebarContentPro
           <DropdownMenu headerTitle="워크스페이스" initialOpen={true}>
             <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pb-[1.6rem]">
               <SidebarItem
-                defaultIcon={<img src={vecocirclenavy} alt="Workspace Profile" />}
+                defaultIcon={vecocirclenavy}
                 label="워크스페이스 프로필"
                 onClick={() => {
                   navigate('/workspace/setting');
@@ -58,16 +58,16 @@ const FullSettingSidebarContent = ({ setExpanded }: FullSettingSidebarContentPro
           <DropdownMenu headerTitle="팀" initialOpen={true}>
             <div className="flex flex-col justify-center items-start gap-[1.6rem] pb-[1.6rem]">
               <SidebarItem
-                defaultIcon={<img src={tableIcon} alt="Team List" />}
-                hoverIcon={<img src={tableHoverIcon} alt="Team List" />}
+                defaultIcon={tableIcon}
+                hoverIcon={tableHoverIcon}
                 label="팀 목록"
                 onClick={() => {
                   navigate('/workspace/setting/team-list');
                 }}
               />
               <SidebarItem
-                defaultIcon={<img src={usersIcon} alt="Workspace Members" />}
-                hoverIcon={<img src={usersHoverIcon} alt="Workspace Members" />}
+                defaultIcon={usersIcon}
+                hoverIcon={usersHoverIcon}
                 label="워크스페이스 멤버"
                 onClick={() => {
                   navigate('/workspace/setting/team-members');
@@ -80,8 +80,8 @@ const FullSettingSidebarContent = ({ setExpanded }: FullSettingSidebarContentPro
           <DropdownMenu headerTitle="계정" initialOpen={true}>
             <div className="flex flex-col justify-center items-start gap-[1.6rem] pb-[1.6rem]">
               <SidebarItem
-                defaultIcon={<img src={userProfileIcon} alt="My Profile" />}
-                hoverIcon={<img src={userProfileHoverIcon} alt="My Profile" />}
+                defaultIcon={userProfileIcon}
+                hoverIcon={userProfileHoverIcon}
                 label="나의 프로필"
                 onClick={() => {
                   navigate('/workspace/setting/my-profile');

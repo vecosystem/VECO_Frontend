@@ -1,8 +1,8 @@
 import plusIcon from '../../assets/icons/plus.svg';
 
 interface SidebarItemProps {
-  defaultIcon: React.ReactNode;
-  hoverIcon?: React.ReactNode;
+  defaultIcon: string;
+  hoverIcon?: string;
   label: string;
   onClick: () => void;
   onAddClick?: () => void;
@@ -23,8 +23,12 @@ const SidebarItem = ({
         className="flex grow items-center gap-[0.8rem] cursor-pointer"
       >
         <span className="w-[2.4rem] h-[2.4rem] shrink-0 aspect-square">
-          <span className="block group-hover:hidden">{defaultIcon}</span>
-          <span className="hidden group-hover:block">{hoverIcon}</span>
+          <span className="block group-hover:hidden">
+            <img src={defaultIcon} alt="defaultIcon" />
+          </span>
+          <span className="hidden group-hover:block">
+            <img src={hoverIcon} alt="hoverIcon" />
+          </span>
         </span>
         <span className="font-small-r text-gray-600 letter-spacing-[0.028rem] group-hover:text-primary-blue group-hover:font-bold">
           {label}

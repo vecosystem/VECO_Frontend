@@ -87,15 +87,13 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
               <DropdownMenu
                 headerTitle="Workspace"
                 initialOpen={true}
-                headerTeamIcon={
-                  <img src={vecocirclenavy} className="w-[2.4rem] h-[2.4rem]" alt="Workspace" />
-                }
+                headerTeamIcon={vecocirclenavy}
                 isNested={true}
               >
                 <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
                   <SidebarItem
-                    defaultIcon={<img src={goalIcon} alt="Goal" />}
-                    hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
+                    defaultIcon={goalIcon}
+                    hoverIcon={goalHoverIcon}
                     label="목표"
                     onClick={() => {
                       navigate(
@@ -111,8 +109,8 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                     }}
                   />
                   <SidebarItem
-                    defaultIcon={<img src={issueIcon} alt="Issue" />}
-                    hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
+                    defaultIcon={issueIcon}
+                    hoverIcon={issueHoverIcon}
                     label="이슈"
                     onClick={() => {
                       navigate(
@@ -128,8 +126,8 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                     }}
                   />
                   <SidebarItem
-                    defaultIcon={<img src={externalIcon} alt="External" />}
-                    hoverIcon={<img src={externalHoverIcon} alt="External" />}
+                    defaultIcon={externalIcon}
+                    hoverIcon={externalHoverIcon}
                     label="외부"
                     onClick={() => {
                       navigate(`/workspace/default/team/:teamId/ext`.replace(':teamId', String(1)));
@@ -150,9 +148,7 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                 <DropdownMenu
                   headerTitle={team.teamName}
                   initialOpen={!isOverlay}
-                  headerTeamIcon={
-                    <img src={team.teamImageUrl || vecocirclewhite} alt={team.teamName} />
-                  }
+                  headerTeamIcon={team.teamImageUrl || vecocirclewhite}
                   isNested={true}
                   dragHandle={
                     <button {...attributes} {...listeners} type="button" className="cursor-grab">
@@ -163,8 +159,8 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                   {!isOverlay && (
                     <div className="flex flex-col justify-center items-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
                       <SidebarItem
-                        defaultIcon={<img src={goalIcon} alt="Goal" />}
-                        hoverIcon={<img src={goalHoverIcon} alt="Goal" />}
+                        defaultIcon={goalIcon}
+                        hoverIcon={goalHoverIcon}
                         label="목표"
                         onClick={() => {
                           navigate(
@@ -180,8 +176,8 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                         }}
                       />
                       <SidebarItem
-                        defaultIcon={<img src={issueIcon} alt="Issue" />}
-                        hoverIcon={<img src={issueHoverIcon} alt="Issue" />}
+                        defaultIcon={issueIcon}
+                        hoverIcon={issueHoverIcon}
                         label="이슈"
                         onClick={() => {
                           navigate(
@@ -197,8 +193,8 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                         }}
                       />
                       <SidebarItem
-                        defaultIcon={<img src={externalIcon} alt="External" />}
-                        hoverIcon={<img src={externalHoverIcon} alt="External" />}
+                        defaultIcon={externalIcon}
+                        hoverIcon={externalHoverIcon}
                         label="외부"
                         onClick={() => {
                           navigate(
