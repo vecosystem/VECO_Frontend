@@ -37,15 +37,15 @@ const ExternalHome = () => {
   const filterToQuery = (filter: ItemFilter) => {
     switch (filter) {
       case '상태':
-        return 'state';
+        return 'STATE';
       case '우선순위':
-        return 'priority';
+        return 'PRIORITY';
       case '담당자':
-        return 'manager';
+        return 'ASSIGNEE';
       case '목표':
-        return 'goal';
+        return 'GOAL';
       case '외부':
-        return 'external';
+        return 'EXT_TYPE';
       default:
         return '';
     }
@@ -55,7 +55,7 @@ const ExternalHome = () => {
     () => ({
       // 우선 기본값 설정
       // cursor: '-1',
-      size: 10,
+      // size: 10,
       query: filterToQuery(filter),
     }),
     [filter]
