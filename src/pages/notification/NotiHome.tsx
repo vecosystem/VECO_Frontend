@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import TeamIcon from '../../components/ListView/TeamIcon';
 import BellIcon from '../../assets/icons/bell.svg';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
@@ -12,20 +12,9 @@ import { PRIORITY_LABELS, STATUS_LABELS, type ItemFilter } from '../../types/lis
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import GroupTypeTab from '../../components/ListView/GroupTypeTab';
 import { ExternalItem } from '../../components/ListView/ExternalItem';
-import {
-  dummyExternalAlarmByGoal,
-  dummyExternalAlarmByPriority,
-  dummyExternalAlarmByState,
-  dummyExternalAlarmByTool,
-  dummyGoalAlarmByPriority,
-  dummyGoalAlarmByState,
-  dummyIssueAlarmByGoal,
-  dummyIssueAlarmByPriority,
-  dummyIssueAlarmByState,
-} from '../../types/testNotiDummy';
-import type { AlarmFilter } from '../../types/alarm';
 import { usePatchAlarms } from '../../apis/alarm/usePatchAlarms';
 import { useParams } from 'react-router-dom';
+import { useGetAlarmList } from '../../apis/alarm/useGetAlarmList';
 
 const TAB_LIST = ['GOAL', 'ISSUE', 'EXTERNAL'] as const;
 type NotiTab = (typeof TAB_LIST)[number];
@@ -41,21 +30,21 @@ const NotiHome = () => {
   const [tab, setTab] = useState<NotiTab>('GOAL');
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
-  const getDummyGroups = (tab: NotiTab, filter: ItemFilter): AlarmFilter | undefined => {
-      if (filter === '상태') return dummyGoalAlarmByState.result;
-      if (filter === '우선순위') return dummyGoalAlarmByPriority.result;
+  const filterToQuery = (tab: NotiTab, filter: ItemFilter) => {
     if (tab === 'GOAL') {
+      if (filter === '상태') return 'state';
+      if (filter === '우선순위') return 'priority';
     }
-      if (filter === '상태') return dummyIssueAlarmByState.result;
-      if (filter === '우선순위') return dummyIssueAlarmByPriority.result;
-      if (filter === '목표') return dummyIssueAlarmByGoal.result;
     if (tab === 'ISSUE') {
+      if (filter === '상태') return 'state';
+      if (filter === '우선순위') return 'priority';
+      if (filter === '목표') return 'goal';
     }
-      if (filter === '상태') return dummyExternalAlarmByState.result;
-      if (filter === '우선순위') return dummyExternalAlarmByPriority.result;
-      if (filter === '목표') return dummyExternalAlarmByGoal.result;
-      if (filter === '외부') return dummyExternalAlarmByTool.result;
     if (tab === 'EXTERNAL') {
+      if (filter === '상태') return 'state';
+      if (filter === '우선순위') return 'priority';
+      if (filter === '목표') return 'goal';
+      if (filter === '외부') return 'external';
     }
     return undefined;
   };
@@ -66,34 +55,39 @@ const NotiHome = () => {
     setCheckedIds([]); // 탭 변경 시 선택 해제
   };
 
-  const alarmGroups = getDummyGroups(tab, filter);
+  const params = useMemo(
+    () => ({
+      // 우선 기본값 설정
+      cursor: '-1',
+      size: 10,
+      query: filterToQuery(tab, filter),
+    }),
+    [tab, filter]
+  );
 
-  const allItems = alarmGroups
-    ? alarmGroups.groupedList.flatMap((group) =>
-        group.notiList.map((item) => ({
+  // isLoading, isError 로직 추가
+  const { data } = useGetAlarmList(tab, params);
+  const alarmGroups = data?.result?.groupedList ?? [];
+  const allAlarmsFlat = useMemo(() => alarmGroups.flatMap((g) => g.notiList), [alarmGroups]);
+
+  const grouped = useMemo(
+    () =>
+      alarmGroups.map((group) => ({
+        key: group.groupTitle,
+        items: group.notiList.map((item) => ({
           ...item,
-          deadline: alarmGroups.deadline,
-        }))
-      )
-    : [];
-
+          deadline: data?.result?.deadline,
+        })),
+      })),
+    [alarmGroups, data?.result?.deadline]
+  );
   const {
     checkedIds: checkItems,
     isAllChecked,
     handleCheck,
     handleSelectAll,
     setCheckedIds,
-  } = useCheckItems(allItems, 'alarmId');
-
-  const grouped = alarmGroups
-    ? alarmGroups.groupedList.map((group) => ({
-        key: group.groupTitle,
-        items: group.notiList.map((item) => ({
-          ...item,
-          deadline: alarmGroups.deadline,
-        })),
-      }))
-    : [];
+  } = useCheckItems(allAlarmsFlat, 'alarmId');
 
   const isEmpty = grouped.every(({ items }) => items.length === 0);
 
