@@ -26,7 +26,7 @@ export type External = {
   goaltitle?: string;
   deadline: Deadline | string;
   managers?: Manager;
-  externalTool?: string;
+  extServiceType?: string;
 };
 
 export type GroupedExternal = { key: string; items: External[] };
