@@ -46,3 +46,13 @@ export type SimpleGoalListDto = {
   cnt: number;
   info: SimpleGoal[];
 };
+
+export type TeamMember = {
+  id: number;
+  nickname: string;
+};
+
+export type TeamMemberListDto = {
+  cnt: number;
+  info: TeamMember[];
+};
