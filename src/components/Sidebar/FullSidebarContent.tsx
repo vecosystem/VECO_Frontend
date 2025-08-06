@@ -46,9 +46,13 @@ const FullSidebarContent = ({
               navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/issue`)
             }
           >
-            <img src={vecocirclenavy} className="w-[3.2rem] h-[3.2rem]" alt="Workspace" />
+            <img
+              src={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
+              className="w-[3.2rem] h-[3.2rem]"
+              alt="Workspace"
+            />
             <span className="font-body-b text-gray-600 letter-spacing-[-0.032rem]">
-              {workspaceProfile.workspaceName}
+              {workspaceProfile?.workspaceName}
             </span>
           </button>
           <div className="flex items-center gap-[1.6rem]">
@@ -94,7 +98,7 @@ const FullSidebarContent = ({
           <DropdownMenu headerTitle="워크스페이스 전체 팀" initialOpen={true}>
             <div className="flex flex-col">
               <DropdownMenu
-                headerTitle={workspaceProfile.workspaceName || ''}
+                headerTitle={workspaceProfile?.workspaceName || ''}
                 initialOpen={true}
                 headerTeamIcon={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
                 isNested={true}
@@ -152,9 +156,9 @@ const FullSidebarContent = ({
                 items={teams}
                 renderContent={(team, { listeners, attributes }, isOverlay) => (
                   <DropdownMenu
-                    headerTitle={team.teamName}
+                    headerTitle={team?.teamName}
                     initialOpen={!isOverlay}
-                    headerTeamIcon={team.teamImageUrl || vecocirclewhite}
+                    headerTeamIcon={team?.teamImageUrl || vecocirclewhite}
                     isNested={true}
                     dragHandle={
                       <button {...attributes} {...listeners} type="button" className="cursor-grab">
