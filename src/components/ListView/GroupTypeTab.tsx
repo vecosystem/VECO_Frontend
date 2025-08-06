@@ -5,23 +5,23 @@ import IssueBlueIcon from '../../assets/icons/issue-blue.svg';
 import ExternalIcon from '../../assets/icons/external.svg';
 import ExternalBlueIcon from '../../assets/icons/external-blue.svg';
 
-const TAB_LIST = ['goal', 'issue', 'external'] as const;
+const TAB_LIST = ['GOAL', 'ISSUE', 'EXTERNAL'] as const;
 const TAB_LABELS: Record<(typeof TAB_LIST)[number], string> = {
-  goal: '목표',
-  issue: '이슈',
-  external: '외부',
+  GOAL: '목표',
+  ISSUE: '이슈',
+  EXTERNAL: '외부',
 } as const;
 
 const ICONS = {
-  goal: GoalIcon,
-  issue: IssueIcon,
-  external: ExternalIcon,
+  GOAL: GoalIcon,
+  ISSUE: IssueIcon,
+  EXTERNAL: ExternalIcon,
 };
 
 const SELECTED_ICONS = {
-  goal: GoalBlueIcon,
-  issue: IssueBlueIcon,
-  external: ExternalBlueIcon,
+  GOAL: GoalBlueIcon,
+  ISSUE: IssueBlueIcon,
+  EXTERNAL: ExternalBlueIcon,
 };
 
 export type NotiTab = (typeof TAB_LIST)[number];

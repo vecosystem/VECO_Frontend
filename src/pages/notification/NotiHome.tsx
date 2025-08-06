@@ -27,35 +27,35 @@ import type { AlarmFilter } from '../../types/alarm';
 import { usePatchAlarms } from '../../apis/alarm/usePatchAlarms';
 import { useParams } from 'react-router-dom';
 
-const TAB_LIST = ['goal', 'issue', 'external'] as const;
+const TAB_LIST = ['GOAL', 'ISSUE', 'EXTERNAL'] as const;
 type NotiTab = (typeof TAB_LIST)[number];
 
 const FILTER_OPTIONS: Record<NotiTab, ItemFilter[]> = {
-  goal: ['상태', '우선순위'],
-  issue: ['상태', '우선순위', '목표'],
-  external: ['상태', '우선순위', '목표', '외부'],
+  GOAL: ['상태', '우선순위'],
+  ISSUE: ['상태', '우선순위', '목표'],
+  EXTERNAL: ['상태', '우선순위', '목표', '외부'],
 };
 
 const NotiHome = () => {
   const { teamId } = useParams<{ teamId: string }>(); // 팀 id api 에서 가져오기
-  const [tab, setTab] = useState<NotiTab>('goal');
+  const [tab, setTab] = useState<NotiTab>('GOAL');
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   const getDummyGroups = (tab: NotiTab, filter: ItemFilter): AlarmFilter | undefined => {
-    if (tab === 'goal') {
       if (filter === '상태') return dummyGoalAlarmByState.result;
       if (filter === '우선순위') return dummyGoalAlarmByPriority.result;
+    if (tab === 'GOAL') {
     }
-    if (tab === 'issue') {
       if (filter === '상태') return dummyIssueAlarmByState.result;
       if (filter === '우선순위') return dummyIssueAlarmByPriority.result;
       if (filter === '목표') return dummyIssueAlarmByGoal.result;
+    if (tab === 'ISSUE') {
     }
-    if (tab === 'external') {
       if (filter === '상태') return dummyExternalAlarmByState.result;
       if (filter === '우선순위') return dummyExternalAlarmByPriority.result;
       if (filter === '목표') return dummyExternalAlarmByGoal.result;
       if (filter === '외부') return dummyExternalAlarmByTool.result;
+    if (tab === 'EXTERNAL') {
     }
     return undefined;
   };
@@ -219,7 +219,7 @@ const NotiHome = () => {
                   const showCheckbox = isDeleteMode;
                   const isChecked = checkItems.includes(item.alarmId);
 
-                  if (tab == 'goal') {
+                  if (tab == 'GOAL') {
                     return (
                       <GoalItem
                         key={item.alarmId}
@@ -240,7 +240,7 @@ const NotiHome = () => {
                       />
                     );
                   }
-                  if (tab == 'issue') {
+                  if (tab == 'ISSUE') {
                     return (
                       <IssueItem
                         key={item.alarmId}
