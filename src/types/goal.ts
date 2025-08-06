@@ -39,3 +39,10 @@ export type RequestGoalListDto = {
 };
 
 export type ResponseGoalDto = CursorBasedResponse<GoalFilter[]>;
+
+export type SimpleGoal = Pick<Goal, 'id' | 'title'>;
+
+export type SimpleGoalListDto = {
+  cnt: number;
+  info: SimpleGoal[];
+};
