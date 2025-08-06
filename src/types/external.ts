@@ -1,7 +1,5 @@
 import type { CursorBasedResponse } from './common';
 
-/* 임시 구조, api 명세서 완성 시 변경 필요하면 수정 예정 */
-
 export type Deadline = {
   start: string;
   end: string;
@@ -9,7 +7,8 @@ export type Deadline = {
 
 export type ManagerInfo = {
   profileUrl: string;
-  name: string;
+  name?: string;
+  managerName?: string;
 };
 
 export type Manager = {
