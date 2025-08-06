@@ -182,7 +182,9 @@ const WorkspaceExternal = () => {
                       checked={checkItems.includes(externals.id)}
                       onCheckChange={(checked) => handleCheck(externals.id, checked)}
                       filter={filter}
-                      onItemClick={() => navigate(`/workspace/team/${teamId}/ext/${externals.id}`)}
+                      onItemClick={() =>
+                        navigate(`/workspace/default/team/${teamId}/ext/${externals.id}`)
+                      }
                     />
                   ))}
                 </div>

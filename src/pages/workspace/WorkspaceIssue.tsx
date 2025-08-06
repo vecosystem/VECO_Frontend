@@ -168,7 +168,9 @@ const WorkspaceIssue = () => {
                       checked={checkItems.includes(issue.id)}
                       onCheckChange={(checked) => handleCheck(issue.id, checked)}
                       filter={filter}
-                      onItemClick={() => navigate(`/workspace/team/${teamId}/ext/${issue.id}`)}
+                      onItemClick={() =>
+                        navigate(`/workspace/default/team/${teamId}/issue/${issue.id}`)
+                      }
                     />
                   ))}
                 </div>
