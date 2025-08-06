@@ -15,18 +15,25 @@ import { useNavigate } from 'react-router-dom';
 import hamburgerIcon from '../../assets/icons/hamburger.svg';
 import SortableDropdownList from './SortableDropdownList';
 import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
-// import { usePatchWorkspaceTeams } from '../../apis/setting/usePatchWorkspaceTeams';
+import { usePatchWorkspaceTeams } from '../../apis/setting/usePatchWorkspaceTeams';
 import type { Team } from '../../types/setting';
+import type { WorkspaceResponse } from '../../types/setting';
 
 interface FullSidebarContentProps {
   setExpanded: (value: boolean) => void;
   teams: Team[];
+  isLoading: boolean;
+  workspaceProfile: WorkspaceResponse;
 }
 
-const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => {
+const FullSidebarContent = ({
+  setExpanded,
+  teams,
+  isLoading,
+  workspaceProfile,
+}: FullSidebarContentProps) => {
   const navigate = useNavigate();
-  // todo: 팀 순서 변경 API 연동
-  // const { mutate: patchWorkspaceTeams } = usePatchWorkspaceTeams();
+  const { mutate: patchWorkspaceTeams } = usePatchWorkspaceTeams();
 
   return (
     <div className="w-full p-[3.2rem] pe-[2rem] min-h-screen">
@@ -36,11 +43,13 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
             type="button"
             className="flex items-center gap-[0.8rem] cursor-pointer"
             onClick={() =>
-              navigate('/workspace/default/team/:teamId/issue'.replace(':teamId', String(1)))
+              navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/issue`)
             }
           >
             <img src={vecocirclenavy} className="w-[3.2rem] h-[3.2rem]" alt="Workspace" />
-            <span className="font-body-b text-gray-600 letter-spacing-[-0.032rem]">Workspace</span>
+            <span className="font-body-b text-gray-600 letter-spacing-[-0.032rem]">
+              {workspaceProfile.workspaceName}
+            </span>
           </button>
           <div className="flex items-center gap-[1.6rem]">
             <button
@@ -85,9 +94,9 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
           <DropdownMenu headerTitle="워크스페이스 전체 팀" initialOpen={true}>
             <div className="flex flex-col">
               <DropdownMenu
-                headerTitle="Workspace"
+                headerTitle={workspaceProfile.workspaceName || ''}
                 initialOpen={true}
-                headerTeamIcon={vecocirclenavy}
+                headerTeamIcon={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
                 isNested={true}
               >
                 <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
@@ -96,15 +105,11 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                     hoverIcon={goalHoverIcon}
                     label="목표"
                     onClick={() => {
-                      navigate(
-                        `/workspace/default/team/:teamId/goal`.replace(':teamId', String(1))
-                      );
+                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/goal`);
                     }}
                     onAddClick={() => {
                       navigate(
-                        `/workspace/default/team/:teamId/goal/:goalId`
-                          .replace(':teamId', String(1))
-                          .replace(':goalId', String(123))
+                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/goal/:goalId`
                       );
                     }}
                   />
@@ -113,15 +118,11 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                     hoverIcon={issueHoverIcon}
                     label="이슈"
                     onClick={() => {
-                      navigate(
-                        `/workspace/default/team/:teamId/issue`.replace(':teamId', String(1))
-                      );
+                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/issue`);
                     }}
                     onAddClick={() => {
                       navigate(
-                        `/workspace/default/team/:teamId/issue/:issueId`
-                          .replace(':teamId', String(1))
-                          .replace(':issueId', String(123))
+                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/issue/:issueId`
                       );
                     }}
                   />
@@ -130,7 +131,7 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                     hoverIcon={externalHoverIcon}
                     label="외부"
                     onClick={() => {
-                      navigate(`/workspace/default/team/:teamId/ext`.replace(':teamId', String(1)));
+                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/ext`);
                     }}
                   />
                 </div>
@@ -142,76 +143,68 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
         <div className="flex flex-col items-start self-stretch">
           <DropdownMenu headerTitle="나의 팀" initialOpen={true}>
             {/* Team 드롭다운 (내부 드롭다운) */}
-            <SortableDropdownList
-              items={teams}
-              renderContent={(team, { listeners, attributes }, isOverlay) => (
-                <DropdownMenu
-                  headerTitle={team.teamName}
-                  initialOpen={!isOverlay}
-                  headerTeamIcon={team.teamImageUrl || vecocirclewhite}
-                  isNested={true}
-                  dragHandle={
-                    <button {...attributes} {...listeners} type="button" className="cursor-grab">
-                      <img src={hamburgerIcon} className="w-[2.4rem] h-[2.4rem]" alt="Drag" />
-                    </button>
-                  }
-                >
-                  {!isOverlay && (
-                    <div className="flex flex-col justify-center items-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
-                      <SidebarItem
-                        defaultIcon={goalIcon}
-                        hoverIcon={goalHoverIcon}
-                        label="목표"
-                        onClick={() => {
-                          navigate(
-                            `/workspace/team/:teamId/goal`.replace(':teamId', String(team.teamId))
-                          );
-                        }}
-                        onAddClick={() => {
-                          navigate(
-                            `/workspace/team/:teamId/goal/:goalId`
-                              .replace(':teamId', String(team.teamId))
-                              .replace(':goalId', String(123))
-                          );
-                        }}
-                      />
-                      <SidebarItem
-                        defaultIcon={issueIcon}
-                        hoverIcon={issueHoverIcon}
-                        label="이슈"
-                        onClick={() => {
-                          navigate(
-                            `/workspace/team/:teamId/issue`.replace(':teamId', String(team.teamId))
-                          );
-                        }}
-                        onAddClick={() => {
-                          navigate(
-                            `/workspace/team/:teamId/issue/:issueId`
-                              .replace(':teamId', String(team.teamId))
-                              .replace(':issueId', String(123))
-                          );
-                        }}
-                      />
-                      <SidebarItem
-                        defaultIcon={externalIcon}
-                        hoverIcon={externalHoverIcon}
-                        label="외부"
-                        onClick={() => {
-                          navigate(
-                            `/workspace/team/:teamId/ext`.replace(':teamId', String(team.teamId))
-                          );
-                        }}
-                      />
-                    </div>
-                  )}
-                </DropdownMenu>
-              )}
-              onSorted={(newList: Team[]) => {
-                const teamIdList = newList.map((item: Team) => item.teamId);
-                console.log(teamIdList);
-                // patchWorkspaceTeams(teamIdList);
-              }}
-            />
+            {isLoading ? null : teams.length === 0 ? (
+              <div className="text-gray-400 font-xsmall-r px-[3rem] pb-[1.6rem]">
+                등록된 팀이 없습니다.
+              </div>
+            ) : (
+              <SortableDropdownList
+                items={teams}
+                renderContent={(team, { listeners, attributes }, isOverlay) => (
+                  <DropdownMenu
+                    headerTitle={team.teamName}
+                    initialOpen={!isOverlay}
+                    headerTeamIcon={team.teamImageUrl || vecocirclewhite}
+                    isNested={true}
+                    dragHandle={
+                      <button {...attributes} {...listeners} type="button" className="cursor-grab">
+                        <img src={hamburgerIcon} className="w-[2.4rem] h-[2.4rem]" alt="Drag" />
+                      </button>
+                    }
+                  >
+                    {!isOverlay && (
+                      <div className="flex flex-col justify-center items-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
+                        <SidebarItem
+                          defaultIcon={goalIcon}
+                          hoverIcon={goalHoverIcon}
+                          label="목표"
+                          onClick={() => {
+                            navigate(`/workspace/team/${team.teamId}/goal`);
+                          }}
+                          onAddClick={() => {
+                            navigate(`/workspace/team/${team.teamId}/goal/:goalId`);
+                          }}
+                        />
+                        <SidebarItem
+                          defaultIcon={issueIcon}
+                          hoverIcon={issueHoverIcon}
+                          label="이슈"
+                          onClick={() => {
+                            navigate(`/workspace/team/${team.teamId}/issue`);
+                          }}
+                          onAddClick={() => {
+                            navigate(`/workspace/team/${team.teamId}/issue/:issueId`);
+                          }}
+                        />
+                        <SidebarItem
+                          defaultIcon={externalIcon}
+                          hoverIcon={externalHoverIcon}
+                          label="외부"
+                          onClick={() => {
+                            navigate(`/workspace/team/${team.teamId}/ext`);
+                          }}
+                        />
+                      </div>
+                    )}
+                  </DropdownMenu>
+                )}
+                onSorted={(newList: Team[]) => {
+                  const teamIdList = newList.map((item: Team) => item.teamId);
+                  console.log(teamIdList);
+                  patchWorkspaceTeams({ teamIdList });
+                }}
+              />
+            )}
           </DropdownMenu>
         </div>
       </div>

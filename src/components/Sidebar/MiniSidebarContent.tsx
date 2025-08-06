@@ -13,13 +13,16 @@ import DropdownMenu from './DropdownMenu';
 import SidebarItem from './SidebarItem';
 import SortableDropdownList from './SortableDropdownList';
 import type { Team } from '../../types/setting';
+import type { WorkspaceResponse } from '../../types/setting';
+import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
 
 interface MiniSidebarContentProps {
   setExpanded: (value: boolean) => void;
   teams: Team[];
+  workspaceProfile: WorkspaceResponse;
 }
 
-const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => {
+const MiniSidebarContent = ({ setExpanded, teams, workspaceProfile }: MiniSidebarContentProps) => {
   const navigate = useNavigate();
   return (
     <div className="w-full p-[3.2rem] pe-[2rem] min-h-screen">
@@ -28,9 +31,15 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
           <button
             type="button"
             className="flex w-[3.2rem] h-[3.2rem] shrink-0 items-center cursor-pointer"
-            onClick={() => navigate('/workspace/team/default/issue')}
+            onClick={() =>
+              navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/issue`)
+            }
           >
-            <img src={vecocirclenavy} className="w-full h-full shrink-0" alt="Workspace" />
+            <img
+              src={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
+              className="w-full h-full shrink-0"
+              alt="Workspace"
+            />
           </button>
           <button
             type="button"
@@ -65,7 +74,7 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
               <DropdownMenu
                 headerTitle=""
                 initialOpen={true}
-                headerTeamIcon={vecocirclenavy}
+                headerTeamIcon={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
                 isNested={true}
               >
                 <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pb-[1.6rem]">
@@ -74,10 +83,12 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                     hoverIcon={goalHoverIcon}
                     label=""
                     onClick={() => {
-                      navigate(`/workspace/team/default/goal`);
+                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/goal`);
                     }}
                     onAddClick={() => {
-                      navigate(`/workspace/team/default/goal/:goalId`);
+                      navigate(
+                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/goal/:goalId`
+                      );
                     }}
                   />
                   <SidebarItem
@@ -85,10 +96,12 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                     hoverIcon={issueHoverIcon}
                     label=""
                     onClick={() => {
-                      navigate(`/workspace/team/default/issue`);
+                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/issue`);
                     }}
                     onAddClick={() => {
-                      navigate(`/workspace/team/default/issue/:issueId`);
+                      navigate(
+                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/issue/:issueId`
+                      );
                     }}
                   />
                   <SidebarItem
@@ -96,7 +109,7 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                     hoverIcon={externalHoverIcon}
                     label=""
                     onClick={() => {
-                      navigate(`/workspace/team/default/ext`);
+                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/ext`);
                     }}
                   />
                 </div>
@@ -114,7 +127,7 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                 <DropdownMenu
                   headerTitle=""
                   initialOpen={!isOverlay}
-                  headerTeamIcon={team.teamImageUrl}
+                  headerTeamIcon={team.teamImageUrl || vecocirclewhite}
                   isNested={true}
                 >
                   {!isOverlay && (
@@ -124,10 +137,10 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                         hoverIcon={goalHoverIcon}
                         label=""
                         onClick={() => {
-                          navigate(`/workspace/team/:teamId/goal`);
+                          navigate(`/workspace/team/${team.teamId}/goal`);
                         }}
                         onAddClick={() => {
-                          navigate(`/workspace/team/:teamId/goal/:goalId`);
+                          navigate(`/workspace/team/${team.teamId}/goal/:goalId`);
                         }}
                       />
                       <SidebarItem
@@ -135,10 +148,10 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                         hoverIcon={issueHoverIcon}
                         label=""
                         onClick={() => {
-                          navigate(`/workspace/team/:teamId/issue`);
+                          navigate(`/workspace/team/${team.teamId}/issue`);
                         }}
                         onAddClick={() => {
-                          navigate(`/workspace/team/:teamId/issue/:issueId`);
+                          navigate(`/workspace/team/${team.teamId}/issue/:issueId`);
                         }}
                       />
                       <SidebarItem
@@ -146,7 +159,7 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                         hoverIcon={externalHoverIcon}
                         label=""
                         onClick={() => {
-                          navigate(`/workspace/team/:teamId/ext`);
+                          navigate(`/workspace/team/${team.teamId}/ext`);
                         }}
                       />
                     </div>
