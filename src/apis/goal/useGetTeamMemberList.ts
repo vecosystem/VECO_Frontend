@@ -23,5 +23,6 @@ export const useGetTeamMemberList = (teamId: number) => {
   return useQuery({
     queryKey: [queryKey.TEAM_MEMBER_LIST, teamId],
     queryFn: () => getTeamMemberList(teamId),
+    select: (data) => data.info,
   });
 };

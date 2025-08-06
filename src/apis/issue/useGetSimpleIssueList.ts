@@ -23,5 +23,6 @@ export const useGetSimpleIssueList = (teamId: number) => {
   return useQuery({
     queryKey: [queryKey.ISSUE_LIST_SIMPLE, teamId],
     queryFn: () => getSimpleIssueList(teamId),
+    select: (data) => data.info,
   });
 };

@@ -23,5 +23,6 @@ export const useGetSimpleGoalList = (teamId: number) => {
   return useQuery({
     queryKey: [queryKey.GOAL_LIST_SIMPLE, teamId],
     queryFn: () => getSimpleGoalList(teamId),
+    select: (data) => data.info,
   });
 };
