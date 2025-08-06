@@ -7,7 +7,7 @@ import { queryKey } from '../../constants/queryKey.ts';
 const getExternalName = async (teamId: number): Promise<string> => {
   try {
     const response = await axiosInstance.get<CommonResponse<string>>(
-      `/api/teams/${teamId}/external-name`
+      `/api/teams/${teamId}/externals/external-name`
     );
     if (!response.data.result) return Promise.reject(response);
     return response.data.result;
