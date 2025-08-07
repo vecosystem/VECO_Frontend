@@ -25,16 +25,32 @@ import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
 import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
 
-const GoalDetail = () => {
+/**
+ * 구현 완료하면 이 주석은 지운다.
+ * - 생성 모드: 댓글창 안 보임 + 제목&상세설명 작성 가능 + 작성 완료 버튼으로 떠있음(초기 비활성화->제목 입력 후 활성화됨)
+ * - 조회 모드: 댓글창 보임 + 제목&상세설명 수정 불가 + 수정하기 버튼으로 떠있음(활성화)
+ * - 수정 모드: 댓글창 안 보임 + 제목&상세설명 수정 가능 + 작성 완료 버튼으로 떠있음(활성화)
+ */
+
+// 상세페이지 모드 구분
+// (1) create - 생성 모드: 처음에 목표를 생성하여 작성 완료하기 전
+// (2) view - 조회 모드: 작성 완료 후 목표 조회할 때
+// (3) edit - 수정 모드: 작성 완료 후 목표를 다시 수정할 때
+interface GoalDetailProps {
+  mode: 'create' | 'view' | 'edit';
+}
+
+const GoalDetail = ({ mode }: GoalDetailProps) => {
   const [title, setTitle] = useState('');
-  const [isCompleted, setIsCompleted] = useState(false);
-
-  // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
-  const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]);
-
+  const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
   const [option, setOption] = useState<string>('이슈');
   const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
   const { openDropdown, closeDropdown } = useDropdownActions();
+
+  // 상태에 따라 작성 완료 버튼의 상태 결정
+  const [isCompleted, setIsCompleted] = useState(mode === 'view');
+  const isEditable = mode === 'create' || mode === 'edit';
+  const isTitleFilled = title.trim().length > 0;
 
   // '기한' 속성의 텍스트(시작일, 종료일) 결정하는 함수
   const getDisplayText = () => {
@@ -61,9 +77,6 @@ const GoalDetail = () => {
     전채운: IcProfile,
     전시현: IcProfile,
   };
-
-  // const dateIconMap = IcDate; // '기한' 속성 아이콘 매핑
-  // const issueIconMap = IcIssue; // '이슈' 속성 아이콘 매핑
 
   const handleToggle = () => {
     setIsCompleted((prev) => !prev);

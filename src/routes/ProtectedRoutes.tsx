@@ -69,10 +69,18 @@ export const protectedRoutes: RouteObject[] = [
         children: [
           // 기본 경로는 이슈 페이지로 리다이렉트.
           { index: true, element: <Navigate to="issue" replace /> },
+
+          // 목표 관련 라우트
           { path: 'goal', element: <GoalHome /> },
-          { path: 'goal/:goalId', element: <GoalDetail /> },
+          { path: 'goal/detail/create', element: <GoalDetail mode="create" /> },
+          { path: 'goal/:goalId', element: <GoalDetail mode="view" /> },
+          { path: 'goal/:goalId/edit', element: <GoalDetail mode="edit" /> },
+
+          // 이슈 관련 라우트
           { path: 'issue', element: <IssueHome /> },
           { path: 'issue/:issueId', element: <IssueDetail /> },
+
+          // 외부 연동 관련 라우트
           { path: 'ext', element: <ExternalHome /> },
           { path: 'ext/:extId', element: <ExternalDetail /> },
         ],
