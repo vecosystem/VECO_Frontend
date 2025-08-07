@@ -17,7 +17,11 @@ const InviteLoading = () => {
     }
   }, [workspaceName, navigate]);
 
-  return <h3 className="font-title-sub-r text-gray-600">초대 확인중입니다.</h3>;
+  return (
+    <div className="min-w-max min-h-screen flex flex-col items-center justify-center">
+      <h3 className="font-title-sub-r text-gray-600">초대 확인중입니다.</h3>;
+    </div>
+  );
 };
 
 export default InviteLoading;
