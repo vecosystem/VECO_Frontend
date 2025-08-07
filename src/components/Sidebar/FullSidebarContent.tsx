@@ -18,12 +18,17 @@ import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
 import { usePatchWorkspaceTeams } from '../../apis/setting/usePatchWorkspaceTeams';
 import type { Team } from '../../types/setting';
 import type { WorkspaceResponse } from '../../types/setting';
+import { useInView } from 'react-intersection-observer';
+import { useEffect } from 'react';
 
 interface FullSidebarContentProps {
   setExpanded: (value: boolean) => void;
   teams: Team[];
   isLoading: boolean;
   workspaceProfile: WorkspaceResponse;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
 }
 
 const FullSidebarContent = ({
@@ -31,9 +36,19 @@ const FullSidebarContent = ({
   teams,
   isLoading,
   workspaceProfile,
+  hasNextPage,
+  isFetchingNextPage,
+  fetchNextPage,
 }: FullSidebarContentProps) => {
   const navigate = useNavigate();
   const { mutate: patchWorkspaceTeams } = usePatchWorkspaceTeams();
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage]);
 
   return (
     <div className="w-full p-[3.2rem] pe-[2rem] min-h-screen">
@@ -152,62 +167,70 @@ const FullSidebarContent = ({
                 등록된 팀이 없습니다.
               </div>
             ) : (
-              <SortableDropdownList
-                items={teams}
-                renderContent={(team, { listeners, attributes }, isOverlay) => (
-                  <DropdownMenu
-                    headerTitle={team?.teamName}
-                    initialOpen={!isOverlay}
-                    headerTeamIcon={team?.teamImageUrl || vecocirclewhite}
-                    isNested={true}
-                    dragHandle={
-                      <button {...attributes} {...listeners} type="button" className="cursor-grab">
-                        <img src={hamburgerIcon} className="w-[2.4rem] h-[2.4rem]" alt="Drag" />
-                      </button>
-                    }
-                  >
-                    {!isOverlay && (
-                      <div className="flex flex-col justify-center items-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
-                        <SidebarItem
-                          defaultIcon={goalIcon}
-                          hoverIcon={goalHoverIcon}
-                          label="목표"
-                          onClick={() => {
-                            navigate(`/workspace/team/${team.teamId}/goal`);
-                          }}
-                          onAddClick={() => {
-                            navigate(`/workspace/team/${team.teamId}/goal/:goalId`);
-                          }}
-                        />
-                        <SidebarItem
-                          defaultIcon={issueIcon}
-                          hoverIcon={issueHoverIcon}
-                          label="이슈"
-                          onClick={() => {
-                            navigate(`/workspace/team/${team.teamId}/issue`);
-                          }}
-                          onAddClick={() => {
-                            navigate(`/workspace/team/${team.teamId}/issue/:issueId`);
-                          }}
-                        />
-                        <SidebarItem
-                          defaultIcon={externalIcon}
-                          hoverIcon={externalHoverIcon}
-                          label="외부"
-                          onClick={() => {
-                            navigate(`/workspace/team/${team.teamId}/ext`);
-                          }}
-                        />
-                      </div>
-                    )}
-                  </DropdownMenu>
-                )}
-                onSorted={(newList: Team[]) => {
-                  const teamIdList = newList.map((item: Team) => item.teamId);
-                  teamIdList.unshift(workspaceProfile.defaultTeamId);
-                  patchWorkspaceTeams({ teamIdList });
-                }}
-              />
+              <>
+                <SortableDropdownList
+                  items={teams}
+                  renderContent={(team, { listeners, attributes }, isOverlay) => (
+                    <DropdownMenu
+                      headerTitle={team?.teamName}
+                      initialOpen={!isOverlay}
+                      headerTeamIcon={team?.teamImageUrl || vecocirclewhite}
+                      isNested={true}
+                      dragHandle={
+                        <button
+                          {...attributes}
+                          {...listeners}
+                          type="button"
+                          className="cursor-grab"
+                        >
+                          <img src={hamburgerIcon} className="w-[2.4rem] h-[2.4rem]" alt="Drag" />
+                        </button>
+                      }
+                    >
+                      {!isOverlay && (
+                        <div className="flex flex-col justify-center items-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
+                          <SidebarItem
+                            defaultIcon={goalIcon}
+                            hoverIcon={goalHoverIcon}
+                            label="목표"
+                            onClick={() => {
+                              navigate(`/workspace/team/${team.teamId}/goal`);
+                            }}
+                            onAddClick={() => {
+                              navigate(`/workspace/team/${team.teamId}/goal/:goalId`);
+                            }}
+                          />
+                          <SidebarItem
+                            defaultIcon={issueIcon}
+                            hoverIcon={issueHoverIcon}
+                            label="이슈"
+                            onClick={() => {
+                              navigate(`/workspace/team/${team.teamId}/issue`);
+                            }}
+                            onAddClick={() => {
+                              navigate(`/workspace/team/${team.teamId}/issue/:issueId`);
+                            }}
+                          />
+                          <SidebarItem
+                            defaultIcon={externalIcon}
+                            hoverIcon={externalHoverIcon}
+                            label="외부"
+                            onClick={() => {
+                              navigate(`/workspace/team/${team.teamId}/ext`);
+                            }}
+                          />
+                        </div>
+                      )}
+                    </DropdownMenu>
+                  )}
+                  onSorted={(newList: Team[]) => {
+                    const teamIdList = newList.map((item: Team) => item.teamId);
+                    teamIdList.unshift(workspaceProfile.defaultTeamId);
+                    patchWorkspaceTeams({ teamIdList });
+                  }}
+                />
+                <div ref={ref} className="h-[1rem]" />
+              </>
             )}
           </DropdownMenu>
         </div>

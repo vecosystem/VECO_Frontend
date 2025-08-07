@@ -9,7 +9,8 @@ import { useGetWorkspaceProfile } from '../../apis/setting/useGetWorkspaceProfil
 const Sidebar = () => {
   const { isOpen, toggle } = useSidebarStore();
   const { data: workspaceProfile } = useGetWorkspaceProfile();
-  const { data, isLoading } = useGetWorkspaceTeams();
+  const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useGetWorkspaceTeams();
 
   const teams: Team[] = data ? data.pages.flatMap((page) => page.teamList).slice(1) : [];
 
@@ -36,6 +37,9 @@ const Sidebar = () => {
               teams={teams}
               isLoading={isLoading}
               workspaceProfile={workspaceProfile!}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              fetchNextPage={fetchNextPage}
             />
           </div>
         </div>
@@ -53,6 +57,9 @@ const Sidebar = () => {
               teams={teams}
               isLoading={isLoading}
               workspaceProfile={workspaceProfile!}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              fetchNextPage={fetchNextPage}
             />
           </div>
         </div>
