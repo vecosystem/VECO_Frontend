@@ -53,13 +53,13 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
   const handleToggleMode = () => {
     if (mode === 'create') {
       setMode('view');
-      navigate(`/workspace/team/${teamId}/issue/${fakeExtId}`);
+      navigate(`/workspace/team/${teamId}/ext/${fakeExtId}`);
     } else if (mode === 'edit') {
       setMode('view');
-      navigate(`/workspace/team/${teamId}/issue/${fakeExtId}`);
+      navigate(`/workspace/team/${teamId}/ext/${fakeExtId}`);
     } else if (mode === 'view') {
       setMode('edit');
-      navigate(`/workspace/team/${teamId}/issue/${fakeExtId}/edit`);
+      navigate(`/workspace/team/${teamId}/ext/${fakeExtId}/edit`);
     }
   };
 

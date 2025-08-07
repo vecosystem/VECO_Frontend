@@ -102,9 +102,10 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                     }}
                     onAddClick={() => {
                       navigate(
-                        `/workspace/default/team/:teamId/goal/:goalId`
-                          .replace(':teamId', String(1))
-                          .replace(':goalId', String(123))
+                        `/workspace/default/team/:teamId/goal/detail/create`.replace(
+                          ':teamId',
+                          String(1)
+                        )
                       );
                     }}
                   />
@@ -119,9 +120,10 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                     }}
                     onAddClick={() => {
                       navigate(
-                        `/workspace/default/team/:teamId/issue/:issueId`
-                          .replace(':teamId', String(1))
-                          .replace(':issueId', String(123))
+                        `/workspace/default/team/:teamId/issue/detail/create`.replace(
+                          ':teamId',
+                          String(1)
+                        )
                       );
                     }}
                   />

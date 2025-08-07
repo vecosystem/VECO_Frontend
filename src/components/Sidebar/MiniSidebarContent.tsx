@@ -77,7 +77,12 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                       navigate(`/workspace/team/default/goal`);
                     }}
                     onAddClick={() => {
-                      navigate(`/workspace/team/default/goal/:goalId`);
+                      navigate(
+                        `/workspace/default/team/:teamId/goal/detail/create`.replace(
+                          ':teamId',
+                          String(1)
+                        )
+                      );
                     }}
                   />
                   <SidebarItem
@@ -88,7 +93,12 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                       navigate(`/workspace/team/default/issue`);
                     }}
                     onAddClick={() => {
-                      navigate(`/workspace/team/default/issue/:issueId`);
+                      navigate(
+                        `/workspace/default/team/:teamId/issue/detail/create`.replace(
+                          ':teamId',
+                          String(1)
+                        )
+                      );
                     }}
                   />
                   <SidebarItem
@@ -127,7 +137,12 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                           navigate(`/workspace/team/:teamId/goal`);
                         }}
                         onAddClick={() => {
-                          navigate(`/workspace/team/:teamId/goal/:goalId`);
+                          navigate(
+                            `/workspace/team/:teamId/goal/detail/create`.replace(
+                              ':teamId',
+                              String(team.teamId)
+                            )
+                          );
                         }}
                       />
                       <SidebarItem
@@ -138,7 +153,12 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                           navigate(`/workspace/team/:teamId/issue`);
                         }}
                         onAddClick={() => {
-                          navigate(`/workspace/team/:teamId/issue/:issueId`);
+                          navigate(
+                            `/workspace/team/:teamId/issue/detail/create`.replace(
+                              ':teamId',
+                              String(team.teamId)
+                            )
+                          );
                         }}
                       />
                       <SidebarItem
