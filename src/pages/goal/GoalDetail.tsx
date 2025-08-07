@@ -25,14 +25,6 @@ import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
 import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGetGoalName } from '../../apis/goal/useGetGoalName';
-
-/**
- * 구현 완료하면 이 주석은 지운다.
- * - 생성 모드: 댓글창 안 보임 + 제목&상세설명 작성 가능 + 작성 완료 버튼으로 떠있음(초기 비활성화->제목 입력 후 활성화됨)
- * - 조회 모드: 댓글창 보임 + 제목&상세설명 수정 불가 + 수정하기 버튼으로 떠있음(활성화)
- * - 수정 모드: 댓글창 안 보임 + 제목&상세설명 수정 가능 + 작성 완료 버튼으로 떠있음(활성화)
- */
 
 // 상세페이지 모드 구분
 // (1) create - 생성 모드: 처음에 목표를 생성하여 작성 완료하기 전
