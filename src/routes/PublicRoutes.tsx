@@ -8,6 +8,7 @@ import OnboardingFinish from '../pages/onboarding/OnboardingFinish';
 import Error404NotFound from '../pages/Error404NotFound';
 import ParticipateWorkspaceInputPw from '../pages/onboarding/ParticipateWorkspaceInputPw';
 import { HomePage } from '../pages/home/HomePage.tsx';
+import TokenLoading from '../pages/onboarding/TokenLoading.tsx';
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -63,6 +64,10 @@ export const publicRoutes: RouteObject[] = [
       {
         path: 'input-pw',
         element: <ParticipateWorkspaceInputPw />,
+      },
+      {
+        path: 'loading',
+        element: <TokenLoading />,
       },
     ],
   },
