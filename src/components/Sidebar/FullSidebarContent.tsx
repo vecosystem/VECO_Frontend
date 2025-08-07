@@ -169,9 +169,11 @@ const FullSidebarContent = ({ setExpanded, teams }: FullSidebarContentProps) => 
                         }}
                         onAddClick={() => {
                           navigate(
-                            `/workspace/team/:teamId/goal/:goalId`
-                              .replace(':teamId', String(team.teamId))
-                              .replace(':goalId', String(123))
+                            // 바꾼 부분 여기임
+                            `/workspace/team/:teamId/goal/detail/create`.replace(
+                              ':teamId',
+                              String(team.teamId)
+                            )
                           );
                         }}
                       />

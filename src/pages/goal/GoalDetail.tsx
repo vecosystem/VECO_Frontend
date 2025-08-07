@@ -24,6 +24,8 @@ import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
 import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGetGoalName } from '../../apis/goal/useGetGoalName';
 
 /**
  * 구현 완료하면 이 주석은 지운다.
@@ -37,20 +39,37 @@ import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
 // (2) view - 조회 모드: 작성 완료 후 목표 조회할 때
 // (3) edit - 수정 모드: 작성 완료 후 목표를 다시 수정할 때
 interface GoalDetailProps {
-  mode: 'create' | 'view' | 'edit';
+  initialMode: 'create' | 'view' | 'edit';
 }
 
-const GoalDetail = ({ mode }: GoalDetailProps) => {
+const GoalDetail = ({ initialMode }: GoalDetailProps) => {
+  const [mode, setMode] = useState<'create' | 'view' | 'edit'>(initialMode); // 상세페이지 모드 상태
   const [title, setTitle] = useState('');
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
   const [option, setOption] = useState<string>('이슈');
+
+  const navigate = useNavigate();
+  const { teamId } = useParams<{ teamId: string; goalId: string }>(); // URL 파라미터에서 teamId와 goalId 가져오기
+  const fakeGoalId = '123'; // 임시 goalId (TODO: 실제로는 목표 작성 API로부터 받아온 result의 goalId 값을 사용 예정)
+
   const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
   const { openDropdown, closeDropdown } = useDropdownActions();
 
-  // 상태에 따라 작성 완료 버튼의 상태 결정
-  const [isCompleted, setIsCompleted] = useState(mode === 'view');
-  const isEditable = mode === 'create' || mode === 'edit';
-  const isTitleFilled = title.trim().length > 0;
+  const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
+  const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
+
+  const handleToggleMode = () => {
+    if (mode === 'create') {
+      setMode('view');
+      navigate(`/workspace/team/${teamId}/goal/${fakeGoalId}`);
+    } else if (mode === 'edit') {
+      setMode('view');
+      navigate(`/workspace/team/${teamId}/goal/${fakeGoalId}`);
+    } else if (mode === 'view') {
+      setMode('edit');
+      navigate(`/workspace/team/${teamId}/goal/${fakeGoalId}/edit`);
+    }
+  };
 
   // '기한' 속성의 텍스트(시작일, 종료일) 결정하는 함수
   const getDisplayText = () => {
@@ -78,10 +97,6 @@ const GoalDetail = ({ mode }: GoalDetailProps) => {
     전시현: IcProfile,
   };
 
-  const handleToggle = () => {
-    setIsCompleted((prev) => !prev);
-  };
-
   return (
     <div className="flex flex-1 flex-col gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem] pb-[5.3rem]">
       {/* 상세페이지 헤더 */}
@@ -96,11 +111,11 @@ const GoalDetail = ({ mode }: GoalDetailProps) => {
             defaultTitle="목표를 생성하세요"
             title={title}
             setTitle={setTitle}
-            isEditable={!isCompleted}
+            isEditable={isEditable}
           />
 
           {/* 상세 설명 작성 컴포넌트 */}
-          <DetailTextEditor isEditable={!isCompleted} />
+          <DetailTextEditor isEditable={isEditable} />
 
           {/* 댓글 영역 */}
           {isCompleted && <CommentSection />}
@@ -199,11 +214,11 @@ const GoalDetail = ({ mode }: GoalDetailProps) => {
             </div>
           </div>
 
-          {/* 작성 완료 버튼 */}
+          {/* 작성 완료 버튼 : 상세페이지 mode 전환을 관리 */}
           <CompletionButton
             isTitleFilled={title.trim().length > 0}
             isCompleted={isCompleted}
-            onToggle={handleToggle}
+            onToggle={handleToggleMode}
           />
         </div>
       </div>
