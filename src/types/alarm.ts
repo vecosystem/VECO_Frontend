@@ -10,7 +10,7 @@ export type NotiList = {
   state: string;
   priority: string;
   goalTitle?: string;
-  isRead: boolean;
+  read: boolean;
   managerList?: {
     profileUrl: string;
     name: string;

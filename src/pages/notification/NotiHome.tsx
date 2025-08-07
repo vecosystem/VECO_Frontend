@@ -13,7 +13,6 @@ import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import GroupTypeTab from '../../components/ListView/GroupTypeTab';
 import { ExternalItem } from '../../components/ListView/ExternalItem';
 import { usePatchAlarms } from '../../apis/alarm/usePatchAlarms';
-import { useParams } from 'react-router-dom';
 import { useGetAlarmList } from '../../apis/alarm/useGetAlarmList';
 
 const TAB_LIST = ['GOAL', 'ISSUE', 'EXTERNAL'] as const;
@@ -26,7 +25,6 @@ const FILTER_OPTIONS: Record<NotiTab, ItemFilter[]> = {
 };
 
 const NotiHome = () => {
-  const { teamId } = useParams<{ teamId: string }>(); // 팀 id api 에서 가져오기
   const [tab, setTab] = useState<NotiTab>('GOAL');
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
@@ -110,7 +108,13 @@ const NotiHome = () => {
 
   const { mutate: patchAlarm } = usePatchAlarms();
 
-  const handleItemClick = (isRead: boolean, typeId: number, alarmId: number, pageType: string) => {
+  const handleItemClick = (
+    isRead: boolean,
+    teamId: number,
+    typeId: number,
+    alarmId: number,
+    pageType: string
+  ) => {
     if (!isRead) {
       // 읽지 않은 알림
       // 읽음 처리 API 호출 후 상세 페이지로 이동
@@ -209,7 +213,7 @@ const NotiHome = () => {
                 </div>
                 {/* 리스트 아이템 */}
                 {items.map((item) => {
-                  const isRead = item.isRead === true;
+                  const isRead = item.read === true;
                   const showCheckbox = isDeleteMode;
                   const isChecked = checkItems.includes(item.alarmId);
 
@@ -229,7 +233,7 @@ const NotiHome = () => {
                           info: item.managerList || [],
                         }}
                         onItemClick={() =>
-                          handleItemClick(isRead, item.typeId, item.alarmId, 'goal')
+                          handleItemClick(isRead, item.teamId, item.typeId, item.alarmId, 'goal')
                         }
                       />
                     );
@@ -250,7 +254,7 @@ const NotiHome = () => {
                           info: item.managerList || [],
                         }}
                         onItemClick={() =>
-                          handleItemClick(isRead, item.typeId, item.alarmId, 'issue')
+                          handleItemClick(isRead, item.teamId, item.typeId, item.alarmId, 'issue')
                         }
                       />
                     );
@@ -270,7 +274,7 @@ const NotiHome = () => {
                         info: item.managerList || [],
                       }}
                       onItemClick={() =>
-                        handleItemClick(isRead, item.typeId, item.alarmId, 'external')
+                        handleItemClick(isRead, item.teamId, item.typeId, item.alarmId, 'external')
                       }
                     />
                   );
