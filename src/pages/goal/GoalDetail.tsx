@@ -24,7 +24,7 @@ import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
 import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useToggleMode } from '../../hooks/useToggleMode';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 목표를 생성하여 작성 완료하기 전
@@ -40,9 +40,6 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const [title, setTitle] = useState('');
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
   const [option, setOption] = useState<string>('이슈');
-
-  const navigate = useNavigate();
-  const { teamId } = useParams<{ teamId: string }>(); // URL 파라미터에서 teamId 가져오기
   const fakeGoalId = '123'; // 임시 goalId (TODO: 실제로는 목표 작성 API로부터 받아온 result의 goalId 값을 사용 예정)
 
   const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
@@ -51,18 +48,13 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
 
-  const handleToggleMode = () => {
-    if (mode === 'create') {
-      setMode('view');
-      navigate(`/workspace/team/${teamId}/goal/${fakeGoalId}`);
-    } else if (mode === 'edit') {
-      setMode('view');
-      navigate(`/workspace/team/${teamId}/goal/${fakeGoalId}`);
-    } else if (mode === 'view') {
-      setMode('edit');
-      navigate(`/workspace/team/${teamId}/goal/${fakeGoalId}/edit`);
-    }
-  };
+  const handleToggleMode = useToggleMode({
+    mode,
+    setMode,
+    type: 'goal',
+    id: fakeGoalId,
+    isDefaultTeam: false,
+  });
 
   // '기한' 속성의 텍스트(시작일, 종료일) 결정하는 함수
   const getDisplayText = () => {
