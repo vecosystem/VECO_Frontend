@@ -9,6 +9,7 @@ import Error404NotFound from '../pages/Error404NotFound';
 import ParticipateWorkspaceInputPw from '../pages/onboarding/ParticipateWorkspaceInputPw';
 import { HomePage } from '../pages/home/HomePage.tsx';
 import TokenLoading from '../pages/onboarding/TokenLoading.tsx';
+import InviteLoading from '../pages/onboarding/InviteLoading.tsx';
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -68,6 +69,10 @@ export const publicRoutes: RouteObject[] = [
       {
         path: 'loading',
         element: <TokenLoading />,
+      },
+      {
+        path: 'inv',
+        element: <InviteLoading />,
       },
     ],
   },
