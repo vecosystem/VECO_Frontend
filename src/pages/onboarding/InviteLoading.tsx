@@ -1,9 +1,10 @@
 // src/pages/onboarding/InviteLoading.tsx
+// 초대 받은 사용자를 위한 리다이렉트 페이지
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const InviteLoading = () => {
-  const { workspaceName } = useParams(); // 1. URL 파라미터 추출
+  const { workspaceName } = useParams(); // URL 파라미터 추출
   const navigate = useNavigate();
 
   useEffect(() => {

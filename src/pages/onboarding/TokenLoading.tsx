@@ -1,3 +1,5 @@
+// src/pages/onboarding/TokenLoading.tsx
+// accessToken 저장 및 워크스페이스 조회하는 리다이렉트 페이지
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postReIssueAccessToken } from '../../apis/auth';
@@ -12,12 +14,15 @@ const TokenLoading = () => {
   useEffect(() => {
     const init = async () => {
       try {
+        // accessToken 발급
         const accessToken = await postReIssueAccessToken();
         setItem(accessToken);
         try {
-          await getWorkspaceProfile();
+          await getWorkspaceProfile(); // 워크스페이스 조회
+          // 200 응답 -> 워크스페이스 홈으로 이동
           navigate('/workspace');
         } catch (err: any) {
+          // 404 응답 -> isInvite 따라 분기 처리
           if (err.response?.status === 404) {
             const isInvite = localStorage.getItem('isInvite');
             if (isInvite === 'true') {
