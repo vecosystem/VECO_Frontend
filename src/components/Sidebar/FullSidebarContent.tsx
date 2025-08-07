@@ -94,8 +94,8 @@ const FullSidebarContent = ({
         </button>
 
         <div className="flex flex-col items-start self-stretch">
-          {/* 첫 번째 드롭다운: 워크스페이스 전체 팀 */}
-          <DropdownMenu headerTitle="워크스페이스 전체 팀" initialOpen={true}>
+          {/* 첫 번째 드롭다운: 워크스페이스 기본 팀 */}
+          <DropdownMenu headerTitle="워크스페이스 기본 팀" initialOpen={true}>
             <div className="flex flex-col">
               <DropdownMenu
                 headerTitle={workspaceProfile?.workspaceName || ''}
