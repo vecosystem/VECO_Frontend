@@ -27,7 +27,7 @@ export const protectedRoutes: RouteObject[] = [
     errorElement: <Error404NotFound />,
 
     children: [
-      { index: true, element: <WorkspaceIssue /> },
+      { index: true, element: <Navigate to="default/team/:teamId/issue" replace /> },
       /* 알람 페이지 */
       {
         path: 'noti',
