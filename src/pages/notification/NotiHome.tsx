@@ -14,6 +14,7 @@ import GroupTypeTab from '../../components/ListView/GroupTypeTab';
 import { ExternalItem } from '../../components/ListView/ExternalItem';
 import { usePatchAlarms } from '../../apis/alarm/usePatchAlarms';
 import { useGetAlarmList } from '../../apis/alarm/useGetAlarmList';
+import { useDeleteAlarms } from '../../apis/alarm/useDeleteAlarms';
 
 const TAB_LIST = ['GOAL', 'ISSUE', 'EXTERNAL'] as const;
 type NotiTab = (typeof TAB_LIST)[number];
@@ -107,6 +108,7 @@ const NotiHome = () => {
   };
 
   const { mutate: patchAlarm } = usePatchAlarms();
+  const { mutate: deleteAlarm } = useDeleteAlarms();
 
   const handleItemClick = (
     isRead: boolean,
@@ -149,6 +151,21 @@ const NotiHome = () => {
     }
   };
 
+  const handleDeleteItem = () => {
+    deleteAlarm(
+      checkItems.filter((id): id is number => typeof id === 'number'), // 숫자만 전달
+      {
+        onSuccess: () => {
+          setIsDeleteMode(false);
+          setCheckedIds([]);
+        },
+        onError: (error) => {
+          console.error('Delete failed:', error);
+        },
+      }
+    );
+  };
+
   return (
     <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
       {/* 알림 아이콘/텍스트 */}
@@ -180,8 +197,7 @@ const NotiHome = () => {
           // 삭제 요소 전달
           onClick={() => {
             console.log('삭제할 ID 리스트:', checkItems);
-            // TODO: 실제 삭제 API mutation화
-            // deleteGoalItem({ teamId, goalIds: checkItems });
+            handleDeleteItem();
           }}
         />
       )}
