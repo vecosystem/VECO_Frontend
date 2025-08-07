@@ -7,7 +7,7 @@ interface DropdownHeaderProps {
   isOpen: boolean;
   onToggle: () => void;
   hasToggleIcon?: boolean;
-  teamIcon?: React.ReactNode;
+  teamIcon?: string;
   isNested?: boolean;
   dragHandle?: React.ReactNode;
 }
@@ -28,7 +28,7 @@ const DropdownHeader = ({
     >
       <div className="flex items-center gap-[0.8rem]">
         {/* teamIcon ex: 팀 이미지 */}
-        {teamIcon && <span className="w-[2.4rem] h-[2.4rem]">{teamIcon}</span>}
+        {teamIcon && <img src={teamIcon} className="w-[2.4rem] h-[2.4rem]" alt="Team" />}
 
         <div className="flex justify-center items-center">
           <span

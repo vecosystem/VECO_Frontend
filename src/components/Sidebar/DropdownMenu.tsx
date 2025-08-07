@@ -6,7 +6,7 @@ interface DropdownMenuProps {
   headerTitle: string;
   initialOpen?: boolean;
   children: React.ReactNode;
-  headerTeamIcon?: React.ReactNode;
+  headerTeamIcon?: string;
   headerHasToggleIcon?: boolean;
   isNested?: boolean;
   dragHandle?: React.ReactNode;
