@@ -7,13 +7,16 @@ const InviteLoading = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('[InviteLoading] 실행됨!');
     if (workspaceName) {
-      // 2. 로컬스토리지에 저장
+      console.log('[InviteLoading] 저장 시도:', workspaceName);
       localStorage.setItem('workspaceName', workspaceName);
       localStorage.setItem('isInvite', 'true');
 
-      // 3. /onboarding으로 이동
-      navigate('/onboarding');
+      setTimeout(() => {
+        console.log('[InviteLoading] /onboarding으로 이동');
+        navigate('/onboarding');
+      }, 50);
     }
   }, [workspaceName, navigate]);
 

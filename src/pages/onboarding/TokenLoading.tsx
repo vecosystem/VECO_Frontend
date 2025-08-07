@@ -12,29 +12,30 @@ const TokenLoading = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        console.log('[TokenLoading] ✅ accessToken 재발급 시도');
+        console.log('[TokenLoading] 시작됨');
+
         const accessToken = await postReIssueAccessToken();
         setItem(accessToken);
-        console.log('[TokenLoading] ✅ accessToken 재발급 성공:', accessToken);
+        console.log('[TokenLoading] ✅ accessToken 재발급 성공');
 
-        // 워크스페이스 정보 조회
-        console.log('[TokenLoading] 🔍 워크스페이스 정보 조회 시도');
+        // 1. 워크스페이스 정보 조회
         try {
           await getWorkspaceProfile();
-          console.log('[TokenLoading] ✅ 워크스페이스 존재 → /workspace로 이동');
+          console.log('[TokenLoading] ✅ 워크스페이스 존재 → /workspace');
           navigate('/workspace');
         } catch (err: any) {
           if (err.response?.status === 404) {
-            // 워크스페이스 없음 → 초대 여부 확인
+            console.log('[TokenLoading] ❌ 워크스페이스 없음 (404)');
+
             const isInvite = localStorage.getItem('isInvite');
             console.log('[TokenLoading] 🔍 isInvite:', isInvite);
 
-            if (isInvite === null) {
-              console.warn('[TokenLoading] ⚠️ 워크스페이스 없음 → /onboarding/workspace로 이동');
-              navigate('/onboarding/workspace');
-            } else {
-              console.log('[TokenLoading] 🔁 초대 사용자 → /onboarding/input-pw로 이동');
+            if (isInvite === 'true') {
+              console.log('[TokenLoading] 🔁 초대 사용자 → /onboarding/input-pw');
               navigate('/onboarding/input-pw');
+            } else {
+              console.warn('[TokenLoading] ⚠️ 일반 사용자 → /onboarding/workspace');
+              navigate('/onboarding/workspace');
             }
           } else {
             console.error('[TokenLoading] ❌ 워크스페이스 조회 실패:', err);
