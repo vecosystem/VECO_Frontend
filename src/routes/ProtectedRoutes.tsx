@@ -84,7 +84,9 @@ export const protectedRoutes: RouteObject[] = [
 
           // 외부 연동 관련 라우트
           { path: 'ext', element: <ExternalHome /> },
-          { path: 'ext/:extId', element: <ExternalDetail /> },
+          { path: 'ext/detail/create', element: <ExternalDetail initialMode="create" /> },
+          { path: 'ext/:extId', element: <ExternalDetail initialMode="view" /> },
+          { path: 'ext/:extId/edit', element: <ExternalDetail initialMode="edit" /> },
         ],
       },
     ],

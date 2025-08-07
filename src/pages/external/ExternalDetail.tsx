@@ -24,16 +24,44 @@ import CommentSection from '../../components/DetailView/Comment/CommentSection';
 import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const ExternalDetail = () => {
+/** 상세페이지 모드 구분
+ * (1) create - 생성 모드: 처음에 목표를 생성하여 작성 완료하기 전
+ * (2) view - 조회 모드: 작성 완료 후 목표 조회할 때
+ * (3) edit - 수정 모드: 작성 완료 후 목표를 다시 수정할 때
+ */
+interface ExternalDetailProps {
+  initialMode: 'create' | 'view' | 'edit';
+}
+
+const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
+  const [mode, setMode] = useState<'create' | 'view' | 'edit'>(initialMode); // 상세페이지 모드 상태
   const [title, setTitle] = useState('');
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
 
-  // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
-  const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]);
+  const navigate = useNavigate();
+  const { teamId } = useParams<{ teamId: string }>(); // URL 파라미터에서 teamId 가져오기
+  const fakeExtId = '123'; // 임시 extId (TODO: 실제로는 외부이슈 작성 API로부터 받아온 result의 extId 값을 사용 예정)
 
   const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
   const { openDropdown } = useDropdownActions();
+
+  const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
+  const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
+
+  const handleToggleMode = () => {
+    if (mode === 'create') {
+      setMode('view');
+      navigate(`/workspace/team/${teamId}/issue/${fakeExtId}`);
+    } else if (mode === 'edit') {
+      setMode('view');
+      navigate(`/workspace/team/${teamId}/issue/${fakeExtId}`);
+    } else if (mode === 'view') {
+      setMode('edit');
+      navigate(`/workspace/team/${teamId}/issue/${fakeExtId}/edit`);
+    }
+  };
 
   // '기한' 속성의 텍스트(시작일, 종료일) 결정하는 함수
   const getDisplayText = () => {
@@ -75,10 +103,6 @@ const ExternalDetail = () => {
     Github: IcExt,
   };
 
-  const handleToggle = () => {
-    setIsCompleted((prev) => !prev);
-  };
-
   return (
     <div className="flex flex-1 flex-col gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem] pb-[5.3rem]">
       {/* 상세페이지 헤더 */}
@@ -93,11 +117,11 @@ const ExternalDetail = () => {
             defaultTitle="제목을 작성해보세요"
             title={title}
             setTitle={setTitle}
-            isEditable={!isCompleted}
+            isEditable={isEditable}
           />
 
           {/* 상세 설명 작성 컴포넌트 */}
-          <DetailTextEditor isEditable={!isCompleted} />
+          <DetailTextEditor isEditable={isEditable} />
 
           {/* 댓글 영역 */}
           {isCompleted && <CommentSection />}
@@ -190,7 +214,7 @@ const ExternalDetail = () => {
           <CompletionButton
             isTitleFilled={title.trim().length > 0}
             isCompleted={isCompleted}
-            onToggle={handleToggle}
+            onToggle={handleToggleMode}
           />
         </div>
       </div>
