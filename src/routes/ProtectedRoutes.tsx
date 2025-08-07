@@ -78,7 +78,9 @@ export const protectedRoutes: RouteObject[] = [
 
           // 이슈 관련 라우트
           { path: 'issue', element: <IssueHome /> },
-          { path: 'issue/:issueId', element: <IssueDetail /> },
+          { path: 'issue/detail/create', element: <IssueDetail initialMode="create" /> },
+          { path: 'issue/:issueId', element: <IssueDetail initialMode="view" /> },
+          { path: 'issue/:issueId/edit', element: <IssueDetail initialMode="edit" /> },
 
           // 외부 연동 관련 라우트
           { path: 'ext', element: <ExternalHome /> },

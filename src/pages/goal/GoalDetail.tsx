@@ -26,10 +26,11 @@ import { formatDateDot } from '../../utils/formatDate';
 import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
 import { useNavigate, useParams } from 'react-router-dom';
 
-// 상세페이지 모드 구분
-// (1) create - 생성 모드: 처음에 목표를 생성하여 작성 완료하기 전
-// (2) view - 조회 모드: 작성 완료 후 목표 조회할 때
-// (3) edit - 수정 모드: 작성 완료 후 목표를 다시 수정할 때
+/** 상세페이지 모드 구분
+ * (1) create - 생성 모드: 처음에 목표를 생성하여 작성 완료하기 전
+ * (2) view - 조회 모드: 작성 완료 후 목표 조회할 때
+ * (3) edit - 수정 모드: 작성 완료 후 목표를 다시 수정할 때
+ */
 interface GoalDetailProps {
   initialMode: 'create' | 'view' | 'edit';
 }
@@ -41,7 +42,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const [option, setOption] = useState<string>('이슈');
 
   const navigate = useNavigate();
-  const { teamId } = useParams<{ teamId: string; goalId: string }>(); // URL 파라미터에서 teamId와 goalId 가져오기
+  const { teamId } = useParams<{ teamId: string }>(); // URL 파라미터에서 teamId 가져오기
   const fakeGoalId = '123'; // 임시 goalId (TODO: 실제로는 목표 작성 API로부터 받아온 result의 goalId 값을 사용 예정)
 
   const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
