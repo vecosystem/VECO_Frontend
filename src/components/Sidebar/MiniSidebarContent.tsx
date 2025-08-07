@@ -19,10 +19,16 @@ import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
 interface MiniSidebarContentProps {
   setExpanded: (value: boolean) => void;
   teams: Team[];
+  isLoading: boolean;
   workspaceProfile: WorkspaceResponse;
 }
 
-const MiniSidebarContent = ({ setExpanded, teams, workspaceProfile }: MiniSidebarContentProps) => {
+const MiniSidebarContent = ({
+  setExpanded,
+  teams,
+  isLoading,
+  workspaceProfile,
+}: MiniSidebarContentProps) => {
   const navigate = useNavigate();
   return (
     <div className="w-full p-[3.2rem] pe-[2rem] min-h-screen">
@@ -121,53 +127,59 @@ const MiniSidebarContent = ({ setExpanded, teams, workspaceProfile }: MiniSideba
         <div className="flex flex-col items-start self-stretch">
           <DropdownMenu headerTitle="나의" initialOpen={true}>
             {/* Team1 드롭다운 (내부 드롭다운) */}
-            <SortableDropdownList
-              items={teams}
-              renderContent={(team, {}, isOverlay) => (
-                <DropdownMenu
-                  headerTitle=""
-                  initialOpen={!isOverlay}
-                  headerTeamIcon={team.teamImageUrl || vecocirclewhite}
-                  isNested={true}
-                >
-                  {!isOverlay && (
-                    <div className="flex flex-col justify-center items-start gap-[1.6rem] pb-[1.6rem]">
-                      <SidebarItem
-                        defaultIcon={goalIcon}
-                        hoverIcon={goalHoverIcon}
-                        label=""
-                        onClick={() => {
-                          navigate(`/workspace/team/${team.teamId}/goal`);
-                        }}
-                        onAddClick={() => {
-                          navigate(`/workspace/team/${team.teamId}/goal/:goalId`);
-                        }}
-                      />
-                      <SidebarItem
-                        defaultIcon={issueIcon}
-                        hoverIcon={issueHoverIcon}
-                        label=""
-                        onClick={() => {
-                          navigate(`/workspace/team/${team.teamId}/issue`);
-                        }}
-                        onAddClick={() => {
-                          navigate(`/workspace/team/${team.teamId}/issue/:issueId`);
-                        }}
-                      />
-                      <SidebarItem
-                        defaultIcon={externalIcon}
-                        hoverIcon={externalHoverIcon}
-                        label=""
-                        onClick={() => {
-                          navigate(`/workspace/team/${team.teamId}/ext`);
-                        }}
-                      />
-                    </div>
-                  )}
-                </DropdownMenu>
-              )}
-              onSorted={(newList: any) => console.log(newList)}
-            />
+            {isLoading ? null : teams.length === 0 ? (
+              <div className="text-gray-400 font-xsmall-r px-[3rem] pb-[1.6rem]">
+                등록된 팀이 없습니다.
+              </div>
+            ) : (
+              <SortableDropdownList
+                items={teams}
+                renderContent={(team, {}, isOverlay) => (
+                  <DropdownMenu
+                    headerTitle=""
+                    initialOpen={!isOverlay}
+                    headerTeamIcon={team.teamImageUrl || vecocirclewhite}
+                    isNested={true}
+                  >
+                    {!isOverlay && (
+                      <div className="flex flex-col justify-center items-start gap-[1.6rem] pb-[1.6rem]">
+                        <SidebarItem
+                          defaultIcon={goalIcon}
+                          hoverIcon={goalHoverIcon}
+                          label=""
+                          onClick={() => {
+                            navigate(`/workspace/team/${team.teamId}/goal`);
+                          }}
+                          onAddClick={() => {
+                            navigate(`/workspace/team/${team.teamId}/goal/:goalId`);
+                          }}
+                        />
+                        <SidebarItem
+                          defaultIcon={issueIcon}
+                          hoverIcon={issueHoverIcon}
+                          label=""
+                          onClick={() => {
+                            navigate(`/workspace/team/${team.teamId}/issue`);
+                          }}
+                          onAddClick={() => {
+                            navigate(`/workspace/team/${team.teamId}/issue/:issueId`);
+                          }}
+                        />
+                        <SidebarItem
+                          defaultIcon={externalIcon}
+                          hoverIcon={externalHoverIcon}
+                          label=""
+                          onClick={() => {
+                            navigate(`/workspace/team/${team.teamId}/ext`);
+                          }}
+                        />
+                      </div>
+                    )}
+                  </DropdownMenu>
+                )}
+                onSorted={(newList: any) => console.log(newList)}
+              />
+            )}
           </DropdownMenu>
         </div>
       </div>

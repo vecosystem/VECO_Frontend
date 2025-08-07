@@ -51,6 +51,7 @@ const Sidebar = () => {
             <MiniSidebarContent
               setExpanded={toggle}
               teams={teams}
+              isLoading={isLoading}
               workspaceProfile={workspaceProfile!}
             />
           </div>
