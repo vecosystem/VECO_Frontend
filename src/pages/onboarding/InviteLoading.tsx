@@ -20,7 +20,7 @@ const InviteLoading = () => {
     }
   }, [workspaceName, navigate]);
 
-  return <div>초대 경로 확인 중입니다...</div>;
+  return <h3 className="font-title-sub-r text-gray-600">초대 확인중입니다.</h3>;
 };
 
 export default InviteLoading;
