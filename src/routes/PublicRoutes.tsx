@@ -24,6 +24,11 @@ export const publicRoutes: RouteObject[] = [
       { path: 'entry', element: <AuthRedirect /> },
     ],
   },
+  /* 초대 받은 사용자를 위한 리다이렉트 페이지 */
+  {
+    path: '/:workspaceName/invite',
+    element: <InviteLoading />,
+  },
   /* Onboarding 단계 페이지들 */
   {
     path: '/onboarding',
@@ -66,13 +71,10 @@ export const publicRoutes: RouteObject[] = [
         path: 'input-pw',
         element: <ParticipateWorkspaceInputPw />,
       },
+      /* accessToken 저장 및 워크스페이스 조회하는 리다이렉트 페이지 */
       {
         path: 'loading',
         element: <TokenLoading />,
-      },
-      {
-        path: 'inv',
-        element: <InviteLoading />,
       },
     ],
   },
