@@ -140,11 +140,11 @@ const NotiHome = () => {
       // 읽은 알림
       // 상세 페이지로 이동
       if (pageType === 'goal') {
-        window.location.href = `/workspace/team/${teamId}/goal/${typeId}`;
+        window.open(`/workspace/team/${teamId}/goal/${typeId}`, '_blank');
       } else if (pageType === 'issue') {
-        window.location.href = `/workspace/team/${teamId}/issue/${typeId}`;
+        window.open(`/workspace/team/${teamId}/issue/${typeId}`, '_blank');
       } else if (pageType === 'external') {
-        window.location.href = `/workspace/team/${teamId}/ext/${typeId}`;
+        window.open(`/workspace/team/${teamId}/ext/${typeId}`, '_blank');
       }
     }
   };
