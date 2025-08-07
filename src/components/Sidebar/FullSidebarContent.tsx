@@ -204,7 +204,7 @@ const FullSidebarContent = ({
                 )}
                 onSorted={(newList: Team[]) => {
                   const teamIdList = newList.map((item: Team) => item.teamId);
-                  console.log(teamIdList);
+                  teamIdList.unshift(workspaceProfile.defaultTeamId);
                   patchWorkspaceTeams({ teamIdList });
                 }}
               />

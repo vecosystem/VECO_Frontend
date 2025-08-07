@@ -11,7 +11,7 @@ const Sidebar = () => {
   const { data: workspaceProfile } = useGetWorkspaceProfile();
   const { data, isLoading } = useGetWorkspaceTeams();
 
-  const teams: Team[] = data ? data.pages.flatMap((page) => page.teamList) : [];
+  const teams: Team[] = data ? data.pages.flatMap((page) => page.teamList).slice(1) : [];
 
   return (
     <div
