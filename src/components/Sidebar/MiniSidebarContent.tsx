@@ -109,7 +109,7 @@ const MiniSidebarContent = ({
                     }}
                     onAddClick={() => {
                       navigate(
-                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/goal/detai/create`
+                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/goal/detail/create`
                       );
                     }}
                   />
