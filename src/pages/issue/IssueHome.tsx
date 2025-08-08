@@ -65,8 +65,7 @@ const IssueHome = () => {
   const issueGroups = data?.pages ?? [];
   const allIssuesFlat = issueGroups.flatMap((i) => i.issues);
 
-  const rawIssueGroups = data?.pages ?? [];
-  const allGroups: GroupedIssue[] = rawIssueGroups.map((i) => ({
+  const allGroups: GroupedIssue[] = issueGroups.map((i) => ({
     key: i.filterName,
     items: i.issues,
   }));

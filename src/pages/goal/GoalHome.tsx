@@ -63,8 +63,7 @@ const GoalHome = () => {
   const goalGroups = data?.pages ?? [];
   const allGoalsFlat = goalGroups.flatMap((g) => g.goals);
 
-  const rawGoalGroups = data?.pages ?? [];
-  const allGroups: GroupedGoal[] = rawGoalGroups.map((g) => ({
+  const allGroups: GroupedGoal[] = goalGroups.map((g) => ({
     key: g.filterName,
     items: g.goals,
   }));
