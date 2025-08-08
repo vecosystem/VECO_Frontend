@@ -1,10 +1,13 @@
 import PrimaryButton from '../../components/Onboarding/PrimaryButton.tsx';
 import IcGithub from '../../assets/icons/github.svg';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useGetWorkspaceProfile } from '../../apis/setting/useGetWorkspaceProfile.ts';
 
 const GithubComplete = () => {
+  const { data } = useGetWorkspaceProfile();
+  const workspaceId = data?.workspaceId || -1;
   const [searchParams] = useSearchParams();
-  const teamId = searchParams.get('teamId');
+  const teamId = searchParams.get('teamId') || workspaceId;
   const navigate = useNavigate();
 
   return (
@@ -22,7 +25,13 @@ const GithubComplete = () => {
           <PrimaryButton
             text="돌아가기"
             onClick={() => {
-              navigate(`/workspace/team/${teamId}/ext`);
+              /* 팀 ID가 워크스페이스 ID와 같으면 기본 팀으로 이동
+             아니면 해당 팀으로 이동 */
+              if (workspaceId === teamId) {
+                navigate(`/workspace/default/team/${teamId}/ext`);
+              } else {
+                navigate(`/workspace/team/${teamId}/ext`);
+              }
             }}
           />
         </div>
