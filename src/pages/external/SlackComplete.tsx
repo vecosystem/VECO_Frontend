@@ -25,13 +25,7 @@ const SlackComplete = () => {
           <PrimaryButton
             text="돌아가기"
             onClick={() => {
-              /* 팀 ID가 워크스페이스 ID와 같으면 기본 팀으로 이동
-              아니면 해당 팀으로 이동 */
-              if (workspaceId === teamId) {
-                navigate(`/workspace/default/team/${teamId}/ext`);
-              } else {
-                navigate(`/workspace/team/${teamId}/ext`);
-              }
+              navigate(`/workspace/default/team/${teamId}/ext`);
             }}
           />
         </div>
