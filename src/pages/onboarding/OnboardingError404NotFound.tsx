@@ -1,9 +1,9 @@
-// src/pages/onboarding/Error404NotFound.tsx
+// src/pages/onboarding/OnboardingError404NotFound.tsx
 
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 
-const Error404NotFound = () => {
+const OnboardingError404NotFound = () => {
   const navigate = useNavigate();
 
   return (
@@ -26,4 +26,4 @@ const Error404NotFound = () => {
   );
 };
 
-export default Error404NotFound;
+export default OnboardingError404NotFound;
