@@ -47,3 +47,10 @@ export type RequestIssueListDto = {
 };
 
 export type ResponseIssueDto = CursorBasedResponse<IssueFilter[]>;
+
+export type SimpleIssue = Pick<Issue, 'id' | 'title'>;
+
+export type SimpleIssueListDto = {
+  cnt: number;
+  info: SimpleIssue[];
+};
