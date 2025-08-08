@@ -1,31 +1,18 @@
 import MiniSidebarContent from './MiniSidebarContent';
 import FullSidebarContent from './FullSidebarContent';
-import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
 import clsx from 'clsx';
 import { useSidebarStore } from '../../stores/useSidebarStore';
-// import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams';
+import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams';
+import type { Team } from '../../types/setting';
+import { useGetWorkspaceProfile } from '../../apis/setting/useGetWorkspaceProfile';
 
 const Sidebar = () => {
   const { isOpen, toggle } = useSidebarStore();
-  // todo: 팀 목록 조회 API 연동
-  // const { data: teams = [] } = useGetWorkspaceTeams();
+  const { data: workspaceProfile } = useGetWorkspaceProfile();
+  const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useGetWorkspaceTeams();
 
-  const teams = [
-    {
-      teamId: 2,
-      teamName: 'Team1',
-      teamImageUrl: vecocirclewhite,
-      memberCount: 2,
-      createdAt: '2025-01-01',
-    },
-    {
-      teamId: 3,
-      teamName: 'Team2',
-      teamImageUrl: vecocirclewhite,
-      memberCount: 2,
-      createdAt: '2025-01-01',
-    },
-  ];
+  const teams: Team[] = data ? data.pages.flatMap((page) => page.teamList).slice(1) : [];
 
   return (
     <div
@@ -45,7 +32,15 @@ const Sidebar = () => {
           )}
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
-            <FullSidebarContent setExpanded={toggle} teams={teams} />
+            <FullSidebarContent
+              setExpanded={toggle}
+              teams={teams}
+              isLoading={isLoading}
+              workspaceProfile={workspaceProfile!}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              fetchNextPage={fetchNextPage}
+            />
           </div>
         </div>
 
@@ -57,7 +52,15 @@ const Sidebar = () => {
           )}
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
-            <MiniSidebarContent setExpanded={toggle} teams={teams} />
+            <MiniSidebarContent
+              setExpanded={toggle}
+              teams={teams}
+              isLoading={isLoading}
+              workspaceProfile={workspaceProfile!}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              fetchNextPage={fetchNextPage}
+            />
           </div>
         </div>
       </div>
