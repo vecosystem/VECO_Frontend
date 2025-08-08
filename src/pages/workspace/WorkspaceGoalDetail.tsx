@@ -27,9 +27,9 @@ import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
 import { useToggleMode } from '../../hooks/useToggleMode';
 
 /** 상세페이지 모드 구분
- * (1) create - 생성 모드: 처음에 목표를 생성하여 작성 완료하기 전
- * (2) view - 조회 모드: 작성 완료 후 목표 조회할 때
- * (3) edit - 수정 모드: 작성 완료 후 목표를 다시 수정할 때
+ * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
+ * (2) view - 조회 모드: 작성 완료 후 조회할 때
+ * (3) edit - 수정 모드: 작성 완료 후 다시 수정할 때
  */
 interface WorkspaceGoalDetailProps {
   initialMode: 'create' | 'view' | 'edit';
