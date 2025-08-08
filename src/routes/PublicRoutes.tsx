@@ -5,15 +5,17 @@ import OnboardingSSOLogin from '../pages/onboarding/OnboardingSSOLogin';
 import OnboardingCreateWorkspace from '../pages/onboarding/OnboardingCreateWorkspace';
 import OnboardingInviteMember from '../pages/onboarding/OnboardingInviteMember';
 import OnboardingFinish from '../pages/onboarding/OnboardingFinish';
-import Error404NotFound from '../pages/Error404NotFound';
+import OnboardingError404NotFound from '../pages/onboarding/OnboardingError404NotFound.tsx';
 import ParticipateWorkspaceInputPw from '../pages/onboarding/ParticipateWorkspaceInputPw';
 import { HomePage } from '../pages/home/HomePage.tsx';
+import TokenLoading from '../pages/onboarding/TokenLoading.tsx';
+import InviteLoading from '../pages/onboarding/InviteLoading.tsx';
 
 export const publicRoutes: RouteObject[] = [
   {
     path: '/',
     element: <HomePage />,
-    errorElement: <Error404NotFound />,
+    errorElement: <OnboardingError404NotFound />,
     children: [
       // 도메인 최상위: 백호 랜딩페이지
       { index: true, element: <HomePage /> },
@@ -22,11 +24,16 @@ export const publicRoutes: RouteObject[] = [
       { path: 'entry', element: <AuthRedirect /> },
     ],
   },
+  /* 초대 받은 사용자를 위한 리다이렉트 페이지 */
+  {
+    path: '/:workspaceName/invite',
+    element: <InviteLoading />,
+  },
   /* Onboarding 단계 페이지들 */
   {
     path: '/onboarding',
     element: <PublicLayout />,
-    errorElement: <Error404NotFound />,
+    errorElement: <OnboardingError404NotFound />,
     children: [
       {
         index: true,
@@ -63,6 +70,11 @@ export const publicRoutes: RouteObject[] = [
       {
         path: 'input-pw',
         element: <ParticipateWorkspaceInputPw />,
+      },
+      /* accessToken 저장 및 워크스페이스 조회하는 리다이렉트 페이지 */
+      {
+        path: 'loading',
+        element: <TokenLoading />,
       },
     ],
   },

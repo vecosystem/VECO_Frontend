@@ -4,7 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '../../constants/queryKey';
 
 // 설정 - 워크스페이스 프로필 조회
-const getWorkspaceProfile = async (): Promise<WorkspaceResponse> => {
+// - src/pages/onboarding/TokenLoading.tsx
+export const getWorkspaceProfile = async (): Promise<WorkspaceResponse> => {
   try {
     const response = await axiosInstance.get('/api/workspace/setting');
     return response.data.result;
