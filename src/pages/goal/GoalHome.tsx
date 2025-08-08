@@ -125,12 +125,7 @@ const GoalHome = () => {
   };
 
   if (isError) {
-    return (
-      <ServerError
-        error={new Error('목표 데이터를 불러오는 중 오류가 발생했습니다.')}
-        resetErrorBoundary={() => window.location.reload()}
-      />
-    );
+    return <ServerError error={new Error()} resetErrorBoundary={() => window.location.reload()} />;
   }
 
   return (

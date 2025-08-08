@@ -3,7 +3,6 @@ import ProtectedLayout from '../layouts/ProtectedLayout';
 import GoalHome from '../pages/goal/GoalHome';
 import IssueHome from '../pages/issue/IssueHome';
 import NotiHome from '../pages/notification/NotiHome';
-import Error404NotFound from '../pages/Error404NotFound';
 import SettingTeam from '../pages/setting/SettingTeam.tsx';
 import SettingMember from '../pages/setting/SettingMember.tsx';
 import SettingMyProfile from '../pages/setting/SettingMyProfile.tsx';
@@ -18,13 +17,24 @@ import ExternalDetail from '../pages/external/ExternalDetail.tsx';
 import WorkspaceGoalDetail from '../pages/workspace/WorkspaceGoalDetail.tsx';
 import WorkspaceIssueDetail from '../pages/workspace/WorkspaceIssueDetail.tsx';
 import WorkspaceExternalDetail from '../pages/workspace/WorkspaceExternalDetail.tsx';
+import ServerError from '../pages/ServerError.tsx';
 
 export const protectedRoutes: RouteObject[] = [
   {
     // 워크스페이스 내부 페이지들 : 로그인해야 들어올 수 있음
     path: '/workspace',
     element: <ProtectedLayout />,
-    errorElement: <Error404NotFound />,
+    errorElement: (
+      <ServerError
+        error={
+          {
+            isAxiosError: true,
+            response: { status: 500 },
+          } as any
+        }
+        resetErrorBoundary={() => window.location.reload()}
+      />
+    ),
 
     children: [
       { index: true, element: <Navigate to="default/team/:teamId/issue" replace /> },
