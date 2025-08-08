@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import TeamIcon from '../../components/ListView/TeamIcon';
 import BellIcon from '../../assets/icons/bell.svg';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
@@ -12,50 +12,38 @@ import { PRIORITY_LABELS, STATUS_LABELS, type ItemFilter } from '../../types/lis
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import GroupTypeTab from '../../components/ListView/GroupTypeTab';
 import { ExternalItem } from '../../components/ListView/ExternalItem';
-import {
-  dummyExternalAlarmByGoal,
-  dummyExternalAlarmByPriority,
-  dummyExternalAlarmByState,
-  dummyExternalAlarmByTool,
-  dummyGoalAlarmByPriority,
-  dummyGoalAlarmByState,
-  dummyIssueAlarmByGoal,
-  dummyIssueAlarmByPriority,
-  dummyIssueAlarmByState,
-} from '../../types/testNotiDummy';
-import type { AlarmFilter } from '../../types/alarm';
 import { usePatchAlarms } from '../../apis/alarm/usePatchAlarms';
-import { useParams } from 'react-router-dom';
+import { useGetAlarmList } from '../../apis/alarm/useGetAlarmList';
+import { useDeleteAlarms } from '../../apis/alarm/useDeleteAlarms';
 
-const TAB_LIST = ['goal', 'issue', 'external'] as const;
+const TAB_LIST = ['GOAL', 'ISSUE', 'EXTERNAL'] as const;
 type NotiTab = (typeof TAB_LIST)[number];
 
 const FILTER_OPTIONS: Record<NotiTab, ItemFilter[]> = {
-  goal: ['상태', '우선순위'],
-  issue: ['상태', '우선순위', '목표'],
-  external: ['상태', '우선순위', '목표', '외부'],
+  GOAL: ['상태', '우선순위'],
+  ISSUE: ['상태', '우선순위', '목표'],
+  EXTERNAL: ['상태', '우선순위', '목표', '외부'],
 };
 
 const NotiHome = () => {
-  const { teamId } = useParams<{ teamId: string }>(); // 팀 id api 에서 가져오기
-  const [tab, setTab] = useState<NotiTab>('goal');
+  const [tab, setTab] = useState<NotiTab>('GOAL');
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
-  const getDummyGroups = (tab: NotiTab, filter: ItemFilter): AlarmFilter | undefined => {
-    if (tab === 'goal') {
-      if (filter === '상태') return dummyGoalAlarmByState.result;
-      if (filter === '우선순위') return dummyGoalAlarmByPriority.result;
+  const filterToQuery = (tab: NotiTab, filter: ItemFilter) => {
+    if (tab === 'GOAL') {
+      if (filter === '상태') return 'state';
+      if (filter === '우선순위') return 'priority';
     }
-    if (tab === 'issue') {
-      if (filter === '상태') return dummyIssueAlarmByState.result;
-      if (filter === '우선순위') return dummyIssueAlarmByPriority.result;
-      if (filter === '목표') return dummyIssueAlarmByGoal.result;
+    if (tab === 'ISSUE') {
+      if (filter === '상태') return 'state';
+      if (filter === '우선순위') return 'priority';
+      if (filter === '목표') return 'goal';
     }
-    if (tab === 'external') {
-      if (filter === '상태') return dummyExternalAlarmByState.result;
-      if (filter === '우선순위') return dummyExternalAlarmByPriority.result;
-      if (filter === '목표') return dummyExternalAlarmByGoal.result;
-      if (filter === '외부') return dummyExternalAlarmByTool.result;
+    if (tab === 'EXTERNAL') {
+      if (filter === '상태') return 'state';
+      if (filter === '우선순위') return 'priority';
+      if (filter === '목표') return 'goal';
+      if (filter === '외부') return 'external';
     }
     return undefined;
   };
@@ -66,34 +54,39 @@ const NotiHome = () => {
     setCheckedIds([]); // 탭 변경 시 선택 해제
   };
 
-  const alarmGroups = getDummyGroups(tab, filter);
+  const params = useMemo(
+    () => ({
+      // 우선 기본값 설정
+      cursor: '-1',
+      size: 10,
+      query: filterToQuery(tab, filter),
+    }),
+    [tab, filter]
+  );
 
-  const allItems = alarmGroups
-    ? alarmGroups.groupedList.flatMap((group) =>
-        group.notiList.map((item) => ({
+  // isLoading, isError 로직 추가
+  const { data } = useGetAlarmList(tab, params);
+  const alarmGroups = data?.result?.groupedList ?? [];
+  const allAlarmsFlat = useMemo(() => alarmGroups.flatMap((g) => g.notiList), [alarmGroups]);
+
+  const grouped = useMemo(
+    () =>
+      alarmGroups.map((group) => ({
+        key: group.groupTitle,
+        items: group.notiList.map((item) => ({
           ...item,
-          deadline: alarmGroups.deadline,
-        }))
-      )
-    : [];
-
+          deadline: data?.result?.deadline,
+        })),
+      })),
+    [alarmGroups, data?.result?.deadline]
+  );
   const {
     checkedIds: checkItems,
     isAllChecked,
     handleCheck,
     handleSelectAll,
     setCheckedIds,
-  } = useCheckItems(allItems, 'alarmId');
-
-  const grouped = alarmGroups
-    ? alarmGroups.groupedList.map((group) => ({
-        key: group.groupTitle,
-        items: group.notiList.map((item) => ({
-          ...item,
-          deadline: alarmGroups.deadline,
-        })),
-      }))
-    : [];
+  } = useCheckItems(allAlarmsFlat, 'alarmId');
 
   const isEmpty = grouped.every(({ items }) => items.length === 0);
 
@@ -115,8 +108,15 @@ const NotiHome = () => {
   };
 
   const { mutate: patchAlarm } = usePatchAlarms();
+  const { mutate: deleteAlarm } = useDeleteAlarms();
 
-  const handleItemClick = (isRead: boolean, typeId: number, alarmId: number, pageType: string) => {
+  const handleItemClick = (
+    isRead: boolean,
+    teamId: number,
+    typeId: number,
+    alarmId: number,
+    pageType: string
+  ) => {
     if (!isRead) {
       // 읽지 않은 알림
       // 읽음 처리 API 호출 후 상세 페이지로 이동
@@ -142,13 +142,28 @@ const NotiHome = () => {
       // 읽은 알림
       // 상세 페이지로 이동
       if (pageType === 'goal') {
-        window.location.href = `/workspace/team/${teamId}/goal/${typeId}`;
+        window.open(`/workspace/team/${teamId}/goal/${typeId}`, '_blank');
       } else if (pageType === 'issue') {
-        window.location.href = `/workspace/team/${teamId}/issue/${typeId}`;
+        window.open(`/workspace/team/${teamId}/issue/${typeId}`, '_blank');
       } else if (pageType === 'external') {
-        window.location.href = `/workspace/team/${teamId}/ext/${typeId}`;
+        window.open(`/workspace/team/${teamId}/ext/${typeId}`, '_blank');
       }
     }
+  };
+
+  const handleDeleteItem = () => {
+    deleteAlarm(
+      checkItems.filter((id): id is number => typeof id === 'number'), // 숫자만 전달
+      {
+        onSuccess: () => {
+          setIsDeleteMode(false);
+          setCheckedIds([]);
+        },
+        onError: (error) => {
+          console.error('Delete failed:', error);
+        },
+      }
+    );
   };
 
   return (
@@ -182,8 +197,7 @@ const NotiHome = () => {
           // 삭제 요소 전달
           onClick={() => {
             console.log('삭제할 ID 리스트:', checkItems);
-            // TODO: 실제 삭제 API mutation화
-            // deleteGoalItem({ teamId, goalIds: checkItems });
+            handleDeleteItem();
           }}
         />
       )}
@@ -215,11 +229,11 @@ const NotiHome = () => {
                 </div>
                 {/* 리스트 아이템 */}
                 {items.map((item) => {
-                  const isRead = item.isRead === true;
+                  const isRead = item.read === true;
                   const showCheckbox = isDeleteMode;
                   const isChecked = checkItems.includes(item.alarmId);
 
-                  if (tab == 'goal') {
+                  if (tab == 'GOAL') {
                     return (
                       <GoalItem
                         key={item.alarmId}
@@ -235,12 +249,12 @@ const NotiHome = () => {
                           info: item.managerList || [],
                         }}
                         onItemClick={() =>
-                          handleItemClick(isRead, item.typeId, item.alarmId, 'goal')
+                          handleItemClick(isRead, item.teamId, item.typeId, item.alarmId, 'goal')
                         }
                       />
                     );
                   }
-                  if (tab == 'issue') {
+                  if (tab == 'ISSUE') {
                     return (
                       <IssueItem
                         key={item.alarmId}
@@ -256,7 +270,7 @@ const NotiHome = () => {
                           info: item.managerList || [],
                         }}
                         onItemClick={() =>
-                          handleItemClick(isRead, item.typeId, item.alarmId, 'issue')
+                          handleItemClick(isRead, item.teamId, item.typeId, item.alarmId, 'issue')
                         }
                       />
                     );
@@ -276,7 +290,7 @@ const NotiHome = () => {
                         info: item.managerList || [],
                       }}
                       onItemClick={() =>
-                        handleItemClick(isRead, item.typeId, item.alarmId, 'external')
+                        handleItemClick(isRead, item.teamId, item.typeId, item.alarmId, 'external')
                       }
                     />
                   );

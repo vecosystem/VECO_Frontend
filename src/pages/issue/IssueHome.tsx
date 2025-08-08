@@ -165,7 +165,7 @@ const IssueHome = () => {
         )}
         {isEmpty ? (
           <div className="flex flex-1 items-center justify-center">
-            <div className="font-body-r">목표를 생성하세요</div>
+            <div className="font-body-r">이슈를 생성하세요</div>
           </div>
         ) : isLoading ? (
           <ListViewItemSkeletonList />
