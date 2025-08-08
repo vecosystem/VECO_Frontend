@@ -12,7 +12,7 @@ export const deleteExternalItem = async ({
 }: RequestExternalListDto): Promise<CommonResponse> => {
   try {
     const { data } = await axiosInstance.delete(`/api/teams/${teamId}/externals`, {
-      data: externalIds,
+      data: { externalIds },
     });
 
     return data;
