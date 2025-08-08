@@ -10,12 +10,17 @@ import userProfileIcon from '../../assets/icons/user-profile.svg';
 import userProfileHoverIcon from '../../assets/icons/user-profile-hover.svg';
 import leftArrowIcon from '../../assets/icons/left-arrow.svg';
 import expandIcon from '../../assets/icons/expand.svg';
+import type { WorkspaceResponse } from '../../types/setting';
 
 interface MiniSettingSidebarContentProps {
   setExpanded: (value: boolean) => void;
+  workspaceProfile: WorkspaceResponse;
 }
 
-const MiniSettingSidebarContent = ({ setExpanded }: MiniSettingSidebarContentProps) => {
+const MiniSettingSidebarContent = ({
+  setExpanded,
+  workspaceProfile,
+}: MiniSettingSidebarContentProps) => {
   const navigate = useNavigate();
 
   return (
@@ -26,7 +31,7 @@ const MiniSettingSidebarContent = ({ setExpanded }: MiniSettingSidebarContentPro
             type="button"
             className="flex w-[3.2rem] h-[3.2rem] shrink-0 items-center cursor-pointer"
             onClick={() => {
-              navigate('/workspace/team/default/issue');
+              navigate(`/workspace/team/${workspaceProfile.defaultTeamId}/issue`);
             }}
           >
             <img src={leftArrowIcon} className="w-full h-full shrink-0" alt="Workspace" />
@@ -44,7 +49,7 @@ const MiniSettingSidebarContent = ({ setExpanded }: MiniSettingSidebarContentPro
           <DropdownMenu headerTitle="워크" initialOpen={true}>
             <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pb-[1.6rem]">
               <SidebarItem
-                defaultIcon={vecocirclenavy}
+                defaultIcon={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
                 label=""
                 onClick={() => {
                   navigate('/workspace/setting');
