@@ -5,9 +5,12 @@ export const queryKey = {
   MY_PROFILE: 'my_profile',
   GITHUB_LINK: 'github_link',
   GOAL_LIST: 'goal_list',
+  GOAL_LIST_SIMPLE: 'goal_list_simple',
   ISSUE_LIST: 'issue_list',
+  ISSUE_LIST_SIMPLE: 'issue_list_simple',
   EXTERNAL_LIST: 'external_list',
   NOTI_LIST: 'noti_list',
   GOAL: 'goal',
   EXTERNAL: 'external',
+  TEAM_MEMBER_LIST: 'team_member_list',
 };
