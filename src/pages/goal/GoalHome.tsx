@@ -17,7 +17,7 @@ import { useGetInfiniteGoalList } from '../../apis/goal/useGetGoalList';
 import { useDeleteGoals } from '../../apis/goal/useDeleteGoals';
 import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
 import { mergeGroups } from '../../components/ListView/MergeGroup';
-import Server500Error from '../Server500Error';
+import ServerError from '../ServerError';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
@@ -125,7 +125,7 @@ const GoalHome = () => {
   };
 
   if (isError) {
-    return <Server500Error />;
+    return <ServerError error={new Error()} resetErrorBoundary={() => window.location.reload()} />;
   }
 
   return (
