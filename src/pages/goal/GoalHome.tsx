@@ -29,7 +29,7 @@ const GoalHome = () => {
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   const handleClick = () => {
-    navigate(':goalId');
+    navigate('detail/create');
   };
 
   const filterToQuery = (filter: ItemFilter) => {

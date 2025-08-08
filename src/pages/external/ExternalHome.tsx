@@ -35,7 +35,7 @@ const ExternalHome = () => {
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   const handleClick = () => {
-    navigate(':extId');
+    navigate('detail/create');
   };
 
   const filterToQuery = (filter: ItemFilter) => {

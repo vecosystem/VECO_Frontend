@@ -29,7 +29,7 @@ const IssueHome = () => {
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   const handleClick = () => {
-    navigate(':issueId');
+    navigate('detail/create');
   };
 
   const filterToQuery = (filter: ItemFilter) => {
