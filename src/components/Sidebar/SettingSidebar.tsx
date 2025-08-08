@@ -2,9 +2,11 @@ import FullSettingSidebarContent from './FullSettingSidebarContent';
 import MiniSettingSidebarContent from './MiniSettingSidebarContent';
 import clsx from 'clsx';
 import { useSidebarStore } from '../../stores/useSidebarStore';
+import { useGetWorkspaceProfile } from '../../apis/setting/useGetWorkspaceProfile';
 
 const SettingSidebar = () => {
   const { isOpen, toggle } = useSidebarStore();
+  const { data: workspaceProfile } = useGetWorkspaceProfile();
 
   return (
     <div
@@ -24,7 +26,7 @@ const SettingSidebar = () => {
           )}
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
-            <FullSettingSidebarContent setExpanded={toggle} />
+            <FullSettingSidebarContent setExpanded={toggle} workspaceProfile={workspaceProfile!} />
           </div>
         </div>
 
@@ -36,7 +38,7 @@ const SettingSidebar = () => {
           )}
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
-            <MiniSettingSidebarContent setExpanded={toggle} />
+            <MiniSettingSidebarContent setExpanded={toggle} workspaceProfile={workspaceProfile!} />
           </div>
         </div>
       </div>
