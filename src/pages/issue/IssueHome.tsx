@@ -17,7 +17,7 @@ import { useDeleteIssues } from '../../apis/issue/useDeleteIssues';
 import { mergeGroups } from '../../components/ListView/MergeGroup';
 import { useInView } from 'react-intersection-observer';
 import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
-import Server500Error from '../Server500Error';
+import Server500Error from '../ServerError';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 

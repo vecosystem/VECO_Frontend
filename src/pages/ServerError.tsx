@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../components/Onboarding/PrimaryButton.tsx';
 
-const Server500Error = () => {
+const ServerError = () => {
   const navigate = useNavigate();
 
   return (
@@ -10,7 +10,7 @@ const Server500Error = () => {
         <div className="flex flex-col items-center gap-[10.8rem]">
           {/* 에러 문구 */}
           <div className="flex flex-col gap-[3.2rem] text-center">
-            <h2 className="font-bigtitle-b text-gray-600">500</h2>
+            <h2 className="font-bigtitle-b text-gray-600">Error</h2>
             <h3 className="font-title-sub-r text-gray-600">
               서버 오류가 발생했습니다.
               <br /> 잠시 후 다시 시도해 주세요!
@@ -30,4 +30,4 @@ const Server500Error = () => {
   );
 };
 
-export default Server500Error;
+export default ServerError;

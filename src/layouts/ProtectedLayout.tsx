@@ -5,7 +5,7 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import Loading from '../pages/Loading.tsx';
-import Server500Error from '../pages/Server500Error.tsx';
+import ServerError from '../pages/ServerError.tsx';
 
 const ProtectedLayout = () => {
   const location = useLocation();
@@ -13,7 +13,7 @@ const ProtectedLayout = () => {
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (
-        <ErrorBoundary onReset={reset} FallbackComponent={Server500Error}>
+        <ErrorBoundary onReset={reset} FallbackComponent={ServerError}>
           <Suspense fallback={<Loading />}>
             <div className="flex h-screen">
               <aside className="overflow-auto sidebar-scroll">
