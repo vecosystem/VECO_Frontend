@@ -128,7 +128,7 @@ const FullSidebarContent = ({
                     }}
                     onAddClick={() => {
                       navigate(
-                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/goal/:goalId`
+                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/goal/detail/create`
                       );
                     }}
                   />
@@ -141,7 +141,7 @@ const FullSidebarContent = ({
                     }}
                     onAddClick={() => {
                       navigate(
-                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/issue/:issueId`
+                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/issue/detail/create`
                       );
                     }}
                   />
@@ -197,7 +197,7 @@ const FullSidebarContent = ({
                               navigate(`/workspace/team/${team.teamId}/goal`);
                             }}
                             onAddClick={() => {
-                              navigate(`/workspace/team/${team.teamId}/goal/:goalId`);
+                              navigate(`/workspace/team/${team.teamId}/goal/detail/create`);
                             }}
                           />
                           <SidebarItem
@@ -208,7 +208,7 @@ const FullSidebarContent = ({
                               navigate(`/workspace/team/${team.teamId}/issue`);
                             }}
                             onAddClick={() => {
-                              navigate(`/workspace/team/${team.teamId}/issue/:issueId`);
+                              navigate(`/workspace/team/${team.teamId}/issue/detail/create`);
                             }}
                           />
                           <SidebarItem
