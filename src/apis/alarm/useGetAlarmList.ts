@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import type { PaginationDto } from '../../types/common';
 import type { AlarmType } from '../../types/listItem';
 import { queryKey } from '../../constants/queryKey';
@@ -23,7 +23,7 @@ const getAlarmList = async (
 };
 
 export const useGetAlarmList = (alarmtype: AlarmType, params: PaginationDto) => {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: [queryKey.NOTI_LIST, alarmtype, params],
     queryFn: () => getAlarmList(alarmtype, params),
   });
