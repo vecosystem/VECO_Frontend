@@ -5,7 +5,7 @@ import OnboardingSSOLogin from '../pages/onboarding/OnboardingSSOLogin';
 import OnboardingCreateWorkspace from '../pages/onboarding/OnboardingCreateWorkspace';
 import OnboardingInviteMember from '../pages/onboarding/OnboardingInviteMember';
 import OnboardingFinish from '../pages/onboarding/OnboardingFinish';
-import Error404NotFound from '../pages/Error404NotFound';
+import Error404NotFound from '../pages/onboarding/Error404NotFound.tsx';
 import ParticipateWorkspaceInputPw from '../pages/onboarding/ParticipateWorkspaceInputPw';
 import { HomePage } from '../pages/home/HomePage.tsx';
 import TokenLoading from '../pages/onboarding/TokenLoading.tsx';
