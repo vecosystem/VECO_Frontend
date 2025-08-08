@@ -13,14 +13,39 @@ import DropdownMenu from './DropdownMenu';
 import SidebarItem from './SidebarItem';
 import SortableDropdownList from './SortableDropdownList';
 import type { Team } from '../../types/setting';
+import type { WorkspaceResponse } from '../../types/setting';
+import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
+import { useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
 
 interface MiniSidebarContentProps {
   setExpanded: (value: boolean) => void;
   teams: Team[];
+  isLoading: boolean;
+  workspaceProfile: WorkspaceResponse;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
 }
 
-const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => {
+const MiniSidebarContent = ({
+  setExpanded,
+  teams,
+  isLoading,
+  workspaceProfile,
+  hasNextPage,
+  isFetchingNextPage,
+  fetchNextPage,
+}: MiniSidebarContentProps) => {
   const navigate = useNavigate();
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage]);
+
   return (
     <div className="w-full p-[3.2rem] pe-[2rem] min-h-screen">
       <div className="flex flex-col items-start gap-[3.2rem] self-stretch">
@@ -28,9 +53,15 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
           <button
             type="button"
             className="flex w-[3.2rem] h-[3.2rem] shrink-0 items-center cursor-pointer"
-            onClick={() => navigate('/workspace/team/default/issue')}
+            onClick={() =>
+              navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/issue`)
+            }
           >
-            <img src={vecocirclenavy} className="w-full h-full shrink-0" alt="Workspace" />
+            <img
+              src={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
+              className="w-full h-full shrink-0"
+              alt="Workspace"
+            />
           </button>
           <button
             type="button"
@@ -59,13 +90,13 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
         </button>
 
         <div className="flex flex-col items-start self-stretch">
-          {/* 첫 번째 드롭다운: 워크스페이스 전체 팀 */}
-          <DropdownMenu headerTitle="전체" initialOpen={true}>
+          {/* 첫 번째 드롭다운: 워크스페이스 기본 팀 */}
+          <DropdownMenu headerTitle="기본" initialOpen={true}>
             <div className="flex flex-col">
               <DropdownMenu
                 headerTitle=""
                 initialOpen={true}
-                headerTeamIcon={vecocirclenavy}
+                headerTeamIcon={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
                 isNested={true}
               >
                 <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pb-[1.6rem]">
@@ -74,14 +105,11 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                     hoverIcon={goalHoverIcon}
                     label=""
                     onClick={() => {
-                      navigate(`/workspace/team/default/goal`);
+                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/goal`);
                     }}
                     onAddClick={() => {
                       navigate(
-                        `/workspace/default/team/:teamId/goal/detail/create`.replace(
-                          ':teamId',
-                          String(1)
-                        )
+                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/goal/detai/create`
                       );
                     }}
                   />
@@ -90,14 +118,11 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                     hoverIcon={issueHoverIcon}
                     label=""
                     onClick={() => {
-                      navigate(`/workspace/team/default/issue`);
+                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/issue`);
                     }}
                     onAddClick={() => {
                       navigate(
-                        `/workspace/default/team/:teamId/issue/detail/create`.replace(
-                          ':teamId',
-                          String(1)
-                        )
+                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/issue/detail/create`
                       );
                     }}
                   />
@@ -106,7 +131,7 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
                     hoverIcon={externalHoverIcon}
                     label=""
                     onClick={() => {
-                      navigate(`/workspace/team/default/ext`);
+                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/ext`);
                     }}
                   />
                 </div>
@@ -118,63 +143,62 @@ const MiniSidebarContent = ({ setExpanded, teams }: MiniSidebarContentProps) => 
         <div className="flex flex-col items-start self-stretch">
           <DropdownMenu headerTitle="나의" initialOpen={true}>
             {/* Team1 드롭다운 (내부 드롭다운) */}
-            <SortableDropdownList
-              items={teams}
-              renderContent={(team, {}, isOverlay) => (
-                <DropdownMenu
-                  headerTitle=""
-                  initialOpen={!isOverlay}
-                  headerTeamIcon={team.teamImageUrl}
-                  isNested={true}
-                >
-                  {!isOverlay && (
-                    <div className="flex flex-col justify-center items-start gap-[1.6rem] pb-[1.6rem]">
-                      <SidebarItem
-                        defaultIcon={goalIcon}
-                        hoverIcon={goalHoverIcon}
-                        label=""
-                        onClick={() => {
-                          navigate(`/workspace/team/:teamId/goal`);
-                        }}
-                        onAddClick={() => {
-                          navigate(
-                            `/workspace/team/:teamId/goal/detail/create`.replace(
-                              ':teamId',
-                              String(team.teamId)
-                            )
-                          );
-                        }}
-                      />
-                      <SidebarItem
-                        defaultIcon={issueIcon}
-                        hoverIcon={issueHoverIcon}
-                        label=""
-                        onClick={() => {
-                          navigate(`/workspace/team/:teamId/issue`);
-                        }}
-                        onAddClick={() => {
-                          navigate(
-                            `/workspace/team/:teamId/issue/detail/create`.replace(
-                              ':teamId',
-                              String(team.teamId)
-                            )
-                          );
-                        }}
-                      />
-                      <SidebarItem
-                        defaultIcon={externalIcon}
-                        hoverIcon={externalHoverIcon}
-                        label=""
-                        onClick={() => {
-                          navigate(`/workspace/team/:teamId/ext`);
-                        }}
-                      />
-                    </div>
+            {isLoading ? null : teams.length === 0 ? (
+              <div className="text-gray-400 font-xsmall-r px-[3rem] pb-[1.6rem]">
+                등록된 팀이 없습니다.
+              </div>
+            ) : (
+              <>
+                <SortableDropdownList
+                  items={teams}
+                  renderContent={(team, {}, isOverlay) => (
+                    <DropdownMenu
+                      headerTitle=""
+                      initialOpen={!isOverlay}
+                      headerTeamIcon={team.teamImageUrl || vecocirclewhite}
+                      isNested={true}
+                    >
+                      {!isOverlay && (
+                        <div className="flex flex-col justify-center items-start gap-[1.6rem] pb-[1.6rem]">
+                          <SidebarItem
+                            defaultIcon={goalIcon}
+                            hoverIcon={goalHoverIcon}
+                            label=""
+                            onClick={() => {
+                              navigate(`/workspace/team/${team.teamId}/goal`);
+                            }}
+                            onAddClick={() => {
+                              navigate(`/workspace/team/${team.teamId}/goal/detail/create`);
+                            }}
+                          />
+                          <SidebarItem
+                            defaultIcon={issueIcon}
+                            hoverIcon={issueHoverIcon}
+                            label=""
+                            onClick={() => {
+                              navigate(`/workspace/team/${team.teamId}/issue`);
+                            }}
+                            onAddClick={() => {
+                              navigate(`/workspace/team/${team.teamId}/issue/detail/create`);
+                            }}
+                          />
+                          <SidebarItem
+                            defaultIcon={externalIcon}
+                            hoverIcon={externalHoverIcon}
+                            label=""
+                            onClick={() => {
+                              navigate(`/workspace/team/${team.teamId}/ext`);
+                            }}
+                          />
+                        </div>
+                      )}
+                    </DropdownMenu>
                   )}
-                </DropdownMenu>
-              )}
-              onSorted={(newList: any) => console.log(newList)}
-            />
+                  onSorted={(newList: any) => console.log(newList)}
+                />
+                <div ref={ref} className="h-[1rem]" />
+              </>
+            )}
           </DropdownMenu>
         </div>
       </div>

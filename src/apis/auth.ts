@@ -37,7 +37,6 @@ export const redirectToGoogleLogin = () => {
 
 /**
  * Kakao OAuth2 로그인 URL로 리다이렉트
- * - 명세서 X, 임시 구조
  * - components/Onboarding/SocialLoginButton.tsx
  */
 export const redirectToKakaoLogin = () => {
