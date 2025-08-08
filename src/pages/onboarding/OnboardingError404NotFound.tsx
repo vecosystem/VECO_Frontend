@@ -1,4 +1,4 @@
-// src/pages/Error404NotFound.tsx
+// src/pages/onboarding/Error404NotFound.tsx
 
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../../components/Onboarding/PrimaryButton';

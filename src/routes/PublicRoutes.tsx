@@ -5,7 +5,7 @@ import OnboardingSSOLogin from '../pages/onboarding/OnboardingSSOLogin';
 import OnboardingCreateWorkspace from '../pages/onboarding/OnboardingCreateWorkspace';
 import OnboardingInviteMember from '../pages/onboarding/OnboardingInviteMember';
 import OnboardingFinish from '../pages/onboarding/OnboardingFinish';
-import Error404NotFound from '../pages/onboarding/Error404NotFound.tsx';
+import OnboardingError404NotFound from '../pages/onboarding/OnboardingError404NotFound.tsx';
 import ParticipateWorkspaceInputPw from '../pages/onboarding/ParticipateWorkspaceInputPw';
 import { HomePage } from '../pages/home/HomePage.tsx';
 import TokenLoading from '../pages/onboarding/TokenLoading.tsx';
@@ -15,7 +15,7 @@ export const publicRoutes: RouteObject[] = [
   {
     path: '/',
     element: <HomePage />,
-    errorElement: <Error404NotFound />,
+    errorElement: <OnboardingError404NotFound />,
     children: [
       // 도메인 최상위: 백호 랜딩페이지
       { index: true, element: <HomePage /> },
@@ -33,7 +33,7 @@ export const publicRoutes: RouteObject[] = [
   {
     path: '/onboarding',
     element: <PublicLayout />,
-    errorElement: <Error404NotFound />,
+    errorElement: <OnboardingError404NotFound />,
     children: [
       {
         index: true,
