@@ -3,4 +3,6 @@ export const LOCAL_STORAGE_KEY = {
   inviteUrl: 'inviteUrl',
   invitePassword: 'invitePassword',
   name: 'name',
+  workspaceName: 'workspaceName',
+  isInvite: 'isInvite',
 };

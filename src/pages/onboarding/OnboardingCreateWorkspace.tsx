@@ -1,13 +1,10 @@
 // src/pages/onboarding/OnboardingCreateWorkspace.tsx
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PageIndicator from '../../components/Onboarding/PageIndicator';
 import onboardingSteps from '../../constants/onboardingSteps';
 import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 import WorkspaceNameInput from '../../components/Onboarding/WorkspaceNameInput';
-import { postReIssueAccessToken } from '../../apis/auth';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { LOCAL_STORAGE_KEY } from '../../constants/key';
 import { usePostCreateWorkspace } from '../../apis/workspace/usePostCreateWorkspace';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,15 +13,6 @@ const OnboardingCreateWorkspace = () => {
   const [workspaceName, setWorkspaceName] = useState('');
   const [workspaceUrl, setWorkspaceUrl] = useState('');
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchAccessToken = async () => {
-      const accesstoken = await postReIssueAccessToken();
-      const { setItem } = useLocalStorage(LOCAL_STORAGE_KEY.accessToken);
-      setItem(accesstoken);
-    };
-    fetchAccessToken();
-  }, []);
 
   const { mutateAsync } = usePostCreateWorkspace();
 
