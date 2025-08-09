@@ -12,7 +12,8 @@ const Sidebar = () => {
   const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useGetWorkspaceTeams();
 
-  const teams: Team[] = data ? data.pages.flatMap((page) => page.teamList).slice(1) : [];
+  const defaultTeam: Team | null = data ? data.pages.flatMap((page) => page.teamList)[0] : null;
+  const myTeams: Team[] = data ? data.pages.flatMap((page) => page.teamList).slice(1) : [];
 
   return (
     <div
@@ -34,9 +35,10 @@ const Sidebar = () => {
           <div className="h-full overflow-y-auto sidebar-scroll">
             <FullSidebarContent
               setExpanded={toggle}
-              teams={teams}
-              isLoading={isLoading}
+              defaultTeam={defaultTeam!}
+              myTeams={myTeams}
               workspaceProfile={workspaceProfile!}
+              isLoading={isLoading}
               hasNextPage={hasNextPage}
               isFetchingNextPage={isFetchingNextPage}
               fetchNextPage={fetchNextPage}
@@ -54,9 +56,10 @@ const Sidebar = () => {
           <div className="h-full overflow-y-auto sidebar-scroll">
             <MiniSidebarContent
               setExpanded={toggle}
-              teams={teams}
-              isLoading={isLoading}
+              defaultTeam={defaultTeam!}
+              myTeams={myTeams}
               workspaceProfile={workspaceProfile!}
+              isLoading={isLoading}
               hasNextPage={hasNextPage}
               isFetchingNextPage={isFetchingNextPage}
               fetchNextPage={fetchNextPage}

@@ -20,7 +20,8 @@ import { useInView } from 'react-intersection-observer';
 
 interface MiniSidebarContentProps {
   setExpanded: (value: boolean) => void;
-  teams: Team[];
+  defaultTeam: Team;
+  myTeams: Team[];
   isLoading: boolean;
   workspaceProfile: WorkspaceResponse;
   hasNextPage: boolean;
@@ -30,7 +31,8 @@ interface MiniSidebarContentProps {
 
 const MiniSidebarContent = ({
   setExpanded,
-  teams,
+  defaultTeam,
+  myTeams,
   isLoading,
   workspaceProfile,
   hasNextPage,
@@ -54,7 +56,7 @@ const MiniSidebarContent = ({
             type="button"
             className="flex w-[3.2rem] h-[3.2rem] shrink-0 items-center cursor-pointer"
             onClick={() =>
-              navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/issue`)
+              navigate(`/workspace/default/team/${workspaceProfile?.defaultTeamId}/issue`)
             }
           >
             <img
@@ -93,49 +95,51 @@ const MiniSidebarContent = ({
           {/* 첫 번째 드롭다운: 워크스페이스 기본 팀 */}
           <DropdownMenu headerTitle="기본" initialOpen={true}>
             <div className="flex flex-col">
-              <DropdownMenu
-                headerTitle=""
-                initialOpen={true}
-                headerTeamIcon={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
-                isNested={true}
-              >
-                <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pb-[1.6rem]">
-                  <SidebarItem
-                    defaultIcon={goalIcon}
-                    hoverIcon={goalHoverIcon}
-                    label=""
-                    onClick={() => {
-                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/goal`);
-                    }}
-                    onAddClick={() => {
-                      navigate(
-                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/goal/detail/create`
-                      );
-                    }}
-                  />
-                  <SidebarItem
-                    defaultIcon={issueIcon}
-                    hoverIcon={issueHoverIcon}
-                    label=""
-                    onClick={() => {
-                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/issue`);
-                    }}
-                    onAddClick={() => {
-                      navigate(
-                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/issue/detail/create`
-                      );
-                    }}
-                  />
-                  <SidebarItem
-                    defaultIcon={externalIcon}
-                    hoverIcon={externalHoverIcon}
-                    label=""
-                    onClick={() => {
-                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/ext`);
-                    }}
-                  />
-                </div>
-              </DropdownMenu>
+              {isLoading ? null : (
+                <DropdownMenu
+                  headerTitle=""
+                  initialOpen={true}
+                  headerTeamIcon={defaultTeam?.teamImageUrl || vecocirclenavy}
+                  isNested={true}
+                >
+                  <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pb-[1.6rem]">
+                    <SidebarItem
+                      defaultIcon={goalIcon}
+                      hoverIcon={goalHoverIcon}
+                      label=""
+                      onClick={() => {
+                        navigate(`/workspace/default/team/${defaultTeam.teamId}/goal`);
+                      }}
+                      onAddClick={() => {
+                        navigate(
+                          `/workspace/default/team/${defaultTeam.teamId}/goal/detail/create`
+                        );
+                      }}
+                    />
+                    <SidebarItem
+                      defaultIcon={issueIcon}
+                      hoverIcon={issueHoverIcon}
+                      label=""
+                      onClick={() => {
+                        navigate(`/workspace/default/team/${defaultTeam.teamId}/issue`);
+                      }}
+                      onAddClick={() => {
+                        navigate(
+                          `/workspace/default/team/${defaultTeam.teamId}/issue/detail/create`
+                        );
+                      }}
+                    />
+                    <SidebarItem
+                      defaultIcon={externalIcon}
+                      hoverIcon={externalHoverIcon}
+                      label=""
+                      onClick={() => {
+                        navigate(`/workspace/default/team/${defaultTeam.teamId}/ext`);
+                      }}
+                    />
+                  </div>
+                </DropdownMenu>
+              )}
             </div>
           </DropdownMenu>
         </div>
@@ -143,14 +147,14 @@ const MiniSidebarContent = ({
         <div className="flex flex-col items-start self-stretch">
           <DropdownMenu headerTitle="나의" initialOpen={true}>
             {/* Team1 드롭다운 (내부 드롭다운) */}
-            {isLoading ? null : teams.length === 0 ? (
+            {isLoading ? null : myTeams.length === 0 ? (
               <div className="text-gray-400 font-xsmall-r px-[3rem] pb-[1.6rem]">
                 등록된 팀이 없습니다.
               </div>
             ) : (
               <>
                 <SortableDropdownList
-                  items={teams}
+                  items={myTeams}
                   renderContent={(team, {}, isOverlay) => (
                     <DropdownMenu
                       headerTitle=""
