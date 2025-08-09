@@ -25,6 +25,9 @@ import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
 import { useToggleMode } from '../../hooks/useToggleMode';
+import { useParams } from 'react-router-dom';
+import { useGetExternalIssue } from '../../apis/external/useGetExternalssue.ts';
+import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -36,6 +39,19 @@ interface WorkspaceExternalDetailProps {
 }
 
 const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) => {
+  const teamId = Number(useParams<{ teamId: string }>().teamId);
+  const { data: externalIssues } = useGetExternalIssue(teamId);
+  const issues = externalIssues?.info.map((issue) => issue.title) || [];
+
+  const { data: linkedTools } = useGetExternalLinks(teamId);
+  const linkedToolsList = linkedTools
+    ? Object.entries(linkedTools)
+        .filter(([, value]) => value)
+        .map(([key]) =>
+          key === 'linkedWithGithub' ? 'Github' : key === 'linkedWithSlack' ? 'Slack' : key
+        )
+    : [];
+
   const [mode, setMode] = useState<'create' | 'view' | 'edit'>(initialMode); // 상세페이지 모드 상태
   const [title, setTitle] = useState('');
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
@@ -180,22 +196,14 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
 
               {/* (5) 목표 */}
               <div onClick={(e) => e.stopPropagation()}>
-                <PropertyItem
-                  defaultValue="목표"
-                  options={[
-                    '없음',
-                    '백호를 사용해서 다른 사람들과 협업해보기',
-                    '기획 및 요구사항 분석',
-                  ]}
-                  iconMap={goalIconMap}
-                />
+                <PropertyItem defaultValue="목표" options={issues} iconMap={goalIconMap} />
               </div>
 
               {/* (6) 외부 */}
               <div onClick={(e) => e.stopPropagation()}>
                 <PropertyItem
                   defaultValue="외부"
-                  options={['Slack', 'Notion', 'Github']}
+                  options={linkedToolsList}
                   iconMap={externalIconMap}
                 />
               </div>

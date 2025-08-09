@@ -13,5 +13,6 @@ export const queryKey = {
   GOAL: 'goal',
   EXTERNAL: 'external',
   EXTERNAL_LINKS: 'external_links',
+  EXTERNAL_ISSUE: 'external_issue',
   TEAM_MEMBER_LIST: 'team_member_list',
 };
