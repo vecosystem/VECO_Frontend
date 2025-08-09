@@ -1,4 +1,3 @@
-// src/components/DropdownMenu.jsx
 import { useUIStore } from '../../stores/ui';
 import DropdownHeader from './DropdownHeader';
 
@@ -16,21 +15,15 @@ interface DropdownMenuProps {
 const DropdownMenu = ({
   dropdownId,
   headerTitle,
-  initialOpen = true, // 기본적으로 열려있도록 설정
+  initialOpen = true,
   children,
   headerTeamIcon,
   headerHasToggleIcon = true,
   isNested = false,
   dragHandle,
 }: DropdownMenuProps) => {
-  const { dropdownOpen, toggleDropdown, setDropdownOpen } = useUIStore();
-
-  // 스토어에 초기값이 없으면 initialOpen 값으로 설정
-  if (dropdownOpen[dropdownId] === undefined) {
-    setDropdownOpen(dropdownId, initialOpen);
-  }
-
-  const isOpen = dropdownOpen[dropdownId] ?? initialOpen;
+  const isOpen = useUIStore((s) => s.dropdownOpen[dropdownId] ?? initialOpen);
+  const toggleDropdown = useUIStore((s) => s.toggleDropdown);
 
   const handleToggle = () => {
     toggleDropdown(dropdownId);
