@@ -9,24 +9,24 @@ import { useState, useRef } from 'react';
 import { useModalActions, useModalInfo } from '../../hooks/useModal.ts';
 import InputSection from './components/InputSection.tsx';
 import Modal from '../../components/Modal/Modal.tsx';
-// import { useGetMyProfile } from '../../apis/setting/useGetMyProfile.ts';
-// import { usePatchMyProfileImage } from '../../apis/setting/usePatchMyProfileImage.ts';
-// import { useDeleteMyProfileImage } from '../../apis/setting/useDeleteMyProfileImage.ts';
+import { useGetMyProfile } from '../../apis/setting/useGetMyProfile.ts';
+import { usePatchMyProfileImage } from '../../apis/setting/usePatchMyProfileImage.ts';
+import { useDeleteMyProfileImage } from '../../apis/setting/useDeleteMyProfileImage.ts';
+import { postLogout } from '../../apis/auth.ts';
+import { useNavigate } from 'react-router-dom';
 
 const SettingMyProfile = () => {
+  const navigate = useNavigate();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const { isOpen, content } = useModalInfo();
   const { openModal } = useModalActions();
   const [isAgree, setIsAgree] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { mutate: patchMyProfileImage } = usePatchMyProfileImage();
+  const { mutate: deleteMyProfileImage } = useDeleteMyProfileImage();
 
-  // TODO: 나의 프로필 조회 API 호출
-  // const { data: userData } = useGetMyProfile();
-  const userData = {
-    name: '박진주',
-    email: 'vecocircle@gmail.com',
-    profileImage: '',
-  };
+  const { data: userData } = useGetMyProfile();
+  console.log(userData);
 
   const handleDropdownToggle = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -48,15 +48,17 @@ const SettingMyProfile = () => {
     const formData = new FormData();
     formData.append('image', file);
 
-    // TODO: 프로필 이미지 변경 API 호출
-    // const { mutate: patchMyProfileImage } = usePatchMyProfileImage();
-    // patchMyProfileImage(formData);
+    patchMyProfileImage(formData);
   };
 
   const handleProfileImageDelete = () => {
-    // TODO: 프로필 이미지 삭제 API 호출
-    // const { mutate: deleteMyProfileImage } = useDeleteMyProfileImage();
-    // deleteMyProfileImage();
+    deleteMyProfileImage();
+  };
+
+  const handleLogout = async () => {
+    await postLogout();
+    localStorage.clear();
+    navigate('/onboarding');
   };
 
   return (
@@ -74,8 +76,8 @@ const SettingMyProfile = () => {
                   onClick={handleDropdownToggle}
                 >
                   <img
-                    src={userData?.profileImage || userCircleIcon}
-                    className="w-full h-full"
+                    src={userData?.profileImageUrl || userCircleIcon}
+                    className="w-full h-full rounded-full object-cover"
                     alt="프로필 사진"
                   />
                   <input
@@ -107,8 +109,8 @@ const SettingMyProfile = () => {
               </div>
             </section>
             <div className="flex flex-col gap-[3.2rem]">
-              <InputSection label="이름" placeholder={userData?.name || ''} disabled />
-              <InputSection label="이메일" placeholder={userData?.email || ''} disabled />
+              <InputSection label="이름" placeholder={userData?.name || 'Name'} disabled />
+              <InputSection label="이메일" placeholder={userData?.email || 'Email'} disabled />
             </div>
           </div>
           <div className="flex flex-col gap-[2.4rem]">
@@ -160,7 +162,7 @@ const SettingMyProfile = () => {
           subtitle="정말로 로그아웃하시겠습니까?"
           buttonText="로그아웃"
           buttonColor="bg-error-400"
-          onClick={() => console.log('Modal Button Clicked')}
+          onClick={handleLogout}
         />
       )}
     </div>

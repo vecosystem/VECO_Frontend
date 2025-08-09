@@ -1,18 +1,18 @@
 import FullSettingSidebarContent from './FullSettingSidebarContent';
 import MiniSettingSidebarContent from './MiniSettingSidebarContent';
 import clsx from 'clsx';
-import { useSidebarStore } from '../../stores/useSidebarStore';
+import { useUIStore } from '../../stores/ui';
 import { useGetWorkspaceProfile } from '../../apis/setting/useGetWorkspaceProfile';
 
 const SettingSidebar = () => {
-  const { isOpen, toggle } = useSidebarStore();
+  const { sidebarOpen } = useUIStore();
   const { data: workspaceProfile } = useGetWorkspaceProfile();
 
   return (
     <div
       className={clsx(
         'bg-gray-200 transition-all duration-300 ease-in-out',
-        isOpen ? 'w-[30.8rem]' : 'w-[12.8rem]',
+        sidebarOpen ? 'w-[30.8rem]' : 'w-[12.8rem]',
         'h-screen flex flex-col'
       )}
     >
@@ -22,11 +22,13 @@ const SettingSidebar = () => {
         <div
           className={clsx(
             'absolute inset-0 h-full w-full transition-opacity duration-300',
-            isOpen ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
+            sidebarOpen ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
           )}
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
-            <FullSettingSidebarContent setExpanded={toggle} workspaceProfile={workspaceProfile!} />
+            <FullSettingSidebarContent
+              workspaceProfile={workspaceProfile!}
+            />
           </div>
         </div>
 
@@ -34,11 +36,13 @@ const SettingSidebar = () => {
         <div
           className={clsx(
             'absolute inset-0 h-full w-full transition-opacity duration-300',
-            !isOpen ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
+            !sidebarOpen ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
           )}
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
-            <MiniSettingSidebarContent setExpanded={toggle} workspaceProfile={workspaceProfile!} />
+            <MiniSettingSidebarContent
+              workspaceProfile={workspaceProfile!}
+            />
           </div>
         </div>
       </div>

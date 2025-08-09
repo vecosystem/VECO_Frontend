@@ -7,7 +7,7 @@ import { queryKey } from '../../constants/queryKey';
 // 설정 - 나의 프로필 이미지 삭제
 const deleteMyProfileImage = async (): Promise<CommonResponse<{}>> => {
   try {
-    const response = await axiosInstance.delete('/api/workspace/setting/my-profile/profileImage');
+    const response = await axiosInstance.delete('/api/workspace/setting/my-profile/profile-image');
     return response.data;
   } catch (error) {
     console.error('나의 프로필 이미지 삭제 실패', error);

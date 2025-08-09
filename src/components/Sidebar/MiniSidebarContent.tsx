@@ -17,10 +17,11 @@ import type { WorkspaceResponse } from '../../types/setting';
 import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { useUIStore } from '../../stores/ui';
 
 interface MiniSidebarContentProps {
-  setExpanded: (value: boolean) => void;
-  teams: Team[];
+  defaultTeam: Team;
+  myTeams: Team[];
   isLoading: boolean;
   workspaceProfile: WorkspaceResponse;
   hasNextPage: boolean;
@@ -29,14 +30,15 @@ interface MiniSidebarContentProps {
 }
 
 const MiniSidebarContent = ({
-  setExpanded,
-  teams,
+  defaultTeam,
+  myTeams,
   isLoading,
   workspaceProfile,
   hasNextPage,
   isFetchingNextPage,
   fetchNextPage,
 }: MiniSidebarContentProps) => {
+  const { toggleSidebar } = useUIStore();
   const navigate = useNavigate();
   const { ref, inView } = useInView();
 
@@ -54,19 +56,19 @@ const MiniSidebarContent = ({
             type="button"
             className="flex w-[3.2rem] h-[3.2rem] shrink-0 items-center cursor-pointer"
             onClick={() =>
-              navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/issue`)
+              navigate(`/workspace/default/team/${workspaceProfile?.defaultTeamId}/issue`)
             }
           >
             <img
               src={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
-              className="w-full h-full shrink-0"
+              className="w-full h-full shrink-0 rounded-full object-cover"
               alt="Workspace"
             />
           </button>
           <button
             type="button"
             className="flex w-[2.4rem] h-[2.4rem] shrink-0 items-center justify-center cursor-pointer"
-            onClick={() => setExpanded(true)}
+            onClick={toggleSidebar}
           >
             <img src={expandIcon} className="w-full h-full shrink-0" alt="expand" />
           </button>
@@ -91,68 +93,72 @@ const MiniSidebarContent = ({
 
         <div className="flex flex-col items-start self-stretch">
           {/* 첫 번째 드롭다운: 워크스페이스 기본 팀 */}
-          <DropdownMenu headerTitle="기본" initialOpen={true}>
+          <DropdownMenu dropdownId="ws-default-team" headerTitle="기본 팀" initialOpen={true}>
             <div className="flex flex-col">
-              <DropdownMenu
-                headerTitle=""
-                initialOpen={true}
-                headerTeamIcon={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
-                isNested={true}
-              >
-                <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pb-[1.6rem]">
-                  <SidebarItem
-                    defaultIcon={goalIcon}
-                    hoverIcon={goalHoverIcon}
-                    label=""
-                    onClick={() => {
-                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/goal`);
-                    }}
-                    onAddClick={() => {
-                      navigate(
-                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/goal/detail/create`
-                      );
-                    }}
-                  />
-                  <SidebarItem
-                    defaultIcon={issueIcon}
-                    hoverIcon={issueHoverIcon}
-                    label=""
-                    onClick={() => {
-                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/issue`);
-                    }}
-                    onAddClick={() => {
-                      navigate(
-                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/issue/detail/create`
-                      );
-                    }}
-                  />
-                  <SidebarItem
-                    defaultIcon={externalIcon}
-                    hoverIcon={externalHoverIcon}
-                    label=""
-                    onClick={() => {
-                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/ext`);
-                    }}
-                  />
-                </div>
-              </DropdownMenu>
+              {isLoading ? null : (
+                <DropdownMenu
+                  dropdownId={`team-${defaultTeam.teamId}`}
+                  headerTitle=""
+                  initialOpen={true}
+                  headerTeamIcon={defaultTeam?.teamImageUrl || vecocirclenavy}
+                  isNested={true}
+                >
+                  <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pb-[1.6rem]">
+                    <SidebarItem
+                      defaultIcon={goalIcon}
+                      hoverIcon={goalHoverIcon}
+                      label=""
+                      onClick={() => {
+                        navigate(`/workspace/default/team/${defaultTeam.teamId}/goal`);
+                      }}
+                      onAddClick={() => {
+                        navigate(
+                          `/workspace/default/team/${defaultTeam.teamId}/goal/detail/create`
+                        );
+                      }}
+                    />
+                    <SidebarItem
+                      defaultIcon={issueIcon}
+                      hoverIcon={issueHoverIcon}
+                      label=""
+                      onClick={() => {
+                        navigate(`/workspace/default/team/${defaultTeam.teamId}/issue`);
+                      }}
+                      onAddClick={() => {
+                        navigate(
+                          `/workspace/default/team/${defaultTeam.teamId}/issue/detail/create`
+                        );
+                      }}
+                    />
+                    <SidebarItem
+                      defaultIcon={externalIcon}
+                      hoverIcon={externalHoverIcon}
+                      label=""
+                      onClick={() => {
+                        navigate(`/workspace/default/team/${defaultTeam.teamId}/ext`);
+                      }}
+                    />
+                  </div>
+                </DropdownMenu>
+              )}
             </div>
           </DropdownMenu>
         </div>
         {/* 두 번째 드롭다운: 나의 팀 (내부에 드롭다운 또 포함) */}
         <div className="flex flex-col items-start self-stretch">
-          <DropdownMenu headerTitle="나의" initialOpen={true}>
+          <DropdownMenu dropdownId="my-teams" headerTitle="나의 팀" initialOpen={true}>
             {/* Team1 드롭다운 (내부 드롭다운) */}
-            {isLoading ? null : teams.length === 0 ? (
+            {isLoading ? null : myTeams.length === 0 ? (
               <div className="text-gray-400 font-xsmall-r px-[3rem] pb-[1.6rem]">
                 등록된 팀이 없습니다.
               </div>
             ) : (
               <>
                 <SortableDropdownList
-                  items={teams}
+                  items={myTeams}
                   renderContent={(team, {}, isOverlay) => (
                     <DropdownMenu
+                      dropdownId={`team-${team.teamId}`}
                       headerTitle=""
                       initialOpen={!isOverlay}
                       headerTeamIcon={team.teamImageUrl || vecocirclewhite}
