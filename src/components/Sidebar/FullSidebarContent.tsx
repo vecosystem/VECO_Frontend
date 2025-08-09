@@ -63,7 +63,7 @@ const FullSidebarContent = ({
           >
             <img
               src={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
-              className="w-[3.2rem] h-[3.2rem]"
+              className="w-[3.2rem] h-[3.2rem] rounded-full object-cover"
               alt="Workspace"
             />
             <span className="font-body-b text-gray-600 letter-spacing-[-0.032rem]">

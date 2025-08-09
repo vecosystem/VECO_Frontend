@@ -59,7 +59,7 @@ const MiniSidebarContent = ({
           >
             <img
               src={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
-              className="w-full h-full shrink-0"
+              className="w-full h-full shrink-0 rounded-full object-cover"
               alt="Workspace"
             />
           </button>

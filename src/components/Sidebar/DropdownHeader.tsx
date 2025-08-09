@@ -28,7 +28,13 @@ const DropdownHeader = ({
     >
       <div className="flex items-center gap-[0.8rem]">
         {/* teamIcon ex: 팀 이미지 */}
-        {teamIcon && <img src={teamIcon} className="w-[2.4rem] h-[2.4rem]" alt="Team" />}
+        {teamIcon && (
+          <img
+            src={teamIcon}
+            className="w-[2.4rem] h-[2.4rem] rounded-full object-cover"
+            alt="Team"
+          />
+        )}
 
         <div className="flex justify-center items-center">
           <span
