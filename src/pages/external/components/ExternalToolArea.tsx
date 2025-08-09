@@ -25,7 +25,9 @@ const ExternalToolArea = ({ isLinkedWithGithub, isLinkedWithSlack }: Props) => {
     <>
       <button className="ml-[1.6rem] cursor-pointer" onClick={handleButtonClick}>
         {/* 연동하기 버튼 */}
-        {(!isLinkedWithSlack || !isLinkedWithGithub) && <img src={LinkButton} />}
+        {(!isLinkedWithSlack || !isLinkedWithGithub) && (
+          <img src={LinkButton} alt={'연동하기 버튼'} />
+        )}
       </button>
       <div className="flex gap-[2rem] ml-[3.2rem]">
         {isLinkedWithGithub && <img src={GitIcon} className="w-[2.4rem] h-[2.4rem]" alt="GitHub" />}
