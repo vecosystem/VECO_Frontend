@@ -36,8 +36,9 @@ const SettingTeam = () => {
       <hr className={`w-full text-gray-300`} />
       {isLoading ? (
         <>
-          <TeamItemSkeleton />
-          <TeamItemSkeleton />
+          {Array.from({ length: 10 }).map((_, idx) => (
+            <TeamItemSkeleton key={idx} />
+          ))}
         </>
       ) : (
         <>

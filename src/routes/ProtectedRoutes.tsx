@@ -18,6 +18,8 @@ import WorkspaceGoalDetail from '../pages/workspace/WorkspaceGoalDetail.tsx';
 import WorkspaceIssueDetail from '../pages/workspace/WorkspaceIssueDetail.tsx';
 import WorkspaceExternalDetail from '../pages/workspace/WorkspaceExternalDetail.tsx';
 import ServerError from '../pages/ServerError.tsx';
+import GithubComplete from '../pages/external/GithubComplete.tsx';
+import SlackComplete from '../pages/external/SlackComplete.tsx';
 
 export const protectedRoutes: RouteObject[] = [
   {
@@ -112,5 +114,14 @@ export const protectedRoutes: RouteObject[] = [
         ],
       },
     ],
+  },
+  /* 연동 완료 페이지 */
+  {
+    path: 'github/complete',
+    element: <GithubComplete />,
+  },
+  {
+    path: 'slack/complete',
+    element: <SlackComplete />,
   },
 ];

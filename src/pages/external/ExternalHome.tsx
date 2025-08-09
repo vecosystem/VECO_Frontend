@@ -20,6 +20,7 @@ import ExternalToolArea from './components/ExternalToolArea';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetExternalList } from '../../apis/external/useGetExternalList';
 import { useDeleteExternals } from '../../apis/external/useDeleteExternals';
+import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
@@ -65,6 +66,8 @@ const ExternalHome = () => {
   const { data } = useGetExternalList(teamId ?? '', params);
   const externalGroups = data?.result?.data ?? [];
   const allExternalsFlat = externalGroups.flatMap((g) => g.externals);
+
+  const { data: externalLinks } = useGetExternalLinks(Number(teamId));
 
   const {
     checkedIds: checkItems,
@@ -119,8 +122,12 @@ const ExternalHome = () => {
       <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
         <div className="flex items-center">
           <TeamIcon />
-          {/* 아래 부분 연동 여부에 따라 다르게 보임. 추후 컴포넌트 분리*/}
-          <ExternalToolArea />
+          {externalLinks && (
+            <ExternalToolArea
+              isLinkedWithGithub={externalLinks.linkedWithGithub}
+              isLinkedWithSlack={externalLinks.linkedWithSlack}
+            />
+          )}
         </div>
         <ListViewToolbar
           filter={filter}

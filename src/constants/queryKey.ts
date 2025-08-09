@@ -12,5 +12,9 @@ export const queryKey = {
   NOTI_LIST: 'noti_list',
   GOAL: 'goal',
   EXTERNAL: 'external',
+  EXTERNAL_LINKS: 'external_links',
+  EXTERNAL_SIMPLE_ISSUE: 'external_simple_issue',
   TEAM_MEMBER_LIST: 'team_member_list',
+  GITHUB_REPOSITORIES: 'github_repositories',
+  GITHUB_INSTALLATION_ID: 'github_installation_id',
 };
