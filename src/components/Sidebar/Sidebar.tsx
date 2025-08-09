@@ -7,7 +7,7 @@ import { useGetWorkspaceProfile } from '../../apis/setting/useGetWorkspaceProfil
 import { useUIStore } from '../../stores/ui';
 
 const Sidebar = () => {
-  const { sidebarOpen, toggleSidebar } = useUIStore();
+  const { sidebarOpen } = useUIStore();
   const { data: workspaceProfile } = useGetWorkspaceProfile();
   const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useGetWorkspaceTeams();
@@ -34,7 +34,6 @@ const Sidebar = () => {
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
             <FullSidebarContent
-              toggleSidebar={toggleSidebar}
               defaultTeam={defaultTeam!}
               myTeams={myTeams}
               workspaceProfile={workspaceProfile!}
@@ -55,7 +54,6 @@ const Sidebar = () => {
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
             <MiniSidebarContent
-              toggleSidebar={toggleSidebar}
               defaultTeam={defaultTeam!}
               myTeams={myTeams}
               workspaceProfile={workspaceProfile!}

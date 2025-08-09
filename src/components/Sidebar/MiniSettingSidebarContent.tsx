@@ -11,16 +11,16 @@ import userProfileHoverIcon from '../../assets/icons/user-profile-hover.svg';
 import leftArrowIcon from '../../assets/icons/left-arrow.svg';
 import expandIcon from '../../assets/icons/expand.svg';
 import type { WorkspaceResponse } from '../../types/setting';
+import { useUIStore } from '../../stores/ui';
 
 interface MiniSettingSidebarContentProps {
-  toggleSidebar: () => void;
   workspaceProfile: WorkspaceResponse;
 }
 
 const MiniSettingSidebarContent = ({
-  toggleSidebar,
   workspaceProfile,
 }: MiniSettingSidebarContentProps) => {
+  const { toggleSidebar } = useUIStore();
   const navigate = useNavigate();
 
   return (

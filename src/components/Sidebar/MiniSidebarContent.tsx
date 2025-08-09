@@ -17,9 +17,9 @@ import type { WorkspaceResponse } from '../../types/setting';
 import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { useUIStore } from '../../stores/ui';
 
 interface MiniSidebarContentProps {
-  toggleSidebar: () => void;
   defaultTeam: Team;
   myTeams: Team[];
   isLoading: boolean;
@@ -30,7 +30,6 @@ interface MiniSidebarContentProps {
 }
 
 const MiniSidebarContent = ({
-  toggleSidebar,
   defaultTeam,
   myTeams,
   isLoading,
@@ -39,6 +38,7 @@ const MiniSidebarContent = ({
   isFetchingNextPage,
   fetchNextPage,
 }: MiniSidebarContentProps) => {
+  const { toggleSidebar } = useUIStore();
   const navigate = useNavigate();
   const { ref, inView } = useInView();
 

@@ -5,7 +5,7 @@ import { useUIStore } from '../../stores/ui';
 import { useGetWorkspaceProfile } from '../../apis/setting/useGetWorkspaceProfile';
 
 const SettingSidebar = () => {
-  const { sidebarOpen, toggleSidebar } = useUIStore();
+  const { sidebarOpen } = useUIStore();
   const { data: workspaceProfile } = useGetWorkspaceProfile();
 
   return (
@@ -27,7 +27,6 @@ const SettingSidebar = () => {
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
             <FullSettingSidebarContent
-              toggleSidebar={toggleSidebar}
               workspaceProfile={workspaceProfile!}
             />
           </div>
@@ -42,7 +41,6 @@ const SettingSidebar = () => {
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
             <MiniSettingSidebarContent
-              toggleSidebar={toggleSidebar}
               workspaceProfile={workspaceProfile!}
             />
           </div>

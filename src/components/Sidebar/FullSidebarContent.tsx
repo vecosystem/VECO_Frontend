@@ -17,12 +17,13 @@ import SortableDropdownList from './SortableDropdownList';
 import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
 import { usePatchWorkspaceTeams } from '../../apis/setting/usePatchWorkspaceTeams';
 import type { Team } from '../../types/setting';
+
+import { useUIStore } from '../../stores/ui';
+import type { WorkspaceResponse } from '../../types/setting';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
-import type { WorkspaceResponse } from '../../types/setting';
 
 interface FullSidebarContentProps {
-  toggleSidebar: () => void;
   defaultTeam: Team;
   myTeams: Team[];
   workspaceProfile: WorkspaceResponse;
@@ -33,7 +34,6 @@ interface FullSidebarContentProps {
 }
 
 const FullSidebarContent = ({
-  toggleSidebar,
   defaultTeam,
   myTeams,
   workspaceProfile,
@@ -42,6 +42,7 @@ const FullSidebarContent = ({
   isFetchingNextPage,
   fetchNextPage,
 }: FullSidebarContentProps) => {
+  const { toggleSidebar } = useUIStore();
   const navigate = useNavigate();
   const { mutate: patchWorkspaceTeams } = usePatchWorkspaceTeams();
   const { ref, inView } = useInView();

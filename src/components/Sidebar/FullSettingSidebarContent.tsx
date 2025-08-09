@@ -11,16 +11,16 @@ import usersHoverIcon from '../../assets/icons/users-hover.svg';
 import userProfileIcon from '../../assets/icons/user-profile.svg';
 import userProfileHoverIcon from '../../assets/icons/user-profile-hover.svg';
 import type { WorkspaceResponse } from '../../types/setting';
+import { useUIStore } from '../../stores/ui';
 
 interface FullSettingSidebarContentProps {
-  toggleSidebar: () => void;
   workspaceProfile: WorkspaceResponse;
 }
 
 const FullSettingSidebarContent = ({
-  toggleSidebar,
   workspaceProfile,
 }: FullSettingSidebarContentProps) => {
+  const { toggleSidebar } = useUIStore();
   const navigate = useNavigate();
 
   return (
