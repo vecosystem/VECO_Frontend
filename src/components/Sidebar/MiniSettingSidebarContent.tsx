@@ -46,7 +46,7 @@ const MiniSettingSidebarContent = ({
         </div>
 
         <div className="flex flex-col items-start self-stretch">
-          <DropdownMenu headerTitle="워크" initialOpen={true}>
+          <DropdownMenu dropdownId="setting-workspace" headerTitle="워크" initialOpen={true}>
             <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pb-[1.6rem]">
               <SidebarItem
                 defaultIcon={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
@@ -59,7 +59,7 @@ const MiniSettingSidebarContent = ({
           </DropdownMenu>
         </div>
         <div className="flex flex-col items-start self-stretch">
-          <DropdownMenu headerTitle="팀" initialOpen={true}>
+          <DropdownMenu dropdownId="setting-team" headerTitle="팀" initialOpen={true}>
             <div className="flex flex-col justify-center items-start gap-[1.6rem] pb-[1.6rem]">
               <SidebarItem
                 defaultIcon={tableIcon}
@@ -81,7 +81,7 @@ const MiniSettingSidebarContent = ({
           </DropdownMenu>
         </div>
         <div className="flex flex-col items-start self-stretch">
-          <DropdownMenu headerTitle="계정" initialOpen={true}>
+          <DropdownMenu dropdownId="setting-account" headerTitle="계정" initialOpen={true}>
             <div className="flex flex-col justify-center items-start gap-[1.6rem] pb-[1.6rem]">
               <SidebarItem
                 defaultIcon={userProfileIcon}
