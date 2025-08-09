@@ -13,12 +13,12 @@ import expandIcon from '../../assets/icons/expand.svg';
 import type { WorkspaceResponse } from '../../types/setting';
 
 interface MiniSettingSidebarContentProps {
-  setExpanded: (value: boolean) => void;
+  toggleSidebar: () => void;
   workspaceProfile: WorkspaceResponse;
 }
 
 const MiniSettingSidebarContent = ({
-  setExpanded,
+  toggleSidebar,
   workspaceProfile,
 }: MiniSettingSidebarContentProps) => {
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ const MiniSettingSidebarContent = ({
           <button
             type="button"
             className="flex w-[2.4rem] h-[2.4rem] shrink-0 items-center justify-center cursor-pointer"
-            onClick={() => setExpanded(true)}
+            onClick={toggleSidebar}
           >
             <img src={expandIcon} className="w-full h-full shrink-0" alt="expand" />
           </button>

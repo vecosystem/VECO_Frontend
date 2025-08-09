@@ -22,7 +22,7 @@ import { useEffect } from 'react';
 import type { WorkspaceResponse } from '../../types/setting';
 
 interface FullSidebarContentProps {
-  setExpanded: (value: boolean) => void;
+  toggleSidebar: () => void;
   defaultTeam: Team;
   myTeams: Team[];
   workspaceProfile: WorkspaceResponse;
@@ -33,7 +33,7 @@ interface FullSidebarContentProps {
 }
 
 const FullSidebarContent = ({
-  setExpanded,
+  toggleSidebar,
   defaultTeam,
   myTeams,
   workspaceProfile,
@@ -76,7 +76,7 @@ const FullSidebarContent = ({
             <button
               type="button"
               className="flex w-[2.4rem] h-[2.4rem] items-center justify-center cursor-pointer"
-              onClick={() => setExpanded(false)}
+              onClick={toggleSidebar}
             >
               <img src={collapseIcon} alt="collapse" />
             </button>

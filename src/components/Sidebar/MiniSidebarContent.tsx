@@ -19,7 +19,7 @@ import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 interface MiniSidebarContentProps {
-  setExpanded: (value: boolean) => void;
+  toggleSidebar: () => void;
   defaultTeam: Team;
   myTeams: Team[];
   isLoading: boolean;
@@ -30,7 +30,7 @@ interface MiniSidebarContentProps {
 }
 
 const MiniSidebarContent = ({
-  setExpanded,
+  toggleSidebar,
   defaultTeam,
   myTeams,
   isLoading,
@@ -68,7 +68,7 @@ const MiniSidebarContent = ({
           <button
             type="button"
             className="flex w-[2.4rem] h-[2.4rem] shrink-0 items-center justify-center cursor-pointer"
-            onClick={() => setExpanded(true)}
+            onClick={toggleSidebar}
           >
             <img src={expandIcon} className="w-full h-full shrink-0" alt="expand" />
           </button>

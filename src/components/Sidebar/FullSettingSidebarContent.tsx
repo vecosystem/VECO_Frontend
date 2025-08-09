@@ -13,12 +13,12 @@ import userProfileHoverIcon from '../../assets/icons/user-profile-hover.svg';
 import type { WorkspaceResponse } from '../../types/setting';
 
 interface FullSettingSidebarContentProps {
-  setExpanded: (value: boolean) => void;
+  toggleSidebar: () => void;
   workspaceProfile: WorkspaceResponse;
 }
 
 const FullSettingSidebarContent = ({
-  setExpanded,
+  toggleSidebar,
   workspaceProfile,
 }: FullSettingSidebarContentProps) => {
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ const FullSettingSidebarContent = ({
           <button
             type="button"
             className="flex w-[2.4rem] h-[2.4rem] items-center justify-center cursor-pointer"
-            onClick={() => setExpanded(false)}
+            onClick={toggleSidebar}
           >
             <img src={collapseIcon} alt="collapse" />
           </button>

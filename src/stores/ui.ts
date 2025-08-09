@@ -5,8 +5,6 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 type UIState = {
   // 사이드바 자체 토글
   sidebarOpen: boolean;
-  openSidebar: () => void;
-  closeSidebar: () => void;
   toggleSidebar: () => void;
 
   // 드롭다운별 토글 (key: string → open: boolean)
@@ -19,8 +17,6 @@ export const useUIStore = create<UIState>()(
   persist(
     (set) => ({
       sidebarOpen: true,
-      openSidebar: () => set({ sidebarOpen: true }),
-      closeSidebar: () => set({ sidebarOpen: false }),
       toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
 
       dropdownOpen: {},

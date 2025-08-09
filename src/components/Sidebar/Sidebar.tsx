@@ -34,7 +34,7 @@ const Sidebar = () => {
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
             <FullSidebarContent
-              setExpanded={toggleSidebar}
+              toggleSidebar={toggleSidebar}
               defaultTeam={defaultTeam!}
               myTeams={myTeams}
               workspaceProfile={workspaceProfile!}
@@ -55,7 +55,7 @@ const Sidebar = () => {
         >
           <div className="h-full overflow-y-auto sidebar-scroll">
             <MiniSidebarContent
-              setExpanded={toggleSidebar}
+              toggleSidebar={toggleSidebar}
               defaultTeam={defaultTeam!}
               myTeams={myTeams}
               workspaceProfile={workspaceProfile!}
