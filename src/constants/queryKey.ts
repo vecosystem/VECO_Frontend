@@ -12,5 +12,6 @@ export const queryKey = {
   NOTI_LIST: 'noti_list',
   GOAL: 'goal',
   EXTERNAL: 'external',
+  EXTERNAL_LINKS: 'external_links',
   TEAM_MEMBER_LIST: 'team_member_list',
 };
