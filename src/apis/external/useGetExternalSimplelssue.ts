@@ -13,7 +13,8 @@ interface ExternalIssueInfo {
   title: string;
 }
 
-const getExternalIssue = async (teamId: number): Promise<GetExternalIssueResponse> => {
+// 팀 내 외부이슈 간단 조회
+const getExternalSimpleIssue = async (teamId: number): Promise<GetExternalIssueResponse> => {
   try {
     const response = await axiosInstance.get<CommonResponse<GetExternalIssueResponse>>(
       `/api/teams/${teamId}/externals/externals-simple`
@@ -26,9 +27,9 @@ const getExternalIssue = async (teamId: number): Promise<GetExternalIssueRespons
   }
 };
 
-export const useGetExternalIssue = (teamId: number) => {
+export const useGetExternalSimpleIssue = (teamId: number) => {
   return useQuery({
-    queryFn: () => getExternalIssue(teamId),
-    queryKey: [queryKey.EXTERNAL_ISSUE, teamId],
+    queryFn: () => getExternalSimpleIssue(teamId),
+    queryKey: [queryKey.EXTERNAL_SIMPLE_ISSUE, teamId],
   });
 };

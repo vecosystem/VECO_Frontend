@@ -26,7 +26,7 @@ import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
 import { useToggleMode } from '../../hooks/useToggleMode';
 import { useParams } from 'react-router-dom';
-import { useGetExternalIssue } from '../../apis/external/useGetExternalssue.ts';
+import { useGetExternalSimpleIssue } from '../../apis/external/useGetExternalSimplelssue.ts';
 import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts';
 
 /** 상세페이지 모드 구분
@@ -40,7 +40,7 @@ interface ExternalDetailProps {
 
 const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
   const teamId = Number(useParams<{ teamId: string }>().teamId);
-  const { data: externalIssues } = useGetExternalIssue(teamId);
+  const { data: externalIssues } = useGetExternalSimpleIssue(teamId);
   const issues = externalIssues?.info.map((issue) => issue.title) || [];
 
   const { data: linkedTools } = useGetExternalLinks(teamId);
