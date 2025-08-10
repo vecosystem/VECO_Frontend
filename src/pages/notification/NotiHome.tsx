@@ -15,6 +15,8 @@ import { ExternalItem } from '../../components/ListView/ExternalItem';
 import { usePatchAlarms } from '../../apis/alarm/usePatchAlarms';
 import { useGetAlarmList } from '../../apis/alarm/useGetAlarmList';
 import { useDeleteAlarms } from '../../apis/alarm/useDeleteAlarms';
+import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
+import ServerError from '../ServerError';
 
 const TAB_LIST = ['GOAL', 'ISSUE', 'EXTERNAL'] as const;
 type NotiTab = (typeof TAB_LIST)[number];
@@ -64,8 +66,7 @@ const NotiHome = () => {
     [tab, filter]
   );
 
-  // isLoading, isError 로직 추가
-  const { data } = useGetAlarmList(tab, params);
+  const { data, isLoading, isError } = useGetAlarmList(tab, params);
   const alarmGroups = data?.result?.groupedList ?? [];
   const allAlarmsFlat = useMemo(() => alarmGroups.flatMap((g) => g.notiList), [alarmGroups]);
 
@@ -166,6 +167,10 @@ const NotiHome = () => {
     );
   };
 
+  if (isError) {
+    return <ServerError error={new Error()} resetErrorBoundary={() => window.location.reload()} />;
+  }
+
   return (
     <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
       {/* 알림 아이콘/텍스트 */}
@@ -205,6 +210,8 @@ const NotiHome = () => {
         <div className="flex flex-1 items-center justify-center">
           <div className="font-body-r">새로운 알림이 없습니다</div>
         </div>
+      ) : isLoading ? (
+        <ListViewItemSkeletonList />
       ) : (
         /* 리스트뷰 */
         <div className="flex flex-col gap-[4.8rem]">
