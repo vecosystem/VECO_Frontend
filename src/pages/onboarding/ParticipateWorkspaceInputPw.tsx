@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import vecocirclenavy from '../../assets/logos/veco-circle-logo-bg-navy.svg';
 import InviteCodeInput from '../../components/Onboarding/InviteCodeInput';
 import PrimaryButton from '../../components/Onboarding/PrimaryButton';
+import { LOCAL_STORAGE_KEY } from '../../constants/key';
 
 const ParticipateWorkspaceInputPw = () => {
   const [inputCode, setInputCode] = useState(''); // 사용자 입력 코드 상태
@@ -29,8 +30,10 @@ const ParticipateWorkspaceInputPw = () => {
       <div className="flex flex-col items-center gap-[3.2rem]">
         {/* 원형 로고 */}
         <img src={vecocirclenavy} alt="Veco" className="w-[10rem] h-[10rem]" />
-        {/* 초대 문구 - 백엔드 연동 후 수정 */}
-        <h2 className="font-title-b text-gray-600">OOO 워크스페이스에 초대합니다.</h2>
+        {/* 초대 문구 */}
+        <h2 className="font-title-b text-gray-600">
+          {localStorage.getItem(LOCAL_STORAGE_KEY.workspaceName)} 워크스페이스에 초대합니다.
+        </h2>
         {/* 암호 입력란 - 백엔드 연동 후 수정 */}
         <InviteCodeInput inputCode={inputCode} onChange={setInputCode} hasError={hasError} />
       </div>
