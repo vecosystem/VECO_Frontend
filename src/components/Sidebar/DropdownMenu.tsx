@@ -1,8 +1,8 @@
-// src/components/DropdownMenu.jsx
-import React, { useState } from 'react';
+import { useUIStore } from '../../stores/ui';
 import DropdownHeader from './DropdownHeader';
 
 interface DropdownMenuProps {
+  dropdownId: string; // 각 드롭다운의 고유 ID
   headerTitle: string;
   initialOpen?: boolean;
   children: React.ReactNode;
@@ -13,18 +13,20 @@ interface DropdownMenuProps {
 }
 
 const DropdownMenu = ({
+  dropdownId,
   headerTitle,
-  initialOpen = false,
+  initialOpen = true,
   children,
   headerTeamIcon,
   headerHasToggleIcon = true,
   isNested = false,
   dragHandle,
 }: DropdownMenuProps) => {
-  const [isOpen, setIsOpen] = useState(initialOpen);
+  const isOpen = useUIStore((s) => s.dropdownOpen[dropdownId] ?? initialOpen);
+  const toggleDropdown = useUIStore((s) => s.toggleDropdown);
 
   const handleToggle = () => {
-    setIsOpen(!isOpen);
+    toggleDropdown(dropdownId);
   };
 
   return (
