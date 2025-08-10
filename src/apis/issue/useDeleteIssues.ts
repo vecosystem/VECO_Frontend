@@ -31,5 +31,8 @@ export const useDeleteIssues = () => {
         queryKey: [queryKey.ISSUE_LIST, variables.teamId],
       });
     },
+    onError(error) {
+      console.error('Error deleting issue item:', error);
+    },
   });
 };

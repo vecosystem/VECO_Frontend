@@ -31,5 +31,8 @@ export const useDeleteExternals = () => {
         queryKey: [queryKey.EXTERNAL_LIST, variables.teamId],
       });
     },
+    onError(error) {
+      console.error('Error deleting external item:', error);
+    },
   });
 };

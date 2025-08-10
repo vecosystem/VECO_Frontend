@@ -25,5 +25,8 @@ export const useDeleteAlarms = () => {
         queryKey: [queryKey.NOTI_LIST],
       });
     },
+    onError(error) {
+      console.error('Error deleting alarm item:', error);
+    },
   });
 };

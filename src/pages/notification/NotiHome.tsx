@@ -160,9 +160,6 @@ const NotiHome = () => {
           setIsDeleteMode(false);
           setCheckedIds([]);
         },
-        onError: (error) => {
-          console.error('Delete failed:', error);
-        },
       }
     );
   };

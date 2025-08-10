@@ -45,5 +45,8 @@ export const usePatchAlarms = () => {
         queryKey: [queryKey.NOTI_LIST],
       });
     },
+    onError(error) {
+      console.error('Error patching alarm item:', error);
+    },
   });
 };
