@@ -12,6 +12,7 @@ import { usePostJoinWorkspace } from '../../apis/workspace/usePostJoinWorkspace'
 const ParticipateWorkspaceInputPw = () => {
   const [inputCode, setInputCode] = useState(''); // 사용자 입력 코드 상태
   const [hasError, setHasError] = useState(false); // 사용자 입력 코드 에러 상태
+  const [lastTriedCode, setLastTriedCode] = useState<string | null>(null);
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
   const { getItem: getInviteToken } = useLocalStorage(LOCAL_STORAGE_KEY.token);
@@ -21,7 +22,8 @@ const ParticipateWorkspaceInputPw = () => {
 
   // 입장하기 버튼 클릭 시 처리 로직
   const handleClick = () => {
-    if (isPending) return;
+    if (isPending || (hasError && lastTriedCode === inputCode)) return;
+    setLastTriedCode(inputCode);
     mutate(
       {
         token: getInviteToken() || '',
