@@ -22,6 +22,7 @@ const ParticipateWorkspaceInputPw = () => {
 
   // 입장하기 버튼 클릭 시 처리 로직
   const handleClick = () => {
+    // 요청 중 or 직전 실패값 그대로일경우 요청 보내지 않음
     if (isPending || (hasError && lastTriedCode === inputCode)) return;
     setLastTriedCode(inputCode);
     mutate(
@@ -32,7 +33,7 @@ const ParticipateWorkspaceInputPw = () => {
       {
         onSuccess: () => {
           setHasError(false);
-          navigate('/workspace'); // TODO: 실제 팀 경로로 교체
+          navigate('/workspace'); // TODO: 실제 경로로 교체
         },
         onError: () => {
           setHasError(true);
@@ -50,7 +51,7 @@ const ParticipateWorkspaceInputPw = () => {
         <h2 className="font-title-b text-gray-600">
           {getWorkspaceName()} 워크스페이스에 초대합니다.
         </h2>
-        {/* 암호 입력란 - 백엔드 연동 후 수정 */}
+        {/* 암호 입력란 */}
         <InviteCodeInput inputCode={inputCode} onChange={setInputCode} hasError={hasError} />
       </div>
       {/* 입장하기 버튼 */}
