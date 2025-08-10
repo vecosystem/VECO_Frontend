@@ -6,9 +6,13 @@ import CommentInput from './CommentInput';
 import CommentItem from './CommentItem';
 import { useGetCommentList } from '../../../apis/comment/useGetCommentList';
 import type { Comment } from '../../../types/comment';
+import { postComment } from '../../../apis/comment/comment';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKey } from '../../../constants/queryKey';
 
 const CommentSection = () => {
   const [comments, setComments] = useState<Comment[]>([]); // comments라는 상태를 배열로 관리
+  const queryClient = useQueryClient();
   const { data: commentList } = useGetCommentList(1, 'GOAL');
 
   useEffect(() => {
@@ -16,12 +20,17 @@ const CommentSection = () => {
     setComments(commentList?.comments ?? []);
   }, [commentList]);
 
-  // const handleAddComment = (content: string) => {
-  //   const newComment: Comment = {
-
-  //   };
-  //   setComments((prev) => [...prev, newComment]);
-  // };
+  const handleAddComment = async (content: string) => {
+    try {
+      await postComment({ content, category: 'GOAL', targetId: 1 });
+      // 댓글 작성 후 캐시 무효화 → 목록 재요청
+      queryClient.invalidateQueries({
+        queryKey: [queryKey.COMMENT_LIST, 1, 'GOAL'],
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="relative flex flex-col flex-1 gap-[3.2rem] w-full min-h-0">

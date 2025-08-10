@@ -17,3 +17,9 @@ export type CommentListResponse = {
   totalSize: number;
   comments: Comment[];
 };
+
+export type PostCommentRequest = {
+  content: string;
+  category: CategoryType;
+  targetId: number;
+};
