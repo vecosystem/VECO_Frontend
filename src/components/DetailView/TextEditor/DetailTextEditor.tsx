@@ -38,22 +38,22 @@ const initialConfig: ComponentProps<typeof LexicalComposer>['initialConfig'] = {
 
 const DetailTextEditor = ({ isEditable }: DetailTextEditorProps) => {
   return (
-    <div className="w-full flex-1 overflow-y-scroll basic-scroll resize-none">
+    <div className="w-full h-full flex-1 overflow-y-scroll basic-scroll resize-none">
       {/* LexicalComposer: LexicalEditor 인스턴스 생성 -> Context.Provider를 통해 전달 */}
       <LexicalComposer initialConfig={initialConfig}>
         {/* 텍스트에디터 Container */}
-        <div className="relative w-full h-full">
+        <div className="w-full h-full">
           {/* 텍스트에디터 Toolbar: 편집 모드에서만 보이도록 */}
           {isEditable && (
-            <div className="basic-scroll">
+            <div className="sticky top-0 z-20 basic-scroll bg-gray-100">
               <ToolbarPlugin />
-              <ListPlugin />
-              <CheckListPlugin />
-              <CodeHighlightPlugin />
-              <IndentPlugin />
-              <EnterAsParagraphPlugin />
             </div>
           )}
+          <ListPlugin />
+          <CheckListPlugin />
+          <CodeHighlightPlugin />
+          <IndentPlugin />
+          <EnterAsParagraphPlugin />
           {/* 텍스트에디터 본문 Contents */}
           <div className="relative flex-1 editor-root group">
             <RichTextPlugin

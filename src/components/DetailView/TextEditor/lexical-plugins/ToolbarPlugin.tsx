@@ -1,7 +1,7 @@
 // ToolbarPlugin.tsx
 // Lexical 에디터의 툴바를 구현하는 플러그인
 
-// 버튼 아이콘 import
+// 버튼 아이콘
 import btn_bold from '../../../../assets/icons/text-editor/ooui_bold-b.svg';
 import btn_italic from '../../../../assets/icons/text-editor/codicon_italic.svg';
 import btn_underline from '../../../../assets/icons/text-editor/teenyicons_underline-solid.svg';
