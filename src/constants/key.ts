@@ -5,4 +5,5 @@ export const LOCAL_STORAGE_KEY = {
   name: 'name',
   workspaceName: 'workspaceName',
   isInvite: 'isInvite',
+  token: 'token',
 };
