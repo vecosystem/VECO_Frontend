@@ -11,16 +11,16 @@ import userProfileHoverIcon from '../../assets/icons/user-profile-hover.svg';
 import leftArrowIcon from '../../assets/icons/left-arrow.svg';
 import expandIcon from '../../assets/icons/expand.svg';
 import type { WorkspaceResponse } from '../../types/setting';
+import { useUIStore } from '../../stores/ui';
 
 interface MiniSettingSidebarContentProps {
-  setExpanded: (value: boolean) => void;
   workspaceProfile: WorkspaceResponse;
 }
 
 const MiniSettingSidebarContent = ({
-  setExpanded,
   workspaceProfile,
 }: MiniSettingSidebarContentProps) => {
+  const { toggleSidebar } = useUIStore();
   const navigate = useNavigate();
 
   return (
@@ -39,14 +39,14 @@ const MiniSettingSidebarContent = ({
           <button
             type="button"
             className="flex w-[2.4rem] h-[2.4rem] shrink-0 items-center justify-center cursor-pointer"
-            onClick={() => setExpanded(true)}
+            onClick={toggleSidebar}
           >
             <img src={expandIcon} className="w-full h-full shrink-0" alt="expand" />
           </button>
         </div>
 
         <div className="flex flex-col items-start self-stretch">
-          <DropdownMenu headerTitle="워크" initialOpen={true}>
+          <DropdownMenu dropdownId="setting-workspace" headerTitle="워크" initialOpen={true}>
             <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pb-[1.6rem]">
               <SidebarItem
                 defaultIcon={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
@@ -59,7 +59,7 @@ const MiniSettingSidebarContent = ({
           </DropdownMenu>
         </div>
         <div className="flex flex-col items-start self-stretch">
-          <DropdownMenu headerTitle="팀" initialOpen={true}>
+          <DropdownMenu dropdownId="setting-team" headerTitle="팀" initialOpen={true}>
             <div className="flex flex-col justify-center items-start gap-[1.6rem] pb-[1.6rem]">
               <SidebarItem
                 defaultIcon={tableIcon}
@@ -81,7 +81,7 @@ const MiniSettingSidebarContent = ({
           </DropdownMenu>
         </div>
         <div className="flex flex-col items-start self-stretch">
-          <DropdownMenu headerTitle="계정" initialOpen={true}>
+          <DropdownMenu dropdownId="setting-account" headerTitle="계정" initialOpen={true}>
             <div className="flex flex-col justify-center items-start gap-[1.6rem] pb-[1.6rem]">
               <SidebarItem
                 defaultIcon={userProfileIcon}

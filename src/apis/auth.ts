@@ -54,3 +54,13 @@ export const redirectToKakaoLogin = () => {
     alert('Kakao 로그인 중 문제가 발생했습니다.');
   }
 };
+
+// 설정 - 로그아웃
+export const postLogout = async (): Promise<void> => {
+  try {
+    await axiosInstance.post('/api/token/logout');
+  } catch (error) {
+    console.error('로그아웃 실패:', error);
+    throw error;
+  }
+};
