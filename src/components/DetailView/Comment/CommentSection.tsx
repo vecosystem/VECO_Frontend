@@ -1,27 +1,27 @@
 // CommentSection.tsx
 // 상세페이지 댓글창) 댓글 전체 영역 컴포넌트
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CommentInput from './CommentInput';
 import CommentItem from './CommentItem';
-
-interface Comment {
-  author: string; // 댓글 작성자
-  content: string; // 댓글 내용
-  createAt: Date; // 댓글 작성 날짜
-}
+import { useGetCommentList } from '../../../apis/comment/useGetCommentList';
+import type { Comment } from '../../../types/comment';
 
 const CommentSection = () => {
   const [comments, setComments] = useState<Comment[]>([]); // comments라는 상태를 배열로 관리
+  const { data: commentList } = useGetCommentList(1, 'GOAL');
 
-  const handleAddComment = (content: string) => {
-    const newComment: Comment = {
-      author: '전채운', // 추후 로그인 유저로 대체
-      content,
-      createAt: new Date(),
-    };
-    setComments((prev) => [...prev, newComment]);
-  };
+  useEffect(() => {
+    console.log(commentList);
+    setComments(commentList?.comments ?? []);
+  }, [commentList]);
+
+  // const handleAddComment = (content: string) => {
+  //   const newComment: Comment = {
+
+  //   };
+  //   setComments((prev) => [...prev, newComment]);
+  // };
 
   return (
     <div className="relative flex flex-col flex-1 gap-[3.2rem] w-full min-h-0">
@@ -48,12 +48,13 @@ const CommentSection = () => {
             </div>
             {/* 댓글을 순서대로 목록에 추가 */}
             <div className="flex flex-col gap-y-[2.4rem] mb-[14.6rem] w-full overflow-y-scroll basic-scroll">
-              {comments.map(({ author, content, createAt }) => (
+              {comments.map(({ commentId, author, content, createdAt }) => (
                 <CommentItem
-                  key={`${createAt.getTime()}-${author}`} // Date를 밀리초 숫자로 변환
+                  key={commentId}
+                  commentId={commentId}
                   author={author}
                   content={content}
-                  createAt={createAt}
+                  createdAt={createdAt}
                 />
               ))}
             </div>
@@ -62,7 +63,7 @@ const CommentSection = () => {
       </div>
 
       {/* 댓글 입력창 */}
-      <CommentInput onAdd={handleAddComment} />
+      <CommentInput onAdd={() => {}} />
     </div>
   );
 };
