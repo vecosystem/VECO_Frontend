@@ -1,10 +1,10 @@
-interface InviteCodeInputProps {
+interface InvitePwInputProps {
   inputCode: string; // 상위 컴포넌트에서 내려준 입력값 (input의 value로 사용)
   onChange: (value: string) => void; // 입력이 변경되었을 때 상위에 전달할 함수
   hasError: boolean; // 에러 상태
 }
 
-const InviteCodeInput = ({ inputCode, onChange, hasError }: InviteCodeInputProps) => {
+const InvitePwInput = ({ inputCode, onChange, hasError }: InvitePwInputProps) => {
   // input의 값이 바뀔 때 호출되는 함수
   // 사용자가 입력한 값을 상위 컴포넌트로 전달
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,4 +32,4 @@ const InviteCodeInput = ({ inputCode, onChange, hasError }: InviteCodeInputProps
   );
 };
 
-export default InviteCodeInput;
+export default InvitePwInput;

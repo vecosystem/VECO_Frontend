@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import vecocirclenavy from '../../assets/logos/veco-circle-logo-bg-navy.svg';
-import InviteCodeInput from '../../components/Onboarding/InviteCodeInput';
+import InvitePwInput from '../../components/Onboarding/InvitePwInput';
 import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 import { LOCAL_STORAGE_KEY } from '../../constants/key';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
@@ -52,7 +52,7 @@ const ParticipateWorkspaceInputPw = () => {
           {getWorkspaceName()} 워크스페이스에 초대합니다.
         </h2>
         {/* 암호 입력란 */}
-        <InviteCodeInput inputCode={inputCode} onChange={setInputCode} hasError={hasError} />
+        <InvitePwInput inputCode={inputCode} onChange={setInputCode} hasError={hasError} />
       </div>
       {/* 입장하기 버튼 */}
       <PrimaryButton text="입장하기" onClick={handleClick} />
