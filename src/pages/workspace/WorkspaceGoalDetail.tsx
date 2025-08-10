@@ -6,7 +6,7 @@ import WorkspaceDetailHeader from '../../components/DetailView/WorkspaceDetailHe
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
 import CompletionButton from '../../components/DetailView/CompletionButton';
-import DetailTextEditor from '../../components/DetailView/DetailTextEditor';
+import DetailTextEditor from '../../components/DetailView/TextEditor/DetailTextEditor';
 
 // 속성 항목별 아이콘 svg import
 import pr1 from '../../assets/icons/pr-1-sm.svg';

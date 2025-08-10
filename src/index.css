@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './components/DetailView/TextEditor/editor-theme/editorTheme.css';
 
 @theme {
   /* Gray Scale */
