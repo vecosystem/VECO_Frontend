@@ -18,6 +18,7 @@ import { useDeleteGoals } from '../../apis/goal/useDeleteGoals';
 import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
 import { mergeGroups } from '../../components/ListView/MergeGroup';
 import ServerError from '../ServerError';
+import { useManagerProfiles } from '../../hooks/useManagerProfiles';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
@@ -123,6 +124,8 @@ const GoalHome = () => {
     );
   };
 
+  const managerProfiles = useManagerProfiles(allGoalsFlat);
+
   if (isError) {
     return <ServerError error={new Error()} resetErrorBoundary={() => window.location.reload()} />;
   }
@@ -179,7 +182,11 @@ const GoalHome = () => {
                       <GroupTypeIcon
                         filter={filter}
                         typeKey={key}
-                        profileImghUrl={filter === '담당자' ? '' : undefined}
+                        profileImgUrl={
+                          filter === '담당자' && managerProfiles[key]
+                            ? managerProfiles[key]
+                            : undefined
+                        }
                       />
                       {/* 유형명 */}
                       <div>

@@ -18,6 +18,7 @@ import { mergeGroups } from '../../components/ListView/MergeGroup';
 import { useInView } from 'react-intersection-observer';
 import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
 import ServerError from '../ServerError';
+import { useManagerProfiles } from '../../hooks/useManagerProfiles';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
@@ -125,6 +126,8 @@ const IssueHome = () => {
     );
   };
 
+  const managerProfiles = useManagerProfiles(allIssuesFlat);
+
   if (isError) {
     return <ServerError error={new Error()} resetErrorBoundary={() => window.location.reload()} />;
   }
@@ -181,7 +184,11 @@ const IssueHome = () => {
                       <GroupTypeIcon
                         filter={filter}
                         typeKey={key}
-                        profileImghUrl={filter === '담당자' ? '' : undefined}
+                        profileImgUrl={
+                          filter === '담당자' && managerProfiles[key]
+                            ? managerProfiles[key]
+                            : undefined
+                        }
                       />
                       {/* 유형명 */}
                       <div>

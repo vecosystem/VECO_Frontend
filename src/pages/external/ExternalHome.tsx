@@ -25,6 +25,7 @@ import { useInView } from 'react-intersection-observer';
 import ServerError from '../ServerError';
 import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
 import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts';
+import { useManagerProfiles } from '../../hooks/useManagerProfiles.ts';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
@@ -136,6 +137,8 @@ const ExternalHome = () => {
     );
   };
 
+  const managerProfiles = useManagerProfiles(allExternalsFlat);
+
   if (isError) {
     return <ServerError error={new Error()} resetErrorBoundary={() => window.location.reload()} />;
   }
@@ -199,7 +202,11 @@ const ExternalHome = () => {
                       <GroupTypeIcon
                         filter={filter}
                         typeKey={key}
-                        profileImghUrl={filter === '담당자' ? '' : undefined}
+                        profileImgUrl={
+                          filter === '담당자' && managerProfiles[key]
+                            ? managerProfiles[key]
+                            : undefined
+                        }
                       />
                       {/* 유형명 */}
                       <div>
