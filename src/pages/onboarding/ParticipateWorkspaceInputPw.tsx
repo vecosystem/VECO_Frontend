@@ -17,10 +17,11 @@ const ParticipateWorkspaceInputPw = () => {
   const { getItem: getInviteToken } = useLocalStorage(LOCAL_STORAGE_KEY.token);
   const { getItem: getWorkspaceName } = useLocalStorage(LOCAL_STORAGE_KEY.workspaceName);
 
-  const { mutate, isPending, isError } = usePostJoinWorkspace();
+  const { mutate, isPending } = usePostJoinWorkspace();
 
   // 입장하기 버튼 클릭 시 처리 로직
   const handleClick = () => {
+    if (isPending) return;
     mutate(
       {
         token: getInviteToken() || '',
