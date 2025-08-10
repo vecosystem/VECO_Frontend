@@ -24,6 +24,7 @@ import { mergeGroups } from '../../components/ListView/MergeGroup';
 import { useInView } from 'react-intersection-observer';
 import ServerError from '../ServerError';
 import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
+import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
@@ -73,6 +74,8 @@ const ExternalHome = () => {
   // 그룹화
   const externalGroups = data?.pages ?? [];
   const allExternalsFlat = externalGroups.flatMap((g) => g.externals);
+
+  const { data: externalLinks } = useGetExternalLinks(Number(teamId));
 
   const allGroups: GroupedExternal[] = externalGroups.map((g) => ({
     key: g.filterName,
@@ -143,8 +146,12 @@ const ExternalHome = () => {
       <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
         <div className="flex items-center">
           <TeamIcon />
-          {/* 아래 부분 연동 여부에 따라 다르게 보임. 추후 컴포넌트 분리*/}
-          <ExternalToolArea />
+          {externalLinks && (
+            <ExternalToolArea
+              isLinkedWithGithub={externalLinks.linkedWithGithub}
+              isLinkedWithSlack={externalLinks.linkedWithSlack}
+            />
+          )}
         </div>
         <ListViewToolbar
           filter={filter}

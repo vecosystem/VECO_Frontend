@@ -2,15 +2,10 @@ import { axiosInstance } from '../axios.ts';
 import type { CommonResponse } from '../../types/common.ts';
 import { useMutation } from '@tanstack/react-query';
 
-interface GetSlackConnectResponse {
-  workspaceId: number;
-  linkedAt: string;
-}
-
-const getSlackConnect = async (): Promise<GetSlackConnectResponse> => {
+// Slack App 설치 플로우
+const getSlackConnect = async (): Promise<string> => {
   try {
-    const response =
-      await axiosInstance.get<CommonResponse<GetSlackConnectResponse>>('/slack/connect');
+    const response = await axiosInstance.get<CommonResponse<string>>('/slack/connect');
     if (!response.data.result) return Promise.reject(response);
     return response.data.result;
   } catch (error) {
@@ -22,8 +17,9 @@ const getSlackConnect = async (): Promise<GetSlackConnectResponse> => {
 export const useGetSlackConnect = () => {
   return useMutation({
     mutationFn: () => getSlackConnect(),
-    onSuccess: () => {
+    onSuccess: (data) => {
       console.log('Slack 연동 조회 성공');
+      window.location.href = `${data}`;
     },
   });
 };

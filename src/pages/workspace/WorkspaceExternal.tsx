@@ -25,11 +25,12 @@ import { ExternalItem } from '../../components/ListView/ExternalItem';
 import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
 import ExternalToolArea from '../external/components/ExternalToolArea';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
 const WorkspaceExternal = () => {
-  const { teamId } = useParams<{ teamId: string }>();
+  const teamId = Number(useParams<{ teamId: string }>().teamId);
   const navigate = useNavigate();
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
@@ -97,13 +98,20 @@ const WorkspaceExternal = () => {
   const sortedGrouped = getSortedGrouped(filter, grouped);
   const isEmpty = grouped.every(({ items }) => items.length === 0);
 
+  const { data: linkedTools } = useGetExternalLinks(teamId);
+
   return (
     <>
       <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
         <div className="flex items-center">
           <WorkspaceIcon />
           {/* 아래 부분 연동 여부에 따라 다르게 보임. 추후 컴포넌트 분리*/}
-          <ExternalToolArea />
+          {linkedTools && (
+            <ExternalToolArea
+              isLinkedWithGithub={linkedTools.linkedWithGithub}
+              isLinkedWithSlack={linkedTools.linkedWithSlack}
+            />
+          )}
         </div>
         <ListViewToolbar
           filter={filter}
