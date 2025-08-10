@@ -17,29 +17,32 @@ import SortableDropdownList from './SortableDropdownList';
 import vecocirclewhite from '../../assets/logos/veco-circle-logo-bg-white.svg';
 import { usePatchWorkspaceTeams } from '../../apis/setting/usePatchWorkspaceTeams';
 import type { Team } from '../../types/setting';
+
+import { useUIStore } from '../../stores/ui';
 import type { WorkspaceResponse } from '../../types/setting';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 
 interface FullSidebarContentProps {
-  setExpanded: (value: boolean) => void;
-  teams: Team[];
-  isLoading: boolean;
+  defaultTeam: Team;
+  myTeams: Team[];
   workspaceProfile: WorkspaceResponse;
+  isLoading: boolean;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
 }
 
 const FullSidebarContent = ({
-  setExpanded,
-  teams,
-  isLoading,
+  defaultTeam,
+  myTeams,
   workspaceProfile,
+  isLoading,
   hasNextPage,
   isFetchingNextPage,
   fetchNextPage,
 }: FullSidebarContentProps) => {
+  const { toggleSidebar } = useUIStore();
   const navigate = useNavigate();
   const { mutate: patchWorkspaceTeams } = usePatchWorkspaceTeams();
   const { ref, inView } = useInView();
@@ -58,12 +61,12 @@ const FullSidebarContent = ({
             type="button"
             className="flex items-center gap-[0.8rem] cursor-pointer"
             onClick={() =>
-              navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/issue`)
+              navigate(`/workspace/default/team/${workspaceProfile?.defaultTeamId}/issue`)
             }
           >
             <img
               src={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
-              className="w-[3.2rem] h-[3.2rem]"
+              className="w-[3.2rem] h-[3.2rem] rounded-full object-cover"
               alt="Workspace"
             />
             <span className="font-body-b text-gray-600 letter-spacing-[-0.032rem]">
@@ -74,7 +77,7 @@ const FullSidebarContent = ({
             <button
               type="button"
               className="flex w-[2.4rem] h-[2.4rem] items-center justify-center cursor-pointer"
-              onClick={() => setExpanded(false)}
+              onClick={toggleSidebar}
             >
               <img src={collapseIcon} alt="collapse" />
             </button>
@@ -110,69 +113,73 @@ const FullSidebarContent = ({
 
         <div className="flex flex-col items-start self-stretch">
           {/* 첫 번째 드롭다운: 워크스페이스 기본 팀 */}
-          <DropdownMenu headerTitle="워크스페이스 기본 팀" initialOpen={true}>
+          <DropdownMenu dropdownId="ws-default-team" headerTitle="워크스페이스 기본 팀" initialOpen={true}>
             <div className="flex flex-col">
-              <DropdownMenu
-                headerTitle={workspaceProfile?.workspaceName || ''}
-                initialOpen={true}
-                headerTeamIcon={workspaceProfile?.workspaceImageUrl || vecocirclenavy}
-                isNested={true}
-              >
-                <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
-                  <SidebarItem
-                    defaultIcon={goalIcon}
-                    hoverIcon={goalHoverIcon}
-                    label="목표"
-                    onClick={() => {
-                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/goal`);
-                    }}
-                    onAddClick={() => {
-                      navigate(
-                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/goal/detail/create`
-                      );
-                    }}
-                  />
-                  <SidebarItem
-                    defaultIcon={issueIcon}
-                    hoverIcon={issueHoverIcon}
-                    label="이슈"
-                    onClick={() => {
-                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/issue`);
-                    }}
-                    onAddClick={() => {
-                      navigate(
-                        `/workspace/default/team/${workspaceProfile.defaultTeamId}/issue/detail/create`
-                      );
-                    }}
-                  />
-                  <SidebarItem
-                    defaultIcon={externalIcon}
-                    hoverIcon={externalHoverIcon}
-                    label="외부"
-                    onClick={() => {
-                      navigate(`/workspace/default/team/${workspaceProfile.defaultTeamId}/ext`);
-                    }}
-                  />
-                </div>
-              </DropdownMenu>
+              {isLoading ? null : (
+                <DropdownMenu
+                  dropdownId={`team-${defaultTeam.teamId}`}
+                  headerTitle={defaultTeam?.teamName || ''}
+                  initialOpen={true}
+                  headerTeamIcon={defaultTeam?.teamImageUrl || vecocirclenavy}
+                  isNested={true}
+                >
+                  <div className="flex flex-col justify-center items-flex-start gap-[1.6rem] pl-[3rem] pb-[1.6rem]">
+                    <SidebarItem
+                      defaultIcon={goalIcon}
+                      hoverIcon={goalHoverIcon}
+                      label="목표"
+                      onClick={() => {
+                        navigate(`/workspace/default/team/${defaultTeam.teamId}/goal`);
+                      }}
+                      onAddClick={() => {
+                        navigate(
+                          `/workspace/default/team/${defaultTeam.teamId}/goal/detail/create`
+                        );
+                      }}
+                    />
+                    <SidebarItem
+                      defaultIcon={issueIcon}
+                      hoverIcon={issueHoverIcon}
+                      label="이슈"
+                      onClick={() => {
+                        navigate(`/workspace/default/team/${defaultTeam.teamId}/issue`);
+                      }}
+                      onAddClick={() => {
+                        navigate(
+                          `/workspace/default/team/${defaultTeam.teamId}/issue/detail/create`
+                        );
+                      }}
+                    />
+                    <SidebarItem
+                      defaultIcon={externalIcon}
+                      hoverIcon={externalHoverIcon}
+                      label="외부"
+                      onClick={() => {
+                        navigate(`/workspace/default/team/${defaultTeam.teamId}/ext`);
+                      }}
+                    />
+                  </div>
+                </DropdownMenu>
+              )}
             </div>
           </DropdownMenu>
         </div>
         {/* 두 번째 드롭다운: 나의 팀 (내부에 드롭다운 또 포함) */}
         <div className="flex flex-col items-start self-stretch">
-          <DropdownMenu headerTitle="나의 팀" initialOpen={true}>
+          <DropdownMenu dropdownId="my-teams" headerTitle="나의 팀" initialOpen={true}>
             {/* Team 드롭다운 (내부 드롭다운) */}
-            {isLoading ? null : teams.length === 0 ? (
+            {isLoading ? null : myTeams.length === 0 ? (
               <div className="text-gray-400 font-xsmall-r px-[3rem] pb-[1.6rem]">
                 등록된 팀이 없습니다.
               </div>
             ) : (
               <>
                 <SortableDropdownList
-                  items={teams}
+                  items={myTeams}
                   renderContent={(team, { listeners, attributes }, isOverlay) => (
                     <DropdownMenu
-                      headerTitle={team?.teamName}
+                      dropdownId={`team-${team.teamId}`}
+                      headerTitle={team.teamName}
                       initialOpen={!isOverlay}
                       headerTeamIcon={team?.teamImageUrl || vecocirclewhite}
                       isNested={true}
@@ -225,7 +232,7 @@ const FullSidebarContent = ({
                   )}
                   onSorted={(newList: Team[]) => {
                     const teamIdList = newList.map((item: Team) => item.teamId);
-                    teamIdList.unshift(workspaceProfile.defaultTeamId);
+                    teamIdList.unshift(defaultTeam.teamId);
                     patchWorkspaceTeams({ teamIdList });
                   }}
                 />

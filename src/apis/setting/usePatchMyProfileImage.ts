@@ -8,7 +8,7 @@ import { queryKey } from '../../constants/queryKey';
 const patchMyProfileImage = async (formData: FormData): Promise<MyProfileImageResponse> => {
   try {
     const response = await axiosInstance.patch(
-      '/api/workspace/setting/my-profile/profileImage',
+      '/api/workspace/setting/my-profile/profile-image',
       formData,
       {
         headers: {
