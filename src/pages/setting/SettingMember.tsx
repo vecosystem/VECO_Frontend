@@ -5,12 +5,17 @@ import MemberInviteModal from './components/modal/MemberInviteModal.tsx';
 import { LOCAL_STORAGE_KEY } from '../../constants/key.ts';
 import { useGetWorkspaceMembers } from '../../apis/setting/useGetWorkspaceMembers.ts';
 import { formatIsoToDot } from '../../utils/formatDate.ts';
+import { useGetWorkspaceProfile } from '../../apis/setting/useGetWorkspaceProfile.ts';
+import { useGetMyProfile } from '../../apis/setting/useGetMyProfile.ts';
 
 const SettingMember = () => {
+  const { data: workspaceProfile } = useGetWorkspaceProfile();
   const { data: members } = useGetWorkspaceMembers();
-  const inviteUrl = localStorage.getItem(LOCAL_STORAGE_KEY.inviteUrl) || '';
+  const { data: myProfile } = useGetMyProfile();
+  const inviteUrl =
+    localStorage.getItem(LOCAL_STORAGE_KEY.inviteUrl) || workspaceProfile?.workspaceUrl || '';
   const invitePassword = localStorage.getItem(LOCAL_STORAGE_KEY.invitePassword) || '';
-  const memberName = localStorage.getItem(LOCAL_STORAGE_KEY.name) || '';
+  const memberName = localStorage.getItem(LOCAL_STORAGE_KEY.name) || myProfile?.name || '';
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
