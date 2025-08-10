@@ -1,0 +1,109 @@
+@layer components {
+  /* 공통 변수: 체크박스/간격 조절 */
+  .editor-root {
+    --cb-size: 1.6rem; /* 체크박스 가로/세로 크기 */
+    --cb-left: 0rem; /* 체크박스 좌측 위치 */
+    --cb-top: 0.3rem; /* 체크박스 상단 위치 */
+    --cb-border-width: 2px; /* 체크박스 테두리 두께 */
+    --cb-gap: 0.75rem; /* 체크박스와 텍스트 사이 간격 */
+  }
+
+  .editor-root ol {
+    list-style-position: outside; /* 숫자를 리스트 바깥으로 */
+    padding-left: 0rem;
+  }
+
+  /* 체크리스트 공통 베이스 */
+  .tw-listitem-base,
+  .tw-listitem-unchecked,
+  .tw-listitem-checked {
+    outline: none;
+    list-style: none;
+    position: relative;
+    /* 체크박스 크기+여백 만큼 왼쪽 패딩 확보 */
+    padding-left: calc(var(--cb-left) + var(--cb-size) + var(--cb-gap));
+  }
+
+  .tw-listitem-base:focus-visible,
+  .tw-listitem-unchecked:focus-visible,
+  .tw-listitem-checked:focus-visible {
+    box-shadow: none;
+    outline: none;
+  }
+
+  /* 체크박스(공통) */
+  .tw-listitem-base::before,
+  .tw-listitem-unchecked::before,
+  .tw-listitem-checked::before {
+    content: '';
+    position: absolute;
+    display: inline-block;
+    width: var(--cb-size);
+    height: var(--cb-size);
+    border-radius: 0.25rem;
+    top: var(--cb-top);
+    left: var(--cb-left);
+    border: var(--cb-border-width) solid #c5c5c5; /* 기본: 회색 라인 */
+    background: #fff; /* 기본 배경 흰색 */
+  }
+
+  /* 미체크 상태 */
+  .tw-listitem-unchecked::before {
+    border-color: #c5c5c5;
+    background-color: #fff;
+  }
+
+  /* 체크 상태: 박스만 파란색 */
+  .tw-listitem-checked::before {
+    border-color: #132650;
+    background-color: #132650;
+  }
+
+  /* 체크 상태 마크(흰색 체크 아이콘) */
+  .tw-listitem-checked::after {
+    content: '';
+    position: absolute;
+
+    /* 체크마크 위치/크기 계산 */
+    --tick-w: calc(var(--cb-size) * 0.6);
+    --tick-h: calc(var(--cb-size) * 0.32);
+    --tick-left: calc(var(--cb-left) + var(--cb-size) * 0.22);
+    --tick-top: calc(var(--cb-top) + var(--cb-size) * 0.28);
+    --tick-bw: 2px;
+
+    left: var(--tick-left);
+    top: var(--tick-top);
+    width: var(--tick-w);
+    height: var(--tick-h);
+    border-bottom: var(--tick-bw) solid #fff;
+    border-left: var(--tick-bw) solid #fff;
+    transform: rotate(-45deg);
+  }
+
+  /* 코드 블록 (라인 넘버 gutter 포함) */
+  .tw-code {
+    @apply bg-gray-200;
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+      monospace;
+    display: block;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    line-height: 2.5rem;
+    overflow-x: auto;
+    position: relative;
+    tab-size: 4;
+    border-radius: 1rem;
+  }
+
+  /* 수평선 스타일 */
+  .editor-root hr {
+    @apply bg-gray-200;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    border: 0;
+    height: 2px;
+  }
+}
