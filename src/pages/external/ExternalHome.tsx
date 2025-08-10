@@ -66,7 +66,6 @@ const ExternalHome = () => {
     [filter]
   );
 
-  // isLoading, isError 로직 추가
   // 데이터 불러오기
   const { data, isFetchingNextPage, isLoading, isError, hasNextPage, fetchNextPage } =
     useGetInfiniteExternalList(teamId ?? '', params);
