@@ -10,9 +10,9 @@ import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { usePostJoinWorkspace } from '../../apis/workspace/usePostJoinWorkspace';
 
 const ParticipateWorkspaceInputPw = () => {
-  const [inputCode, setInputCode] = useState(''); // 사용자 입력 코드 상태
+  const [inputPw, setInputPw] = useState(''); // 사용자 입력 코드 상태
   const [hasError, setHasError] = useState(false); // 사용자 입력 코드 에러 상태
-  const [lastTriedCode, setLastTriedCode] = useState<string | null>(null);
+  const [lastTriedPw, setLastTriedPw] = useState<string | null>(null);
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
   const { getItem: getInviteToken } = useLocalStorage(LOCAL_STORAGE_KEY.token);
@@ -23,12 +23,12 @@ const ParticipateWorkspaceInputPw = () => {
   // 입장하기 버튼 클릭 시 처리 로직
   const handleClick = () => {
     // 요청 중 or 직전 실패값 그대로일경우 요청 보내지 않음
-    if (isPending || (hasError && lastTriedCode === inputCode)) return;
-    setLastTriedCode(inputCode);
+    if (isPending || (hasError && lastTriedPw === inputPw)) return;
+    setLastTriedPw(inputPw);
     mutate(
       {
         token: getInviteToken() || '',
-        password: inputCode,
+        password: inputPw,
       },
       {
         onSuccess: () => {
@@ -52,7 +52,7 @@ const ParticipateWorkspaceInputPw = () => {
           {getWorkspaceName()} 워크스페이스에 초대합니다.
         </h2>
         {/* 암호 입력란 */}
-        <InvitePwInput inputCode={inputCode} onChange={setInputCode} hasError={hasError} />
+        <InvitePwInput inputPw={inputPw} onChange={setInputPw} hasError={hasError} />
       </div>
       {/* 입장하기 버튼 */}
       <PrimaryButton text="입장하기" onClick={handleClick} />
