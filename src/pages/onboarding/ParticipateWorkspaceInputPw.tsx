@@ -33,7 +33,7 @@ const ParticipateWorkspaceInputPw = () => {
       {
         onSuccess: () => {
           setHasError(false);
-          navigate('/workspace'); // TODO: 실제 경로로 교체
+          navigate('/workspace/complete');
         },
         onError: () => {
           setHasError(true);
