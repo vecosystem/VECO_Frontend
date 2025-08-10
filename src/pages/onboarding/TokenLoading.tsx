@@ -20,8 +20,8 @@ const TokenLoading = () => {
         setItem(accessToken);
         try {
           await getWorkspaceProfile(); // 워크스페이스 조회
-          // 200 응답 -> 워크스페이스 홈으로 이동
-          navigate('/workspace');
+          // 200 응답
+          navigate('/workspace/complete');
         } catch (err: any) {
           // 404 응답 -> isInvite 따라 분기 처리
           if (err.response?.status === 404) {
