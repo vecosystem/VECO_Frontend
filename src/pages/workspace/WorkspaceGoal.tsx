@@ -1,6 +1,6 @@
 import { GoalItem } from '../../components/ListView/GoalItem';
 import PlusIcon from '../../assets/icons/plus.svg';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PRIORITY_LABELS, STATUS_LABELS, type ItemFilter } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
@@ -8,15 +8,17 @@ import useCheckItems from '../../hooks/useCheckItems';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
 import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import Modal from '../../components/Modal/Modal';
-import {
-  dummyStatusGoalGroups,
-  dummyPriorityGoalGroups,
-  dummyManagerGoalGroups,
-} from '../../types/testDummy';
-import type { GoalFilter, GroupedGoal } from '../../types/goal';
+import type { GroupedGoal } from '../../types/goal';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
-import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useInView } from 'react-intersection-observer';
+import { useGetInfiniteGoalList } from '../../apis/goal/useGetGoalList';
+import { useDeleteGoals } from '../../apis/goal/useDeleteGoals';
+import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
+import { mergeGroups } from '../../components/ListView/MergeGroup';
+import ServerError from '../ServerError';
+import { useManagerProfiles } from '../../hooks/useManagerProfiles';
+import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
@@ -31,22 +33,58 @@ const WorkspaceGoal = () => {
     navigate('detail/create');
   };
 
-  // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
-  const dummyGoalGroups = useMemo<GoalFilter[]>(() => {
+  const filterToQuery = (filter: ItemFilter) => {
     switch (filter) {
       case '상태':
-        return dummyStatusGoalGroups;
+        return 'state';
       case '우선순위':
-        return dummyPriorityGoalGroups;
+        return 'priority';
       case '담당자':
-        return dummyManagerGoalGroups;
+        return 'manager';
       default:
-        return [];
+        return '';
     }
-  }, [filter]);
+  };
 
-  const allGoalsFlat = dummyGoalGroups.flatMap((g) => g.goals);
+  const params = useMemo(
+    () => ({
+      // 우선 기본값 설정
+      cursor: '-1',
+      size: 3,
+      query: filterToQuery(filter),
+    }),
+    [filter]
+  );
 
+  // 데이터 불러오기
+  const { data, isFetchingNextPage, isLoading, isError, hasNextPage, fetchNextPage } =
+    useGetInfiniteGoalList(teamId ?? '', params);
+
+  // 그룹화
+  const goalGroups = data?.pages ?? [];
+  const allGoalsFlat = goalGroups.flatMap((g) => g.goals);
+
+  const allGroups: GroupedGoal[] = goalGroups.map((g) => ({
+    key: g.filterName,
+    items: g.goals,
+  }));
+
+  const grouped = mergeGroups(allGroups);
+  const sortedGrouped = getSortedGrouped(filter, grouped);
+  const isEmpty = grouped.every(({ items }) => items.length === 0);
+
+  // 무한스크롤 fetching
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
+
+  // 삭제 관련 상태 및 함수
   const {
     checkedIds: checkItems,
     isAllChecked,
@@ -70,19 +108,27 @@ const WorkspaceGoal = () => {
     }
   };
 
+  const { mutate: deleteGoalItem } = useDeleteGoals();
   const handleDeleteItem = () => {
-    // TODO: 실제 삭제 로직 구현
-    setIsDeleteMode(false);
-    setCheckedIds([]);
+    deleteGoalItem(
+      {
+        teamId: teamId ?? '',
+        goalIds: checkItems.map(Number),
+      },
+      {
+        onSuccess: () => {
+          setIsDeleteMode(false);
+          setCheckedIds([]);
+        },
+      }
+    );
   };
 
-  const grouped: GroupedGoal[] = dummyGoalGroups.map((g) => ({
-    key: g.filterName,
-    items: g.goals,
-  }));
+  const managerProfiles = useManagerProfiles(allGoalsFlat);
 
-  const sortedGrouped = getSortedGrouped(filter, grouped);
-  const isEmpty = grouped.every(({ items }) => items.length === 0);
+  if (isError) {
+    return <ServerError error={new Error()} resetErrorBoundary={() => window.location.reload()} />;
+  }
 
   return (
     <>
@@ -127,8 +173,9 @@ const WorkspaceGoal = () => {
               새 목표 생성하기
             </div>
           </div>
+        ) : isLoading ? (
+          <ListViewItemSkeletonList />
         ) : (
-          /* 리스트뷰 */
           <div className="flex flex-col gap-[4.8rem]">
             {sortedGrouped.map(({ key, items }) =>
               /* 해당 요소 존재할 때만 생성 */
@@ -141,7 +188,11 @@ const WorkspaceGoal = () => {
                       <GroupTypeIcon
                         filter={filter}
                         typeKey={key}
-                        profileImgUrl={filter === '담당자' ? '' : undefined}
+                        profileImgUrl={
+                          filter === '담당자' && managerProfiles[key]
+                            ? managerProfiles[key]
+                            : undefined
+                        }
                       />
                       {/* 유형명 */}
                       <div>
@@ -170,14 +221,13 @@ const WorkspaceGoal = () => {
                       checked={checkItems.includes(goal.id)}
                       onCheckChange={(checked) => handleCheck(goal.id, checked)}
                       filter={filter}
-                      onItemClick={() =>
-                        navigate(`/workspace/default/team/${teamId}/goal/${goal.id}`)
-                      }
+                      onItemClick={() => navigate(`/workspace/team/${teamId}/goal/${goal.id}`)}
                     />
                   ))}
                 </div>
               ) : null
             )}
+            <div ref={ref}>{isFetchingNextPage && <ListViewItemSkeletonList count={3} />}</div>
           </div>
         )}
       </div>

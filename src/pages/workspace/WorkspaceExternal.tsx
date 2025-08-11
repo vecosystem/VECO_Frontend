@@ -1,6 +1,6 @@
 import PlusIcon from '../../assets/icons/plus.svg';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   EXTERNAL_LABELS,
   PRIORITY_LABELS,
@@ -11,55 +11,93 @@ import useCheckItems from '../../hooks/useCheckItems';
 import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
 import Modal from '../../components/Modal/Modal';
-import type { ExternalFilter, GroupedExternal } from '../../types/external';
-import {
-  dummyExternalToolExternalGroups,
-  dummyGoalTitleExternalGroups,
-  dummyManagerExternalGroups,
-  dummyPriorityExternalGroups,
-  dummyStatusExternalGroups,
-} from '../../types/testDummy';
+import type { GroupedExternal } from '../../types/external';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { ExternalItem } from '../../components/ListView/ExternalItem';
-import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
-import ExternalToolArea from '../external/components/ExternalToolArea';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useGetInfiniteExternalList } from '../../apis/external/useGetExternalList';
+import { useDeleteExternals } from '../../apis/external/useDeleteExternals';
+import { mergeGroups } from '../../components/ListView/MergeGroup';
+import { useInView } from 'react-intersection-observer';
+import ServerError from '../ServerError';
+import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
 import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts';
+import { useManagerProfiles } from '../../hooks/useManagerProfiles.ts';
+import ExternalToolArea from '../external/components/ExternalToolArea.tsx';
+import WorkspaceIcon from '../../components/ListView/WorkspaceIcon.tsx';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
 const WorkspaceExternal = () => {
-  const teamId = Number(useParams<{ teamId: string }>().teamId);
+  const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
   const { isOpen, content } = useDropdownInfo();
   const { openDropdown, closeDropdown } = useDropdownActions();
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   const handleClick = () => {
-    navigate(':extId');
+    navigate('detail/create');
   };
 
-  // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
-  const dummyExternalGroups = useMemo<ExternalFilter[]>(() => {
+  const filterToQuery = (filter: ItemFilter) => {
     switch (filter) {
       case '상태':
-        return dummyStatusExternalGroups;
+        return 'STATE';
       case '우선순위':
-        return dummyPriorityExternalGroups;
+        return 'PRIORITY';
       case '담당자':
-        return dummyManagerExternalGroups;
+        return 'ASSIGNEE';
       case '목표':
-        return dummyGoalTitleExternalGroups;
+        return 'GOAL';
       case '외부':
-        return dummyExternalToolExternalGroups;
+        return 'EXT_TYPE';
       default:
-        return [];
+        return '';
     }
-  }, [filter]);
+  };
 
-  const allExternalsFlat = dummyExternalGroups.flatMap((i) => i.externals);
+  const params = useMemo(
+    () => ({
+      // 우선 기본값 설정
+      // cursor: '-1',
+      // size: 3,
+      query: filterToQuery(filter),
+    }),
+    [filter]
+  );
 
+  // 데이터 불러오기
+  const { data, isFetchingNextPage, isLoading, isError, hasNextPage, fetchNextPage } =
+    useGetInfiniteExternalList(teamId ?? '', params);
+
+  // 그룹화
+  const externalGroups = data?.pages ?? [];
+  const allExternalsFlat = externalGroups.flatMap((g) => g.externals);
+
+  const { data: externalLinks } = useGetExternalLinks(Number(teamId));
+
+  const allGroups: GroupedExternal[] = externalGroups.map((g) => ({
+    key: g.filterName,
+    items: g.externals,
+  }));
+
+  const grouped = mergeGroups(allGroups);
+  const sortedGrouped = getSortedGrouped(filter, grouped);
+  const isEmpty = grouped.every(({ items }) => items.length === 0);
+
+  // 무한스크롤 fetching
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // 삭제 관련 상태 및 함수
   const {
     checkedIds: checkItems,
     isAllChecked,
@@ -83,33 +121,38 @@ const WorkspaceExternal = () => {
     }
   };
 
+  const { mutate: deleteGoalItem } = useDeleteExternals();
   const handleDeleteItem = () => {
-    // TODO: 실제 삭제 로직 구현
-    setIsDeleteMode(false);
-    setCheckedIds([]);
+    deleteGoalItem(
+      {
+        teamId: teamId ?? '',
+        externalIds: checkItems.map(Number),
+      },
+      {
+        onSuccess: () => {
+          setIsDeleteMode(false);
+          setCheckedIds([]);
+        },
+      }
+    );
   };
 
-  // 그룹핑
-  const grouped: GroupedExternal[] = dummyExternalGroups.map((i) => ({
-    key: i.filterName,
-    items: i.externals,
-  }));
+  const managerProfiles = useManagerProfiles(allExternalsFlat);
 
-  const sortedGrouped = getSortedGrouped(filter, grouped);
-  const isEmpty = grouped.every(({ items }) => items.length === 0);
-
-  const { data: linkedTools } = useGetExternalLinks(teamId);
+  if (isError) {
+    return <ServerError error={new Error()} resetErrorBoundary={() => window.location.reload()} />;
+  }
 
   return (
     <>
       <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
         <div className="flex items-center">
+          {/* 워크스페이스 아이콘, 워크스페이스명, props로 요소 전달 가능 */}
           <WorkspaceIcon />
-          {/* 아래 부분 연동 여부에 따라 다르게 보임. 추후 컴포넌트 분리*/}
-          {linkedTools && (
+          {externalLinks && (
             <ExternalToolArea
-              isLinkedWithGithub={linkedTools.linkedWithGithub}
-              isLinkedWithSlack={linkedTools.linkedWithSlack}
+              isLinkedWithGithub={externalLinks.linkedWithGithub}
+              isLinkedWithSlack={externalLinks.linkedWithSlack}
             />
           )}
         </div>
@@ -117,7 +160,7 @@ const WorkspaceExternal = () => {
           filter={filter}
           isDeleteMode={isDeleteMode}
           isAllChecked={isAllChecked}
-          showSelectAll={dummyExternalGroups.length > 0}
+          showSelectAll={grouped.some(({ items }) => items.length > 0)}
           filterOptions={[...FILTER_OPTIONS]}
           onFilterClick={() => openDropdown({ name: 'filter' })}
           onFilterSelect={(option) => {
@@ -151,8 +194,9 @@ const WorkspaceExternal = () => {
               새 외부 이슈 생성하기
             </div>
           </div>
+        ) : isLoading ? (
+          <ListViewItemSkeletonList />
         ) : (
-          /* 리스트뷰 */
           <div className="flex flex-col gap-[4.8rem]">
             {sortedGrouped.map(({ key, items }) =>
               /* 해당 요소 존재할 때만 생성 */
@@ -165,7 +209,11 @@ const WorkspaceExternal = () => {
                       <GroupTypeIcon
                         filter={filter}
                         typeKey={key}
-                        profileImgUrl={filter === '담당자' ? '' : undefined}
+                        profileImgUrl={
+                          filter === '담당자' && managerProfiles[key]
+                            ? managerProfiles[key]
+                            : undefined
+                        }
                       />
                       {/* 유형명 */}
                       <div>
@@ -196,14 +244,13 @@ const WorkspaceExternal = () => {
                       checked={checkItems.includes(externals.id)}
                       onCheckChange={(checked) => handleCheck(externals.id, checked)}
                       filter={filter}
-                      onItemClick={() =>
-                        navigate(`/workspace/default/team/${teamId}/ext/${externals.id}`)
-                      }
+                      onItemClick={() => navigate(`/workspace/team/${teamId}/ext/${externals.id}`)}
                     />
                   ))}
                 </div>
               ) : null
             )}
+            <div ref={ref}>{isFetchingNextPage && <ListViewItemSkeletonList count={3} />}</div>
           </div>
         )}
       </div>
