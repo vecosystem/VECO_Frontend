@@ -44,7 +44,7 @@ const SocialLoginButton = ({ provider }: SocialLoginButtonProps) => {
   return (
     <button
       onClick={handleClick}
-      className="pl-[2rem] w-[40rem] h-[6.2rem] rounded-[0.5rem] bg-[#FEE500] cursor-pointer hover:opacity-90"
+      className="pl-[2rem] w-[40rem] h-[6.2rem] rounded-[0.5rem] bg-kakao-yellow cursor-pointer hover:opacity-90"
     >
       {/* 내부 콘텐츠 영역: 로고 + 텍스트 */}
       <div className="w-[25.5rem] flex items-center justify-between">
