@@ -23,9 +23,8 @@ const OnboardingCreateWorkspace = () => {
     }
 
     try {
-      const res = await mutateAsync({ workspaceName });
+      await mutateAsync({ workspaceName });
       setWorkspaceCreated(true);
-      console.log(res);
       navigate('/onboarding/invite');
     } catch (error) {
       console.error('에러 발생:', error);

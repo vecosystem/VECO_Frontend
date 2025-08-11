@@ -1,11 +1,12 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
+// 워크스페이스 생성 요청 이력 관리
 type OnboardingStatusState = {
-  workspaceCreated: boolean; // 생성 요청 성공 여부
-  createdWorkspaceId?: string | number; // 선택: 서버가 준 id 저장
+  workspaceCreated: boolean;
+  createdWorkspaceId?: string | number;
   setWorkspaceCreated: (v: boolean, id?: string | number) => void;
-  resetWorkspaceCreated: () => void; // 선택: 다시 만들기 눌렀을 때 초기화용
+  resetWorkspaceCreated: () => void;
 };
 
 export const useOnboardingStatus = create<OnboardingStatusState>()(
