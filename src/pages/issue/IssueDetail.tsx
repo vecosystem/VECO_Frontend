@@ -1,7 +1,7 @@
 // IssueDetail.tsx
 // 이슈 상세페이지
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import DetailHeader from '../../components/DetailView/DetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -99,30 +99,39 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
   const queryClient = useQueryClient();
   const { category, targetId, enabled } = useCommentTarget();
   const { data: commentList } = useGetCommentList(targetId ?? 0, category ?? 'GOAL');
-
-  const height = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const triggerScrollRef = useRef(false);
 
   useEffect(() => {
     setComments(commentList?.comments ?? []);
-    // 댓글 작성 후 스크롤 이동
-    window.scrollTo({
-      top: height,
-      behavior: 'smooth', // 부드럽게 이동
-    });
   }, [commentList]);
 
   const handleAddComment = async (content: string) => {
     if (!enabled) return;
     try {
+      triggerScrollRef.current = true;
       await postComment({ content, category: category!, targetId: targetId! });
       // 댓글 작성 후 캐시 무효화 → 목록 재요청
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: [queryKey.COMMENT_LIST, targetId!, category!],
       });
     } catch (error) {
       console.error(error);
     }
   };
+
+  // "렌더 결과"가 바뀌었을 때만, 그리고 플래그가 켜져있을 때만 스크롤
+  useEffect(() => {
+    if (!isCompleted) return;
+    if (!triggerScrollRef.current) return; // ← 초기 진입 차단
+
+    const id = requestAnimationFrame(() => {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      triggerScrollRef.current = false; // 한 번만!
+    });
+
+    return () => cancelAnimationFrame(id);
+  }, [comments.length, isCompleted]);
 
   return (
     <div className="flex flex-1 flex-col min-h-max gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem]">
@@ -143,7 +152,7 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
 
           {/* 상세 설명 작성 컴포넌트 */}
           <DetailTextEditor isEditable={isEditable} />
-          <div className="flex flex-col min-h-max gap-[1.6rem]">
+          <div className="flex flex-col min-h-max gap-[1.6rem] pb-[5.3rem]">
             {/* 댓글 영역 */}
             {isCompleted && <CommentSection />}
             {/* 댓글 작성 영역 */}
@@ -237,6 +246,7 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
           />
         </div>
       </div>
+      <div ref={bottomRef} className="scroll-mb-[6.4rem]" />
     </div>
   );
 };
