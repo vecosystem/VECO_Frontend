@@ -1,7 +1,7 @@
 // IssueDetail.tsx
 // 이슈 상세페이지
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import DetailHeader from '../../components/DetailView/DetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -26,12 +26,7 @@ import { formatDateDot } from '../../utils/formatDate';
 import { useToggleMode } from '../../hooks/useToggleMode';
 
 import CommentInput from '../../components/DetailView/Comment/CommentInput';
-import { useQueryClient } from '@tanstack/react-query';
-import { useCommentTarget } from '../../components/DetailView/Comment/hooks/useCommentTarget';
-import { useGetCommentList } from '../../apis/comment/useGetCommentList';
-import { postComment } from '../../apis/comment/comment';
-import { queryKey } from '../../constants/queryKey';
-import type { Comment } from '../../types/comment';
+import { usePostComment } from '../../apis/comment/usePostComment';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -95,43 +90,14 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
     '기획 및 요구사항 분석': IcGoal,
   };
 
-  const [comments, setComments] = useState<Comment[]>([]); // comments라는 상태를 배열로 관리
-  const queryClient = useQueryClient();
-  const { category, targetId, enabled } = useCommentTarget();
-  const { data: commentList } = useGetCommentList(targetId ?? 0, category ?? 'GOAL');
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const triggerScrollRef = useRef(false);
+  const shouldScrollRef = useRef(false);
+  const { mutate: addComment } = usePostComment({ bottomRef, shouldScrollRef, useDoubleRaf: true });
 
-  useEffect(() => {
-    setComments(commentList?.comments ?? []);
-  }, [commentList]);
-
-  const handleAddComment = async (content: string) => {
-    if (!enabled) return;
-    try {
-      triggerScrollRef.current = true;
-      await postComment({ content, category: category!, targetId: targetId! });
-      // 댓글 작성 후 캐시 무효화 → 목록 재요청
-      await queryClient.invalidateQueries({
-        queryKey: [queryKey.COMMENT_LIST, targetId!, category!],
-      });
-    } catch (error) {
-      console.error(error);
-    }
+  const handleAddComment = (content: string) => {
+    shouldScrollRef.current = true;
+    addComment(content);
   };
-
-  // "렌더 결과"가 바뀌었을 때만, 그리고 플래그가 켜져있을 때만 스크롤
-  useEffect(() => {
-    if (!isCompleted) return;
-    if (!triggerScrollRef.current) return; // ← 초기 진입 차단
-
-    const id = requestAnimationFrame(() => {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      triggerScrollRef.current = false; // 한 번만!
-    });
-
-    return () => cancelAnimationFrame(id);
-  }, [comments.length, isCompleted]);
 
   return (
     <div className="flex flex-1 flex-col min-h-max gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem]">

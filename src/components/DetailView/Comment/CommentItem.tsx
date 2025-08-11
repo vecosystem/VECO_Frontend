@@ -6,8 +6,6 @@ import type { Comment } from '../../../types/comment';
 import { formatDateTimeDot } from '../../../utils/formatDate';
 
 const CommentItem = ({ author, content, createdAt }: Comment) => {
-  console.log(author);
-
   return (
     <div className="flex items-start gap-[1.6rem] w-full">
       {/* 댓글 작성자 프로필: 현재는 더미이미지 삽입. 추후 데이터 받아와 연동 예정 */}
