@@ -28,7 +28,7 @@ const WorkspaceGoal = () => {
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   const handleClick = () => {
-    navigate(':goalId');
+    navigate('detail/create');
   };
 
   // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
@@ -116,10 +116,16 @@ const WorkspaceGoal = () => {
               handleDeleteItem();
             }}
           />
-        )}{' '}
+        )}
         {isEmpty ? (
-          <div className="flex flex-1 items-center justify-center">
+          <div className="flex flex-1 flex-col items-center justify-center">
             <div className="font-body-r">목표를 생성하세요</div>
+            <div
+              className="font-body-r cursor-pointer underline text-gray-500"
+              onClick={handleClick}
+            >
+              새 목표 생성하기
+            </div>
           </div>
         ) : (
           /* 리스트뷰 */

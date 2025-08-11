@@ -140,10 +140,16 @@ const WorkspaceExternal = () => {
               handleDeleteItem();
             }}
           />
-        )}{' '}
+        )}
         {isEmpty ? (
-          <div className="flex flex-1 items-center justify-center">
+          <div className="flex flex-1 flex-col items-center justify-center">
             <div className="font-body-r">외부 연동이 없습니다</div>
+            <div
+              className="font-body-r cursor-pointer underline text-gray-500"
+              onClick={handleClick}
+            >
+              새 외부 이슈 생성하기
+            </div>
           </div>
         ) : (
           /* 리스트뷰 */
