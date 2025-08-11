@@ -139,7 +139,7 @@ const WorkspaceIssue = () => {
                       <GroupTypeIcon
                         filter={filter}
                         typeKey={key}
-                        profileImghUrl={filter === '담당자' ? '' : undefined}
+                        profileImgUrl={filter === '담당자' ? '' : undefined}
                       />
                       {/* 유형명 */}
                       <div>
