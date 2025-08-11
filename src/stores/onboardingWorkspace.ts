@@ -17,8 +17,8 @@ export const useOnboardingWS = create<WSState>()(
       setWorkspaceUrl: (v) => set({ workspaceUrl: v }),
     }),
     {
-      name: 'onboarding-workspace', // 저장 키
-      storage: createJSONStorage(() => localStorage), // localStorage 사용 → 새로고침/브라우저 꺼도 유지
+      name: 'onboarding-workspace',
+      storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({ workspaceName: s.workspaceName, workspaceUrl: s.workspaceUrl }),
     }
   )
