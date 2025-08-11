@@ -684,8 +684,8 @@ export const dummyStatusExternalGroups: ExternalFilter[] = [
         managers: {
           cnt: 2,
           info: [
-            { profileUrl: '', managerName: '염주원' },
-            { profileUrl: '', managerName: '박유민' },
+            { profileUrl: '', name: '염주원' },
+            { profileUrl: '', name: '박유민' },
           ],
         },
       },
@@ -705,7 +705,7 @@ export const dummyStatusExternalGroups: ExternalFilter[] = [
         deadline: { start: '2025-05-01', end: '2025-05-02' },
         managers: {
           cnt: 1,
-          info: [{ profileUrl: '', managerName: '박유민' }],
+          info: [{ profileUrl: '', name: '박유민' }],
         },
       },
       {
@@ -719,7 +719,7 @@ export const dummyStatusExternalGroups: ExternalFilter[] = [
         extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
-          info: [{ profileUrl: '', managerName: '김선화' }],
+          info: [{ profileUrl: '', name: '김선화' }],
         },
       },
     ],
@@ -739,7 +739,7 @@ export const dummyStatusExternalGroups: ExternalFilter[] = [
         extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
-          info: [{ profileUrl: '', managerName: '이가을' }],
+          info: [{ profileUrl: '', name: '이가을' }],
         },
       },
     ],
@@ -783,8 +783,8 @@ export const dummyPriorityExternalGroups: ExternalFilter[] = [
         managers: {
           cnt: 2,
           info: [
-            { profileUrl: '', managerName: '염주원' },
-            { profileUrl: '', managerName: '박유민' },
+            { profileUrl: '', name: '염주원' },
+            { profileUrl: '', name: '박유민' },
           ],
         },
       },
@@ -799,7 +799,7 @@ export const dummyPriorityExternalGroups: ExternalFilter[] = [
         extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
-          info: [{ profileUrl: '', managerName: '박유민' }],
+          info: [{ profileUrl: '', name: '박유민' }],
         },
       },
     ],
@@ -819,7 +819,7 @@ export const dummyPriorityExternalGroups: ExternalFilter[] = [
         extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
-          info: [{ profileUrl: '', managerName: '김선화' }],
+          info: [{ profileUrl: '', name: '김선화' }],
         },
       },
     ],
@@ -839,7 +839,7 @@ export const dummyPriorityExternalGroups: ExternalFilter[] = [
         extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
-          info: [{ profileUrl: '', managerName: '이가을' }],
+          info: [{ profileUrl: '', name: '이가을' }],
         },
       },
     ],
@@ -969,7 +969,7 @@ export const dummyGoalTitleExternalGroups: ExternalFilter[] = [
         extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
-          info: [{ profileUrl: '', managerName: '박유민' }],
+          info: [{ profileUrl: '', name: '박유민' }],
         },
       },
     ],
@@ -1003,7 +1003,7 @@ export const dummyGoalTitleExternalGroups: ExternalFilter[] = [
         extServiceType: 'SLACK',
         managers: {
           cnt: 1,
-          info: [{ profileUrl: '', managerName: '김선화' }],
+          info: [{ profileUrl: '', name: '김선화' }],
         },
       },
       {
@@ -1017,7 +1017,7 @@ export const dummyGoalTitleExternalGroups: ExternalFilter[] = [
         extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
-          info: [{ profileUrl: '', managerName: '이가을' }],
+          info: [{ profileUrl: '', name: '이가을' }],
         },
       },
       {
@@ -1055,8 +1055,8 @@ export const dummyExternalToolExternalGroups: ExternalFilter[] = [
         managers: {
           cnt: 2,
           info: [
-            { profileUrl: '', managerName: '염주원' },
-            { profileUrl: '', managerName: '박유민' },
+            { profileUrl: '', name: '염주원' },
+            { profileUrl: '', name: '박유민' },
           ],
         },
       },
@@ -1071,7 +1071,7 @@ export const dummyExternalToolExternalGroups: ExternalFilter[] = [
         extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
-          info: [{ profileUrl: '', managerName: '박유민' }],
+          info: [{ profileUrl: '', name: '박유민' }],
         },
       },
       {
@@ -1085,7 +1085,7 @@ export const dummyExternalToolExternalGroups: ExternalFilter[] = [
         extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
-          info: [{ profileUrl: '', managerName: '이가을' }],
+          info: [{ profileUrl: '', name: '이가을' }],
         },
       },
     ],
@@ -1105,7 +1105,7 @@ export const dummyExternalToolExternalGroups: ExternalFilter[] = [
         extServiceType: 'SLACK',
         managers: {
           cnt: 1,
-          info: [{ profileUrl: '', managerName: '김선화' }],
+          info: [{ profileUrl: '', name: '김선화' }],
         },
       },
       {
