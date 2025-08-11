@@ -1,19 +1,32 @@
 // src/pages/onboarding/OnboardingCreateWorkspace.tsx
 
-import { useState } from 'react';
 import PageIndicator from '../../components/Onboarding/PageIndicator';
 import onboardingSteps from '../../constants/onboardingSteps';
 import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 import WorkspaceNameInput from '../../components/Onboarding/WorkspaceNameInput';
 import { usePostCreateWorkspace } from '../../apis/workspace/usePostCreateWorkspace';
 import { useNavigate } from 'react-router-dom';
+import { create } from 'zustand';
+
+type WSState = {
+  workspaceName: string;
+  workspaceUrl: string;
+  setWorkspaceName: (v: string) => void;
+  setWorkspaceUrl: (v: string) => void;
+};
+
+const useOnboardingWS = create<WSState>((set) => ({
+  workspaceName: '',
+  workspaceUrl: '',
+  setWorkspaceName: (v) => set({ workspaceName: v }),
+  setWorkspaceUrl: (v) => set({ workspaceUrl: v }),
+}));
 
 const OnboardingCreateWorkspace = () => {
   // useOnboardingGuard(1); API 연결 후 훅 사용 예정
-  const [workspaceName, setWorkspaceName] = useState('');
-  const [workspaceUrl, setWorkspaceUrl] = useState('');
-  const navigate = useNavigate();
+  const { workspaceName, setWorkspaceName, workspaceUrl, setWorkspaceUrl } = useOnboardingWS();
 
+  const navigate = useNavigate();
   const { mutateAsync } = usePostCreateWorkspace();
 
   const handleButtonClick = async () => {
