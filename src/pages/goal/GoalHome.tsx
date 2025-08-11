@@ -169,7 +169,7 @@ const GoalHome = () => {
               className="font-body-r cursor-pointer underline decoration-1 text-gray-500 [text-underline-position:under]"
               onClick={handleClick}
             >
-              새 목표 생성하기
+              목표를 생성하세요
             </div>
           </div>
         ) : isLoading ? (
