@@ -19,7 +19,7 @@ const ProtectedLayout = () => {
               <aside className="overflow-auto sidebar-scroll">
                 {isSettingRoute ? <SettingSidebar /> : <Sidebar />}
               </aside>
-              <main className="flex flex-1 min-w-0 overflow-auto basic-scroll">
+              <main className="flex flex-1 min-w-0 min-h-max overflow-auto basic-scroll">
                 <Outlet />
               </main>
             </div>
