@@ -25,7 +25,7 @@ const OnboardingFinish = () => {
           </h1>
         </div>
         {/* 지금 시작하기 버튼 */}
-        <PrimaryButton text="지금 시작하기" to="/workspace/default/team/:teamId" />
+        <PrimaryButton text="지금 시작하기" to="/workspace/complete" />
       </div>
     </div>
   );

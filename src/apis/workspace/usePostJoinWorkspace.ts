@@ -4,6 +4,7 @@ import type { JoinWorkspaceRequest, JoinWorkspaceResponse } from '../../types/wo
 
 /**
  * 워크스페이스 참여 요청 함수
+ * - pages/onboarding/ParticipateWorkspaceInputPw.tsx
  */
 export const postJoinWorkspace = async (
   data: JoinWorkspaceRequest

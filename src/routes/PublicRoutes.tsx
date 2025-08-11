@@ -10,6 +10,7 @@ import ParticipateWorkspaceInputPw from '../pages/onboarding/ParticipateWorkspac
 import { HomePage } from '../pages/home/HomePage.tsx';
 import TokenLoading from '../pages/onboarding/TokenLoading.tsx';
 import InviteLoading from '../pages/onboarding/InviteLoading.tsx';
+import WorkspaceComplete from '../pages/workspace/WorkspaceComplete.tsx';
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -28,6 +29,11 @@ export const publicRoutes: RouteObject[] = [
   {
     path: '/:workspaceName/invite',
     element: <InviteLoading />,
+  },
+  /* 온보딩 완료한 사용자를 위한 리다이렉트 페이지 */
+  {
+    path: '/workspace/complete',
+    element: <WorkspaceComplete />,
   },
   /* Onboarding 단계 페이지들 */
   {
