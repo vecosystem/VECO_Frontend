@@ -186,9 +186,8 @@ const WorkspaceExternal = () => {
         )}
         {isEmpty ? (
           <div className="flex flex-1 flex-col items-center justify-center">
-            <div className="font-body-r">외부 연동이 없습니다</div>
             <div
-              className="font-body-r cursor-pointer underline text-gray-500"
+              className="font-body-r cursor-pointer underline decoration-1 text-gray-500 [text-underline-position:under]"
               onClick={handleClick}
             >
               새 외부 이슈 생성하기
