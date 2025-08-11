@@ -7,7 +7,7 @@ export type Deadline = {
 
 export type ManagerInfo = {
   profileUrl: string;
-  managerName: string;
+  name: string;
 };
 
 export type Manager = {

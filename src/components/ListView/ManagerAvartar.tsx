@@ -59,7 +59,7 @@ function ManagerAvatar({ managers }: ManagerAvatarsProps) {
       {hover && (
         <div className="absolute top-full left-[-5rem] z-20">
           <Dropdown
-            options={managers.map((m) => m.name || m.managerName || '')}
+            options={managers.map((m) => m.name || '')}
             onSelect={() => {}}
             onClose={() => setHover(false)}
           />
