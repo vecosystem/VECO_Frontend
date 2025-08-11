@@ -9,8 +9,6 @@ import { LOCAL_STORAGE_KEY } from '../../constants/key';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 const OnboardingInviteMember = () => {
-  // useOnboardingGuard(2); API 연결 후 훅 사용 예정
-
   const [inviteText, setInviteText] = useState('');
 
   // 텍스트 영역의 DOM 요소에 접근하기 위한 ref (복사 기능용)

@@ -10,7 +10,6 @@ import { useOnboardingWS } from '../../stores/onboardingWorkspace';
 import { useOnboardingStatus } from '../../stores/onboardingStatus';
 
 const OnboardingCreateWorkspace = () => {
-  // useOnboardingGuard(1); API 연결 후 훅 사용 예정
   const { workspaceName, setWorkspaceName, workspaceUrl, setWorkspaceUrl } = useOnboardingWS();
   const { workspaceCreated, setWorkspaceCreated } = useOnboardingStatus();
   const navigate = useNavigate();
