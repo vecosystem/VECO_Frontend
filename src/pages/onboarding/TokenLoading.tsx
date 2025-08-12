@@ -9,6 +9,7 @@ import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 const TokenLoading = () => {
   const { setItem } = useLocalStorage(LOCAL_STORAGE_KEY.accessToken);
+  const { getItem } = useLocalStorage(LOCAL_STORAGE_KEY.isInvite);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,12 +20,12 @@ const TokenLoading = () => {
         setItem(accessToken);
         try {
           await getWorkspaceProfile(); // 워크스페이스 조회
-          // 200 응답 -> 워크스페이스 홈으로 이동
-          navigate('/workspace');
+          // 200 응답
+          navigate('/workspace/complete');
         } catch (err: any) {
           // 404 응답 -> isInvite 따라 분기 처리
           if (err.response?.status === 404) {
-            const isInvite = localStorage.getItem('isInvite');
+            const isInvite = getItem();
             if (isInvite === 'true') {
               navigate('/onboarding/input-pw');
             } else {

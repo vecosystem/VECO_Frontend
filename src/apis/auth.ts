@@ -3,7 +3,7 @@ import type { ReIssueTokenResponse } from '../types/auth';
 
 /**
  * accessToken 재발급 요청 함수
- * - pages/onboarding/GoogleLoginRedirect.tsx
+ * - pages/onboarding/TokenLoading.tsx
  */
 export const postReIssueAccessToken = async (): Promise<string> => {
   const { data }: { data: ReIssueTokenResponse } = await axiosInstance.post('/api/token/reissue');
