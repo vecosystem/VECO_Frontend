@@ -25,7 +25,7 @@ export const getCommentList = async (
 
 export const useGetCommentList = (targetId: number, category: CategoryType) => {
   return useQuery({
-    queryKey: [queryKey.COMMENT_LIST, targetId, category],
+    queryKey: [queryKey.COMMENT_LIST, {targetId, category}],
     queryFn: () => getCommentList(targetId, category),
   });
 };
