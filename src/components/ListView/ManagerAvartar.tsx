@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Dropdown from '../Dropdown/Dropdown';
 import userIcon from '../../assets/icons/user-base.svg';
-import type { ManagerInfo } from '../../types/goal';
+import type { ManagerInfo } from '../../types/external';
 
 interface ManagerAvatarsProps {
   managers: ManagerInfo[];
@@ -59,7 +59,7 @@ function ManagerAvatar({ managers }: ManagerAvatarsProps) {
       {hover && (
         <div className="absolute top-full left-[-5rem] z-20">
           <Dropdown
-            options={managers.map((m) => m.name)}
+            options={managers.map((m) => m.name || '')}
             onSelect={() => {}}
             onClose={() => setHover(false)}
           />

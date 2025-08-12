@@ -18,6 +18,7 @@ import { useDeleteGoals } from '../../apis/goal/useDeleteGoals';
 import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
 import { mergeGroups } from '../../components/ListView/MergeGroup';
 import ServerError from '../ServerError';
+import { useManagerProfiles } from '../../hooks/useManagerProfiles';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
@@ -29,7 +30,7 @@ const GoalHome = () => {
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   const handleClick = () => {
-    navigate(':goalId');
+    navigate('detail/create');
   };
 
   const filterToQuery = (filter: ItemFilter) => {
@@ -63,8 +64,7 @@ const GoalHome = () => {
   const goalGroups = data?.pages ?? [];
   const allGoalsFlat = goalGroups.flatMap((g) => g.goals);
 
-  const rawGoalGroups = data?.pages ?? [];
-  const allGroups: GroupedGoal[] = rawGoalGroups.map((g) => ({
+  const allGroups: GroupedGoal[] = goalGroups.map((g) => ({
     key: g.filterName,
     items: g.goals,
   }));
@@ -124,6 +124,8 @@ const GoalHome = () => {
     );
   };
 
+  const managerProfiles = useManagerProfiles(allGoalsFlat);
+
   if (isError) {
     return <ServerError error={new Error()} resetErrorBoundary={() => window.location.reload()} />;
   }
@@ -180,7 +182,11 @@ const GoalHome = () => {
                       <GroupTypeIcon
                         filter={filter}
                         typeKey={key}
-                        profileImghUrl={filter === '담당자' ? '' : undefined}
+                        profileImgUrl={
+                          filter === '담당자' && managerProfiles[key]
+                            ? managerProfiles[key]
+                            : undefined
+                        }
                       />
                       {/* 유형명 */}
                       <div>
