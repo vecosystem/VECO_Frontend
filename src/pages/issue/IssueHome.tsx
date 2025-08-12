@@ -18,6 +18,7 @@ import { mergeGroups } from '../../components/ListView/MergeGroup';
 import { useInView } from 'react-intersection-observer';
 import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
 import ServerError from '../ServerError';
+import { useManagerProfiles } from '../../hooks/useManagerProfiles';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
@@ -29,7 +30,7 @@ const IssueHome = () => {
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   const handleClick = () => {
-    navigate(':issueId');
+    navigate('detail/create');
   };
 
   const filterToQuery = (filter: ItemFilter) => {
@@ -65,8 +66,7 @@ const IssueHome = () => {
   const issueGroups = data?.pages ?? [];
   const allIssuesFlat = issueGroups.flatMap((i) => i.issues);
 
-  const rawIssueGroups = data?.pages ?? [];
-  const allGroups: GroupedIssue[] = rawIssueGroups.map((i) => ({
+  const allGroups: GroupedIssue[] = issueGroups.map((i) => ({
     key: i.filterName,
     items: i.issues,
   }));
@@ -126,6 +126,8 @@ const IssueHome = () => {
     );
   };
 
+  const managerProfiles = useManagerProfiles(allIssuesFlat);
+
   if (isError) {
     return <ServerError error={new Error()} resetErrorBoundary={() => window.location.reload()} />;
   }
@@ -165,7 +167,7 @@ const IssueHome = () => {
         )}
         {isEmpty ? (
           <div className="flex flex-1 items-center justify-center">
-            <div className="font-body-r">목표를 생성하세요</div>
+            <div className="font-body-r">이슈를 생성하세요</div>
           </div>
         ) : isLoading ? (
           <ListViewItemSkeletonList />
@@ -182,7 +184,11 @@ const IssueHome = () => {
                       <GroupTypeIcon
                         filter={filter}
                         typeKey={key}
-                        profileImghUrl={filter === '담당자' ? '' : undefined}
+                        profileImgUrl={
+                          filter === '담당자' && managerProfiles[key]
+                            ? managerProfiles[key]
+                            : undefined
+                        }
                       />
                       {/* 유형명 */}
                       <div>

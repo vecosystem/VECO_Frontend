@@ -28,5 +28,8 @@ export const useDeleteGoals = () => {
         queryKey: [queryKey.GOAL_LIST, variables.teamId],
       });
     },
+    onError(error) {
+      console.error('Error deleting goal item:', error);
+    },
   });
 };

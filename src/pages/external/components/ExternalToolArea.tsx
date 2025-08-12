@@ -21,19 +21,23 @@ const ExternalToolArea = ({ isLinkedWithGithub, isLinkedWithSlack }: Props) => {
     setIsModalOpen(false);
   };
 
+  const linkedToolCount = Number(isLinkedWithGithub) + Number(isLinkedWithSlack);
+
   return (
     <>
       <button className="ml-[1.6rem] cursor-pointer" onClick={handleButtonClick}>
         {/* 연동하기 버튼 */}
-        {(!isLinkedWithSlack || !isLinkedWithGithub) && (
-          <img src={LinkButton} alt={'연동하기 버튼'} />
+        {linkedToolCount === 0 && (
+          <button className="ml-[1.6rem] cursor-pointer" onClick={handleButtonClick}>
+            <img src={LinkButton} alt="연동하기 버튼" />
+          </button>
         )}
       </button>
       <div className="flex gap-[2rem] ml-[3.2rem]">
         {isLinkedWithGithub && <img src={GitIcon} className="w-[2.4rem] h-[2.4rem]" alt="GitHub" />}
         {isLinkedWithSlack && <img src={SlackIcon} className="w-[2.4rem] h-[2.4rem]" alt="Slack" />}
       </div>
-      {(!isLinkedWithSlack || !isLinkedWithGithub) && (
+      {linkedToolCount === 1 && (
         <img
           src={PlusBlueIcon}
           className="ml-[3.2rem] w-[2.4rem] h-[2.4rem] cursor-pointer"

@@ -680,7 +680,7 @@ export const dummyStatusExternalGroups: ExternalFilter[] = [
         priority: 'HIGH',
         goaltitle: '없음',
         deadline: { start: '', end: '' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
         managers: {
           cnt: 2,
           info: [
@@ -716,7 +716,7 @@ export const dummyStatusExternalGroups: ExternalFilter[] = [
         priority: 'NORMAL',
         goaltitle: '없음',
         deadline: { start: '2025-05-02', end: '2025-05-02' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
           info: [{ profileUrl: '', name: '김선화' }],
@@ -736,7 +736,7 @@ export const dummyStatusExternalGroups: ExternalFilter[] = [
         priority: 'URGENT',
         goaltitle: '없음',
         deadline: { start: '2025-05-01', end: '2025-05-02' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
           info: [{ profileUrl: '', name: '이가을' }],
@@ -756,7 +756,7 @@ export const dummyStatusExternalGroups: ExternalFilter[] = [
         priority: 'LOW',
         goaltitle: '없음',
         deadline: { start: '2025-05-01', end: '2025-05-03' },
-        externalTool: 'SLACK',
+        extServiceType: 'SLACK',
         managers: {
           cnt: 0,
           info: [],
@@ -779,7 +779,7 @@ export const dummyPriorityExternalGroups: ExternalFilter[] = [
         priority: 'HIGH',
         goaltitle: '없음',
         deadline: { start: '', end: '' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
         managers: {
           cnt: 2,
           info: [
@@ -796,7 +796,7 @@ export const dummyPriorityExternalGroups: ExternalFilter[] = [
         priority: 'HIGH',
         goaltitle: '기획 및 요구사항 분석',
         deadline: { start: '2025-05-01', end: '2025-05-02' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
           info: [{ profileUrl: '', name: '박유민' }],
@@ -816,7 +816,7 @@ export const dummyPriorityExternalGroups: ExternalFilter[] = [
         priority: 'NORMAL',
         goaltitle: '없음',
         deadline: { start: '2025-05-02', end: '2025-05-02' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
           info: [{ profileUrl: '', name: '김선화' }],
@@ -836,7 +836,7 @@ export const dummyPriorityExternalGroups: ExternalFilter[] = [
         priority: 'URGENT',
         goaltitle: '없음',
         deadline: { start: '2025-05-01', end: '2025-05-02' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
           info: [{ profileUrl: '', name: '이가을' }],
@@ -856,7 +856,7 @@ export const dummyPriorityExternalGroups: ExternalFilter[] = [
         priority: 'LOW',
         goaltitle: '없음',
         deadline: { start: '2025-05-01', end: '2025-05-03' },
-        externalTool: 'SLACK',
+        extServiceType: 'SLACK',
         managers: {
           cnt: 0,
           info: [],
@@ -879,7 +879,7 @@ export const dummyManagerExternalGroups: ExternalFilter[] = [
         priority: 'HIGH',
         goaltitle: '기획 및 요구사항 분석',
         deadline: { start: '2025-05-01', end: '2025-05-02' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
       },
       {
         id: 1,
@@ -889,7 +889,7 @@ export const dummyManagerExternalGroups: ExternalFilter[] = [
         priority: 'HIGH',
         goaltitle: '없음',
         deadline: { start: '', end: '' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
       },
     ],
   },
@@ -905,7 +905,7 @@ export const dummyManagerExternalGroups: ExternalFilter[] = [
         priority: 'NORMAL',
         goaltitle: '없음',
         deadline: { start: '2025-05-02', end: '2025-05-02' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
       },
     ],
   },
@@ -921,7 +921,7 @@ export const dummyManagerExternalGroups: ExternalFilter[] = [
         priority: 'URGENT',
         goaltitle: '없음',
         deadline: { start: '2025-05-01', end: '2025-05-02' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
       },
     ],
   },
@@ -937,7 +937,7 @@ export const dummyManagerExternalGroups: ExternalFilter[] = [
         priority: 'HIGH',
         goaltitle: '없음',
         deadline: { start: '', end: '' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
       },
       {
         id: 5,
@@ -947,7 +947,7 @@ export const dummyManagerExternalGroups: ExternalFilter[] = [
         priority: 'LOW',
         goaltitle: '없음',
         deadline: { start: '2025-05-01', end: '2025-05-03' },
-        externalTool: 'SLACK',
+        extServiceType: 'SLACK',
       },
     ],
   },
@@ -966,7 +966,7 @@ export const dummyGoalTitleExternalGroups: ExternalFilter[] = [
         priority: 'HIGH',
         goaltitle: '기획 및 요구사항 분석',
         deadline: { start: '2025-05-01', end: '2025-05-02' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
           info: [{ profileUrl: '', name: '박유민' }],
@@ -986,7 +986,7 @@ export const dummyGoalTitleExternalGroups: ExternalFilter[] = [
         priority: 'HIGH',
         goaltitle: '없음',
         deadline: { start: '', end: '' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
         managers: {
           cnt: 0,
           info: [],
@@ -1000,7 +1000,7 @@ export const dummyGoalTitleExternalGroups: ExternalFilter[] = [
         priority: 'NORMAL',
         goaltitle: '없음',
         deadline: { start: '2025-05-02', end: '2025-05-02' },
-        externalTool: 'SLACK',
+        extServiceType: 'SLACK',
         managers: {
           cnt: 1,
           info: [{ profileUrl: '', name: '김선화' }],
@@ -1014,7 +1014,7 @@ export const dummyGoalTitleExternalGroups: ExternalFilter[] = [
         priority: 'URGENT',
         goaltitle: '없음',
         deadline: { start: '2025-05-01', end: '2025-05-02' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
           info: [{ profileUrl: '', name: '이가을' }],
@@ -1028,7 +1028,7 @@ export const dummyGoalTitleExternalGroups: ExternalFilter[] = [
         priority: 'LOW',
         goaltitle: '없음',
         deadline: { start: '2025-05-01', end: '2025-05-03' },
-        externalTool: 'SLACK',
+        extServiceType: 'SLACK',
         managers: {
           cnt: 0,
           info: [],
@@ -1051,7 +1051,7 @@ export const dummyExternalToolExternalGroups: ExternalFilter[] = [
         priority: 'HIGH',
         goaltitle: '없음',
         deadline: { start: '', end: '' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
         managers: {
           cnt: 2,
           info: [
@@ -1068,7 +1068,7 @@ export const dummyExternalToolExternalGroups: ExternalFilter[] = [
         priority: 'HIGH',
         goaltitle: '기획 및 요구사항 분석',
         deadline: { start: '2025-05-01', end: '2025-05-02' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
           info: [{ profileUrl: '', name: '박유민' }],
@@ -1082,7 +1082,7 @@ export const dummyExternalToolExternalGroups: ExternalFilter[] = [
         priority: 'URGENT',
         goaltitle: '없음',
         deadline: { start: '2025-05-01', end: '2025-05-02' },
-        externalTool: 'GITHUB',
+        extServiceType: 'GITHUB',
         managers: {
           cnt: 1,
           info: [{ profileUrl: '', name: '이가을' }],
@@ -1102,7 +1102,7 @@ export const dummyExternalToolExternalGroups: ExternalFilter[] = [
         priority: 'NORMAL',
         goaltitle: '없음',
         deadline: { start: '2025-05-02', end: '2025-05-02' },
-        externalTool: 'SLACK',
+        extServiceType: 'SLACK',
         managers: {
           cnt: 1,
           info: [{ profileUrl: '', name: '김선화' }],
@@ -1116,7 +1116,7 @@ export const dummyExternalToolExternalGroups: ExternalFilter[] = [
         priority: 'LOW',
         goaltitle: '없음',
         deadline: { start: '2025-05-01', end: '2025-05-03' },
-        externalTool: 'SLACK',
+        extServiceType: 'SLACK',
         managers: {
           cnt: 0,
           info: [],

@@ -1,7 +1,5 @@
 import type { CursorBasedResponse } from './common';
 
-/* 임시 구조, api 명세서 완성 시 변경 필요하면 수정 예정 */
-
 export type Deadline = {
   start: string;
   end: string;
@@ -26,7 +24,7 @@ export type External = {
   goaltitle?: string;
   deadline: Deadline | string;
   managers?: Manager;
-  externalTool?: string;
+  extServiceType?: string;
 };
 
 export type GroupedExternal = { key: string; items: External[] };

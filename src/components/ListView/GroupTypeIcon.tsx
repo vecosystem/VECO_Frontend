@@ -9,10 +9,10 @@ import { getPriorityIcon, getStatusColor } from '../../utils/listItemUtils';
 interface Props {
   filter: ItemFilter;
   typeKey: string;
-  profileImghUrl?: string;
+  profileImgUrl?: string;
 }
 
-const GroupTypeIcon = ({ filter, typeKey, profileImghUrl }: Props) => {
+const GroupTypeIcon = ({ filter, typeKey, profileImgUrl }: Props) => {
   if (filter === '상태') {
     return (
       <span
@@ -34,7 +34,7 @@ const GroupTypeIcon = ({ filter, typeKey, profileImghUrl }: Props) => {
     return (
       <img
         className="inline-block w-[2.4rem] h-[2.4rem] rounded-full mr-[1.2rem] bg-center bg-cover"
-        src={profileImghUrl || profileIcon}
+        src={profileImgUrl || profileIcon}
         alt="담당자"
       />
     );

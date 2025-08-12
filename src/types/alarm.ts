@@ -5,17 +5,17 @@ export type NotiList = {
   alarmId: number;
   name: string;
   typeId: number;
+  teamId: number;
   title: string;
   state: string;
   priority: string;
   goalTitle?: string;
-  isRead: boolean;
-  // TODO : teamId 정보 추가, 명세서 확인 후 수정
+  read: boolean;
   managerList?: {
     profileUrl: string;
     name: string;
   }[];
-  externalTool?: string;
+  extServiceType?: string;
 };
 
 export type GroupedList = {
