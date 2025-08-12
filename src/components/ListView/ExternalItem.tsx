@@ -42,8 +42,8 @@ export const ExternalItem = (props: Partial<ExternalItemProps>) => {
       : ('NONE' as PriorityCode);
 
   const external: ExternalCode =
-    props.externalTool && EXTERNAL_CODES.includes(props.externalTool as ExternalCode)
-      ? (props.externalTool as ExternalCode)
+    props.extServiceType && EXTERNAL_CODES.includes(props.extServiceType as ExternalCode)
+      ? (props.extServiceType as ExternalCode)
       : ('GITHUB' as ExternalCode);
 
   const {
@@ -57,7 +57,7 @@ export const ExternalItem = (props: Partial<ExternalItemProps>) => {
     goalTitle = '없음',
     deadline = { start: '', end: '' },
     managers = { cnt: 0, info: [] },
-    externalTool = 'GITHUB',
+    extServiceType = 'GITHUB',
     filter,
   } = {
     ...props,
@@ -154,8 +154,8 @@ export const ExternalItem = (props: Partial<ExternalItemProps>) => {
         {displayFields.includes('external') && (
           <div className="flex gap-[0.8rem] items-center">
             <img
-              src={externalTool === 'GITHUB' ? GithubIcon : SlackIcon}
-              alt={externalTool}
+              src={extServiceType === 'GITHUB' ? GithubIcon : SlackIcon}
+              alt={extServiceType}
               className="w-[2.4rem] h-[2.4rem]"
             />
             <div className="whitespace-nowrap">{EXTERNAL_LABELS[external]}</div>

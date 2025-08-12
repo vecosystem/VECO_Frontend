@@ -1,7 +1,7 @@
 import PlusIcon from '../../assets/icons/plus.svg';
 import TeamIcon from '../../components/ListView/TeamIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   EXTERNAL_LABELS,
   PRIORITY_LABELS,
@@ -18,9 +18,14 @@ import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { ExternalItem } from '../../components/ListView/ExternalItem';
 import ExternalToolArea from './components/ExternalToolArea';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGetExternalList } from '../../apis/external/useGetExternalList';
+import { useGetInfiniteExternalList } from '../../apis/external/useGetExternalList';
 import { useDeleteExternals } from '../../apis/external/useDeleteExternals';
+import { mergeGroups } from '../../components/ListView/MergeGroup';
+import { useInView } from 'react-intersection-observer';
+import ServerError from '../ServerError';
+import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
 import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts';
+import { useManagerProfiles } from '../../hooks/useManagerProfiles.ts';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
@@ -32,21 +37,21 @@ const ExternalHome = () => {
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   const handleClick = () => {
-    navigate(':extId');
+    navigate('detail/create');
   };
 
   const filterToQuery = (filter: ItemFilter) => {
     switch (filter) {
       case '상태':
-        return 'state';
+        return 'STATE';
       case '우선순위':
-        return 'priority';
+        return 'PRIORITY';
       case '담당자':
-        return 'manager';
+        return 'ASSIGNEE';
       case '목표':
-        return 'goal';
+        return 'GOAL';
       case '외부':
-        return 'external';
+        return 'EXT_TYPE';
       default:
         return '';
     }
@@ -56,19 +61,43 @@ const ExternalHome = () => {
     () => ({
       // 우선 기본값 설정
       // cursor: '-1',
-      size: 10,
+      // size: 3,
       query: filterToQuery(filter),
     }),
     [filter]
   );
 
-  // isLoading, isError 로직 추가
-  const { data } = useGetExternalList(teamId ?? '', params);
-  const externalGroups = data?.result?.data ?? [];
+  // 데이터 불러오기
+  const { data, isFetchingNextPage, isLoading, isError, hasNextPage, fetchNextPage } =
+    useGetInfiniteExternalList(teamId ?? '', params);
+
+  // 그룹화
+  const externalGroups = data?.pages ?? [];
   const allExternalsFlat = externalGroups.flatMap((g) => g.externals);
 
   const { data: externalLinks } = useGetExternalLinks(Number(teamId));
 
+  const allGroups: GroupedExternal[] = externalGroups.map((g) => ({
+    key: g.filterName,
+    items: g.externals,
+  }));
+
+  const grouped = mergeGroups(allGroups);
+  const sortedGrouped = getSortedGrouped(filter, grouped);
+  const isEmpty = grouped.every(({ items }) => items.length === 0);
+
+  // 무한스크롤 fetching
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // 삭제 관련 상태 및 함수
   const {
     checkedIds: checkItems,
     isAllChecked,
@@ -108,14 +137,11 @@ const ExternalHome = () => {
     );
   };
 
-  // 그룹핑
-  const grouped: GroupedExternal[] = externalGroups.map((e) => ({
-    key: e.filterName,
-    items: e.externals,
-  }));
+  const managerProfiles = useManagerProfiles(allExternalsFlat);
 
-  const sortedGrouped = getSortedGrouped(filter, grouped);
-  const isEmpty = grouped.every(({ items }) => items.length === 0);
+  if (isError) {
+    return <ServerError error={new Error()} resetErrorBoundary={() => window.location.reload()} />;
+  }
 
   return (
     <>
@@ -161,8 +187,9 @@ const ExternalHome = () => {
           <div className="flex flex-1 items-center justify-center">
             <div className="font-body-r">외부 연동이 없습니다</div>
           </div>
+        ) : isLoading ? (
+          <ListViewItemSkeletonList />
         ) : (
-          /* 리스트뷰 */
           <div className="flex flex-col gap-[4.8rem]">
             {sortedGrouped.map(({ key, items }) =>
               /* 해당 요소 존재할 때만 생성 */
@@ -175,7 +202,11 @@ const ExternalHome = () => {
                       <GroupTypeIcon
                         filter={filter}
                         typeKey={key}
-                        profileImghUrl={filter === '담당자' ? '' : undefined}
+                        profileImgUrl={
+                          filter === '담당자' && managerProfiles[key]
+                            ? managerProfiles[key]
+                            : undefined
+                        }
                       />
                       {/* 유형명 */}
                       <div>
@@ -212,6 +243,7 @@ const ExternalHome = () => {
                 </div>
               ) : null
             )}
+            <div ref={ref}>{isFetchingNextPage && <ListViewItemSkeletonList count={3} />}</div>
           </div>
         )}
       </div>

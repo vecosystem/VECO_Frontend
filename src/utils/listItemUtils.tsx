@@ -1,8 +1,8 @@
-import pr0 from '../assets/icons/pr-0.svg';
-import pr1 from '../assets/icons/pr-1.svg';
-import pr2 from '../assets/icons/pr-2.svg';
-import pr3 from '../assets/icons/pr-3.svg';
-import pr4 from '../assets/icons/pr-4.svg';
+import pr0 from '../assets/icons/pr-0-sm.svg';
+import pr1 from '../assets/icons/pr-1-sm.svg';
+import pr2 from '../assets/icons/pr-2-sm.svg';
+import pr3 from '../assets/icons/pr-3-sm.svg';
+import pr4 from '../assets/icons/pr-4-sm.svg';
 
 import type { ItemFilter, DisplayField, StatusCode, PriorityCode } from '../types/listItem';
 

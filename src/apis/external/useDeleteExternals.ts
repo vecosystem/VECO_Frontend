@@ -12,7 +12,7 @@ export const deleteExternalItem = async ({
 }: RequestExternalListDto): Promise<CommonResponse> => {
   try {
     const { data } = await axiosInstance.delete(`/api/teams/${teamId}/externals`, {
-      data: externalIds,
+      data: { externalIds },
     });
 
     return data;
@@ -30,6 +30,9 @@ export const useDeleteExternals = () => {
       queryClient.invalidateQueries({
         queryKey: [queryKey.EXTERNAL_LIST, variables.teamId],
       });
+    },
+    onError(error) {
+      console.error('Error deleting external item:', error);
     },
   });
 };
