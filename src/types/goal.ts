@@ -66,7 +66,7 @@ export type CreateGoalDetailDto = {
   priority: string;
   managersId: number[];
   deadline: Deadline;
-  issueId: number[];
+  issuesId: number[];
 };
 
 export type CreateGoalResultDto = CreateGoalDetailDto;
@@ -89,10 +89,11 @@ export type GoalCommentListDto = {
 
 // 목표 상세 조회
 export type ViewGoalDetailDto = {
-  name: string; // id랑 name 둘다 주시는 걸로 서버에서 변경해주실 것. 변경되면 반영.
+  id: number;
+  name: string;
   title: string;
   content: string;
-  state: string; // 이거 현재 스웨거에 누락되어있음. 일단 요청해두기.
+  state: string;
   priority: string;
   managers: Manager;
   deadline: Deadline;
@@ -111,7 +112,7 @@ export type UpdateGoalDetailDto = {
   priority?: string | null;
   managersId?: number[] | null;
   deadline?: Deadline | null;
-  issuesId?: number[] | null; // 변수명 통일 여부 물어보기
+  issuesId?: number[] | null;
 };
 
 type UpdatableGoalFields = {
@@ -122,7 +123,7 @@ type UpdatableGoalFields = {
   priority: string;
   managersId: number[];
   deadline: Deadline;
-  issuesId: number[]; // 변수명 통일 여부 물어보기
+  issuesId: number[];
 };
 
 export type UpdateGoalResultDto = Partial<UpdatableGoalFields>;
