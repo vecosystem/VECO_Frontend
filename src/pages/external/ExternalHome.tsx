@@ -26,6 +26,7 @@ import ServerError from '../ServerError';
 import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
 import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts';
 import { useManagerProfiles } from '../../hooks/useManagerProfiles.ts';
+import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams.ts';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
@@ -39,6 +40,12 @@ const ExternalHome = () => {
   const handleClick = () => {
     navigate('detail/create');
   };
+
+  // 팀 정보 불러오기
+  const { data: teamData } = useGetWorkspaceTeams();
+  const currentTeam = useMemo(() => {
+    return teamData?.pages[0].teamList.find((team) => team.teamId === Number(teamId));
+  }, [teamData, teamId]);
 
   const filterToQuery = (filter: ItemFilter) => {
     switch (filter) {
@@ -147,7 +154,7 @@ const ExternalHome = () => {
     <>
       <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
         <div className="flex items-center">
-          <TeamIcon />
+          <TeamIcon teamName={currentTeam?.teamName} teamImgUrl={currentTeam?.teamImageUrl} />
           {externalLinks && (
             <ExternalToolArea
               isLinkedWithGithub={externalLinks.linkedWithGithub}

@@ -19,6 +19,7 @@ import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkel
 import ServerError from '../ServerError';
 import { useManagerProfiles } from '../../hooks/useManagerProfiles';
 import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
+import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
@@ -32,6 +33,11 @@ const WorkspaceIssue = () => {
   const handleClick = () => {
     navigate('detail/create');
   };
+  // 팀 정보 불러오기
+  const { data: teamData } = useGetWorkspaceTeams();
+  const currentTeam = useMemo(() => {
+    return teamData?.pages[0].teamList.find((team) => team.teamId === Number(teamId));
+  }, [teamData, teamId]);
 
   const filterToQuery = (filter: ItemFilter) => {
     switch (filter) {
@@ -135,8 +141,10 @@ const WorkspaceIssue = () => {
   return (
     <>
       <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
-        {/* 워크스페이스 아이콘, 워크스페이스명, props로 요소 전달 가능 */}
-        <WorkspaceIcon />
+        <WorkspaceIcon
+          workspaceName={currentTeam?.teamName}
+          workspaceImgUrl={currentTeam?.teamImageUrl}
+        />
         <ListViewToolbar
           filter={filter}
           isDeleteMode={isDeleteMode}
