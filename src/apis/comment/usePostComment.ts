@@ -48,7 +48,7 @@ export const usePostComment = ({
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: [queryKey.COMMENT_LIST, targetId!, category!],
+        queryKey: [queryKey.COMMENT_LIST, { targetId, category }],
         refetchType: 'active',
       });
       // “사용자 액션 후에만” 스크롤 (초기 진입 차단)
