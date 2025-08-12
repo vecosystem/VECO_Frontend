@@ -1,7 +1,7 @@
 // GoalDetail.tsx
 // 목표 상세페이지
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import DetailHeader from '../../components/DetailView/DetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -25,6 +25,11 @@ import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
 import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
 import { useToggleMode } from '../../hooks/useToggleMode';
+import type { SubmitHandleRef } from '../../components/DetailView/TextEditor/lexical-plugins/SubmitHandlePlugin';
+import type { CreateGoalDetailDto } from '../../types/goal';
+import type { Deadline } from '../../types/external';
+import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail';
+import { useParams } from 'react-router-dom';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -37,10 +42,20 @@ interface GoalDetailProps {
 
 const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const [mode, setMode] = useState<'create' | 'view' | 'edit'>(initialMode); // 상세페이지 모드 상태
-  const [title, setTitle] = useState('');
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
   const [option, setOption] = useState<string>('이슈');
+  const submitRef = useRef<SubmitHandleRef | null>(null);
   const fakeGoalId = '123'; // 임시 goalId (TODO: 실제로는 목표 작성 API로부터 받아온 result의 goalId 값을 사용 예정)
+
+  const [title, setTitle] = useState('');
+  const [state, setState] = useState('PROGRESS'); // TODO: 이거 맞는지 확인
+  const [priority, setPriority] = useState('MEDIUM'); // TODO: 이거 맞는지 확인
+  const [managersId, setManagersId] = useState<number[]>([]);
+  const [deadline, setDeadline] = useState<Deadline>({ start: '', end: '' });
+  const [issuesId, setIssuesId] = useState<number[]>([]);
+
+  const teamId = Number(useParams<{ teamId: string }>().teamId);
+  const { mutate: submitGoal, isPending } = useCreateGoal(teamId);
 
   const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
   const { openDropdown, closeDropdown } = useDropdownActions();
@@ -48,6 +63,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
 
+  // handleToggleMode: 상세페이지 모드 전환
   const handleToggleMode = useToggleMode({
     mode,
     setMode,
@@ -55,6 +71,33 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     id: fakeGoalId,
     isDefaultTeam: false,
   });
+
+  // handleSubmit: Lexical 에디터 내용을 JSON 문자열로 직렬화 후 API로 전송하는 함수
+  const handleSubmit = (onSuccess?: () => void) => {
+    const content = submitRef.current?.getJson() ?? ''; // content가 비었으면 그냥 '' 빈 문자열로
+    const payload: CreateGoalDetailDto = {
+      title,
+      content,
+      state,
+      priority,
+      managersId,
+      deadline,
+      issuesId,
+    };
+    submitGoal(payload, { onSuccess });
+  };
+
+  // handleCompletion - 하단 작성 완료<-수정하기 버튼 클릭 시 실행
+  // - create/edit → view: API 저장 후 모드 전환
+  // - view → edit: API 호출 없이 모드 전환
+  const handleCompletion = () => {
+    if (!isCompleted) {
+      // create 또는 edit 모드에서 view 모드로 전환하려는 시점
+      handleSubmit(() => handleToggleMode()); // 저장 성공 시 모드 전환
+    } else {
+      handleToggleMode(); // 모드 전환
+    }
+  };
 
   // '기한' 속성의 텍스트(시작일, 종료일) 결정하는 함수
   const getDisplayText = () => {
@@ -100,7 +143,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
           />
 
           {/* 상세 설명 작성 컴포넌트 */}
-          <DetailTextEditor isEditable={isEditable} />
+          <DetailTextEditor isEditable={isEditable} submitRef={submitRef} />
 
           {/* 댓글 영역 */}
           {isCompleted && <CommentSection />}
@@ -203,7 +246,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
           <CompletionButton
             isTitleFilled={title.trim().length > 0}
             isCompleted={isCompleted}
-            onToggle={handleToggleMode}
+            onToggle={handleCompletion}
           />
         </div>
       </div>
