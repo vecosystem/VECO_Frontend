@@ -13,7 +13,9 @@ const ProtectedLayout = () => {
   const isSettingRoute = location.pathname.startsWith('/workspace/setting');
 
   const accessToken = localStorage.getItem(LOCAL_STORAGE_KEY.accessToken);
-  const isLoggedIn = !!accessToken && accessToken !== 'undefined';
+  const workspaceUrl = localStorage.getItem(LOCAL_STORAGE_KEY.inviteUrl);
+  const isLoggedIn =
+    !!accessToken && accessToken !== 'undefined' && !!workspaceUrl && workspaceUrl !== 'undefined';
 
   if (!isLoggedIn) {
     return <Navigate to="/onboarding" replace />;
