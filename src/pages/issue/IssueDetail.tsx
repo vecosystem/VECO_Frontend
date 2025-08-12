@@ -118,13 +118,14 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
 
           {/* 상세 설명 작성 컴포넌트 */}
           <DetailTextEditor isEditable={isEditable} />
-          <div className="flex flex-col min-h-max gap-[1.6rem] pb-[5.3rem]">
+          <div className="flex flex-col min-h-max gap-[1.6rem]">
             {/* 댓글 영역 */}
             {isCompleted && <CommentSection />}
             {/* 댓글 작성 영역 */}
             {isCompleted && (
-              <div className="sticky bottom-[5.3rem] z-20">
+              <div className="sticky bottom-[0rem] z-20 bg-white">
                 <CommentInput onAdd={handleAddComment} />
+                <div className="h-[5.3rem] bg-transparent"></div>
               </div>
             )}
           </div>
