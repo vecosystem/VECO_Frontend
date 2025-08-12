@@ -79,11 +79,17 @@ const WorkspaceNameInput = ({
         </div>
 
         {/* 에러 메시지 (입력창 아래에 고정, 조건부 빨간색) */}
-        <p
-          className={`absolute mt-[1rem] font-xsmall-r ${error ? 'text-error-400' : 'text-transparent'}`}
-        >
-          {error || '입력 정보를 다시 확인하세요'}
-        </p>
+        {error ? (
+          <p
+            className="absolute mt-[1rem] font-xsmall-r text-error-400"
+            role="alert"
+            aria-live="polite"
+          >
+            {error}
+          </p>
+        ) : (
+          <div className="absolute mt-[1rem]" />
+        )}
       </div>
 
       {/* 워크스페이스 URL 표시 (readOnly) */}
