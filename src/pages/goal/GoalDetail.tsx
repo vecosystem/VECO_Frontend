@@ -1,7 +1,7 @@
 // GoalDetail.tsx
 // 목표 상세페이지
 
-import { useEffect, useState } from 'react';
+import { useState, useRef } from 'react';
 import DetailHeader from '../../components/DetailView/DetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -27,12 +27,7 @@ import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
 import { useToggleMode } from '../../hooks/useToggleMode';
 
 import CommentInput from '../../components/DetailView/Comment/CommentInput';
-import { useQueryClient } from '@tanstack/react-query';
-import { useCommentTarget } from '../../components/DetailView/Comment/hooks/useCommentTarget';
-import { useGetCommentList } from '../../apis/comment/useGetCommentList';
-import { postComment } from '../../apis/comment/comment';
-import { queryKey } from '../../constants/queryKey';
-import type { Comment } from '../../types/comment';
+import { usePostComment } from '../../apis/comment/usePostComment';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -90,26 +85,13 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     전시현: IcProfile,
   };
 
-  const [comments, setComments] = useState<Comment[]>([]); // comments라는 상태를 배열로 관리
-  const queryClient = useQueryClient();
-  const { category, targetId, enabled } = useCommentTarget();
-  const { data: commentList } = useGetCommentList(targetId ?? 0, category ?? 'GOAL');
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const shouldScrollRef = useRef(false);
+  const { mutate: addComment } = usePostComment({ bottomRef, shouldScrollRef, useDoubleRaf: true });
 
-  useEffect(() => {
-    setComments(commentList?.comments ?? []);
-  }, [commentList]);
-
-  const handleAddComment = async (content: string) => {
-    if (!enabled) return;
-    try {
-      await postComment({ content, category: category!, targetId: targetId! });
-      // 댓글 작성 후 캐시 무효화 → 목록 재요청
-      queryClient.invalidateQueries({
-        queryKey: [queryKey.COMMENT_LIST, targetId!, category!],
-      });
-    } catch (error) {
-      console.error(error);
-    }
+  const handleAddComment = (content: string) => {
+    shouldScrollRef.current = true;
+    addComment(content);
   };
 
   return (
@@ -120,7 +102,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
       {/* 상세페이지 메인 */}
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full min-h-max">
         {/* 상세페이지 좌측 영역 - 제목 & 상세설명 & 댓글 */}
-        <div className="flex flex-col flex-1 gap-[3.2rem] w-[calc(100%-33rem)] min-h-screen">
+        <div className="flex flex-col flex-1 gap-[3.2rem] w-[calc(100%-33rem)] min-h-max">
           {/* 상세페이지 제목 */}
           <DetailTitle
             defaultTitle="목표를 생성하세요"
@@ -131,15 +113,17 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
           {/* 상세 설명 작성 컴포넌트 */}
           <DetailTextEditor isEditable={isEditable} />
-
-          {/* 댓글 영역 */}
-          {isCompleted && <CommentSection />}
-          {/* 댓글 작성 영역 */}
-          {isCompleted && (
-            <div className="sticky bottom-[5.3rem] z-20">
-              <CommentInput onAdd={handleAddComment} />
-            </div>
-          )}
+          <div className="flex flex-col min-h-max gap-[1.6rem]">
+            {/* 댓글 영역 */}
+            {isCompleted && <CommentSection />}
+            {/* 댓글 작성 영역 */}
+            {isCompleted && (
+              <div className="sticky bottom-[0rem] z-20 bg-white">
+                <CommentInput onAdd={handleAddComment} />
+                <div className="h-[5.3rem] bg-transparent"></div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* 상세페이지 우측 영역 - 속성 탭 & 하단의 작성 완료 버튼 */}
@@ -243,6 +227,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
           />
         </div>
       </div>
+      <div ref={bottomRef} className="scroll-mb-[6.4rem]" />
     </div>
   );
 };
