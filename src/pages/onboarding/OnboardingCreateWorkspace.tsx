@@ -10,7 +10,8 @@ import { useOnboardingWS } from '../../stores/onboardingWorkspace';
 import { useOnboardingStatus } from '../../stores/onboardingStatus';
 
 const OnboardingCreateWorkspace = () => {
-  const { workspaceName, setWorkspaceName, workspaceUrl, setWorkspaceUrl } = useOnboardingWS();
+  const { workspaceName, workspaceUrl, isLocked, setWorkspaceName, setWorkspaceUrl, setIsLocked } =
+    useOnboardingWS();
   const { workspaceCreated, setWorkspaceCreated } = useOnboardingStatus();
   const navigate = useNavigate();
   const { mutateAsync } = usePostCreateWorkspace();
@@ -46,10 +47,12 @@ const OnboardingCreateWorkspace = () => {
 
         {/* 워크스페이스 이름 & 워크스페이스 URL */}
         <WorkspaceNameInput
+          workspaceName={workspaceName}
+          workspaceUrl={workspaceUrl}
+          isLocked={isLocked}
           setWorkspaceName={setWorkspaceName}
           setWorkspaceUrl={setWorkspaceUrl}
-          workspaceUrl={workspaceUrl}
-          workspaceName={workspaceName}
+          setIsLocked={setIsLocked}
         />
 
         {/* 워크스페이스 생성하기 버튼 */}

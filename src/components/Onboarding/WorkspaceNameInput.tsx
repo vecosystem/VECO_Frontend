@@ -3,49 +3,47 @@ import whitecheck from '../../assets/icons/whitecheck.svg';
 import { validateWorkspaceName } from '../../utils/validateWorkspaceName.ts';
 import { usePostCreateWorkspaceUrl } from '../../apis/workspace/usePostCreateWorkspaceUrl.ts';
 
-// 부모 컴포넌트에서 전달되는 props 타입 정의
 interface WorkspaceNameInputProps {
+  workspaceName: string;
+  workspaceUrl: string;
+  isLocked: boolean;
   setWorkspaceName: (url: string) => void;
   setWorkspaceUrl: (url: string) => void;
-  workspaceUrl: string;
-  workspaceName: string;
+  setIsLocked: (v: boolean) => void;
 }
 
 // 워크스페이스 이름 입력 및 URL 생성 컴포넌트
 const WorkspaceNameInput = ({
+  workspaceName,
+  workspaceUrl,
+  isLocked,
   setWorkspaceName,
   setWorkspaceUrl,
-  workspaceUrl,
-  workspaceName,
+  setIsLocked,
 }: WorkspaceNameInputProps) => {
-  const [error, setError] = useState(''); // 유효성 검사 또는 서버 에러 메시지
-
-  // react-query mutation 훅 사용
+  const [error, setError] = useState('');
   const { mutateAsync: createUrl, isPending } = usePostCreateWorkspaceUrl();
 
   const handleCheck = async () => {
     // 중복 요청 혹은 이미 URL 있으면 재요청 막기
-    if (isPending || workspaceUrl) return;
+    if (isPending || workspaceUrl || isLocked) return;
 
     // 입력값 유효성 검사
     const validationError = validateWorkspaceName(workspaceName);
     if (validationError) {
       setError(validationError);
-      setWorkspaceUrl('');
       setWorkspaceName('');
+      setWorkspaceUrl('');
       return;
     }
 
-    // 서버 요청
     const res = await createUrl({ workspaceName });
-
-    // workspaceUrl 추출
     const url = res.result?.workspaceUrl ?? '';
 
-    // 에러 초기화 및 상태 업데이트
     setError('');
-    setWorkspaceUrl(url);
     setWorkspaceName(workspaceName);
+    setWorkspaceUrl(url);
+    setIsLocked(true);
   };
 
   return (
@@ -63,6 +61,7 @@ const WorkspaceNameInput = ({
             placeholder="워크스페이스 이름"
             value={workspaceName}
             onChange={(e) => setWorkspaceName(e.target.value)}
+            readOnly={isLocked || !!workspaceUrl}
             className={`w-full bg-transparent font-body-r focus:outline-none placeholder-text-gray-400 ${
               workspaceUrl && !error ? 'text-gray-600' : 'text-gray-400'
             }`}
@@ -72,6 +71,7 @@ const WorkspaceNameInput = ({
           <button
             type="button"
             onClick={handleCheck}
+            disabled={isLocked || !!workspaceUrl}
             className="w-[4rem] h-[3.6rem] flex items-center justify-center rounded-[0.6rem] bg-primary-blue ml-[1.3rem] shrink-0 cursor-pointer"
           >
             <img src={whitecheck} alt="Check" className="w-[1.6rem] h-[1.6rem]" />
