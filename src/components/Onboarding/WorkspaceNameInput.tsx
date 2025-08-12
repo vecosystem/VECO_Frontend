@@ -5,8 +5,8 @@ import { usePostCreateWorkspaceUrl } from '../../apis/workspace/usePostCreateWor
 
 // 부모 컴포넌트에서 전달되는 props 타입 정의
 interface WorkspaceNameInputProps {
-  setWorkspaceName: (url: string) => void; // 생성된 URL을 상위 컴포넌트에 전달
-  setWorkspaceUrl: (url: string) => void; // 생성된 URL을 상위 컴포넌트에 전달
+  setWorkspaceName: (url: string) => void;
+  setWorkspaceUrl: (url: string) => void;
   workspaceUrl: string;
   workspaceName: string;
 }
