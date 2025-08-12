@@ -9,6 +9,7 @@ type UseCommentTargetResult = {
   enabled: boolean; // react-query enabled에 바로 사용
 };
 
+// 댓글 작성 시 url에서 category와 targetId 추출
 export function useCommentTarget(): UseCommentTargetResult {
   const { pathname } = useLocation();
   const params = useParams();

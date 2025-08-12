@@ -5,6 +5,7 @@ import { queryKey } from '../../constants/queryKey';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCommentTarget } from '../../components/DetailView/Comment/hooks/useCommentTarget';
 
+// 댓글 작성
 export const postComment = async ({
   content,
   category,
