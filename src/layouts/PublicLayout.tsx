@@ -15,10 +15,11 @@ const PublicLayout = () => {
   const { getItem: getInvitePassword } = useLocalStorage(LOCAL_STORAGE_KEY.invitePassword);
   const { getItem: getIsInvite } = useLocalStorage(LOCAL_STORAGE_KEY.isInvite);
 
-  // 온보딩 경로 중 `/onboarding`(0단계) 제외, 1~3단계 경로만 보호
-  const guardedPaths = onboardingSteps.slice(1);
+  const guardedPaths = onboardingSteps.slice(1); // 온보딩 경로 중 `/onboarding`(0단계) 제외, 1~3단계 경로만 보호
   const needsCheck = guardedPaths.includes(location.pathname);
   const isManualOrHistoryNav = location.key === 'default' || navType === 'POP';
+
+  // 온보딩 진행 상태 관련 로컬스토리지 값
   const inviteUrl = needsCheck && isManualOrHistoryNav ? getInviteUrl() : null;
   const invitePassword = needsCheck && isManualOrHistoryNav ? getInvitePassword() : null;
   const isInvite = getIsInvite();
