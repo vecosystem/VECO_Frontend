@@ -11,6 +11,7 @@ import { HomePage } from '../pages/home/HomePage.tsx';
 import TokenLoading from '../pages/onboarding/TokenLoading.tsx';
 import InviteLoading from '../pages/onboarding/InviteLoading.tsx';
 import WorkspaceComplete from '../pages/workspace/WorkspaceComplete.tsx';
+import OnboardingGuard from '../components/Onboarding/OnboardingGuard.tsx';
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -43,39 +44,39 @@ export const publicRoutes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: (
-          <div>
-            <OnboardingSSOLogin />
-          </div>
-        ),
+        element: <OnboardingSSOLogin />,
       },
       {
         path: 'workspace',
         element: (
-          <div>
+          <OnboardingGuard>
             <OnboardingCreateWorkspace />
-          </div>
+          </OnboardingGuard>
         ),
       },
       {
         path: 'invite',
         element: (
-          <div>
+          <OnboardingGuard>
             <OnboardingInviteMember />
-          </div>
+          </OnboardingGuard>
         ),
       },
       {
         path: 'fin',
         element: (
-          <div>
+          <OnboardingGuard>
             <OnboardingFinish />
-          </div>
+          </OnboardingGuard>
         ),
       },
       {
         path: 'input-pw',
-        element: <ParticipateWorkspaceInputPw />,
+        element: (
+          <OnboardingGuard>
+            <ParticipateWorkspaceInputPw />,
+          </OnboardingGuard>
+        ),
       },
       /* accessToken 저장 및 워크스페이스 조회하는 리다이렉트 페이지 */
       {
