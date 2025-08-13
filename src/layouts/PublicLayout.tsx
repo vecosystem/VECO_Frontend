@@ -36,11 +36,20 @@ const PublicLayout = () => {
   // 주소창 직접 입력만 감지 (새로고침 제외)
   const isManualNav = location.key === 'default' && !isReload;
 
+  // 유효한 초대 URL인지 체크
+  const isValidInviteUrl = (url?: string | null) => {
+    return !!url && url.includes('invite?token=');
+  };
+
   // 직접 입력일 때만 가드 실행
   if (
     needsCheck &&
     isManualNav &&
-    (!inviteUrl || !invitePassword || isInvite || hasOnboardingStatus)
+    (!isValidInviteUrl(inviteUrl) ||
+      !inviteUrl ||
+      !invitePassword ||
+      isInvite ||
+      hasOnboardingStatus)
   ) {
     return <Navigate to="/onboarding" replace />;
   }
