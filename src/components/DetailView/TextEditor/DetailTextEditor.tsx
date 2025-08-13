@@ -23,7 +23,7 @@ import SubmitHandlePlugin from './lexical-plugins/SubmitHandlePlugin';
 // 부모 컴포넌트에서 전달하는 props
 interface DetailTextEditorProps {
   isEditable: boolean; // 편집가능 여부 - true일 때만 상세 설명 내용 입력 가능.
-  submitRef: React.RefObject<SubmitHandleRef | null>;
+  editorSubmitRef: React.RefObject<SubmitHandleRef | null>;
 }
 
 // initialConfig: LexicalEditor의 초기 설정 (필수 요소)
@@ -37,7 +37,7 @@ const initialConfig: ComponentProps<typeof LexicalComposer>['initialConfig'] = {
   // editorState: (editor) => safeLoadEditorState(editor, initialContentJson),
 };
 
-const DetailTextEditor = ({ isEditable, submitRef }: DetailTextEditorProps) => {
+const DetailTextEditor = ({ isEditable, editorSubmitRef }: DetailTextEditorProps) => {
   return (
     <div className="w-full h-full flex-1 overflow-y-scroll basic-scroll resize-none">
       {/* LexicalComposer: LexicalEditor 인스턴스 생성 -> Context.Provider를 통해 전달 */}
@@ -55,7 +55,7 @@ const DetailTextEditor = ({ isEditable, submitRef }: DetailTextEditorProps) => {
           <CodeHighlightPlugin />
           <IndentPlugin />
           <EnterAsParagraphPlugin />
-          <SubmitHandlePlugin ref={submitRef} /> {/* 부모의 ref 그대로 전달 */}
+          <SubmitHandlePlugin ref={editorSubmitRef} /> {/* 부모의 ref 그대로 전달 */}
           {/* 텍스트에디터 본문 Contents */}
           <div className="relative flex-1 editor-root group">
             <RichTextPlugin

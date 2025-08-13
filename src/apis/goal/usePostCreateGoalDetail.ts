@@ -18,9 +18,17 @@ const createGoal = async (
   payload: CreateGoalDetailDto
 ): Promise<CreateGoalResultDto> => {
   try {
+    // API 요청의 중복 처리 방지를 위한 멱등성 키를 직접 헤더에 세팅
+    const idempotencyKey = crypto.randomUUID();
+
     const response = await axiosInstance.post<ResponseCreateGoalDetailDto>(
       `/api/teams/${teamId}/goals`,
-      payload
+      payload,
+      {
+        headers: {
+          'Idempotency-Key': idempotencyKey,
+        },
+      }
     );
 
     if (!response.data.result) return Promise.reject(response);

@@ -33,6 +33,8 @@ import type { CreateGoalDetailDto } from '../../types/goal';
 import type { Deadline } from '../../types/external';
 import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail';
 import { useParams } from 'react-router-dom';
+import { useIsMutating } from '@tanstack/react-query';
+import { mutationKey } from '../../constants/mutationKey';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -47,7 +49,6 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const [mode, setMode] = useState<'create' | 'view' | 'edit'>(initialMode); // 상세페이지 모드 상태
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
   const [option, setOption] = useState<string>('이슈');
-  const submitRef = useRef<SubmitHandleRef | null>(null);
 
   const [title, setTitle] = useState('');
   const [state, setState] = useState('PROGRESS'); // TODO: 이거 맞는지 확인
@@ -56,8 +57,12 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const [deadline, setDeadline] = useState<Deadline>({ start: '', end: '' });
   const [issuesId, setIssuesId] = useState<number[]>([]);
 
+  const editorSubmitRef = useRef<SubmitHandleRef | null>(null); // 텍스트에디터 컨텐츠 접근용 플래그
+  const isSubmittingRequestRef = useRef(false); // API 제출 중복 요청 가드 플래그
   const teamId = Number(useParams<{ teamId: string }>().teamId);
   const { mutate: submitGoal, isPending } = useCreateGoal(teamId);
+  const isCreatingGlobal = useIsMutating({ mutationKey: [mutationKey.GOAL_CREATE, teamId] }) > 0;
+  const isSaving = isPending || isCreatingGlobal || isSubmittingRequestRef.current;
 
   const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
   const { openDropdown, closeDropdown } = useDropdownActions();
@@ -79,19 +84,25 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
   // handleSubmit: Lexical 에디터 내용을 JSON 문자열로 직렬화 후 API로 전송하는 함수
   const handleSubmit = () => {
-    const content = submitRef.current?.getJson() ?? ''; // content가 비었으면 그냥 '' 빈 문자열로
+    if (isSaving) return;
+    isSubmittingRequestRef.current = true;
+
     const payload: CreateGoalDetailDto = {
       title,
-      content,
+      content: editorSubmitRef.current?.getJson() ?? '', // content가 비었으면 그냥 빈 문자열로
       state,
       priority,
       managersId,
       deadline,
       issuesId,
     };
+
     submitGoal(payload, {
       onSuccess: ({ goalId }) => {
         handleToggleMode(goalId); // 성공 시점에 goalId 주입
+      },
+      onSettled: () => {
+        isSubmittingRequestRef.current = false; // 성공/실패 모두 해제
       },
     });
   };
@@ -161,7 +172,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
           />
 
           {/* 상세 설명 작성 컴포넌트 */}
-          <DetailTextEditor isEditable={isEditable} submitRef={submitRef} />
+          <DetailTextEditor isEditable={isEditable} editorSubmitRef={editorSubmitRef} />
           <div className="flex flex-col min-h-max gap-[1.6rem]">
             {/* 댓글 영역 */}
             {isCompleted && <CommentSection />}
@@ -272,6 +283,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
           <CompletionButton
             isTitleFilled={title.trim().length > 0}
             isCompleted={isCompleted}
+            isSaving={isSaving}
             onToggle={handleCompletion}
           />
         </div>
