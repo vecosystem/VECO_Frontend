@@ -6,6 +6,7 @@ import Loading from '../pages/Loading.tsx';
 import ServerError from '../pages/ServerError.tsx';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { LOCAL_STORAGE_KEY } from '../constants/key';
+import onboardingSteps from '../constants/onboardingSteps.ts';
 
 const PublicLayout = () => {
   const location = useLocation();
@@ -13,8 +14,8 @@ const PublicLayout = () => {
   const { getItem: getInviteUrl } = useLocalStorage(LOCAL_STORAGE_KEY.inviteUrl);
   const { getItem: getInvitePassword } = useLocalStorage(LOCAL_STORAGE_KEY.invitePassword);
 
-  // 체크해야 하는 경로들
-  const guardedPaths = ['/onboarding/invite', '/onboarding/fin', '/onboarding/workspace'];
+  // index 1~3 경로만 체크 (0번 '/onboarding' 제외)
+  const guardedPaths = onboardingSteps.slice(1);
   const needsCheck = guardedPaths.includes(location.pathname);
 
   // 로컬스토리지 값 캐싱 (호출 1회)
