@@ -26,10 +26,19 @@ const PublicLayout = () => {
   const hasOnboardingStatus =
     needsCheck && isManualOrHistoryNav && localStorage.getItem(ONBOARDING_STATUS_KEY) !== null;
 
-  // 리다이렉트
+  // 새로고침 감지
+  const navEntry = performance.getEntriesByType('navigation')[0] as
+    | PerformanceNavigationTiming
+    | undefined;
+  const isReload = navEntry?.type === 'reload';
+
+  // 주소창 직접 입력만 감지 (새로고침 제외)
+  const isManualNav = location.key === 'default' && !isReload;
+
+  // 직접 입력일 때만 가드 실행
   if (
     needsCheck &&
-    isManualOrHistoryNav &&
+    isManualNav &&
     (!inviteUrl || !invitePassword || isInvite || hasOnboardingStatus)
   ) {
     return <Navigate to="/onboarding" replace />;
