@@ -9,6 +9,7 @@ import CompletionButton from '../../components/DetailView/CompletionButton';
 import DetailTextEditor from '../../components/DetailView/TextEditor/DetailTextEditor';
 
 // 속성 항목별 아이콘 svg import
+import pr0 from '../../assets/icons/pr-0-sm.svg';
 import pr1 from '../../assets/icons/pr-1-sm.svg';
 import pr2 from '../../assets/icons/pr-2-sm.svg';
 import pr3 from '../../assets/icons/pr-3-sm.svg';
@@ -85,7 +86,7 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
   // '우선순위' 속성 아이콘 매핑
   const priorityIconMap = {
     우선순위: pr3,
-    없음: pr3,
+    없음: pr0,
     낮음: pr1,
     중간: pr2,
     높음: pr3,
