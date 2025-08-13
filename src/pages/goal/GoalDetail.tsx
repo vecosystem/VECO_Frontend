@@ -48,7 +48,6 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
   const [option, setOption] = useState<string>('이슈');
   const submitRef = useRef<SubmitHandleRef | null>(null);
-  const fakeGoalId = '123'; // 임시 goalId (TODO: 실제로는 목표 작성 API로부터 받아온 result의 goalId 값을 사용 예정)
 
   const [title, setTitle] = useState('');
   const [state, setState] = useState('PROGRESS'); // TODO: 이거 맞는지 확인
@@ -66,17 +65,20 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
 
+  // goalId를 useParams로부터 가져옴
+  const { goalId } = useParams<{ goalId: string }>();
+
   // handleToggleMode: 상세페이지 모드 전환
   const handleToggleMode = useToggleMode({
     mode,
     setMode,
     type: 'goal',
-    id: fakeGoalId,
+    id: Number(goalId),
     isDefaultTeam: false,
   });
 
   // handleSubmit: Lexical 에디터 내용을 JSON 문자열로 직렬화 후 API로 전송하는 함수
-  const handleSubmit = (onSuccess?: () => void) => {
+  const handleSubmit = () => {
     const content = submitRef.current?.getJson() ?? ''; // content가 비었으면 그냥 '' 빈 문자열로
     const payload: CreateGoalDetailDto = {
       title,
@@ -87,7 +89,11 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
       deadline,
       issuesId,
     };
-    submitGoal(payload, { onSuccess });
+    submitGoal(payload, {
+      onSuccess: ({ goalId }) => {
+        handleToggleMode(goalId); // 성공 시점에 goalId 주입
+      },
+    });
   };
 
   // handleCompletion - 하단 작성 완료<-수정하기 버튼 클릭 시 실행
@@ -96,7 +102,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const handleCompletion = () => {
     if (!isCompleted) {
       // create 또는 edit 모드에서 view 모드로 전환하려는 시점
-      handleSubmit(() => handleToggleMode()); // 저장 성공 시 모드 전환
+      handleSubmit(); // 저장 성공 시 모드 전환
     } else {
       handleToggleMode(); // 모드 전환
     }
