@@ -19,7 +19,7 @@ const getExternalName = async (teamId: number): Promise<string> => {
 
 export const useGetExternalName = (teamId: number) => {
   return useQuery({
-    queryKey: [queryKey.EXTERNAL, teamId],
+    queryKey: [queryKey.EXTERNAL_NAME, teamId],
     queryFn: () => getExternalName(teamId),
   });
 };
