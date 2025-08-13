@@ -69,7 +69,10 @@ export type CreateGoalDetailDto = {
   issuesId: number[];
 };
 
-export type CreateGoalResultDto = CreateGoalDetailDto;
+export type CreateGoalResultDto = {
+  goalId: number;
+  createdAt: string;
+};
 
 export type ResponseCreateGoalDetailDto = CommonResponse<CreateGoalResultDto>;
 

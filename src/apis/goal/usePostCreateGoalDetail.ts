@@ -1,17 +1,25 @@
 import { axiosInstance } from '../axios.ts';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  type ResponseCreateGoalDetailDto,
+  type CreateGoalDetailDto,
+  type CreateGoalResultDto,
+} from '../../types/goal.ts';
+import { mutationKey } from '../../constants/mutationKey.ts';
 import { queryKey } from '../../constants/queryKey.ts';
-import type { CommonResponse } from '../../types/common.ts';
-import type { CreateGoalDetailDto } from '../../types/goal.ts';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * 목표 작성 함수
+ * - 목표 상세페이지 생성 모드에서 사용
  * - pages/goal/GoalDetail.tsx
  */
-
-const createGoal = async (teamId: number, payload: CreateGoalDetailDto): Promise<boolean> => {
+const createGoal = async (
+  teamId: number,
+  payload: CreateGoalDetailDto
+): Promise<CreateGoalResultDto> => {
   try {
-    const response = await axiosInstance.post<CommonResponse<boolean>>(
+    const response = await axiosInstance.post<ResponseCreateGoalDetailDto>(
       `/api/teams/${teamId}/goals`,
       payload
     );
@@ -25,8 +33,19 @@ const createGoal = async (teamId: number, payload: CreateGoalDetailDto): Promise
 };
 
 export const useCreateGoal = (teamId: number) => {
-  return useMutation({
-    mutationFn: (payload: CreateGoalDetailDto) => createGoal(teamId, payload),
-    mutationKey: [queryKey.GOAL_CREATE, teamId],
+  const qc = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation<CreateGoalResultDto, Error, CreateGoalDetailDto>({
+    mutationKey: [mutationKey.GOAL_CREATE, teamId],
+    mutationFn: (payload) => createGoal(teamId, payload),
+
+    onSuccess: ({ goalId }) => {
+      // 목표 작성하여 POST 후 조회되는 데이터 최신화
+      qc.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, teamId] }); // 목표 목록(GOAL_LIST)
+      qc.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, teamId] }); // 다음 생성될 목표 ID명(GOAL_NAME)
+
+      navigate(`/workspace/team/${teamId}/goal/${goalId}`);
+    },
   });
 };
