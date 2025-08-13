@@ -28,8 +28,16 @@ const PublicLayout = () => {
   const invitePassword = needsCheck && isManualOrHistoryNav ? getInvitePassword() : null;
   const isInvite = getIsInvite();
 
-  // 조건 불충족 시에만 리다이렉트 (직접 접근/뒤로가기일 때 한정)
-  if (needsCheck && isManualOrHistoryNav && (!inviteUrl || !invitePassword || isInvite)) {
+  // 유효한 초대 URL인지 체크
+  const isValidInviteUrl = (url?: string | null) => {
+    return !!url && url.includes('invite?token=');
+  };
+
+  if (
+    needsCheck &&
+    isManualOrHistoryNav &&
+    (!isValidInviteUrl(inviteUrl) || !invitePassword || isInvite)
+  ) {
     return <Navigate to="/onboarding" replace />;
   }
 
