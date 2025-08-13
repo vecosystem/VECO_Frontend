@@ -7,13 +7,15 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Loading from '../pages/Loading.tsx';
 import ServerError from '../pages/ServerError.tsx';
 import { LOCAL_STORAGE_KEY } from '../constants/key.ts';
+import { useLocalStorage } from '../hooks/useLocalStorage.ts';
 
 const ProtectedLayout = () => {
   const location = useLocation();
   const isSettingRoute = location.pathname.startsWith('/workspace/setting');
 
-  const accessToken = localStorage.getItem(LOCAL_STORAGE_KEY.accessToken);
-  const isLoggedIn = !!accessToken && accessToken !== 'undefined';
+  const { getItem: getAccessToken } = useLocalStorage(LOCAL_STORAGE_KEY.accessToken);
+  const { getItem: getInviteUrl } = useLocalStorage(LOCAL_STORAGE_KEY.inviteUrl);
+  const isLoggedIn = !!getAccessToken() && !!getInviteUrl();
 
   if (!isLoggedIn) {
     return <Navigate to="/onboarding" replace />;
