@@ -14,6 +14,7 @@ const PublicLayout = () => {
 
   const { getItem: getInviteUrl } = useLocalStorage(LOCAL_STORAGE_KEY.inviteUrl);
   const { getItem: getInvitePassword } = useLocalStorage(LOCAL_STORAGE_KEY.invitePassword);
+  const { getItem: getIsInvite } = useLocalStorage(LOCAL_STORAGE_KEY.isInvite);
 
   // /onboarding 제외한 1~3단계만 보호
   const guardedPaths = onboardingSteps.slice(1);
@@ -25,9 +26,10 @@ const PublicLayout = () => {
   // 필요한 값 읽기 (필요할 때만)
   const inviteUrl = needsCheck && isManualOrHistoryNav ? getInviteUrl() : null;
   const invitePassword = needsCheck && isManualOrHistoryNav ? getInvitePassword() : null;
+  const isInvite = getIsInvite();
 
   // 조건 불충족 시에만 리다이렉트 (직접 접근/뒤로가기일 때 한정)
-  if (needsCheck && isManualOrHistoryNav && (!inviteUrl || !invitePassword)) {
+  if (needsCheck && isManualOrHistoryNav && (!inviteUrl || !invitePassword || isInvite)) {
     return <Navigate to="/onboarding" replace />;
   }
 
