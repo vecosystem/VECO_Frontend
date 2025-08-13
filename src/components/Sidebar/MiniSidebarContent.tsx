@@ -148,11 +148,7 @@ const MiniSidebarContent = ({
         <div className="flex flex-col items-start self-stretch">
           <DropdownMenu dropdownId="my-teams" headerTitle="나의 팀" initialOpen={true}>
             {/* Team1 드롭다운 (내부 드롭다운) */}
-            {isLoading ? null : myTeams.length === 0 ? (
-              <div className="text-gray-400 font-xsmall-r px-[3rem] pb-[1.6rem]">
-                등록된 팀이 없습니다.
-              </div>
-            ) : (
+            {isLoading ? null : (
               <>
                 <SortableDropdownList
                   items={myTeams}

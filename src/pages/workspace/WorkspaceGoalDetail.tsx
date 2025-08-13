@@ -1,7 +1,7 @@
 // WorkspaceGoalDetail.tsx
 // 워크스페이스 전체 팀 - 목표 상세페이지
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import WorkspaceDetailHeader from '../../components/DetailView/WorkspaceDetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -25,6 +25,9 @@ import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
 import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
 import { useToggleMode } from '../../hooks/useToggleMode';
+
+import CommentInput from '../../components/DetailView/Comment/CommentInput';
+import { usePostComment } from '../../apis/comment/usePostComment';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -82,15 +85,24 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
     전시현: IcProfile,
   };
 
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const shouldScrollRef = useRef(false);
+  const { mutate: addComment } = usePostComment({ bottomRef, shouldScrollRef, useDoubleRaf: true });
+
+  const handleAddComment = (content: string) => {
+    shouldScrollRef.current = true;
+    addComment(content);
+  };
+
   return (
-    <div className="flex flex-1 flex-col gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem] pb-[5.3rem]">
+    <div className="flex flex-1 flex-col min-h-max gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem]">
       {/* 상세페이지 헤더 */}
       <WorkspaceDetailHeader type={'goal'} defaultTitle="목표를 생성하세요" title={title} />
 
       {/* 상세페이지 메인 */}
-      <div className="flex px-[3.2rem] gap-[8.8rem] w-full h-full">
+      <div className="flex px-[3.2rem] gap-[8.8rem] w-full min-h-max">
         {/* 상세페이지 좌측 영역 - 제목 & 상세설명 & 댓글 */}
-        <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)] h-full">
+        <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)] min-h-max">
           {/* 상세페이지 제목 */}
           <DetailTitle
             defaultTitle="목표를 생성하세요"
@@ -101,13 +113,21 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
 
           {/* 상세 설명 작성 컴포넌트 */}
           <DetailTextEditor isEditable={isEditable} />
-
-          {/* 댓글 영역 */}
-          {isCompleted && <CommentSection />}
+          <div className="flex flex-col min-h-max gap-[1.6rem]">
+            {/* 댓글 영역 */}
+            {isCompleted && <CommentSection />}
+            {/* 댓글 작성 영역 */}
+            {isCompleted && (
+              <div className="sticky bottom-[0rem] z-20 bg-white">
+                <CommentInput onAdd={handleAddComment} />
+                <div className="h-[5.3rem] bg-transparent"></div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* 상세페이지 우측 영역 - 속성 탭 & 하단의 작성 완료 버튼 */}
-        <div className="w-[33rem] h-full flex flex-col">
+        <div className="w-[33rem] flex flex-col min-h-max">
           {/* 속성 탭 */}
           <div className="w-full h-full flex flex-col gap-[1.6rem] ">
             <div className="w-full font-title-sub-r tex-gray-600">속성</div>
@@ -207,6 +227,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
           />
         </div>
       </div>
+      <div ref={bottomRef} className="scroll-mb-[6.4rem]" />
     </div>
   );
 };

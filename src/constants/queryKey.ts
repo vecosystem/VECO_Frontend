@@ -17,4 +17,5 @@ export const queryKey = {
   TEAM_MEMBER_LIST: 'team_member_list',
   GITHUB_REPOSITORIES: 'github_repositories',
   GITHUB_INSTALLATION_ID: 'github_installation_id',
+  COMMENT_LIST: 'comment_list',
 };
