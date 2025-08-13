@@ -31,7 +31,6 @@ npm install
 npm run dev
 ```
 
----
 
 ## 🔧 작업 전 공통 절차: develop 브랜치 최신화
 
@@ -43,12 +42,14 @@ git checkout develop
 git pull origin develop
 ```
 
+
 ## 🛠 브랜치 생성
 
 ```bash
 # develop 최신화 후 작업 브랜치 생성
 git checkout -b feature/#이슈번호-스크린ID-작업명
 ```
+
 
 ## 🚀 PR 전 점검 및 병합
 
@@ -66,14 +67,27 @@ git merge develop
 # 충돌 해결 후 커밋
 ```
 
+---
+
+## 📏 컨벤션
+
+- 🌿[Commit Convention](https://pretty-tumbleweed-40b.notion.site/Github-Commit-Convention-2212d37cca1180f882f6c607935e07bb?source=copy_link)
+- 🪵[Branch Convention](https://pretty-tumbleweed-40b.notion.site/Github-Branch-Convention-2212d37cca1180b99416cae996470a9d?source=copy_link)
+- 📌[Issue Convention](https://pretty-tumbleweed-40b.notion.site/ISSUE-2212d37cca1180b5b904fc4ea5653f54?source=copy_link)
+- ✅[PR Convention](https://pretty-tumbleweed-40b.notion.site/PR-2212d37cca1180608135d6bccffeaed6?source=copy_link)
+
+---
+
 ## 📖 아티클 모음
-
-🍀 김선화: [제목]() <br/>
-🍒 박유민: [제목]() <br/>
-💎 박진주: [제목]() <br/>
-🎀 염주원: [제목]() <br/>
-🍁 이가을: [다른 도메인 간 쿠키 이슈 해결기](https://velog.io/@gaeulzzang/다른-도메인-간-쿠키-이슈-해결기) <br/>
+| 이름     | 아티클 제목                                                                                                                             |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| 🍀 김선화 | [제목]()                                                                                                                             |
+| 🍒 박유민 | [제목]()                                                                                                                             |
+| 💎 박진주 | [제목]()                                                                                                                             |
+| 🎀 염주원 | [백엔드 트러블슈팅 모음](https://velog.io/@hijuwon/%EB%B0%B1%ED%98%B8-Veco-%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85-%EB%AA%A8%EC%9D%8C) |
+| 🍁 이가을 | [다른 도메인 간 쿠키 이슈 해결기](https://velog.io/@gaeulzzang/다른-도메인-간-쿠키-이슈-해결기)                                                              |
 
 <br/>
 <br/>
 
+---
