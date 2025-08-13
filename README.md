@@ -7,12 +7,17 @@ VECO는 **AI를 활용해 분산된 정보를 한곳에 모으고, 목표를 명
 
 ## 📦 기술 스택
 
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- ESLint (Flat Config)
-- Prettier
+| 역할                 | 종류                                                                                                                                                                                                                 |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Library              | ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white) ![VITE](https://img.shields.io/badge/VITE-646CFF?style=for-the-badge&logo=Vite&logoColor=white)                   |
+| Programming Language | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white)                                                                                                |
+| Styling              |  <img src="https://img.shields.io/badge/-Tailwind%20CSS-%231a202c?style=for-the-badge&logo=tailwind-css" alt="TailwindCSS Badge" />|
+| Data Fetching        | ![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=Axios&logoColor=white) <img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=TanStack-Query&logoColor=white" alt="TanStack Query Badge" /> |
+| Formatting           | ![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white) ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)    |
+| Package Manager      | ![Npm](https://img.shields.io/badge/npm%20-grey?style=for-the-badge&logo=npm)                                                                                                                      |
+| Version Control      | ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)     |
+| State Management     | <img src="https://img.shields.io/badge/Zustand-2D3748?style=for-the-badge&logo=Zustand&logoColor=white" alt="Zustand Badge" />  |
+| Deploy               | <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=Vercel&logoColor=white" alt="Vercel Badge" /> |
 
 ---
 
@@ -60,3 +65,15 @@ git merge develop
 
 # 충돌 해결 후 커밋
 ```
+
+## 📖 아티클 모음
+
+🍀 김선화: [제목]() <br/>
+🍒 박유민: [제목]() <br/>
+💎 박진주: [제목]() <br/>
+🎀 염주원: [제목]() <br/>
+🍁 이가을: [다른 도메인 간 쿠키 이슈 해결기](https://velog.io/@gaeulzzang/다른-도메인-간-쿠키-이슈-해결기) <br/>
+
+<br/>
+<br/>
+
