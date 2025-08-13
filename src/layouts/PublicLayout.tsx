@@ -10,33 +10,27 @@ import onboardingSteps from '../constants/onboardingSteps';
 
 const PublicLayout = () => {
   const location = useLocation();
-  const navType = useNavigationType(); // 'POP' | 'PUSH' | 'REPLACE'
-
+  const navType = useNavigationType();
   const { getItem: getInviteUrl } = useLocalStorage(LOCAL_STORAGE_KEY.inviteUrl);
   const { getItem: getInvitePassword } = useLocalStorage(LOCAL_STORAGE_KEY.invitePassword);
   const { getItem: getIsInvite } = useLocalStorage(LOCAL_STORAGE_KEY.isInvite);
 
-  // /onboarding 제외한 1~3단계만 보호
+  // 온보딩 경로 중 `/onboarding`(0단계) 제외, 1~3단계 경로만 보호
   const guardedPaths = onboardingSteps.slice(1);
   const needsCheck = guardedPaths.includes(location.pathname);
-
-  // "직접 접근/뒤로가기" 같은 경우에만 가드 활성화
   const isManualOrHistoryNav = location.key === 'default' || navType === 'POP';
-
-  // 필요한 값 읽기 (필요할 때만)
   const inviteUrl = needsCheck && isManualOrHistoryNav ? getInviteUrl() : null;
   const invitePassword = needsCheck && isManualOrHistoryNav ? getInvitePassword() : null;
   const isInvite = getIsInvite();
+  const ONBOARDING_STATUS_KEY = 'onboarding-status';
+  const hasOnboardingStatus =
+    needsCheck && isManualOrHistoryNav && localStorage.getItem(ONBOARDING_STATUS_KEY) !== null;
 
-  // 유효한 초대 URL인지 체크
-  const isValidInviteUrl = (url?: string | null) => {
-    return !!url && url.includes('invite?token=');
-  };
-
+  // 리다이렉트
   if (
     needsCheck &&
     isManualOrHistoryNav &&
-    (!isValidInviteUrl(inviteUrl) || !invitePassword || isInvite)
+    (!inviteUrl || !invitePassword || isInvite || hasOnboardingStatus)
   ) {
     return <Navigate to="/onboarding" replace />;
   }
