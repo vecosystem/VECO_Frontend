@@ -30,7 +30,7 @@ export const useGetGoalDetail = (
   options?: UseQueryOptions<ViewGoalDetailDto, Error>
 ) => {
   return useQuery<ViewGoalDetailDto, Error>({
-    queryKey: ['GOAL_DETAIL', goalId],
+    queryKey: [queryKey.GOAL_DETAIL, goalId],
     queryFn: () => getGoalDetail(goalId),
     enabled: Number.isFinite(goalId),
     ...options,
