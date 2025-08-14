@@ -74,8 +74,6 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
   // goalId를 useParams로부터 가져옴
   const { goalId } = useParams<{ goalId: string }>();
-  console.log('현재 페이지 teamId:', teamId);
-  console.log('');
 
   // handleToggleMode: 상세페이지 모드 전환
   const handleToggleMode = useToggleMode({
@@ -186,15 +184,6 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     return base;
   }, [teamMembers]);
 
-  const bottomRef = useRef<HTMLDivElement | null>(null);
-  const shouldScrollRef = useRef(false);
-  const { mutate: addComment } = usePostComment({ bottomRef, shouldScrollRef, useDoubleRaf: true });
-
-  const handleAddComment = (content: string) => {
-    shouldScrollRef.current = true;
-    addComment(content);
-  };
-
   // 이슈 옵션: ['없음', ...팀 이슈 제목들]
   const issueOptions = useMemo(
     () =>
@@ -207,6 +196,15 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     () => Object.fromEntries((simpleIssues ?? []).map((i) => [i.title, i.id] as const)),
     [simpleIssues]
   );
+
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const shouldScrollRef = useRef(false);
+  const { mutate: addComment } = usePostComment({ bottomRef, shouldScrollRef, useDoubleRaf: true });
+
+  const handleAddComment = (content: string) => {
+    shouldScrollRef.current = true;
+    addComment(content);
+  };
 
   return (
     <div className="flex flex-1 flex-col min-h-max gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem]">
