@@ -96,9 +96,9 @@ export const protectedRoutes: RouteObject[] = [
 
           // 목표 관련 라우트
           { path: 'goal', element: <GoalHome /> },
-          { path: 'goal/detail/create', element: <GoalDetail initialMode="create" /> },
-          { path: 'goal/:goalId', element: <GoalDetail initialMode="view" /> },
-          { path: 'goal/:goalId/edit', element: <GoalDetail initialMode="edit" /> },
+          { path: 'goal/detail/create', element: <GoalDetail /> },
+          { path: 'goal/:goalId', element: <GoalDetail /> },
+          { path: 'goal/:goalId/edit', element: <GoalDetail /> },
 
           // 이슈 관련 라우트
           { path: 'issue', element: <IssueHome /> },
