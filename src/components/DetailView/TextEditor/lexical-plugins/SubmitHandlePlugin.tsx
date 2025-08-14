@@ -4,7 +4,7 @@
 
 import { forwardRef, useImperativeHandle } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { serializeEditor } from '../../../../utils/lexicalSerialize';
+import { serializeEditor } from '../../../../utils/editorStateIO';
 
 export type SubmitHandleRef = {
   getJson: () => string; // 상세페이지에서 '작성 완료' 버튼 눌러서 한번 제출 시 직렬화
