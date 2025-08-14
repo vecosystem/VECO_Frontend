@@ -10,14 +10,13 @@ import { useCallback } from 'react';
 type Mode = 'create' | 'view' | 'edit';
 
 interface UseToggleModeProps {
-  mode: Mode;
-  setMode: (mode: Mode) => void;
+  currentMode: Mode;
   type: 'goal' | 'issue' | 'ext';
-  id?: number; // 초기값은 optional, 실행시 override 가능
+  id?: number; // 실행 시 override 가능
   isDefaultTeam: boolean;
 }
 
-export const useToggleMode = ({ mode, setMode, type, id, isDefaultTeam }: UseToggleModeProps) => {
+export const useToggleMode = ({ currentMode, type, id, isDefaultTeam }: UseToggleModeProps) => {
   const navigate = useNavigate();
   const { teamId } = useParams<{ teamId: string }>();
 
@@ -34,17 +33,15 @@ export const useToggleMode = ({ mode, setMode, type, id, isDefaultTeam }: UseTog
       if (!base) return;
 
       const effectiveId = overrideId ?? id;
-      if (effectiveId == null) return; // id 없으면 아무 것도 하지 않음
+      if (effectiveId == null) return;
 
-      if (mode === 'create' || mode === 'edit') {
-        setMode('view');
-        navigate(`${base}/${effectiveId}`, { replace: mode === 'create' }); // create 모드일 때만 replace 적용하여 기존 생성 페이지 기록 삭제
-      } else if (mode === 'view') {
-        setMode('edit');
+      if (currentMode === 'create' || currentMode === 'edit') {
+        navigate(`${base}/${effectiveId}`, { replace: currentMode === 'create' });
+      } else if (currentMode === 'view') {
         navigate(`${base}/${effectiveId}/edit`);
       }
     },
-    [getBasePath, mode, id, navigate, setMode]
+    [getBasePath, currentMode, id, navigate]
   );
 
   return handleToggleMode;

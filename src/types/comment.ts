@@ -1,22 +1,31 @@
 export type CategoryType = 'ISSUE' | 'GOAL' | 'EXTERNAL';
 
-// 개별 댓글
-export type Comment = {
-  id: string;
-  profileUrl: string;
-  nickname: string;
-  createdAt: string; // ISO datetime string
-  content: string;
+export type Author = {
+  authorId: number;
+  authorName: string;
+  profileImageUrl: string;
 };
 
-//댓글 리스트
-export type ResponseCommentListDto = {
-  cnt: number;
-  info: Comment[];
+export type Comment = {
+  commentId: number;
+  content: string;
+  createdAt: Date;
+  author: Author;
+};
+
+export type CommentListResponse = {
+  totalSize: number;
+  comments: Comment[];
 };
 
 export type PostCommentRequest = {
   content: string;
   category: CategoryType;
   targetId: number;
+};
+
+//댓글 리스트
+export type ResponseCommentListDto = {
+  cnt: number;
+  info: Comment[];
 };

@@ -1,7 +1,7 @@
 // GoalDetail.tsx
 // 목표 상세페이지
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import DetailHeader from '../../components/DetailView/DetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -25,7 +25,10 @@ import { formatDateDot, formatDateHyphen } from '../../utils/formatDate';
 import { useToggleMode } from '../../hooks/useToggleMode';
 import CommentInput from '../../components/DetailView/Comment/CommentInput';
 import { usePostComment } from '../../apis/comment/usePostComment';
-import type { SubmitHandleRef } from '../../components/DetailView/TextEditor/lexical-plugins/SubmitHandlePlugin';
+import {
+  EMPTY_EDITOR_STATE,
+  type SubmitHandleRef,
+} from '../../components/DetailView/TextEditor/lexical-plugins/SubmitHandlePlugin';
 import type { CreateGoalDetailDto, UpdateGoalDetailDto } from '../../types/goal';
 import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail';
 import { useParams } from 'react-router-dom';
@@ -46,18 +49,15 @@ import { useHydrateGoalDetail } from '../../hooks/useHydrateGoalDetail';
 import { useGetGoalDetail } from '../../apis/goal/useGetGoalDetail';
 import { useUpdateGoal } from '../../apis/goal/usePatchGoalDetail';
 import { useGoalDeadlinePatch } from '../../hooks/useGoalDeadlinePatch';
+import { useDetailMode } from '../../hooks/useDetailMode';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
  * (2) view - 조회 모드: 작성 완료 후 조회할 때
  * (3) edit - 수정 모드: 작성 완료 후 다시 수정할 때
  */
-interface GoalDetailProps {
-  initialMode: 'create' | 'view' | 'edit';
-}
 
-const GoalDetail = ({ initialMode }: GoalDetailProps) => {
-  const [mode, setMode] = useState<'create' | 'view' | 'edit'>(initialMode); // 상세페이지 모드 상태
+const GoalDetail = () => {
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
 
   const [title, setTitle] = useState('');
@@ -66,19 +66,20 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const [managersId, setManagersId] = useState<number[]>([]);
   const [issuesId, setIssuesId] = useState<number[]>([]);
 
-  const editorSubmitRef = useRef<SubmitHandleRef | null>(null); // 텍스트에디터 컨텐츠 접근용 플래그
-  const isSubmittingRequestRef = useRef(false); // API 제출 중복 요청 가드 플래그
+  const { mode, id: numericGoalId } = useDetailMode(); // ✅ 공통 처리
   const teamId = Number(useParams<{ teamId: string }>().teamId);
 
-  // goalId를 useParams로부터 가져옴
-  const { goalId: goalIdParam } = useParams<{ goalId: string }>();
-  const numericGoalId = Number(goalIdParam);
+  const editorSubmitRef = useRef<SubmitHandleRef | null>(null); // 텍스트에디터 컨텐츠 접근용 플래그
+  const isSubmittingRequestRef = useRef(false); // API 제출 중복 요청 가드 플래그
 
   const { data: workspaceMembers } = useGetWorkspaceMembers();
   const { data: simpleIssues } = useGetSimpleIssueList(teamId); // 팀 이슈 간단 조회 (select로 info만 나오도록 되어 있음)
   const { mutate: submitGoal, isPending: isCreating } = useCreateGoal(teamId);
-  const { data: goalDetail } = useGetGoalDetail(numericGoalId);
-  const { mutate: updateGoal, isPending: isUpdating } = useUpdateGoal(teamId, numericGoalId);
+  const { data: goalDetail } = useGetGoalDetail(numericGoalId as number);
+  const { mutate: updateGoal, isPending: isUpdating } = useUpdateGoal(
+    teamId,
+    numericGoalId as number
+  );
 
   const isCreatingGlobal = useIsMutating({ mutationKey: [mutationKey.GOAL_CREATE, teamId] }) > 0;
   const isSaving = isCreating || isUpdating || isCreatingGlobal || isSubmittingRequestRef.current;
@@ -121,10 +122,9 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
   // handleToggleMode: 상세페이지 모드 전환
   const handleToggleMode = useToggleMode({
-    mode,
-    setMode,
+    currentMode: mode,
     type: 'goal',
-    id: Number(goalIdParam),
+    id: Number(numericGoalId),
     isDefaultTeam: false,
   });
 
@@ -261,7 +261,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
   useHydrateGoalDetail({
     goalDetail,
-    goalId: numericGoalId,
+    goalId: numericGoalId ?? -1,
     editorRef: editorSubmitRef,
     workspaceMembers,
     simpleIssues,
@@ -283,6 +283,21 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     addComment(content);
   };
 
+  useEffect(() => {
+    if (mode === 'create') {
+      setTitle('');
+      setState('NONE');
+      setPriority('NONE');
+      setManagersId([]);
+      setIssuesId([]);
+      setSelectedDate([null, null]);
+      // 등등 초기값 리셋
+      editorSubmitRef.current?.loadJson(EMPTY_EDITOR_STATE);
+    }
+  }, [mode]);
+
+  console.log('모드 ', mode);
+  console.log('goalId', numericGoalId);
   return (
     <div className="flex flex-1 flex-col min-h-max gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem]">
       {/* 상세페이지 헤더 */}
