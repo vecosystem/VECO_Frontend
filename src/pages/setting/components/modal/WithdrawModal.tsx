@@ -1,5 +1,7 @@
+import { deleteWithdraw } from '../../../../apis/auth.ts';
 import { useModalActions } from '../../../../hooks/useModal.ts';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface WithdrawModalProps {
   title?: string;
@@ -17,10 +19,22 @@ const WithdrawModal = ({
   onClose,
 }: WithdrawModalProps) => {
   const { closeModal } = useModalActions();
+  const navigate = useNavigate();
 
   const handleClose = () => {
     closeModal();
     onClose?.();
+  };
+
+  const handleWithdraw = async () => {
+    try {
+      await deleteWithdraw();
+      closeModal();
+      localStorage.clear();
+      navigate('/onboarding');
+    } catch (error) {
+      console.error('회원 탈퇴 실패:', error);
+    }
   };
 
   return createPortal(
@@ -40,7 +54,7 @@ const WithdrawModal = ({
         <div className={`flex justify-end`}>
           <button
             className={`px-[1.6rem] py-[0.8rem] rounded-[0.6rem] text-gray-100 font-small-b ${disabled ? 'bg-gray-300 cursor-not-allowed' : 'bg-error-400 cursor-pointer'}`}
-            onClick={handleClose}
+            onClick={handleWithdraw}
             disabled={disabled}
           >
             탈퇴하기
