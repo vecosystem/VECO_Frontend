@@ -33,6 +33,10 @@ import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts'
 import CommentInput from '../../components/DetailView/Comment/CommentInput';
 import { usePostComment } from '../../apis/comment/usePostComment';
 import MultiSelectPropertyItem from '../../components/DetailView/MultiSelectPropertyItem.tsx';
+import type { SubmitHandleRef } from '../../components/DetailView/TextEditor/lexical-plugins/SubmitHandlePlugin.tsx';
+import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail.ts';
+import { useIsMutating } from '@tanstack/react-query';
+import { mutationKey } from '../../constants/mutationKey.ts';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -44,7 +48,28 @@ interface ExternalDetailProps {
 }
 
 const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
+  const [mode, setMode] = useState<'create' | 'view' | 'edit'>(initialMode); // 상세페이지 모드 상태
+  const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
+
+  const [title, setTitle] = useState('');
+
+  const editorSubmitRef = useRef<SubmitHandleRef | null>(null); // 텍스트에디터 컨텐츠 접근용 플래그
+  const isSubmittingRequestRef = useRef(false); // API 제출 중복 요청 가드 플래그
   const teamId = Number(useParams<{ teamId: string }>().teamId);
+  /**
+   * @todo: 나중에 useCreateExt로 제대로 연결
+   */
+  const { isPending } = useCreateGoal(teamId);
+  const isCreatingGlobal =
+    useIsMutating({ mutationKey: [mutationKey.EXTERNAL_CREATE, teamId] }) > 0;
+  const isSaving = isPending || isCreatingGlobal || isSubmittingRequestRef.current;
+
+  const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
+  const { openDropdown } = useDropdownActions();
+
+  const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
+  const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
+
   const { data: externalIssues } = useGetExternalSimpleIssue(teamId);
   const issues = externalIssues?.info.map((issue) => issue.title) || [];
 
@@ -57,22 +82,14 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
         )
     : [];
 
-  const [mode, setMode] = useState<'create' | 'view' | 'edit'>(initialMode); // 상세페이지 모드 상태
-  const [title, setTitle] = useState('');
-  const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
-  const fakeExtId = '123'; // 임시 extId (TODO: 실제로는 외부이슈 작성 API로부터 받아온 result의 extId 값을 사용 예정)
-
-  const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
-  const { openDropdown } = useDropdownActions();
-
-  const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
-  const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
+  // extId를 useParams로부터 가져옴
+  const { extId } = useParams<{ extId: string }>();
 
   const handleToggleMode = useToggleMode({
     mode,
     setMode,
     type: 'ext',
-    id: fakeExtId,
+    id: Number(extId),
     isDefaultTeam: false,
   });
 
@@ -147,7 +164,7 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
           />
 
           {/* 상세 설명 작성 컴포넌트 */}
-          <DetailTextEditor isEditable={isEditable} />
+          <DetailTextEditor isEditable={isEditable} editorSubmitRef={editorSubmitRef} />
           <div className="flex flex-col min-h-max gap-[1.6rem]">
             {/* 댓글 영역 */}
             {isCompleted && <CommentSection />}
@@ -240,6 +257,7 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
           <CompletionButton
             isTitleFilled={title.trim().length > 0}
             isCompleted={isCompleted}
+            isSaving={isSaving}
             onToggle={handleToggleMode}
           />
         </div>
