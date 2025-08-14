@@ -1,7 +1,7 @@
 // GoalDetail.tsx
 // 목표 상세페이지
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import DetailHeader from '../../components/DetailView/DetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -37,6 +37,7 @@ import type { StatusCode, PriorityCode } from '../../types/listItem';
 import { useMemo } from 'react';
 import { useGetWorkspaceMembers } from '../../apis/setting/useGetWorkspaceMembers';
 import { useGetSimpleIssueList } from '../../apis/issue/useGetSimpleIssueList';
+import { useHydrateGoalDetail } from '../../hooks/useHydrateGoalDetail';
 import { useGetGoalDetail } from '../../apis/goal/useGetGoalDetail';
 
 /** 상세페이지 모드 구분
@@ -60,12 +61,17 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
   const editorSubmitRef = useRef<SubmitHandleRef | null>(null); // 텍스트에디터 컨텐츠 접근용 플래그
   const isSubmittingRequestRef = useRef(false); // API 제출 중복 요청 가드 플래그
-  const hydratedRef = useRef(false); // 최초 1회만 조회 데이터로 상태/에디터 하이드레이션
 
   const teamId = Number(useParams<{ teamId: string }>().teamId);
+
+  // goalId를 useParams로부터 가져옴
+  const { goalId: goalIdParam } = useParams<{ goalId: string }>();
+  const numericGoalId = Number(goalIdParam);
+
   const { data: workspaceMembers } = useGetWorkspaceMembers();
   const { data: simpleIssues } = useGetSimpleIssueList(teamId); // 팀 이슈 간단 조회 (select로 info만 나오도록 되어 있음)
   const { mutate: submitGoal, isPending } = useCreateGoal(teamId);
+  const { data: goalDetail } = useGetGoalDetail(numericGoalId);
   const isCreatingGlobal = useIsMutating({ mutationKey: [mutationKey.GOAL_CREATE, teamId] }) > 0;
   const isSaving = isPending || isCreatingGlobal || isSubmittingRequestRef.current;
 
@@ -75,12 +81,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
 
-  // goalId를 useParams로부터 가져옴
-  const { goalId: goalIdParam } = useParams<{ goalId: string }>();
-  const numericGoalId = Number(goalIdParam);
-
   // 상세 조회 훅: goalId가 있을 때만 자동 실행됨
-  const { data: goalDetail } = useGetGoalDetail(numericGoalId);
   const queryClient = useQueryClient();
 
   // handleToggleMode: 상세페이지 모드 전환
@@ -208,44 +209,20 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     [simpleIssues]
   );
 
-  // 상세페이지 조회 데이터 -> 로컬 상태 및 에디터 반영
-  useEffect(() => {
-    if (!goalDetail) return;
-    if (!Number.isFinite(numericGoalId)) return;
-    if (hydratedRef.current) return; // 최초 1회만 하이드레이션
-
-    // 1) 제목/상태/우선순위
-    setTitle(goalDetail.title ?? '');
-    setState((goalDetail.state ?? 'NONE') as StatusCode);
-    setPriority((goalDetail.priority ?? 'NONE') as PriorityCode);
-
-    // 2) 기한(문자열 -> Date)
-    const s = goalDetail.deadline?.start ? new Date(goalDetail.deadline.start) : null;
-    const e = goalDetail.deadline?.end ? new Date(goalDetail.deadline.end) : null;
-    setSelectedDate([s, e]);
-
-    // 3) 담당자(이름 -> id 매핑) : nameToId 준비 후 세팅
-    if (Object.keys(nameToId).length > 0) {
-      const managerNames = goalDetail.managers?.info?.map((m) => m.name) ?? [];
-      const managerIds = managerNames
-        .map((name) => nameToId[name])
-        .filter((v): v is number => typeof v === 'number');
-      setManagersId(managerIds);
-    }
-
-    // 4) 이슈(id 포함 가정: SimpleIssueListDto)
-    const issueIds =
-      goalDetail.issues?.info?.map((i) => i.id).filter((n) => typeof n === 'number') ?? [];
-    setIssuesId(issueIds);
-
-    // 5) Lexical 에디터 역직렬화 (JSON 문자열 주입)
-    const json = goalDetail.content ?? '';
-    if (editorSubmitRef.current && typeof editorSubmitRef.current.loadJson === 'function') {
-      editorSubmitRef.current.loadJson(json);
-    }
-
-    hydratedRef.current = true;
-  }, [goalDetail, numericGoalId, nameToId]);
+  useHydrateGoalDetail({
+    goalDetail,
+    goalId: numericGoalId,
+    editorRef: editorSubmitRef,
+    workspaceMembers,
+    simpleIssues,
+    nameToId,
+    setTitle,
+    setState,
+    setPriority,
+    setSelectedDate,
+    setManagersId,
+    setIssuesId,
+  });
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const shouldScrollRef = useRef(false);

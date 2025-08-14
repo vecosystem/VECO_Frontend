@@ -15,7 +15,7 @@ const getGoalDetail = async (goalId: number): Promise<ViewGoalDetailDto> => {
 
     if (!response.data.result) return Promise.reject(response);
     if (response.data?.isSuccess) {
-      console.error('조회 성공:', response.data.result);
+      console.log('조회 성공:', response.data.result);
     }
     return response.data.result;
   } catch (error) {
