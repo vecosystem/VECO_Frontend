@@ -1,5 +1,7 @@
 // EnterAsParagraphPlugin.tsx
-// 엔터 키를 치면 새로운 paragraph 블록을 생성하는 플러그인
+// 엔터키를 누르면 새 단락을 만들되,
+// - Shift+Enter: 기본 소프트 브레이크 유지
+// - 리스트 안: 이 플러그인은 관여하지 않음(기본 리스트 엔터 동작 유지)
 
 import { useEffect } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -9,8 +11,10 @@ import {
   $getSelection,
   $isRangeSelection,
   $createParagraphNode,
+  $getRoot,
 } from 'lexical';
 import { $isCodeNode } from '@lexical/code';
+import { $isListNode, $isListItemNode } from '@lexical/list';
 
 export default function EnterAsParagraphPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -19,35 +23,51 @@ export default function EnterAsParagraphPlugin() {
     return editor.registerCommand(
       KEY_ENTER_COMMAND,
       (e: KeyboardEvent) => {
-        // Shift+Enter는 소프트 줄바꿈: 기본 동작 사용(개입하지 않음)
+        // Shift+Enter는 기본 소프트 줄바꿈 유지
         if (e.shiftKey) return false;
 
-        // 기본 엔터를 새 문단으로 강제
         let handled = false;
+
         editor.update(() => {
           const selection = $getSelection();
           if (!$isRangeSelection(selection)) return;
 
-          const top = selection.anchor.getNode().getTopLevelElementOrThrow();
+          const anchor = selection.anchor.getNode();
+          const top = anchor.getTopLevelElementOrThrow();
 
-          // 코드블록 안에서는 엔터 = 새 줄(기본 동작 유지)
-          if ($isCodeNode(top)) return;
-
-          e.preventDefault();
-
-          // 현재 블록을 문단 보장(헤딩/인용 등도 엔터 시 새 문단 시작하도록)
-          if (top.getType() !== 'paragraph') {
-            const para = $createParagraphNode();
-            top.replace(para);
-            para.selectEnd();
+          // ✅ 리스트(ul/ol)나 리스트 아이템 내부라면, 이 플러그인은 개입하지 않음
+          //    → return false로 Lexical 기본 리스트 엔터 동작(새 항목 생성/리스트 종료 등)에 맡김
+          if ($isListNode(top) || $isListItemNode(top)) {
+            handled = false;
+            return;
           }
 
-          // 새 문단 삽입
-          const newPara = $createParagraphNode();
-          top.insertAfter(newPara);
-          newPara.select(); // 커서를 새 문단 시작으로
-          handled = true; // 처리 완료
+          // 코드블록 안에서는 개입하지 않음(원하는 경우만 허용)
+          if ($isCodeNode(top)) {
+            handled = false;
+            return;
+          }
+
+          // 여기부터는 일반 블록일 때만 엔터를 새 단락으로 강제
+          const paragraph = $createParagraphNode();
+          const root = $getRoot();
+          const isRoot = top.getKey() === root.getKey();
+          const parent = top.getParent();
+
+          if (isRoot) {
+            root.append(paragraph);
+          } else if (parent) {
+            top.insertAfter(paragraph);
+          } else {
+            // 만약 top이 detach되어 부모가 없으면 루트에 폴백
+            root.append(paragraph);
+          }
+
+          paragraph.select();
+          handled = true;
         });
+
+        // handled=true면 기본 엔터 동작 막음, false면 기본 로직(리스트 처럼) 진행
         return handled;
       },
       COMMAND_PRIORITY_LOW
