@@ -129,7 +129,10 @@ const MultiSelectPropertyItem = ({
 
   return (
     <div
-      onClick={() => setIsOpen((v) => !v)}
+      onClick={() => {
+        if (options.length === 0) return; // 옵션 없으면 클릭 막기
+        setIsOpen((v) => !v);
+      }}
       className="flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200 cursor-pointer"
     >
       {/* 아이콘 */}
@@ -138,7 +141,11 @@ const MultiSelectPropertyItem = ({
       {/* 텍스트 + 드롭다운 */}
       <div className="relative flex items-center max-w-[27.4rem] gap-[0.4rem]">
         <div className="font-body-r flex items-center min-w-0 max-w-[27.4rem]">
-          {renderDisplay(selected)}
+          {defaultValue === '이슈' && options.length === 0 ? (
+            <div className="cursor-default">팀 내에 이슈가 없습니다.</div>
+          ) : (
+            renderDisplay(selected)
+          )}
         </div>
 
         {isOpen && (

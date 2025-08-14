@@ -23,7 +23,6 @@ import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot, formatDateHyphen } from '../../utils/formatDate';
 import { useToggleMode } from '../../hooks/useToggleMode';
-
 import CommentInput from '../../components/DetailView/Comment/CommentInput';
 import { usePostComment } from '../../apis/comment/usePostComment';
 import type { SubmitHandleRef } from '../../components/DetailView/TextEditor/lexical-plugins/SubmitHandlePlugin';
@@ -35,6 +34,9 @@ import { mutationKey } from '../../constants/mutationKey';
 import MultiSelectPropertyItem from '../../components/DetailView/MultiSelectPropertyItem';
 import { statusLabelToCode, priorityLabelToCode } from '../../types/detailitem';
 import type { StatusCode, PriorityCode } from '../../types/listItem';
+import { useMemo } from 'react';
+import { useGetWorkspaceMembers } from '../../apis/setting/useGetWorkspaceMembers';
+import { useGetSimpleIssueList } from '../../apis/issue/useGetSimpleIssueList';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -58,6 +60,8 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const editorSubmitRef = useRef<SubmitHandleRef | null>(null); // 텍스트에디터 컨텐츠 접근용 플래그
   const isSubmittingRequestRef = useRef(false); // API 제출 중복 요청 가드 플래그
   const teamId = Number(useParams<{ teamId: string }>().teamId);
+  const { data: workspaceMembers } = useGetWorkspaceMembers();
+  const { data: simpleIssues } = useGetSimpleIssueList(teamId); // 팀 이슈 간단 조회 (select로 info만 나오도록 되어 있음)
   const { mutate: submitGoal, isPending } = useCreateGoal(teamId);
   const isCreatingGlobal = useIsMutating({ mutationKey: [mutationKey.GOAL_CREATE, teamId] }) > 0;
   const isSaving = isPending || isCreatingGlobal || isSubmittingRequestRef.current;
@@ -155,17 +159,32 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     긴급: pr4,
   };
 
-  // '담당자' 속성 아이콘 매핑 (TODO: API로부터 받아온 데이터로 대체 예정)
-  const managerIconMap = {
-    담당자: IcProfile,
-    없음: IcProfile,
-    전채운: IcProfile,
-    염주원: IcProfile,
-    박유민: IcProfile,
-    이가을: IcProfile,
-    김선화: IcProfile,
-    박진주: IcProfile,
-  };
+  // 해당 teamId에 속한 멤버만 필터
+  const teamMembers = useMemo(
+    () => (workspaceMembers ?? []).filter((m) => m.teams?.some((t) => t.teamId === teamId)),
+    [workspaceMembers, teamId]
+  );
+
+  // '담당자' 항목의 옵션: ['없음', ...팀 멤버 이름들]
+  const managerOptions = useMemo(() => ['없음', ...teamMembers.map((m) => m.name)], [teamMembers]);
+
+  // 멤버 이름 → 멤버 id 매핑 (선택 결과를 id 배열로 변환용)
+  const nameToId = useMemo(
+    () => Object.fromEntries(teamMembers.map((m) => [m.name, m.memberId] as const)),
+    [teamMembers]
+  );
+
+  // '담당자' 아이콘 매핑: 이름 → 프로필 URL(없으면 기본 아이콘), '담당자'/'없음' 기본 아이콘 포함
+  const managerIconMap = useMemo<Record<string, string>>(() => {
+    const base: Record<string, string> = {
+      담당자: IcProfile,
+      없음: IcProfile,
+    };
+    for (const m of teamMembers) {
+      base[m.name] = m.profileImageUrl || IcProfile; // null/빈값 fallback
+    }
+    return base;
+  }, [teamMembers]);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const shouldScrollRef = useRef(false);
@@ -175,6 +194,19 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     shouldScrollRef.current = true;
     addComment(content);
   };
+
+  // 이슈 옵션: ['없음', ...팀 이슈 제목들]
+  const issueOptions = useMemo(
+    () =>
+      simpleIssues && simpleIssues.length > 0 ? ['없음', ...simpleIssues.map((i) => i.title)] : [],
+    [simpleIssues]
+  );
+
+  // 이슈 제목 -> 이슈 id 매핑 (선택 결과를 id 배열로 변환용)
+  const issueTitleToId = useMemo(
+    () => Object.fromEntries((simpleIssues ?? []).map((i) => [i.title, i.id] as const)),
+    [simpleIssues]
+  );
 
   return (
     <div className="flex flex-1 flex-col min-h-max gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem]">
@@ -239,11 +271,18 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
               <div onClick={(e) => e.stopPropagation()}>
                 <MultiSelectPropertyItem
                   defaultValue="담당자"
-                  options={['없음', '전채운', '염주원', '박유민', '이가을', '김선화', '박진주']}
+                  options={managerOptions}
                   iconMap={managerIconMap}
                   onChange={(labels) => {
-                    if (labels.includes('없음')) return setManagersId([]);
-                    // TODO: 라벨 -> 사용자 id 매핑 후 setManagersId(mappedIds)
+                    if (labels.includes('없음')) {
+                      setManagersId([]);
+                      return;
+                    }
+
+                    const ids = labels
+                      .map((label) => nameToId[label])
+                      .filter((v): v is number => typeof v === 'number');
+                    setManagersId(ids);
                   }}
                 />
               </div>
@@ -273,15 +312,19 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
               <div onClick={(e) => e.stopPropagation()}>
                 <MultiSelectPropertyItem
                   defaultValue="이슈"
-                  options={[
-                    '기능 정의: 구현할 핵심 기능과 어쩌구 저쩌구 텍스트가 길어지면 이렇게 표시',
-                    '와이어프레임 디자인',
-                    '컴포넌트 정리',
-                    'UI 구현',
-                    'API 연동',
-                  ]}
+                  options={issueOptions}
                   onChange={(labels) => {
-                    // TODO: 라벨 -> issueId 매핑 후 setIssuesId(mappedIssueIds)
+                    // '없음'을 선택하면 비우기
+                    if (labels.includes('없음')) {
+                      setIssuesId([]);
+                      return;
+                    }
+                    // 제목 -> id 매핑
+                    const ids = labels
+                      .map((label) => issueTitleToId[label])
+                      .filter((v): v is number => typeof v === 'number');
+
+                    setIssuesId(ids);
                   }}
                 />
               </div>
