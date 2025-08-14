@@ -77,7 +77,6 @@ export type CreateGoalResultDto = {
 export type ResponseCreateGoalDetailDto = CommonResponse<CreateGoalResultDto>;
 
 // 개별 댓글
-// TODO: 서버 측에서 데이터 구조 수정되면 반영
 export type GoalComment = {
   name: string;
   profileUrl: string;
@@ -119,17 +118,9 @@ export type UpdateGoalDetailDto = {
   issuesId?: number[] | null;
 };
 
-type UpdatableGoalFields = {
-  // 응답: 변경된 필드만 내려오기 때문에 Partial로 정의
-  title: string;
-  content: string;
-  state: string;
-  priority: string;
-  managersId: number[];
-  deadline: Deadline;
-  issuesId: number[];
+export type UpdateGoalResultDto = {
+  goalId: number;
+  updatedAt: string; // LocalDateTime
 };
-
-export type UpdateGoalResultDto = Partial<UpdatableGoalFields>;
 
 export type ResponseUpdateGoalDetailDto = CommonResponse<UpdateGoalResultDto>;
