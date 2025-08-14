@@ -43,7 +43,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
   const [mode, setMode] = useState<'create' | 'view' | 'edit'>(initialMode); // 상세페이지 모드 상태
   const [title, setTitle] = useState('');
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
-  const [option, setOption] = useState<string>('이슈');
+  const [selectedIssues, setSelectedIssues] = useState<string[]>([]); // '이슈' 속성의 옵션 다중 선택
   const fakeGoalId = '123'; // 임시 goalId (TODO: 실제로는 목표 작성 API로부터 받아온 result의 goalId 값을 사용 예정)
 
   const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
@@ -66,6 +66,22 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
     if (start && end) return `${formatDateDot(start)} - ${formatDateDot(end)}`; // 시작일과 종료일 둘 다 있을 경우
     if (start || end) return formatDateDot(start ?? end!); // 날짜 하나만 선택된 경우
     return '기한'; // 날짜 선택 안 된 경우: default로 '기한' 글씨가 그대로 보이도록
+  };
+
+  // '이슈' 속성의 표시 텍스트를 결정하는 함수
+  const getIssueDisplay = (values: string[]) => {
+    const count = values.length;
+    // 선택된 옵션이 없으면 기본으로 '이슈' 텍스트 노출
+    if (count === 0) return '이슈';
+    // 선택된 옵션이 1개이면 해당 옵션명만 노출
+    if (count === 1) return <span className="max-w-[27.4rem] truncate block">{values[0]}</span>;
+    // 선택된 옵션이 2개 이상이면 첫번째 옵션명과 '외 n개'로 처리
+    return (
+      <div className="flex items-center gap-2 max-w-[27.4rem]">
+        <span className="text-gray-600 truncate block">{values[0]}</span>
+        <span className="flex-shrink-0 text-gray-500"> 외 {count - 1}개</span>
+      </div>
+    );
   };
 
   // '우선순위' 속성 아이콘 매핑
@@ -188,8 +204,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
 
               {/* (5) 이슈 */}
               <div
-                onClick={(e) => {
-                  e.stopPropagation();
+                onClick={() => {
                   openDropdown({ name: '이슈' });
                 }}
                 className={`flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200 cursor-pointer`}
@@ -199,8 +214,8 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
 
                 {/* 속성 이름 */}
                 <div className="flex relative">
-                  {/* 속성 항목명 */}
-                  <p className="font-body-r text-gray-600 max-w-[27.4rem] truncate">{option}</p>
+                  {/* 선택한 옵션 개수별로 표시 텍스트를 다르게 렌더링 */}
+                  <p className="font-body-r">{getIssueDisplay(selectedIssues)}</p>
 
                   {/* 드롭다운 오픈 */}
                   {isOpen && content?.name === '이슈' && (
@@ -210,9 +225,12 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
                         '기능 정의: 구현할 핵심 기능과 어쩌구 저쩌구 텍스트가 길어지면 이렇게 표시',
                         '와이어프레임 디자인',
                         '컴포넌트 정리',
+                        'UI 구현',
+                        'API 연동',
                       ]}
-                      onSelect={(value: string) => setOption(value)}
-                      onClose={closeDropdown}
+                      selected={selectedIssues}
+                      onChangeSelected={setSelectedIssues}
+                      onClose={closeDropdown} // 바깥 클릭으로만 닫힘
                     />
                   )}
                 </div>

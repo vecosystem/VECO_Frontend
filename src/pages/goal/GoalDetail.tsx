@@ -49,7 +49,7 @@ interface GoalDetailProps {
 const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const [mode, setMode] = useState<'create' | 'view' | 'edit'>(initialMode); // 상세페이지 모드 상태
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
-  const [option, setOption] = useState<string>('이슈');
+  const [selectedIssues, setSelectedIssues] = useState<string[]>([]); // '이슈' 속성의 옵션 다중 선택
 
   const [title, setTitle] = useState('');
   const [state, setState] = useState('PROGRESS'); // TODO: 이거 맞는지 확인
@@ -128,6 +128,22 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     return '기한'; // 날짜 선택 안 된 경우: default로 '기한' 글씨가 그대로 보이도록
   };
 
+  // '이슈' 속성의 표시 텍스트를 결정하는 함수
+  const getIssueDisplay = (values: string[]) => {
+    const count = values.length;
+    // 선택된 옵션이 없으면 기본으로 '이슈' 텍스트 노출
+    if (count === 0) return '이슈';
+    // 선택된 옵션이 1개이면 해당 옵션명만 노출
+    if (count === 1) return <span className="max-w-[27.4rem] truncate block">{values[0]}</span>;
+    // 선택된 옵션이 2개 이상이면 첫번째 옵션명과 '외 n개'로 처리
+    return (
+      <div className="flex items-center gap-2 max-w-[27.4rem]">
+        <span className="text-gray-600 truncate block">{values[0]}</span>
+        <span className="flex-shrink-0 text-gray-500"> 외 {count - 1}개</span>
+      </div>
+    );
+  };
+
   // '우선순위' 속성 아이콘 매핑
   const priorityIconMap = {
     우선순위: pr3,
@@ -143,7 +159,11 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     담당자: IcProfile,
     없음: IcProfile,
     전채운: IcProfile,
-    전시현: IcProfile,
+    염주원: IcProfile,
+    박유민: IcProfile,
+    이가을: IcProfile,
+    김선화: IcProfile,
+    박진주: IcProfile,
   };
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -218,7 +238,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
               <div onClick={(e) => e.stopPropagation()}>
                 <PropertyItem
                   defaultValue="담당자"
-                  options={['없음', '전채운', '전시현']}
+                  options={['없음', '전채운', '염주원', '박유민', '이가을', '김선화', '박진주']}
                   iconMap={userIconMap}
                 />
               </div>
@@ -248,8 +268,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
               {/* (5) 이슈 */}
               <div
-                onClick={(e) => {
-                  e.stopPropagation();
+                onClick={() => {
                   openDropdown({ name: '이슈' });
                 }}
                 className={`flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200 cursor-pointer`}
@@ -258,9 +277,9 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                 <img src={IcIssue} alt="이슈" />
 
                 {/* 속성 이름 */}
-                <div className="flex relative">
-                  {/* 속성 항목명 */}
-                  <p className="font-body-r text-gray-600 max-w-[27.4rem] truncate">{option}</p>
+                <div className="relative flex">
+                  {/* 선택한 옵션 개수별로 표시 텍스트를 다르게 렌더링 */}
+                  <p className="font-body-r">{getIssueDisplay(selectedIssues)}</p>
 
                   {/* 드롭다운 오픈 */}
                   {isOpen && content?.name === '이슈' && (
@@ -270,9 +289,12 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                         '기능 정의: 구현할 핵심 기능과 어쩌구 저쩌구 텍스트가 길어지면 이렇게 표시',
                         '와이어프레임 디자인',
                         '컴포넌트 정리',
+                        'UI 구현',
+                        'API 연동',
                       ]}
-                      onSelect={(value: string) => setOption(value)}
-                      onClose={closeDropdown}
+                      selected={selectedIssues}
+                      onChangeSelected={setSelectedIssues}
+                      onClose={closeDropdown} // 바깥 클릭으로만 닫힘
                     />
                   )}
                 </div>
