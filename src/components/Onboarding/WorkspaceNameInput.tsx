@@ -25,10 +25,10 @@ const WorkspaceNameInput = ({
   const { mutateAsync: createUrl, isPending } = usePostCreateWorkspaceUrl();
 
   const handleCheck = async () => {
-    // 중복 요청 혹은 이미 URL 있으면 재요청 막기
+    // 1) 중복 회피: 요청 진행 중이거나, 이미 URL이 있거나, 잠겨 있으면 종료
     if (isPending || workspaceUrl || isLocked) return;
 
-    // 입력값 유효성 검사
+    // 2) 유효성 검증 실패 시 에러 표시 & 값 초기화
     const validationError = validateWorkspaceName(workspaceName);
     if (validationError) {
       setError(validationError);
@@ -37,9 +37,11 @@ const WorkspaceNameInput = ({
       return;
     }
 
+    // 3) 단일 실행: URL 생성 API 호출
     const res = await createUrl({ workspaceName });
     const url = res.result?.workspaceUrl ?? '';
 
+    // 4) 성공 처리: 값 고정 + 잠금
     setError('');
     setWorkspaceName(workspaceName);
     setWorkspaceUrl(url);
