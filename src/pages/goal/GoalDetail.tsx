@@ -66,7 +66,6 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
   const editorSubmitRef = useRef<SubmitHandleRef | null>(null); // 텍스트에디터 컨텐츠 접근용 플래그
   const isSubmittingRequestRef = useRef(false); // API 제출 중복 요청 가드 플래그
-
   const teamId = Number(useParams<{ teamId: string }>().teamId);
 
   // goalId를 useParams로부터 가져옴
