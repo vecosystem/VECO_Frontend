@@ -19,7 +19,7 @@ const getGoalName = async (teamId: number): Promise<string> => {
 
 export const useGetGoalName = (teamId: number) => {
   return useQuery({
-    queryKey: [queryKey.GOAL, teamId],
+    queryKey: [queryKey.GOAL_NAME, teamId],
     queryFn: () => getGoalName(teamId),
   });
 };

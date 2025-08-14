@@ -13,7 +13,7 @@ interface UseToggleModeProps {
   mode: Mode;
   setMode: (mode: Mode) => void;
   type: 'goal' | 'issue' | 'ext';
-  id: string;
+  id?: number; // 초기값은 optional, 실행시 override 가능
   isDefaultTeam: boolean;
 }
 
@@ -21,28 +21,31 @@ export const useToggleMode = ({ mode, setMode, type, id, isDefaultTeam }: UseTog
   const navigate = useNavigate();
   const { teamId } = useParams<{ teamId: string }>();
 
-  const getBasePath = () => {
+  const getBasePath = useCallback(() => {
     if (!teamId) return '';
     return isDefaultTeam
       ? `/workspace/default/team/${teamId}/${type}`
       : `/workspace/team/${teamId}/${type}`;
-  };
+  }, [isDefaultTeam, teamId, type]);
 
-  const handleToggleMode = useCallback(() => {
-    const base = getBasePath();
-    if (!base) return;
+  const handleToggleMode = useCallback(
+    (overrideId?: number) => {
+      const base = getBasePath();
+      if (!base) return;
 
-    if (mode === 'create') {
-      setMode('view');
-      navigate(`${base}/${id}`);
-    } else if (mode === 'edit') {
-      setMode('view');
-      navigate(`${base}/${id}`);
-    } else if (mode === 'view') {
-      setMode('edit');
-      navigate(`${base}/${id}/edit`);
-    }
-  }, [mode, id, navigate, setMode, isDefaultTeam, teamId, type]);
+      const effectiveId = overrideId ?? id;
+      if (effectiveId == null) return; // id 없으면 아무 것도 하지 않음
+
+      if (mode === 'create' || mode === 'edit') {
+        setMode('view');
+        navigate(`${base}/${effectiveId}`, { replace: mode === 'create' }); // create 모드일 때만 replace 적용하여 기존 생성 페이지 기록 삭제
+      } else if (mode === 'view') {
+        setMode('edit');
+        navigate(`${base}/${effectiveId}/edit`);
+      }
+    },
+    [getBasePath, mode, id, navigate, setMode]
+  );
 
   return handleToggleMode;
 };
