@@ -7,7 +7,7 @@
  * - 이 컴포넌트를 활용하는 속성 항목: '담당자', '이슈'
  */
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import IcIssue from '../../assets/icons/issue.svg';
 import IcProfile from '../../assets/icons/user-circle-sm.svg';
 import MultiSelectDropdown from '../Dropdown/MultiSelectDropdown';
@@ -19,6 +19,7 @@ interface MultiPropertyItemProps {
   iconMap?: Record<string, string>; // 옵션명 -> 아이콘
   displayText?: (values: string[]) => React.ReactNode; // 표시 텍스트 커스터마이즈 (선택 1개/다수)
   onChange?: (labels: string[]) => void; // 부모에 선택 배열 전달
+  selected?: string[];
 }
 
 /** 담당자 텍스트 표시 포맷:
@@ -70,18 +71,35 @@ const MultiSelectPropertyItem = ({
   iconMap,
   displayText,
   onChange,
+  selected,
 }: MultiPropertyItemProps) => {
-  const [selected, setSelected] = useState<string[]>([]);
+  const isControlled = Array.isArray(selected);
+
+  // 비제어일 때만 내부 상태 사용
+  const [internalSelected, setInternalSelected] = useState<string[]>(selected ?? []);
+
+  // selected prop 변경 시 내부 상태 동기화
+  useEffect(() => {
+    if (isControlled) {
+      setInternalSelected(selected as string[]);
+    }
+  }, [isControlled, selected]);
+
+  const currentSelected = isControlled ? (selected as string[]) : internalSelected;
+
   const [isOpen, setIsOpen] = useState(false);
 
-  // 부모에도 알리고 내부 상태도 갱신하는 헬퍼
+  // 부모에도 알리고 내부 상태도 갱신
   const handleChangeSelected = (next: string[]) => {
-    setSelected(next);
-    onChange?.(next); // 외부로 변경사항 알림
+    if (!isControlled) {
+      setInternalSelected(next);
+    }
+    onChange?.(next);
   };
 
   // 표시할 속성 텍스트
   const renderDisplay = useMemo(() => {
+    if (displayText) return displayText;
     if (defaultValue === '이슈') return getIssueDisplay;
     return getManagerDisplay(defaultValue || '담당자');
   }, [displayText, defaultValue]);
@@ -95,19 +113,21 @@ const MultiSelectPropertyItem = ({
 
     // '담당자' 항목 아이콘 렌더링
     if (defaultValue === '담당자') {
-      const count = selected.length;
+      const count = currentSelected.length;
       if (count === 0) {
         // 기본 아이콘(있는 경우)
         const fallback = iconMap?.[defaultValue] ?? IcProfile;
         return <img src={fallback} alt="담당자" className="w-[1.8rem] h-[1.8rem] rounded-full" />;
       }
       if (count === 1) {
-        const src = iconMap?.[selected[0]] ?? IcProfile;
-        return <img src={src} alt={selected[0]} className="w-[1.8rem] h-[1.8rem] rounded-full" />;
+        const src = iconMap?.[currentSelected[0]] ?? IcProfile;
+        return (
+          <img src={src} alt={currentSelected[0]} className="w-[1.8rem] h-[1.8rem] rounded-full" />
+        );
       }
       // 2명 이상: 앞 두 명 겹쳐 표시
-      const a = selected[0];
-      const b = selected[1];
+      const a = currentSelected[0];
+      const b = currentSelected[1];
       const srcA = iconMap?.[a] ?? IcProfile;
       const srcB = iconMap?.[b] ?? IcProfile;
       return (
@@ -144,7 +164,7 @@ const MultiSelectPropertyItem = ({
           {defaultValue === '이슈' && options.length === 0 ? (
             <div className="cursor-default">팀 내에 이슈가 없습니다.</div>
           ) : (
-            renderDisplay(selected)
+            renderDisplay(currentSelected)
           )}
         </div>
 
@@ -153,14 +173,14 @@ const MultiSelectPropertyItem = ({
             {defaultValue === '이슈' ? (
               <ArrowDropdown
                 defaultValue="이슈"
-                selected={selected} // 단일 선택 로직
+                selected={currentSelected} // 단일 선택 로직
                 options={options}
                 onChangeSelected={handleChangeSelected}
                 onClose={() => setIsOpen(false)}
               />
             ) : (
               <MultiSelectDropdown
-                selected={selected}
+                selected={currentSelected}
                 defaultValue={defaultValue}
                 options={options}
                 onChangeSelected={handleChangeSelected}

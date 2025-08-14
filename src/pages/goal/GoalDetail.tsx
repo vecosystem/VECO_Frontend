@@ -29,14 +29,21 @@ import type { SubmitHandleRef } from '../../components/DetailView/TextEditor/lex
 import type { CreateGoalDetailDto } from '../../types/goal';
 import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail';
 import { useParams } from 'react-router-dom';
-import { useIsMutating } from '@tanstack/react-query';
+import { useIsMutating, useQueryClient } from '@tanstack/react-query';
 import { mutationKey } from '../../constants/mutationKey';
 import MultiSelectPropertyItem from '../../components/DetailView/MultiSelectPropertyItem';
 import { statusLabelToCode, priorityLabelToCode } from '../../types/detailitem';
-import type { StatusCode, PriorityCode } from '../../types/listItem';
+import {
+  type StatusCode,
+  type PriorityCode,
+  STATUS_LABELS,
+  PRIORITY_LABELS,
+} from '../../types/listItem';
 import { useMemo } from 'react';
 import { useGetWorkspaceMembers } from '../../apis/setting/useGetWorkspaceMembers';
 import { useGetSimpleIssueList } from '../../apis/issue/useGetSimpleIssueList';
+import { useHydrateGoalDetail } from '../../hooks/useHydrateGoalDetail';
+import { useGetGoalDetail } from '../../apis/goal/useGetGoalDetail';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -60,9 +67,15 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const editorSubmitRef = useRef<SubmitHandleRef | null>(null); // 텍스트에디터 컨텐츠 접근용 플래그
   const isSubmittingRequestRef = useRef(false); // API 제출 중복 요청 가드 플래그
   const teamId = Number(useParams<{ teamId: string }>().teamId);
+
+  // goalId를 useParams로부터 가져옴
+  const { goalId: goalIdParam } = useParams<{ goalId: string }>();
+  const numericGoalId = Number(goalIdParam);
+
   const { data: workspaceMembers } = useGetWorkspaceMembers();
   const { data: simpleIssues } = useGetSimpleIssueList(teamId); // 팀 이슈 간단 조회 (select로 info만 나오도록 되어 있음)
   const { mutate: submitGoal, isPending } = useCreateGoal(teamId);
+  const { data: goalDetail } = useGetGoalDetail(numericGoalId);
   const isCreatingGlobal = useIsMutating({ mutationKey: [mutationKey.GOAL_CREATE, teamId] }) > 0;
   const isSaving = isPending || isCreatingGlobal || isSubmittingRequestRef.current;
 
@@ -72,15 +85,31 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
 
-  // goalId를 useParams로부터 가져옴
-  const { goalId } = useParams<{ goalId: string }>();
+  // 상세 조회 훅: goalId가 있을 때만 자동 실행됨
+  const queryClient = useQueryClient();
+
+  // 단일 선택 라벨
+  const selectedStatusLabel = STATUS_LABELS[state];
+  const selectedPriorityLabel = PRIORITY_LABELS[priority];
+
+  // 다중 선택 라벨
+  const selectedManagerLabels = useMemo(() => {
+    if (!workspaceMembers) return [];
+    const idToName = new Map(workspaceMembers.map((m) => [m.memberId, m.name] as const));
+    return managersId.map((id) => idToName.get(id)).filter((v): v is string => !!v);
+  }, [managersId, workspaceMembers]);
+
+  const selectedIssueLabels = useMemo(() => {
+    const idToTitle = new Map((simpleIssues ?? []).map((i) => [i.id, i.title] as const));
+    return issuesId.map((id) => idToTitle.get(id)).filter((v): v is string => !!v);
+  }, [issuesId, simpleIssues]);
 
   // handleToggleMode: 상세페이지 모드 전환
   const handleToggleMode = useToggleMode({
     mode,
     setMode,
     type: 'goal',
-    id: Number(goalId),
+    id: Number(goalIdParam),
     isDefaultTeam: false,
   });
 
@@ -133,6 +162,9 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const handleCompletion = () => {
     if (!isCompleted) {
       // create 또는 edit 모드에서 view 모드로 전환하려는 시점
+      if (Number.isFinite(numericGoalId)) {
+        queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', numericGoalId] }); // 동일 goalId에서 view로 들어갈 때도 최신화
+      }
       handleSubmit(); // 저장 성공 시 모드 전환
     } else {
       handleToggleMode(); // 모드 전환
@@ -197,6 +229,21 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     [simpleIssues]
   );
 
+  useHydrateGoalDetail({
+    goalDetail,
+    goalId: numericGoalId,
+    editorRef: editorSubmitRef,
+    workspaceMembers,
+    simpleIssues,
+    nameToId,
+    setTitle,
+    setState,
+    setPriority,
+    setSelectedDate,
+    setManagersId,
+    setIssuesId,
+  });
+
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const shouldScrollRef = useRef(false);
   const { mutate: addComment } = usePostComment({ bottomRef, shouldScrollRef, useDoubleRaf: true });
@@ -254,6 +301,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                     return getStatusColor(code);
                   }}
                   onSelect={(label) => setState(statusLabelToCode[label] ?? 'NONE')}
+                  selected={selectedStatusLabel}
                 />
               </div>
               {/* (2) 우선순위 */}
@@ -263,6 +311,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                   options={['없음', '긴급', '높음', '중간', '낮음']}
                   iconMap={priorityIconMap}
                   onSelect={(label) => setPriority(priorityLabelToCode[label] ?? 'NONE')}
+                  selected={selectedPriorityLabel}
                 />
               </div>
               {/* (3) 담당자 */}
@@ -282,6 +331,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                       .filter((v): v is number => typeof v === 'number');
                     setManagersId(ids);
                   }}
+                  selected={selectedManagerLabels}
                 />
               </div>
               {/* (4) 기한 */}
@@ -324,6 +374,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
                     setIssuesId(ids);
                   }}
+                  selected={selectedIssueLabels}
                 />
               </div>
             </div>
