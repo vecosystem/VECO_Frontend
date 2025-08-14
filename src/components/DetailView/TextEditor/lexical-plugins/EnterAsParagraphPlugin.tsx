@@ -1,5 +1,5 @@
 // EnterAsParagraphPlugin.tsx
-// 엔터키를 누르면 새 단락을 만들되,
+// 엔터키를 누르면 새 단락을 만드는 플러그인
 // - Shift+Enter: 기본 소프트 브레이크 유지
 // - 리스트 안: 이 플러그인은 관여하지 않음(기본 리스트 엔터 동작 유지)
 
@@ -35,8 +35,8 @@ export default function EnterAsParagraphPlugin() {
           const anchor = selection.anchor.getNode();
           const top = anchor.getTopLevelElementOrThrow();
 
-          // ✅ 리스트(ul/ol)나 리스트 아이템 내부라면, 이 플러그인은 개입하지 않음
-          //    → return false로 Lexical 기본 리스트 엔터 동작(새 항목 생성/리스트 종료 등)에 맡김
+          // 리스트(ul/ol)나 리스트 아이템 내부라면, 이 플러그인은 개입하지 않음
+          // return false로 Lexical 기본 리스트 엔터 동작(새 항목 생성/리스트 종료 등)에 맡김
           if ($isListNode(top) || $isListItemNode(top)) {
             handled = false;
             return;
