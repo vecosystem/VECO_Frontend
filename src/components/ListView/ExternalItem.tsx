@@ -135,7 +135,7 @@ export const ExternalItem = (props: Partial<ExternalItemProps>) => {
             {/* 목표 아이콘 */}
             <img src={goalIcon} alt="date" className="w-[2.4rem] h-[2.4rem]" />
             {/* 목표명 */}
-            <div className="truncate">{goalTitle}</div>
+            <div className="truncate min-w-full">{goalTitle}</div>
           </div>
         )}
 
