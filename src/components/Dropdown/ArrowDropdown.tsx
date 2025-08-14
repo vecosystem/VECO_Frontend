@@ -9,7 +9,7 @@ interface ArrowDropdownProps {
   options: string[]; // 드롭다운에 표시할 옵션들
   selected: string[]; // 현재 선택 상태
   onChangeSelected: (values: string[]) => void; // 선택 변경 시 전체 선택 배열 반환
-  onClose: () => void; // 바깥 클릭 시 닫기 (useDropdownRef로만 닫힘)
+  onClose: () => void; // 바깥 클릭 시 닫힘
   className?: string;
 }
 
@@ -27,9 +27,7 @@ const ArrowDropdown = ({
   const handleToggle = useCallback(
     (option: string) => {
       const set = new Set(selected);
-      if (set.has(option))
-        set.delete(option); // 클릭한 옵션이 이미 selected[]에 있다면 선택 해제
-      else set.add(option); // 클릭한 옵션이 기존에 선택되어 있지 않다면 선택 추가
+      set.has(option) ? set.delete(option) : set.add(option); // 클릭한 옵션이 이미 selected[]에 있다면 선택 해제, 없다면 선택 추가
       onChangeSelected(Array.from(set)); // 부모 컴포넌트에 옵션 선택 변경 알림
     },
     [selected, onChangeSelected]
@@ -38,6 +36,7 @@ const ArrowDropdown = ({
   return (
     <div
       ref={dropdownRef}
+      onClick={(e) => e.stopPropagation()}
       style={{ boxShadow: '0px 4px 12px 0px rgba(0, 0, 0, 0.15)' }}
       className={`absolute z-30 top-0 left-0 flex flex-col w-[27.4rem]
       border border-gray-400 bg-white rounded-[0.4rem] ${className ?? ''}`}
@@ -55,14 +54,14 @@ const ArrowDropdown = ({
           <div
             key={option}
             onClick={() => handleToggle(option)}
-            className={`flex justify-between py-[0.75rem] px-[1.2rem] ${isSelected ? 'bg-gray-200' : 'hover:bg-gray-100'}`}
+            className={`flex justify-between py-[0.75rem] px-[1.2rem] ${isSelected ? 'bg-gray-200' : ''}`}
           >
             <div className="flex gap-1 min-w-0">
               <span className={`font-xsmall-r text-gray-600 me-[0.4rem] truncate`}>{option}</span>
               <img
                 src={IcCheck}
                 alt="selected"
-                className={`shrink-0 transition-opacity ${isSelected ? 'opacity-100' : 'opacity-0'}`}
+                className={`opacity-0 ${isSelected ? 'opacity-100' : 'opacity-0'}`}
               />
             </div>
 

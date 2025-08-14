@@ -14,9 +14,8 @@ import pr1 from '../../assets/icons/pr-1-sm.svg';
 import pr2 from '../../assets/icons/pr-2-sm.svg';
 import pr3 from '../../assets/icons/pr-3-sm.svg';
 import pr4 from '../../assets/icons/pr-4-sm.svg';
-import IcProfile from '../../assets/icons/user-circle-sm.svg';
 import IcCalendar from '../../assets/icons/date-lg.svg';
-import IcIssue from '../../assets/icons/issue.svg';
+import IcProfile from '../../assets/icons/user-base.svg';
 
 import { getStatusColor } from '../../utils/listItemUtils';
 import { statusLabelToCode } from '../../types/detailitem';
@@ -24,7 +23,6 @@ import CommentSection from '../../components/DetailView/Comment/CommentSection';
 import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot } from '../../utils/formatDate';
-import ArrowDropdown from '../../components/Dropdown/ArrowDropdown';
 import { useToggleMode } from '../../hooks/useToggleMode';
 
 import CommentInput from '../../components/DetailView/Comment/CommentInput';
@@ -36,6 +34,7 @@ import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail';
 import { useParams } from 'react-router-dom';
 import { useIsMutating } from '@tanstack/react-query';
 import { mutationKey } from '../../constants/mutationKey';
+import MultiSelectPropertyItem from '../../components/DetailView/MultiSelectPropertyItem';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -49,7 +48,6 @@ interface GoalDetailProps {
 const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const [mode, setMode] = useState<'create' | 'view' | 'edit'>(initialMode); // 상세페이지 모드 상태
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
-  const [selectedIssues, setSelectedIssues] = useState<string[]>([]); // '이슈' 속성의 옵션 다중 선택
 
   const [title, setTitle] = useState('');
   const [state, setState] = useState('PROGRESS'); // TODO: 이거 맞는지 확인
@@ -66,7 +64,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const isSaving = isPending || isCreatingGlobal || isSubmittingRequestRef.current;
 
   const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
-  const { openDropdown, closeDropdown } = useDropdownActions();
+  const { openDropdown } = useDropdownActions();
 
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
@@ -128,22 +126,6 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     return '기한'; // 날짜 선택 안 된 경우: default로 '기한' 글씨가 그대로 보이도록
   };
 
-  // '이슈' 속성의 표시 텍스트를 결정하는 함수
-  const getIssueDisplay = (values: string[]) => {
-    const count = values.length;
-    // 선택된 옵션이 없으면 기본으로 '이슈' 텍스트 노출
-    if (count === 0) return '이슈';
-    // 선택된 옵션이 1개이면 해당 옵션명만 노출
-    if (count === 1) return <span className="max-w-[27.4rem] truncate block">{values[0]}</span>;
-    // 선택된 옵션이 2개 이상이면 첫번째 옵션명과 '외 n개'로 처리
-    return (
-      <div className="flex items-center gap-2 max-w-[27.4rem]">
-        <span className="text-gray-600 truncate block">{values[0]}</span>
-        <span className="flex-shrink-0 text-gray-500"> 외 {count - 1}개</span>
-      </div>
-    );
-  };
-
   // '우선순위' 속성 아이콘 매핑
   const priorityIconMap = {
     우선순위: pr3,
@@ -155,7 +137,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   };
 
   // '담당자' 속성 아이콘 매핑 (나중에 API로부터 받아온 데이터로 대체 예정)
-  const userIconMap = {
+  const managerIconMap = {
     담당자: IcProfile,
     없음: IcProfile,
     전채운: IcProfile,
@@ -224,7 +206,6 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                   }}
                 />
               </div>
-
               {/* (2) 우선순위 */}
               <div onClick={(e) => e.stopPropagation()}>
                 <PropertyItem
@@ -233,16 +214,14 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                   iconMap={priorityIconMap}
                 />
               </div>
-
               {/* (3) 담당자 */}
               <div onClick={(e) => e.stopPropagation()}>
-                <PropertyItem
+                <MultiSelectPropertyItem
                   defaultValue="담당자"
                   options={['없음', '전채운', '염주원', '박유민', '이가을', '김선화', '박진주']}
-                  iconMap={userIconMap}
+                  iconMap={managerIconMap}
                 />
               </div>
-
               {/* (4) 기한 */}
               <div
                 onClick={(e) => {
@@ -265,39 +244,18 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                   )}
                 </div>
               </div>
-
               {/* (5) 이슈 */}
-              <div
-                onClick={() => {
-                  openDropdown({ name: '이슈' });
-                }}
-                className={`flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200 cursor-pointer`}
-              >
-                {/* 속성 아이콘 */}
-                <img src={IcIssue} alt="이슈" />
-
-                {/* 속성 이름 */}
-                <div className="relative flex">
-                  {/* 선택한 옵션 개수별로 표시 텍스트를 다르게 렌더링 */}
-                  <p className="font-body-r">{getIssueDisplay(selectedIssues)}</p>
-
-                  {/* 드롭다운 오픈 */}
-                  {isOpen && content?.name === '이슈' && (
-                    <ArrowDropdown
-                      defaultValue={'이슈'}
-                      options={[
-                        '기능 정의: 구현할 핵심 기능과 어쩌구 저쩌구 텍스트가 길어지면 이렇게 표시',
-                        '와이어프레임 디자인',
-                        '컴포넌트 정리',
-                        'UI 구현',
-                        'API 연동',
-                      ]}
-                      selected={selectedIssues}
-                      onChangeSelected={setSelectedIssues}
-                      onClose={closeDropdown} // 바깥 클릭으로만 닫힘
-                    />
-                  )}
-                </div>
+              <div onClick={(e) => e.stopPropagation()}>
+                <MultiSelectPropertyItem
+                  defaultValue="이슈"
+                  options={[
+                    '기능 정의: 구현할 핵심 기능과 어쩌구 저쩌구 텍스트가 길어지면 이렇게 표시',
+                    '와이어프레임 디자인',
+                    '컴포넌트 정리',
+                    'UI 구현',
+                    'API 연동',
+                  ]}
+                />
               </div>
             </div>
           </div>
