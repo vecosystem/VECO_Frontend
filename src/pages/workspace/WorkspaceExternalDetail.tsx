@@ -59,7 +59,7 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
   /**
    * @todo: 나중에 useCreateExt로 제대로 연결
    */
-  const { mutate: submitGoal, isPending } = useCreateGoal(teamId);
+  const { isPending } = useCreateGoal(teamId);
   const isCreatingGlobal =
     useIsMutating({ mutationKey: [mutationKey.EXTERNAL_CREATE, teamId] }) > 0;
   const isSaving = isPending || isCreatingGlobal || isSubmittingRequestRef.current;

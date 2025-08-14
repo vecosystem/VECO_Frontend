@@ -56,7 +56,7 @@ const WorkspaceIssueDetail = ({ initialMode }: WorkspaceIssueDetailProps) => {
   /**
    * @todo: 나중에 useCreateIssue로 제대로 연결
    */
-  const { mutate: submitGoal, isPending } = useCreateGoal(teamId);
+  const { isPending } = useCreateGoal(teamId);
   const isCreatingGlobal = useIsMutating({ mutationKey: [mutationKey.ISSUE_CREATE, teamId] }) > 0;
   const isSaving = isPending || isCreatingGlobal || isSubmittingRequestRef.current;
 
