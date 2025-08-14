@@ -14,7 +14,6 @@ const getExternalList = async (
       params: paginationDto,
     });
 
-    console.log('외부 연동 리스트 데이터 불러오기 성공', data);
     return data;
   } catch (error) {
     console.error('Error fetching external list:', error);
