@@ -14,7 +14,7 @@ import pr1 from '../../assets/icons/pr-1-sm.svg';
 import pr2 from '../../assets/icons/pr-2-sm.svg';
 import pr3 from '../../assets/icons/pr-3-sm.svg';
 import pr4 from '../../assets/icons/pr-4-sm.svg';
-import IcProfile from '../../assets/icons/user-circle-sm.svg';
+import IcProfile from '../../assets/icons/user-base.svg';
 import IcCalendar from '../../assets/icons/date-lg.svg';
 import IcGoal from '../../assets/icons/goal.svg';
 import IcExt from '../../assets/icons/external.svg';
@@ -32,6 +32,7 @@ import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts'
 
 import CommentInput from '../../components/DetailView/Comment/CommentInput';
 import { usePostComment } from '../../apis/comment/usePostComment';
+import MultiSelectPropertyItem from '../../components/DetailView/MultiSelectPropertyItem.tsx';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -94,11 +95,15 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
   };
 
   // '담당자' 속성 아이콘 매핑 (나중에 API로부터 받아온 데이터로 대체 예정)
-  const userIconMap = {
+  const managerIconMap = {
     담당자: IcProfile,
     없음: IcProfile,
     전채운: IcProfile,
-    전시현: IcProfile,
+    염주원: IcProfile,
+    박유민: IcProfile,
+    이가을: IcProfile,
+    김선화: IcProfile,
+    박진주: IcProfile,
   };
 
   const goalIconMap = {
@@ -185,10 +190,10 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
 
               {/* (3) 담당자 */}
               <div onClick={(e) => e.stopPropagation()}>
-                <PropertyItem
+                <MultiSelectPropertyItem
                   defaultValue="담당자"
-                  options={['없음', '전채운', '전시현']}
-                  iconMap={userIconMap}
+                  options={['없음', '전채운', '염주원', '박유민', '이가을', '김선화', '박진주']}
+                  iconMap={managerIconMap}
                 />
               </div>
 
