@@ -18,23 +18,23 @@ import IcCalendar from '../../assets/icons/date-lg.svg';
 import IcProfile from '../../assets/icons/user-base.svg';
 
 import { getStatusColor } from '../../utils/listItemUtils';
-import { statusLabelToCode } from '../../types/detailitem';
 import CommentSection from '../../components/DetailView/Comment/CommentSection';
 import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
-import { formatDateDot } from '../../utils/formatDate';
+import { formatDateDot, formatDateHyphen } from '../../utils/formatDate';
 import { useToggleMode } from '../../hooks/useToggleMode';
 
 import CommentInput from '../../components/DetailView/Comment/CommentInput';
 import { usePostComment } from '../../apis/comment/usePostComment';
 import type { SubmitHandleRef } from '../../components/DetailView/TextEditor/lexical-plugins/SubmitHandlePlugin';
 import type { CreateGoalDetailDto } from '../../types/goal';
-import type { Deadline } from '../../types/external';
 import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail';
 import { useParams } from 'react-router-dom';
 import { useIsMutating } from '@tanstack/react-query';
 import { mutationKey } from '../../constants/mutationKey';
 import MultiSelectPropertyItem from '../../components/DetailView/MultiSelectPropertyItem';
+import { statusLabelToCode, priorityLabelToCode } from '../../types/detailitem';
+import type { StatusCode, PriorityCode } from '../../types/listItem';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -50,10 +50,9 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
 
   const [title, setTitle] = useState('');
-  const [state, setState] = useState('PROGRESS'); // TODO: 이거 맞는지 확인
-  const [priority, setPriority] = useState('MEDIUM'); // TODO: 이거 맞는지 확인
+  const [state, setState] = useState<StatusCode>('NONE');
+  const [priority, setPriority] = useState<PriorityCode>('NONE');
   const [managersId, setManagersId] = useState<number[]>([]);
-  const [deadline, setDeadline] = useState<Deadline>({ start: '', end: '' });
   const [issuesId, setIssuesId] = useState<number[]>([]);
 
   const editorSubmitRef = useRef<SubmitHandleRef | null>(null); // 텍스트에디터 컨텐츠 접근용 플래그
@@ -71,6 +70,8 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
   // goalId를 useParams로부터 가져옴
   const { goalId } = useParams<{ goalId: string }>();
+  console.log('현재 페이지 teamId:', teamId);
+  console.log('');
 
   // handleToggleMode: 상세페이지 모드 전환
   const handleToggleMode = useToggleMode({
@@ -83,16 +84,27 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
   // handleSubmit: Lexical 에디터 내용을 JSON 문자열로 직렬화 후 API로 전송하는 함수
   const handleSubmit = () => {
+    if (editorSubmitRef.current) {
+      // ref를 통해 직렬화된 에디터 내용 가져오기
+      const serialized = editorSubmitRef.current?.getJson() ?? '';
+      const byteLength = new TextEncoder().encode(serialized).length;
+      console.log('Serialized JSON byte length:', byteLength);
+    }
+
     if (isSaving) return;
     isSubmittingRequestRef.current = true;
 
+    const [start, end] = selectedDate;
     const payload: CreateGoalDetailDto = {
       title,
       content: editorSubmitRef.current?.getJson() ?? '', // content가 비었으면 그냥 빈 문자열로
       state,
       priority,
       managersId,
-      deadline,
+      deadline: {
+        start: formatDateHyphen(start),
+        end: formatDateHyphen(end),
+      },
       issuesId,
     };
 
@@ -136,7 +148,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     긴급: pr4,
   };
 
-  // '담당자' 속성 아이콘 매핑 (나중에 API로부터 받아온 데이터로 대체 예정)
+  // '담당자' 속성 아이콘 매핑 (TODO: API로부터 받아온 데이터로 대체 예정)
   const managerIconMap = {
     담당자: IcProfile,
     없음: IcProfile,
@@ -204,6 +216,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                     const code = statusLabelToCode[label] ?? 'NONE';
                     return getStatusColor(code);
                   }}
+                  onSelect={(label) => setState(statusLabelToCode[label] ?? 'NONE')}
                 />
               </div>
               {/* (2) 우선순위 */}
@@ -212,6 +225,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                   defaultValue="우선순위"
                   options={['없음', '긴급', '높음', '중간', '낮음']}
                   iconMap={priorityIconMap}
+                  onSelect={(label) => setPriority(priorityLabelToCode[label] ?? 'NONE')}
                 />
               </div>
               {/* (3) 담당자 */}
@@ -220,6 +234,10 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                   defaultValue="담당자"
                   options={['없음', '전채운', '염주원', '박유민', '이가을', '김선화', '박진주']}
                   iconMap={managerIconMap}
+                  onChange={(labels) => {
+                    if (labels.includes('없음')) return setManagersId([]);
+                    // TODO: 라벨 -> 사용자 id 매핑 후 setManagersId(mappedIds)
+                  }}
                 />
               </div>
               {/* (4) 기한 */}
@@ -255,6 +273,9 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                     'UI 구현',
                     'API 연동',
                   ]}
+                  onChange={(labels) => {
+                    // TODO: 라벨 -> issueId 매핑 후 setIssuesId(mappedIssueIds)
+                  }}
                 />
               </div>
             </div>

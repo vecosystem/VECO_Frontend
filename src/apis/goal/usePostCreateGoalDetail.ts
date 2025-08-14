@@ -12,6 +12,7 @@ import { queryKey } from '../../constants/queryKey.ts';
  * 목표 작성 함수
  * - 목표 상세페이지 생성 모드에서 사용
  * - pages/goal/GoalDetail.tsx
+ * - pages/goal/WorkspaceGoalDetail.tsx
  */
 const createGoal = async (
   teamId: number,
@@ -19,22 +20,29 @@ const createGoal = async (
 ): Promise<CreateGoalResultDto> => {
   try {
     // API 요청의 중복 처리 방지를 위한 멱등성 키를 직접 헤더에 세팅
-    const idempotencyKey = crypto.randomUUID();
+    /*const idempotencyKey =
+      typeof crypto !== 'undefined' && 'randomUUID' in crypto
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random()}`;
+    */
 
     const response = await axiosInstance.post<ResponseCreateGoalDetailDto>(
       `/api/teams/${teamId}/goals`,
-      payload,
+      payload
+      /*
       {
         headers: {
           'Idempotency-Key': idempotencyKey,
         },
-      }
+      } */
     );
 
     if (!response.data.result) return Promise.reject(response);
     return response.data.result;
-  } catch (error) {
+  } catch (error: any) {
     console.error('목표 작성 실패:', error);
+    console.log('👉 RESPONSE STATUS:', error?.response?.status);
+    console.log('👉 RESPONSE DATA:', error?.response?.data);
     throw error;
   }
 };

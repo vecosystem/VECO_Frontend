@@ -77,6 +77,7 @@ export type CreateGoalResultDto = {
 export type ResponseCreateGoalDetailDto = CommonResponse<CreateGoalResultDto>;
 
 // 개별 댓글
+// TODO: 현재 comment.ts에 있는 데이터 구조와 다름. 확인하고 서버 측에서 수정되면 반영.
 export type GoalComment = {
   name: string;
   profileUrl: string;

@@ -20,7 +20,7 @@ import IcGoal from '../../assets/icons/goal.svg';
 import IcExt from '../../assets/icons/external.svg';
 
 import { getStatusColor } from '../../utils/listItemUtils';
-import { statusLabelToCode } from '../../types/detailitem';
+import { statusLabelToCode } from '../../types/detailitem.ts';
 import CommentSection from '../../components/DetailView/Comment/CommentSection';
 import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';

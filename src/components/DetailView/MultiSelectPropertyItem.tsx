@@ -18,6 +18,7 @@ interface MultiPropertyItemProps {
   options: string[]; // 옵션 목록
   iconMap?: Record<string, string>; // 옵션명 -> 아이콘
   displayText?: (values: string[]) => React.ReactNode; // 표시 텍스트 커스터마이즈 (선택 1개/다수)
+  onChange?: (labels: string[]) => void; // 부모에 선택 배열 전달
 }
 
 /** 담당자 텍스트 표시 포맷:
@@ -68,9 +69,16 @@ const MultiSelectPropertyItem = ({
   options,
   iconMap,
   displayText,
+  onChange,
 }: MultiPropertyItemProps) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+
+  // 부모에도 알리고 내부 상태도 갱신하는 헬퍼
+  const handleChangeSelected = (next: string[]) => {
+    setSelected(next);
+    onChange?.(next); // 외부로 변경사항 알림
+  };
 
   // 표시할 속성 텍스트
   const renderDisplay = useMemo(() => {
@@ -140,7 +148,7 @@ const MultiSelectPropertyItem = ({
                 defaultValue="이슈"
                 selected={selected} // 단일 선택 로직
                 options={options}
-                onChangeSelected={setSelected}
+                onChangeSelected={handleChangeSelected}
                 onClose={() => setIsOpen(false)}
               />
             ) : (
@@ -148,7 +156,7 @@ const MultiSelectPropertyItem = ({
                 selected={selected}
                 defaultValue={defaultValue}
                 options={options}
-                onChangeSelected={setSelected}
+                onChangeSelected={handleChangeSelected}
                 onClose={() => setIsOpen(false)} // 바깥 클릭에서만 닫힘
               />
             )}

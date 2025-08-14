@@ -15,9 +15,16 @@ interface PropertyItemProps {
   options: string[]; // 드롭다운에 표시할 옵션들
   iconMap?: Record<string, string>; // 옵션과 아이콘 이미지 매핑
   getColor?: (value: string) => string; // '상태' 속성의 아이콘 색상 매핑
+  onSelect?: (label: string) => void; // 부모에 선택 라벨 전달
 }
 
-const PropertyItem = ({ defaultValue, options, iconMap, getColor }: PropertyItemProps) => {
+const PropertyItem = ({
+  defaultValue,
+  options,
+  iconMap,
+  getColor,
+  onSelect,
+}: PropertyItemProps) => {
   // placeholder가 options에 없는 값이라면 options[0]으로 대체
   const initialValue = defaultValue && iconMap && iconMap[defaultValue] ? defaultValue : options[0];
 
@@ -29,6 +36,7 @@ const PropertyItem = ({ defaultValue, options, iconMap, getColor }: PropertyItem
     setValue(option);
     setIcon(iconMap ? iconMap[option] : undefined);
     setIsOpen(false);
+    onSelect?.(option);
   };
 
   return (
