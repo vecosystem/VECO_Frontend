@@ -1,12 +1,7 @@
-/**
- * DetailTextEditor.tsx
- * 상세페이지 설명 작성 컴포넌트
- *
- * @todo
- * - onChange로 외부 state 연동 (@lexical/react/LexicalOnChangePlugin 붙여서 JSON으로 내보내면 저장/요청 api 연동 가능)
- */
+// DetailTextEditor.tsx
+// 상세페이지 설명 작성 컴포넌트
 
-import { type ComponentProps } from 'react';
+import { useMemo, type ComponentProps } from 'react';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
@@ -22,21 +17,43 @@ import { CodeHighlightPlugin } from './lexical-plugins/CodeHighlightPlugin';
 import { theme } from './editor-theme/editorTheme';
 import IndentPlugin from './lexical-plugins/IndentPlugin';
 import EnterAsParagraphPlugin from './lexical-plugins/EnterAsParagraphPlugin';
+import type { SubmitHandleRef } from './lexical-plugins/SubmitHandlePlugin';
+import SubmitHandlePlugin from './lexical-plugins/SubmitHandlePlugin';
+import { loadEditorStateFromJson } from '../../../utils/editorStateIO';
+import LoadFromJsonPlugin from './lexical-plugins/LoadFromJsonPlugin';
 
 // 부모 컴포넌트에서 전달하는 props
 interface DetailTextEditorProps {
   isEditable: boolean; // 편집가능 여부 - true일 때만 상세 설명 내용 입력 가능.
+  editorSubmitRef: React.RefObject<SubmitHandleRef | null>;
+  initialContentJson?: string | object; // 조회 or 수정 모드에서 내려오는 초기 콘텐츠 (JSON 문자열)
 }
 
-// initialConfig: LexicalEditor의 초기 설정 (필수 요소)
-const initialConfig: ComponentProps<typeof LexicalComposer>['initialConfig'] = {
-  namespace: 'DetailTextEditor',
-  onError: (e) => console.error(e),
-  nodes: lexicalnodes, // Lexical에서 사용할 커스텀 노드 클래스 목록을 전달.
-  theme: theme,
-};
+const DetailTextEditor = ({
+  isEditable,
+  editorSubmitRef,
+  initialContentJson,
+}: DetailTextEditorProps) => {
+  // initialConfig: LexicalEditor의 초기 설정 (필수 요소)
+  const initialConfig: ComponentProps<typeof LexicalComposer>['initialConfig'] = useMemo(
+    () => ({
+      namespace: 'DetailTextEditor',
+      onError: (e: unknown) => console.error(e),
+      nodes: lexicalnodes, // Lexical에서 사용할 커스텀 노드 클래스 목록을 전달.
+      theme,
+      // 최초 마운트 한정: 초기 상태 주입
+      editorState: (editor) => {
+        if (!initialContentJson) return;
+        try {
+          loadEditorStateFromJson(editor, initialContentJson);
+        } catch (e) {
+          console.error('초기 EditorState 로드 실패', e);
+        }
+      },
+    }),
+    [initialContentJson]
+  );
 
-const DetailTextEditor = ({ isEditable }: DetailTextEditorProps) => {
   return (
     <div className="w-full h-full flex-1 overflow-y-scroll basic-scroll resize-none">
       {/* LexicalComposer: LexicalEditor 인스턴스 생성 -> Context.Provider를 통해 전달 */}
@@ -54,6 +71,7 @@ const DetailTextEditor = ({ isEditable }: DetailTextEditorProps) => {
           <CodeHighlightPlugin />
           <IndentPlugin />
           <EnterAsParagraphPlugin />
+          <SubmitHandlePlugin ref={editorSubmitRef} /> {/* 부모의 ref 그대로 전달 */}
           {/* 텍스트에디터 본문 Contents */}
           <div className="relative flex-1 editor-root group">
             <RichTextPlugin
@@ -79,6 +97,8 @@ const DetailTextEditor = ({ isEditable }: DetailTextEditorProps) => {
           <HistoryPlugin /> {/* undo/redo 기능(ctrl + z 기능) 제공 */}
           <EditableTogglePlugin isEditable={isEditable} /> {/* 에디터 편집 가능 상태 토글 */}
           <AutoFocusPlugin /> {/* 에디터가 마운트될 때 자동으로 포커스 설정*/}
+          <LoadFromJsonPlugin json={initialContentJson} />{' '}
+          {/* 이후 prop이 변경돼도 JSON 재주입 가능 */}
         </div>
       </LexicalComposer>
     </div>

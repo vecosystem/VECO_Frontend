@@ -6,7 +6,6 @@ import onboardingSteps from '../../constants/onboardingSteps';
 import PrimaryButton from '../../components/Onboarding/PrimaryButton';
 
 const OnboardingFinish = () => {
-  // useOnboardingGuard(3); API 연결 후 훅 사용 예정
   return (
     <div className="flex flex-col items-center gap-[3.2rem]">
       {/* 인디케이터 */}

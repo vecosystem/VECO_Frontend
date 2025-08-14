@@ -19,7 +19,7 @@ const getIssueName = async (teamId: number): Promise<string> => {
 
 export const useGetIssueName = (teamId: number) => {
   return useQuery({
-    queryKey: [queryKey.GOAL, teamId],
+    queryKey: [queryKey.ISSUE_NAME, teamId],
     queryFn: () => getIssueName(teamId),
   });
 };

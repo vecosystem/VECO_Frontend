@@ -1,5 +1,4 @@
 import type { RouteObject } from 'react-router-dom';
-import AuthRedirect from '../components/AuthRedirect';
 import PublicLayout from '../layouts/PublicLayout';
 import OnboardingSSOLogin from '../pages/onboarding/OnboardingSSOLogin';
 import OnboardingCreateWorkspace from '../pages/onboarding/OnboardingCreateWorkspace';
@@ -11,6 +10,7 @@ import { HomePage } from '../pages/home/HomePage.tsx';
 import TokenLoading from '../pages/onboarding/TokenLoading.tsx';
 import InviteLoading from '../pages/onboarding/InviteLoading.tsx';
 import WorkspaceComplete from '../pages/workspace/WorkspaceComplete.tsx';
+import OnboardingGuard from '../components/Onboarding/OnboardingGuard.tsx';
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -20,9 +20,6 @@ export const publicRoutes: RouteObject[] = [
     children: [
       // 도메인 최상위: 백호 랜딩페이지
       { index: true, element: <HomePage /> },
-      // '시작하기'를 눌렀을 때 AuthRedirect 컴포넌트로 리다이렉트.
-      // 사용자 인증 여부에 따라 protected 또는 public 경로로 리다이렉트됨.
-      { path: 'entry', element: <AuthRedirect /> },
     ],
   },
   /* 초대 받은 사용자를 위한 리다이렉트 페이지 */
@@ -43,39 +40,39 @@ export const publicRoutes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: (
-          <div>
-            <OnboardingSSOLogin />
-          </div>
-        ),
+        element: <OnboardingSSOLogin />,
       },
       {
         path: 'workspace',
         element: (
-          <div>
+          <OnboardingGuard>
             <OnboardingCreateWorkspace />
-          </div>
+          </OnboardingGuard>
         ),
       },
       {
         path: 'invite',
         element: (
-          <div>
+          <OnboardingGuard>
             <OnboardingInviteMember />
-          </div>
+          </OnboardingGuard>
         ),
       },
       {
         path: 'fin',
         element: (
-          <div>
+          <OnboardingGuard>
             <OnboardingFinish />
-          </div>
+          </OnboardingGuard>
         ),
       },
       {
         path: 'input-pw',
-        element: <ParticipateWorkspaceInputPw />,
+        element: (
+          <OnboardingGuard>
+            <ParticipateWorkspaceInputPw />,
+          </OnboardingGuard>
+        ),
       },
       /* accessToken 저장 및 워크스페이스 조회하는 리다이렉트 페이지 */
       {

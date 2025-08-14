@@ -37,6 +37,7 @@ export type WorkspaceResponse = {
   workspaceName: string;
   workspaceImageUrl: string;
   workspaceUrl: string;
+  invitePassword: string;
   defaultTeamId: number;
 };
 
