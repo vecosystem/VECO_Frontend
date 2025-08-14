@@ -14,6 +14,9 @@ const getGoalDetail = async (goalId: number): Promise<ViewGoalDetailDto> => {
     const response = await axiosInstance.get<ResponseViewGoalDetailDto>(`/api/goals/${goalId}`);
 
     if (!response.data.result) return Promise.reject(response);
+    if (response.data?.isSuccess) {
+      console.error('조회 성공:', response.data.result);
+    }
     return response.data.result;
   } catch (error) {
     console.error('목표 상세 조회 실패', error);

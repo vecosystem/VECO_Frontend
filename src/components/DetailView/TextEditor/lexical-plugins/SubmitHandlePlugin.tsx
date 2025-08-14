@@ -5,9 +5,11 @@
 import { forwardRef, useImperativeHandle } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { serializeEditor } from '../../../../utils/editorStateIO';
+import type { EditorState } from 'lexical';
 
 export type SubmitHandleRef = {
   getJson: () => string; // 상세페이지에서 '작성 완료' 버튼 눌러서 한번 제출 시 직렬화
+  loadJson: (json: string) => void; // 역직렬화
 };
 
 const SubmitHandlePlugin = forwardRef<SubmitHandleRef>(function SubmitHandlePlugin(_, ref) {
@@ -15,6 +17,26 @@ const SubmitHandlePlugin = forwardRef<SubmitHandleRef>(function SubmitHandlePlug
 
   useImperativeHandle(ref, () => ({
     getJson: () => serializeEditor(editor),
+
+    // 역직렬화
+    loadJson: (json: string) => {
+      // 빈 값이면 아무 것도 하지 않음 (초기 상태 유지)
+      if (!json || json.trim() === '') return;
+
+      try {
+        // 문자열 -> 객체
+        const data = JSON.parse(json);
+
+        // Lexical이 이해할 수 있는 EditorState로 파싱
+        const editorState: EditorState = editor.parseEditorState(data);
+
+        // 파싱한 상태를 에디터에 반영
+        editor.setEditorState(editorState);
+      } catch (e) {
+        console.error('Lexical EditorState 역직렬화 실패: ', e);
+        // 파싱 실패 시에는 안전하게 아무 것도 하지 않음(기본 상태 유지)
+      }
+    },
   }));
 
   return null;

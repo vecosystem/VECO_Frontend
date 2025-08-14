@@ -1,7 +1,7 @@
 // GoalDetail.tsx
 // 목표 상세페이지
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import DetailHeader from '../../components/DetailView/DetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -29,7 +29,7 @@ import type { SubmitHandleRef } from '../../components/DetailView/TextEditor/lex
 import type { CreateGoalDetailDto } from '../../types/goal';
 import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail';
 import { useParams } from 'react-router-dom';
-import { useIsMutating } from '@tanstack/react-query';
+import { useIsMutating, useQueryClient } from '@tanstack/react-query';
 import { mutationKey } from '../../constants/mutationKey';
 import MultiSelectPropertyItem from '../../components/DetailView/MultiSelectPropertyItem';
 import { statusLabelToCode, priorityLabelToCode } from '../../types/detailitem';
@@ -37,6 +37,7 @@ import type { StatusCode, PriorityCode } from '../../types/listItem';
 import { useMemo } from 'react';
 import { useGetWorkspaceMembers } from '../../apis/setting/useGetWorkspaceMembers';
 import { useGetSimpleIssueList } from '../../apis/issue/useGetSimpleIssueList';
+import { useGetGoalDetail } from '../../apis/goal/useGetGoalDetail';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -59,6 +60,8 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
   const editorSubmitRef = useRef<SubmitHandleRef | null>(null); // 텍스트에디터 컨텐츠 접근용 플래그
   const isSubmittingRequestRef = useRef(false); // API 제출 중복 요청 가드 플래그
+  const hydratedRef = useRef(false); // 최초 1회만 조회 데이터로 상태/에디터 하이드레이션
+
   const teamId = Number(useParams<{ teamId: string }>().teamId);
   const { data: workspaceMembers } = useGetWorkspaceMembers();
   const { data: simpleIssues } = useGetSimpleIssueList(teamId); // 팀 이슈 간단 조회 (select로 info만 나오도록 되어 있음)
@@ -73,14 +76,19 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
 
   // goalId를 useParams로부터 가져옴
-  const { goalId } = useParams<{ goalId: string }>();
+  const { goalId: goalIdParam } = useParams<{ goalId: string }>();
+  const numericGoalId = Number(goalIdParam);
+
+  // 상세 조회 훅: goalId가 있을 때만 자동 실행됨
+  const { data: goalDetail } = useGetGoalDetail(numericGoalId);
+  const queryClient = useQueryClient();
 
   // handleToggleMode: 상세페이지 모드 전환
   const handleToggleMode = useToggleMode({
     mode,
     setMode,
     type: 'goal',
-    id: Number(goalId),
+    id: Number(goalIdParam),
     isDefaultTeam: false,
   });
 
@@ -133,6 +141,9 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const handleCompletion = () => {
     if (!isCompleted) {
       // create 또는 edit 모드에서 view 모드로 전환하려는 시점
+      if (Number.isFinite(numericGoalId)) {
+        queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', numericGoalId] }); // 동일 goalId에서 view로 들어갈 때도 최신화
+      }
       handleSubmit(); // 저장 성공 시 모드 전환
     } else {
       handleToggleMode(); // 모드 전환
@@ -196,6 +207,45 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     () => Object.fromEntries((simpleIssues ?? []).map((i) => [i.title, i.id] as const)),
     [simpleIssues]
   );
+
+  // 상세페이지 조회 데이터 -> 로컬 상태 및 에디터 반영
+  useEffect(() => {
+    if (!goalDetail) return;
+    if (!Number.isFinite(numericGoalId)) return;
+    if (hydratedRef.current) return; // 최초 1회만 하이드레이션
+
+    // 1) 제목/상태/우선순위
+    setTitle(goalDetail.title ?? '');
+    setState((goalDetail.state ?? 'NONE') as StatusCode);
+    setPriority((goalDetail.priority ?? 'NONE') as PriorityCode);
+
+    // 2) 기한(문자열 -> Date)
+    const s = goalDetail.deadline?.start ? new Date(goalDetail.deadline.start) : null;
+    const e = goalDetail.deadline?.end ? new Date(goalDetail.deadline.end) : null;
+    setSelectedDate([s, e]);
+
+    // 3) 담당자(이름 -> id 매핑) : nameToId 준비 후 세팅
+    if (Object.keys(nameToId).length > 0) {
+      const managerNames = goalDetail.managers?.info?.map((m) => m.name) ?? [];
+      const managerIds = managerNames
+        .map((name) => nameToId[name])
+        .filter((v): v is number => typeof v === 'number');
+      setManagersId(managerIds);
+    }
+
+    // 4) 이슈(id 포함 가정: SimpleIssueListDto)
+    const issueIds =
+      goalDetail.issues?.info?.map((i) => i.id).filter((n) => typeof n === 'number') ?? [];
+    setIssuesId(issueIds);
+
+    // 5) Lexical 에디터 역직렬화 (JSON 문자열 주입)
+    const json = goalDetail.content ?? '';
+    if (editorSubmitRef.current && typeof editorSubmitRef.current.loadJson === 'function') {
+      editorSubmitRef.current.loadJson(json);
+    }
+
+    hydratedRef.current = true;
+  }, [goalDetail, numericGoalId, nameToId]);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const shouldScrollRef = useRef(false);
