@@ -32,9 +32,10 @@ export default function OnboardingGuard({ children }: Props) {
   const isInvite = getIsInvite();
   const hasOnboardingStatus =
     needsCheck && isManualNav && localStorage.getItem(ONBOARDING_STATUS_KEY) !== null;
-
   const isValid = validateInviteUrl(inviteUrl);
 
+  // 현재 경로가 가드 대상 or 주소창 직접 입력/외부 진입
+  // 낯선 사용자 / 초기 사용자 / 기존 사용자 / 초대받은 사용자 모두의 강제 접근을 차단시킴
   if (
     needsCheck &&
     isManualNav &&
