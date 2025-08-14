@@ -95,16 +95,23 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     isSubmittingRequestRef.current = true;
 
     const [start, end] = selectedDate;
+
+    // deadline:'기한' 속성 객체
+    // (1) 아예 입력하지 않은 경우, (2) 종료일만 입력한 경우, (3) 시작일&종료일 둘다 입력한 경우에 따라 다르게
+    let deadline: Record<string, string> = {};
+    if (end) {
+      deadline.end = formatDateHyphen(end);
+
+      if (start) deadline.start = formatDateHyphen(start);
+    }
+
     const payload: CreateGoalDetailDto = {
       title,
       content: editorSubmitRef.current?.getJson() ?? '', // content가 비었으면 그냥 빈 문자열로
       state,
       priority,
       managersId,
-      deadline: {
-        start: formatDateHyphen(start),
-        end: formatDateHyphen(end),
-      },
+      deadline,
       issuesId,
     };
 

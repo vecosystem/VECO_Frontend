@@ -2,8 +2,8 @@ import type { CommonResponse, CursorBasedResponse } from './common';
 import type { SimpleIssueListDto } from './issue';
 
 export type Deadline = {
-  start: string;
-  end: string;
+  start?: string;
+  end?: string;
 };
 
 export type ManagerInfo = {
@@ -65,7 +65,7 @@ export type CreateGoalDetailDto = {
   state: string;
   priority: string;
   managersId: number[];
-  deadline: Deadline;
+  deadline?: Deadline;
   issuesId: number[];
 };
 
