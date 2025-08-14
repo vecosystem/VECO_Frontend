@@ -64,3 +64,9 @@ export const postLogout = async (): Promise<void> => {
     throw error;
   }
 };
+
+// 설정 - 회원 탈퇴
+export const deleteWithdraw = async () => {
+  const res = await axiosInstance.delete('/api/workspace/setting/my-profile');
+  return res;
+};
