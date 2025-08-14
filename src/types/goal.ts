@@ -1,3 +1,4 @@
+import type { ResponseCommentListDto } from './comment';
 import type { CommonResponse, CursorBasedResponse } from './common';
 import type { SimpleIssueListDto } from './issue';
 
@@ -76,20 +77,6 @@ export type CreateGoalResultDto = {
 
 export type ResponseCreateGoalDetailDto = CommonResponse<CreateGoalResultDto>;
 
-// 개별 댓글
-export type GoalComment = {
-  name: string;
-  profileUrl: string;
-  content: string;
-  createdAt: string; // ISO datetime string
-};
-
-//댓글 리스트
-export type GoalCommentListDto = {
-  cnt: number;
-  info: GoalComment[];
-};
-
 // 목표 상세 조회
 export type ViewGoalDetailDto = {
   id: number;
@@ -101,7 +88,7 @@ export type ViewGoalDetailDto = {
   managers: Manager;
   deadline: Deadline;
   issues: SimpleIssueListDto;
-  comments: GoalCommentListDto;
+  comments: ResponseCommentListDto;
 };
 
 export type ResponseViewGoalDetailDto = CommonResponse<ViewGoalDetailDto>;
