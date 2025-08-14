@@ -108,6 +108,16 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     const idToTitle = new Map((simpleIssues ?? []).map((i) => [i.id, i.title] as const));
     return issuesId.map((id) => idToTitle.get(id)).filter((v): v is string => !!v);
   }, [issuesId, simpleIssues]);
+  const [managersShowNoneLabel] = useState(false);
+  const [issuesShowNoneLabel, setIssuesShowNoneLabel] = useState(false);
+
+  // deadline('기한' 속성) patch 훅
+  const { handleSelectDateAndPatch, buildPatchForEditSubmit } = useGoalDeadlinePatch({
+    goalDetail,
+    isViewMode: isCompleted,
+    canPatch,
+    mutateUpdate: updateGoal,
+  });
 
   // handleToggleMode: 상세페이지 모드 전환
   const handleToggleMode = useToggleMode({
@@ -116,14 +126,6 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     type: 'goal',
     id: Number(goalIdParam),
     isDefaultTeam: false,
-  });
-
-  // deadline('기한' 속성) patch 훅
-  const { handleSelectDateAndPatch, buildPatchForEditSubmit } = useGoalDeadlinePatch({
-    goalDetail,
-    isViewMode: isCompleted,
-    canPatch,
-    mutateUpdate: updateGoal,
   });
 
   // handleSubmit: Lexical 에디터 내용을 JSON 문자열로 직렬화 후 API로 전송하는 함수
@@ -212,7 +214,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     우선순위: pr3,
     없음: pr0,
     낮음: pr1,
-    중간: pr2,
+    보통: pr2,
     높음: pr3,
     긴급: pr4,
   };
@@ -348,7 +350,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
               <div onClick={(e) => e.stopPropagation()}>
                 <PropertyItem
                   defaultValue="우선순위"
-                  options={['없음', '긴급', '높음', '중간', '낮음']}
+                  options={['없음', '긴급', '높음', '보통', '낮음']}
                   iconMap={priorityIconMap}
                   onSelect={(label) => {
                     const next = priorityLabelToCode[label] ?? 'NONE';
@@ -367,22 +369,34 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                   options={managerOptions}
                   iconMap={managerIconMap}
                   onChange={(labels) => {
-                    if (labels.includes('없음')) {
+                    // 1) '없음'만 선택된 경우만 비우기
+                    if (labels.length === 1 && labels[0] === '없음') {
                       setManagersId([]);
                       if (isCompleted && Number.isFinite(numericGoalId)) {
                         updateGoal({ managersId: [] });
                       }
                       return;
                     }
-                    const ids = labels
+
+                    // 2) '없음'이 다른 값과 섞여 오면 제거
+                    const cleaned = labels.filter((l) => l !== '없음');
+
+                    const ids = cleaned
                       .map((label) => nameToId[label])
                       .filter((v): v is number => typeof v === 'number');
+
                     setManagersId(ids);
                     if (isCompleted && Number.isFinite(numericGoalId)) {
                       updateGoal({ managersId: ids });
                     }
                   }}
-                  selected={selectedManagerLabels}
+                  selected={
+                    managersId.length === 0
+                      ? managersShowNoneLabel
+                        ? ['없음']
+                        : [] // 비어있지만 '없음'을 선택했으면 '없음'을 내려줌
+                      : selectedManagerLabels
+                  }
                 />
               </div>
               {/* (4) 기한 */}
@@ -419,6 +433,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                   onChange={(labels) => {
                     if (labels.includes('없음')) {
                       setIssuesId([]);
+                      setIssuesShowNoneLabel(true);
                       if (isCompleted && Number.isFinite(numericGoalId)) {
                         updateGoal({ issuesId: [] });
                       }
@@ -428,11 +443,18 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                       .map((label) => issueTitleToId[label])
                       .filter((v): v is number => typeof v === 'number');
                     setIssuesId(ids);
+                    setIssuesShowNoneLabel(false);
                     if (isCompleted && Number.isFinite(numericGoalId)) {
                       updateGoal({ issuesId: ids });
                     }
                   }}
-                  selected={selectedIssueLabels}
+                  selected={
+                    issuesId.length === 0
+                      ? issuesShowNoneLabel
+                        ? ['없음']
+                        : []
+                      : selectedIssueLabels
+                  }
                 />
               </div>
             </div>

@@ -27,7 +27,7 @@ const PropertyItem = ({
   getColor,
   onSelect,
   selected,
-  placeholderLabels = ['없음'],
+  placeholderLabels = [],
 }: PropertyItemProps) => {
   // 제어/비제어 판단
   const isControlled = selected !== undefined;
