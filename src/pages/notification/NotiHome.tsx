@@ -202,12 +202,12 @@ const NotiHome = () => {
           }}
         />
       )}
-      {isEmpty ? (
+      {isLoading || !data ? (
+        <ListViewItemSkeletonList />
+      ) : isEmpty ? (
         <div className="flex flex-1 items-center justify-center">
           <div className="font-body-r">새로운 알림이 없습니다</div>
         </div>
-      ) : isLoading ? (
-        <ListViewItemSkeletonList />
       ) : (
         /* 리스트뷰 */
         <div className="flex flex-col gap-[4.8rem]">

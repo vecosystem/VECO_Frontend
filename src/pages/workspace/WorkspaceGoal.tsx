@@ -171,17 +171,17 @@ const WorkspaceGoal = () => {
             }}
           />
         )}
-        {isEmpty ? (
+        {isLoading || !data ? (
+          <ListViewItemSkeletonList />
+        ) : isEmpty ? (
           <div className="flex flex-1 flex-col items-center justify-center">
             <div
               className="font-body-r cursor-pointer underline decoration-1 text-gray-500 [text-underline-position:under]"
               onClick={handleClick}
             >
-              목표를 생성하세요
+              공동 목표를 생성하세요
             </div>
           </div>
-        ) : isLoading ? (
-          <ListViewItemSkeletonList />
         ) : (
           <div className="flex flex-col gap-[4.8rem]">
             {sortedGrouped.map(({ key, items }) =>
