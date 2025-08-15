@@ -23,3 +23,9 @@ export type PostCommentRequest = {
   category: CategoryType;
   targetId: number;
 };
+
+//댓글 리스트
+export type ResponseCommentListDto = {
+  cnt: number;
+  info: Comment[];
+};

@@ -1,3 +1,4 @@
+import type { ResponseCommentListDto } from './comment';
 import type { CommonResponse, CursorBasedResponse } from './common';
 import type { SimpleIssueListDto } from './issue';
 
@@ -76,21 +77,6 @@ export type CreateGoalResultDto = {
 
 export type ResponseCreateGoalDetailDto = CommonResponse<CreateGoalResultDto>;
 
-// 개별 댓글
-// TODO: 서버 측에서 데이터 구조 수정되면 반영
-export type GoalComment = {
-  name: string;
-  profileUrl: string;
-  content: string;
-  createdAt: string; // ISO datetime string
-};
-
-//댓글 리스트
-export type GoalCommentListDto = {
-  cnt: number;
-  info: GoalComment[];
-};
-
 // 목표 상세 조회
 export type ViewGoalDetailDto = {
   id: number;
@@ -102,7 +88,7 @@ export type ViewGoalDetailDto = {
   managers: Manager;
   deadline: Deadline;
   issues: SimpleIssueListDto;
-  comments: GoalCommentListDto;
+  comments: ResponseCommentListDto;
 };
 
 export type ResponseViewGoalDetailDto = CommonResponse<ViewGoalDetailDto>;
@@ -119,17 +105,9 @@ export type UpdateGoalDetailDto = {
   issuesId?: number[] | null;
 };
 
-type UpdatableGoalFields = {
-  // 응답: 변경된 필드만 내려오기 때문에 Partial로 정의
-  title: string;
-  content: string;
-  state: string;
-  priority: string;
-  managersId: number[];
-  deadline: Deadline;
-  issuesId: number[];
+export type UpdateGoalResultDto = {
+  goalId: number;
+  updatedAt: string; // LocalDateTime
 };
-
-export type UpdateGoalResultDto = Partial<UpdatableGoalFields>;
 
 export type ResponseUpdateGoalDetailDto = CommonResponse<UpdateGoalResultDto>;

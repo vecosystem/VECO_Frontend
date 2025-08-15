@@ -1,7 +1,7 @@
 // WorkspaceGoalDetail.tsx
 // 워크스페이스 전체 팀 - 목표 상세페이지
 
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, startTransition } from 'react';
 import WorkspaceDetailHeader from '../../components/DetailView/WorkspaceDetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -34,16 +34,23 @@ import {
   type PriorityCode,
   type StatusCode,
 } from '../../types/listItem';
-import type { SubmitHandleRef } from '../../components/DetailView/TextEditor/lexical-plugins/SubmitHandlePlugin';
+import {
+  EMPTY_EDITOR_STATE,
+  type SubmitHandleRef,
+} from '../../components/DetailView/TextEditor/lexical-plugins/SubmitHandlePlugin';
 import { useParams } from 'react-router-dom';
 import { useGetWorkspaceMembers } from '../../apis/setting/useGetWorkspaceMembers';
 import { useGetSimpleIssueList } from '../../apis/issue/useGetSimpleIssueList';
 import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail';
-import { useIsMutating, useQueryClient } from '@tanstack/react-query';
+import { useIsMutating } from '@tanstack/react-query';
 import { mutationKey } from '../../constants/mutationKey';
-import type { CreateGoalDetailDto } from '../../types/goal';
+import type { CreateGoalDetailDto, UpdateGoalDetailDto } from '../../types/goal';
 import { useGetGoalDetail } from '../../apis/goal/useGetGoalDetail';
 import { useHydrateGoalDetail } from '../../hooks/useHydrateGoalDetail';
+import { useUpdateGoal } from '../../apis/goal/usePatchGoalDetail';
+import { useGoalDeadlinePatch } from '../../hooks/useGoalDeadlinePatch';
+import queryClient from '../../utils/queryClient';
+import { queryKey } from '../../constants/queryKey';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -74,19 +81,19 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
 
   const { data: workspaceMembers } = useGetWorkspaceMembers();
   const { data: simpleIssues } = useGetSimpleIssueList(teamId); // 팀 이슈 간단 조회 (select로 info만 나오도록 되어 있음)
-  const { mutate: submitGoal, isPending } = useCreateGoal(teamId);
+  const { mutate: submitGoal, isPending: isCreating } = useCreateGoal(teamId);
   const { data: goalDetail } = useGetGoalDetail(numericGoalId);
+  const { mutate: updateGoal, isPending: isUpdating } = useUpdateGoal(teamId, numericGoalId);
+
   const isCreatingGlobal = useIsMutating({ mutationKey: [mutationKey.GOAL_CREATE, teamId] }) > 0;
-  const isSaving = isPending || isCreatingGlobal || isSubmittingRequestRef.current;
+  const isSaving = isCreating || isUpdating || isCreatingGlobal || isSubmittingRequestRef.current;
 
   const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
   const { openDropdown } = useDropdownActions();
 
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
-
-  // 상세 조회 훅: goalId가 있을 때만 자동 실행됨
-  const queryClient = useQueryClient();
+  const canPatch = Number.isFinite(numericGoalId); // PATCH 가능 조건
 
   // 단일 선택 라벨
   const selectedStatusLabel = STATUS_LABELS[state];
@@ -103,6 +110,16 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
     const idToTitle = new Map((simpleIssues ?? []).map((i) => [i.id, i.title] as const));
     return issuesId.map((id) => idToTitle.get(id)).filter((v): v is string => !!v);
   }, [issuesId, simpleIssues]);
+  const [managersShowNoneLabel] = useState(false);
+  const [issuesShowNoneLabel, setIssuesShowNoneLabel] = useState(false);
+
+  // deadline('기한' 속성) patch 훅
+  const { handleSelectDateAndPatch, buildPatchForEditSubmit } = useGoalDeadlinePatch({
+    goalDetail,
+    isViewMode: isCompleted,
+    canPatch,
+    mutateUpdate: updateGoal,
+  });
 
   // handleToggleMode: 상세페이지 모드 전환
   const handleToggleMode = useToggleMode({
@@ -127,33 +144,53 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
 
     const [start, end] = selectedDate;
 
-    // deadline:'기한' 속성 객체
-    // (1) 아예 입력하지 않은 경우, (2) 종료일만 입력한 경우, (3) 시작일&종료일 둘다 입력한 경우에 따라 다르게
-    let deadline: Record<string, string> = {};
-    if (end) {
-      deadline.end = formatDateHyphen(end);
-
-      if (start) deadline.start = formatDateHyphen(start);
-    }
-
-    const payload: CreateGoalDetailDto = {
+    // 화면 상태를 공통 페이로드로 구성
+    const basePayload = {
       title,
-      content: editorSubmitRef.current?.getJson() ?? '', // content가 비었으면 그냥 빈 문자열로
+      content: editorSubmitRef.current?.getJson() ?? EMPTY_EDITOR_STATE,
       state,
       priority,
       managersId,
-      deadline,
       issuesId,
     };
+    if (mode === 'create') {
+      // 생성 시에는 기존 로직 유지 (규칙 제약 없음)
+      const payload: CreateGoalDetailDto = {
+        ...basePayload,
+        deadline: {
+          ...(start ? { start: formatDateHyphen(start) } : {}),
+          ...(end ? { end: formatDateHyphen(end) } : {}),
+        },
+      };
 
-    submitGoal(payload, {
-      onSuccess: ({ goalId }) => {
-        handleToggleMode(goalId); // 성공 시점에 goalId 주입
-      },
-      onSettled: () => {
-        isSubmittingRequestRef.current = false; // 성공/실패 모두 해제
-      },
-    });
+      submitGoal(payload, {
+        onSuccess: ({ goalId }) => {
+          queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, String(teamId)] });
+          queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, String(teamId)] });
+          startTransition(() => handleToggleMode(goalId));
+        },
+        onSettled: () => {
+          isSubmittingRequestRef.current = false;
+        },
+      });
+    } else if (mode === 'edit') {
+      const patch = buildPatchForEditSubmit(selectedDate);
+      const payload = { ...basePayload, ...(patch ?? {}) } as UpdateGoalDetailDto;
+
+      updateGoal(payload, {
+        onSuccess: () => {
+          if (Number.isFinite(numericGoalId)) {
+            queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, String(teamId)] });
+            queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, String(teamId)] });
+            queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_DETAIL, numericGoalId] });
+          }
+          startTransition(() => handleToggleMode());
+        },
+        onSettled: () => {
+          isSubmittingRequestRef.current = false;
+        },
+      });
+    }
   };
 
   // handleCompletion - 하단 작성 완료<-수정하기 버튼 클릭 시 실행
@@ -266,7 +303,13 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
           <DetailTitle
             defaultTitle="목표를 생성하세요"
             title={title}
-            setTitle={setTitle}
+            setTitle={(v) => {
+              setTitle(v);
+              // view 모드에서 즉시 PATCH
+              if (isCompleted && Number.isFinite(numericGoalId)) {
+                updateGoal({ title: v });
+              }
+            }}
             isEditable={isEditable}
           />
 
@@ -289,7 +332,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
         <div className="w-[33rem] flex flex-col min-h-max">
           {/* 속성 탭 */}
           <div className="w-full h-full flex flex-col gap-[1.6rem] ">
-            <div className="w-full font-title-sub-r tex-gray-600">속성</div>
+            <div className="w-full font-title-sub-r text-gray-600">속성</div>
             <div>
               {/* (1) 상태 */}
               <div onClick={(e) => e.stopPropagation()}>
@@ -300,7 +343,13 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
                     const code = statusLabelToCode[label] ?? 'NONE';
                     return getStatusColor(code);
                   }}
-                  onSelect={(label) => setState(statusLabelToCode[label] ?? 'NONE')}
+                  onSelect={(label) => {
+                    const next = statusLabelToCode[label] ?? 'NONE';
+                    setState(next);
+                    if (isCompleted && Number.isFinite(numericGoalId)) {
+                      updateGoal({ state: next });
+                    }
+                  }}
                   selected={selectedStatusLabel}
                 />
               </div>
@@ -311,7 +360,13 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
                   defaultValue="우선순위"
                   options={['없음', '긴급', '높음', '중간', '낮음']}
                   iconMap={priorityIconMap}
-                  onSelect={(label) => setPriority(priorityLabelToCode[label] ?? 'NONE')}
+                  onSelect={(label) => {
+                    const next = priorityLabelToCode[label] ?? 'NONE';
+                    setPriority(next);
+                    if (isCompleted && Number.isFinite(numericGoalId)) {
+                      updateGoal({ priority: next });
+                    }
+                  }}
                   selected={selectedPriorityLabel}
                 />
               </div>
@@ -323,17 +378,34 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
                   options={managerOptions}
                   iconMap={managerIconMap}
                   onChange={(labels) => {
-                    if (labels.includes('없음')) {
+                    // 1) '없음'만 선택된 경우만 비우기
+                    if (labels.length === 1 && labels[0] === '없음') {
                       setManagersId([]);
+                      if (isCompleted && Number.isFinite(numericGoalId)) {
+                        updateGoal({ managersId: [] });
+                      }
                       return;
                     }
 
-                    const ids = labels
+                    // 2) '없음'이 다른 값과 섞여 오면 제거
+                    const cleaned = labels.filter((l) => l !== '없음');
+
+                    const ids = cleaned
                       .map((label) => nameToId[label])
                       .filter((v): v is number => typeof v === 'number');
+
                     setManagersId(ids);
+                    if (isCompleted && Number.isFinite(numericGoalId)) {
+                      updateGoal({ managersId: ids });
+                    }
                   }}
-                  selected={selectedManagerLabels}
+                  selected={
+                    managersId.length === 0
+                      ? managersShowNoneLabel
+                        ? ['없음']
+                        : [] // 비어있지만 '없음'을 선택했으면 '없음'을 내려줌
+                      : selectedManagerLabels
+                  }
                 />
               </div>
 
@@ -354,7 +426,10 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
                   {isOpen && content?.name === 'date' && (
                     <CalendarDropdown
                       selectedDate={selectedDate}
-                      onSelect={(date) => setSelectedDate(date)}
+                      onSelect={(date) => {
+                        setSelectedDate(date);
+                        handleSelectDateAndPatch(date); // view 모드 시 즉시 PATCH
+                      }}
                     />
                   )}
                 </div>
@@ -366,19 +441,29 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
                   defaultValue="이슈"
                   options={issueOptions}
                   onChange={(labels) => {
-                    // '없음'을 선택하면 비우기
                     if (labels.includes('없음')) {
                       setIssuesId([]);
+                      if (isCompleted && Number.isFinite(numericGoalId)) {
+                        updateGoal({ issuesId: [] });
+                      }
                       return;
                     }
-                    // 제목 -> id 매핑
                     const ids = labels
                       .map((label) => issueTitleToId[label])
                       .filter((v): v is number => typeof v === 'number');
-
                     setIssuesId(ids);
+                    setIssuesShowNoneLabel(false);
+                    if (isCompleted && Number.isFinite(numericGoalId)) {
+                      updateGoal({ issuesId: ids });
+                    }
                   }}
-                  selected={selectedIssueLabels}
+                  selected={
+                    issuesId.length === 0
+                      ? issuesShowNoneLabel
+                        ? ['없음']
+                        : []
+                      : selectedIssueLabels
+                  }
                 />
               </div>
             </div>

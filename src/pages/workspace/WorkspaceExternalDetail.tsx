@@ -182,7 +182,7 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
         <div className="w-[33rem] flex flex-col min-h-max">
           {/* 속성 탭 */}
           <div className="w-full h-full flex flex-col gap-[1.6rem] ">
-            <div className="w-full font-title-sub-r tex-gray-600">속성</div>
+            <div className="w-full font-title-sub-r text-gray-600">속성</div>
             <div>
               {/* (1) 상태 */}
               <div onClick={(e) => e.stopPropagation()}>

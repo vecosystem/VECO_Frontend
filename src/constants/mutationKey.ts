@@ -1,9 +1,9 @@
 // 서버에 변경사항을 보내는 행위(POST, PATCH 등) 식별을 위한 mutationKey
 export const mutationKey = {
   GOAL_CREATE: 'goal_create',
-  GOAL_EDIT: 'goal_edit',
+  GOAL_UPDATE: 'goal_update',
   ISSUE_CREATE: 'issue_create',
-  ISSUE_EDIT: 'issue_edit',
+  ISSUE_UPDATE: 'issue_update',
   EXTERNAL_CREATE: 'external_create',
-  EXTERNAL_EDIT: 'external_edit',
+  EXTERNAL_UPDATE: 'external_update',
 };

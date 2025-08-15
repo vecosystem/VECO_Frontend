@@ -30,6 +30,12 @@ interface MultiPropertyItemProps {
 const getManagerDisplay = (fallbackLabel: string) => (values: string[]) => {
   const count = values.length;
   if (count === 0) return fallbackLabel;
+
+  // '없음'만 선택된 경우 → '없음' 그대로 표시
+  if (count === 1 && values[0] === '없음') {
+    return <span className="text-gray-600">{values[0]}</span>;
+  }
+
   if (count <= 4) {
     return (
       <div className="flex items-center min-w-0 max-w-[27.4rem]">
@@ -55,6 +61,9 @@ const getManagerDisplay = (fallbackLabel: string) => (values: string[]) => {
 const getIssueDisplay = (values: string[]) => {
   const count = values.length;
   if (count === 0) return '이슈';
+  if (count === 1 && values[0] === '없음') {
+    return <span className="text-gray-600">{values[0]}</span>;
+  }
   if (count === 1)
     return <span className="text-gray-600 max-w-[27.4rem] truncate block">{values[0]}</span>;
   return (
@@ -90,7 +99,15 @@ const MultiSelectPropertyItem = ({
   const [isOpen, setIsOpen] = useState(false);
 
   // 부모에도 알리고 내부 상태도 갱신
-  const handleChangeSelected = (next: string[]) => {
+  const handleChangeSelected = (nextRaw: string[]) => {
+    // 중복 제거
+    let next = Array.from(new Set(nextRaw));
+
+    // '없음'과 다른 값이 함께 있으면 '없음' 제거
+    if (next.includes('없음') && next.length > 1) {
+      next = next.filter((v) => v !== '없음');
+    }
+
     if (!isControlled) {
       setInternalSelected(next);
     }
@@ -117,12 +134,22 @@ const MultiSelectPropertyItem = ({
       if (count === 0) {
         // 기본 아이콘(있는 경우)
         const fallback = iconMap?.[defaultValue] ?? IcProfile;
-        return <img src={fallback} alt="담당자" className="w-[1.8rem] h-[1.8rem] rounded-full" />;
+        return (
+          <img
+            src={fallback}
+            alt="담당자"
+            className="mx-[0.2rem] w-[1.8rem] h-[1.8rem] rounded-full"
+          />
+        );
       }
       if (count === 1) {
         const src = iconMap?.[currentSelected[0]] ?? IcProfile;
         return (
-          <img src={src} alt={currentSelected[0]} className="w-[1.8rem] h-[1.8rem] rounded-full" />
+          <img
+            src={src}
+            alt={currentSelected[0]}
+            className="mx-[0.2rem] w-[1.8rem] h-[1.8rem] rounded-full"
+          />
         );
       }
       // 2명 이상: 앞 두 명 겹쳐 표시
@@ -150,7 +177,6 @@ const MultiSelectPropertyItem = ({
   return (
     <div
       onClick={() => {
-        if (options.length === 0) return; // 옵션 없으면 클릭 막기
         setIsOpen((v) => !v);
       }}
       className="flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200 cursor-pointer"

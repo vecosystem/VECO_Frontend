@@ -17,6 +17,7 @@ interface PropertyItemProps {
   getColor?: (value: string) => string; // '상태' 속성의 아이콘 색상 매핑
   onSelect?: (label: string) => void; // 부모에 선택 라벨 전달
   selected?: string;
+  placeholderLabels?: string[];
 }
 
 const PropertyItem = ({
@@ -26,23 +27,30 @@ const PropertyItem = ({
   getColor,
   onSelect,
   selected,
+  placeholderLabels = [],
 }: PropertyItemProps) => {
   // 제어/비제어 판단
   const isControlled = selected !== undefined;
 
   // 비제어일 때만 내부 상태 사용
-  const [internalValue, setInternalValue] = useState<string>(
-    selected ?? defaultValue ?? options[0]
+  const [internalValue, setInternalValue] = useState<string>('');
+  const [hasSelected, setHasSelected] = useState<boolean>(
+    Boolean(selected && !placeholderLabels.includes(selected))
   );
 
-  // ✅ selected prop 변경 시 내부 상태 동기화
+  // selected prop 변경 시 내부 상태 동기화
   useEffect(() => {
-    if (isControlled) {
-      setInternalValue(selected as string);
-    }
-  }, [isControlled, selected]);
+    if (!isControlled) return;
+    const value = selected ?? '';
+    setInternalValue(value);
+    setHasSelected(Boolean(value && !placeholderLabels.includes(value)));
+  }, [isControlled, selected, placeholderLabels]);
 
-  const currentValue = isControlled ? (selected as string) : internalValue;
+  const currentValue = isControlled ? (selected ?? '') : internalValue;
+
+  // placeholder로 간주되면 표시용/아이콘용 값은 공백 취급
+  const isPlaceholder = !currentValue || placeholderLabels.includes(currentValue);
+  const effectiveValue = isPlaceholder ? '' : currentValue;
 
   const currentIcon = useMemo(() => {
     if (!iconMap) return undefined;
@@ -52,12 +60,15 @@ const PropertyItem = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = (option: string) => {
-    if (!isControlled) {
-      setInternalValue(option);
-    }
+    if (!isControlled) setInternalValue(option);
+    setHasSelected(!placeholderLabels.includes(option));
     setIsOpen(false);
     onSelect?.(option);
   };
+
+  // 속성 항목 텍스트 표시: 선택 전(또는 placeholder면) defaultValue, 아니면 선택값
+  const displayText =
+    hasSelected && !isPlaceholder && effectiveValue ? effectiveValue : (defaultValue ?? '');
 
   return (
     <div
@@ -79,9 +90,7 @@ const PropertyItem = ({
       {/* 속성 이름 */}
       <div className={`flex relative`}>
         {/* 속성 항목명 */}
-        <p className="font-body-r text-gray-600 max-w-[27.4rem] truncate">
-          {currentValue || defaultValue}
-        </p>
+        <p className="font-body-r text-gray-600 max-w-[27.4rem] truncate">{displayText}</p>
 
         {/* 드롭다운 오픈 */}
         {isOpen && (
