@@ -1,4 +1,5 @@
 # VECO Frontend
+<img width="3284" height="1975" alt="image" src="https://github.com/user-attachments/assets/5e51ab8c-de57-4a81-8b10-fd7d96b7e7f1" />
 
 VECO는 **AI를 활용해 분산된 정보를 한곳에 모으고, 목표를 명확히 추적하며 협업을 효율화하는 시스템**입니다.  
 이 저장소는 VECO의 **프론트엔드 개발을 담당하는 레포지토리**입니다.
@@ -81,10 +82,10 @@ git merge develop
 ## 📖 아티클 모음
 | 이름     | 아티클 제목                                                                                                                             |
 | ------ | ---------------------------------------------------------------------------------------------------------------------------------- |
-| 🍀 김선화 | [제목](https://velog.io/@sunhwaa/UMC-01)                                                                                                                             |
-| 🍒 박유민 | [제목](https://velog.io/@waldls/VECO-9zb3jefr)                                                                                                                             |
-| 💎 박진주 | [제목]()                                                                                                                             |
-| 🎀 염주원 | [백엔드 트러블슈팅 모음](https://velog.io/@hijuwon/%EB%B0%B1%ED%98%B8-Veco-%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85-%EB%AA%A8%EC%9D%8C) |
+| 🍀 김선화 | [데모데이 트러블슈팅](https://velog.io/@sunhwaa/UMC-01)                                                                                                                  |
+| 🍒 박유민 | [Onboarding & 토큰 이슈 해결기](https://velog.io/@waldls/VECO-9zb3jefr)                                                                                                 |
+| 💎 박진주 | [DOM 업데이트와 댓글 스크롤 타이밍 문제 해결기](https://icems0428.tistory.com/25)                                                                                             |
+| 🎀 염주원 | [트러블슈팅 모음](https://velog.io/@hijuwon/%EB%B0%B1%ED%98%B8-Veco-%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85-%EB%AA%A8%EC%9D%8C) |
 | 🍁 이가을 | [다른 도메인 간 쿠키 이슈 해결기](https://velog.io/@gaeulzzang/다른-도메인-간-쿠키-이슈-해결기)                                                              |
 
 <br/>
