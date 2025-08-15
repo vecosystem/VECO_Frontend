@@ -1,8 +1,11 @@
-# VECO Frontend
-<img width="3284" height="1975" alt="image" src="https://github.com/user-attachments/assets/5e51ab8c-de57-4a81-8b10-fd7d96b7e7f1" />
-
+# 🐯 VECO
 VECO는 **AI를 활용해 분산된 정보를 한곳에 모으고, 목표를 명확히 추적하며 협업을 효율화하는 시스템**입니다.  
 이 저장소는 VECO의 **프론트엔드 개발을 담당하는 레포지토리**입니다.
+<br />
+<br />
+<img width="3284" height="1975" alt="image" src="https://github.com/user-attachments/assets/5e51ab8c-de57-4a81-8b10-fd7d96b7e7f1" />
+
+
 
 ---
 
@@ -72,10 +75,10 @@ git merge develop
 
 ## 📏 컨벤션
 
-- 🌿[Commit Convention](https://pretty-tumbleweed-40b.notion.site/Github-Commit-Convention-2212d37cca1180f882f6c607935e07bb?source=copy_link)
-- 🪵[Branch Convention](https://pretty-tumbleweed-40b.notion.site/Github-Branch-Convention-2212d37cca1180b99416cae996470a9d?source=copy_link)
-- 📌[Issue Convention](https://pretty-tumbleweed-40b.notion.site/ISSUE-2212d37cca1180b5b904fc4ea5653f54?source=copy_link)
-- ✅[PR Convention](https://pretty-tumbleweed-40b.notion.site/PR-2212d37cca1180608135d6bccffeaed6?source=copy_link)
+- 🌿 [Commit Convention](https://pretty-tumbleweed-40b.notion.site/Github-Commit-Convention-2212d37cca1180f882f6c607935e07bb?source=copy_link)
+- 🪵 [Branch Convention](https://pretty-tumbleweed-40b.notion.site/Github-Branch-Convention-2212d37cca1180b99416cae996470a9d?source=copy_link)
+- 📌 [Issue Convention](https://pretty-tumbleweed-40b.notion.site/ISSUE-2212d37cca1180b5b904fc4ea5653f54?source=copy_link)
+- ✅ [PR Convention](https://pretty-tumbleweed-40b.notion.site/PR-2212d37cca1180608135d6bccffeaed6?source=copy_link)
 
 ---
 
