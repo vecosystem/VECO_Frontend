@@ -13,7 +13,7 @@ import queryClient from '../../utils/queryClient.ts';
  * 목표 작성 함수
  * - 목표 상세페이지 생성 모드에서 사용
  * - pages/goal/GoalDetail.tsx
- * - pages/goal/WorkspaceGoalDetail.tsx
+ * - pages/workspace/WorkspaceGoalDetail.tsx
  */
 const createGoal = async (
   teamId: number,

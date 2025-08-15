@@ -65,7 +65,7 @@ export type CreateIssueDetailDto = {
   priority: string;
   managersId: number[];
   deadline?: Deadline;
-  goalId: number; // 이거 필수 요소인지 서버에 확인
+  goalId: number;
 };
 
 export type CreateIssueResultDto = {
