@@ -1,6 +1,6 @@
 // src/apis/goal/updateGoal.ts
 import { axiosInstance } from '../axios.ts';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import type {
   UpdateGoalDetailDto,
   UpdateGoalResultDto,
@@ -8,6 +8,7 @@ import type {
 } from '../../types/goal.ts';
 import { mutationKey } from '../../constants/mutationKey.ts';
 import { queryKey } from '../../constants/queryKey.ts';
+import queryClient from '../../utils/queryClient.ts';
 
 /**
  * 목표 수정 (PATCH) 함수
@@ -37,15 +38,13 @@ const updateGoal = async (
 };
 
 export const useUpdateGoal = (teamId: number, goalId: number) => {
-  const qc = useQueryClient();
-
   return useMutation<UpdateGoalResultDto, Error, UpdateGoalDetailDto>({
     mutationKey: [mutationKey.GOAL_UPDATE, teamId, goalId],
     mutationFn: (payload) => updateGoal(teamId, goalId, payload),
     onSuccess: () => {
       // 상세/목록/관련 파생 쿼리 최신화
-      qc.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, teamId] });
-      qc.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, teamId] });
+      queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, teamId] });
+      queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, teamId] });
     },
   });
 };
