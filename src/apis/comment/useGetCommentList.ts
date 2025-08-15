@@ -1,5 +1,5 @@
 import { axiosInstance } from '../axios';
-import type { CommentListResponse } from '../../types/comment';
+import type { ResponseCommentListDto } from '../../types/comment';
 import type { CategoryType } from '../../types/comment';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '../../constants/queryKey';
@@ -8,7 +8,7 @@ import { queryKey } from '../../constants/queryKey';
 export const getCommentList = async (
   targetId: number,
   category: CategoryType
-): Promise<CommentListResponse> => {
+): Promise<ResponseCommentListDto> => {
   try {
     const response = await axiosInstance.get('/api/comments', {
       params: {
@@ -25,7 +25,7 @@ export const getCommentList = async (
 
 export const useGetCommentList = (targetId: number, category: CategoryType) => {
   return useQuery({
-    queryKey: [queryKey.COMMENT_LIST, {targetId, category}],
+    queryKey: [queryKey.COMMENT_LIST, { targetId, category }],
     queryFn: () => getCommentList(targetId, category),
   });
 };
