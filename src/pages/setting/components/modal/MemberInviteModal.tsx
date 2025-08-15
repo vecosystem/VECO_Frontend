@@ -1,18 +1,32 @@
 import IcX from '../../../../assets/icons/x.svg';
 import CopyToClipboard from '../../../../components/Onboarding/CopyToClipboard.tsx';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import ModalButton from './ModalButton.tsx';
+import { useGetInviteMembers } from '../../../../apis/setting/useGetInviteMembers.ts';
 
 interface MemberInviteModalProps {
-  memberName: string;
-  url: string;
-  password: string;
   onClick: () => void;
 }
 
-const MemberInviteModal = (props: MemberInviteModalProps) => {
+const MemberInviteModal = ({ onClick }: MemberInviteModalProps) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const { data: inviteMembers } = useGetInviteMembers();
+  const [inviteData, setInviteData] = useState<{
+    name: string;
+    inviteUrl: string;
+    invitePassword: string;
+  } | null>(null);
+  useEffect(() => {
+    if (inviteMembers?.result) {
+      setInviteData({
+        name: inviteMembers.result.name,
+        inviteUrl: inviteMembers.result.inviteUrl,
+        invitePassword: inviteMembers.result.invitePassword,
+      });
+    }
+  }, [inviteMembers]);
+
   return createPortal(
     <div className={`fixed inset-0 flex items-center justify-center bg-black/66 z-50`}>
       <div
@@ -22,10 +36,12 @@ const MemberInviteModal = (props: MemberInviteModalProps) => {
         <section>
           <div className={`flex w-full justify-between`}>
             <h2 className={`text-gray-600 font-title-sub-b`}>팀원 초대</h2>
-            <img src={IcX} alt={'닫기'} onClick={props.onClick} />
+            <img src={IcX} alt={'닫기'} onClick={onClick} className="cursor-pointer" />
           </div>
           <p className={`mt-[0.8rem] text-gray-500 font-body-r`}>
-            {`팀원을 ${props.memberName}님의 팀에 초대해봐요`}
+            {inviteData
+              ? `팀원을 ${inviteData.name}님의 팀에 초대해봐요`
+              : '초대 정보를 불러오지 못했어요.'}
           </p>
         </section>
 
@@ -33,15 +49,18 @@ const MemberInviteModal = (props: MemberInviteModalProps) => {
           <textarea
             className={`flex-1 border border-gray-300 rounded-[0.6rem] h-[8rem] px-[1.2rem] py-[0.8rem]
             font-xsmall-r text-gray-600 focus:outline-none resize-none`}
-            disabled={true}
-            readOnly={true}
-            value={`팀원 URL : ${props.url}\n\n암호 : ${props.password}`}
+            readOnly
+            value={
+              inviteData
+                ? `팀원 URL : ${inviteData.inviteUrl}\n\n암호 : ${inviteData.invitePassword}`
+                : ''
+            }
             ref={inputRef}
           />
           <CopyToClipboard inputRef={inputRef} />
         </section>
 
-        <ModalButton text={'닫기'} onClick={props.onClick} />
+        <ModalButton text={'닫기'} onClick={onClick} />
       </div>
     </div>,
     document.body

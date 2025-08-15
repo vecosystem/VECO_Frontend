@@ -22,4 +22,5 @@ export const queryKey = {
   GITHUB_REPOSITORIES: 'github_repositories',
   GITHUB_INSTALLATION_ID: 'github_installation_id',
   COMMENT_LIST: 'comment_list',
+  INVITE_MEMBER: 'invite_member',
 };
