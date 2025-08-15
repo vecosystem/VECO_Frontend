@@ -47,6 +47,69 @@ import { useGetGoalDetail } from '../../apis/goal/useGetGoalDetail';
 import { useUpdateGoal } from '../../apis/goal/usePatchGoalDetail';
 import { useGoalDeadlinePatch } from '../../hooks/useGoalDeadlinePatch';
 
+// 빈 deadline 키 제거 유틸 - 어떤 객체든 deadline이 비어 있으면 키를 삭제
+const stripEmptyDeadline = <T extends { deadline?: any }>(obj: T): T => {
+  if ('deadline' in obj) {
+    const d = (obj as any).deadline;
+    const isEmptyObj =
+      d && typeof d === 'object' && !Array.isArray(d) && Object.keys(d).length === 0;
+    if (d == null || isEmptyObj) {
+      delete (obj as any).deadline;
+    }
+  }
+  return obj;
+};
+
+// 생성 payload 빌더: 날짜가 없으면 deadline 키 자체를 만들지 않음
+const buildCreatePayload = (params: {
+  title: string;
+  content: string;
+  state: StatusCode;
+  priority: PriorityCode;
+  managersId: number[];
+  issuesId: number[];
+  selectedDate: [Date | null, Date | null];
+}): CreateGoalDetailDto => {
+  const { title, content, state, priority, managersId, issuesId, selectedDate } = params;
+  const [start, end] = selectedDate;
+
+  // 기본값: 오늘 날짜(서버가 LocalDate로 파싱 가능한 YYYY-MM-DD)
+  const today = new Date();
+  const fallback = formatDateHyphen(today); // 예: "2025-08-15"
+
+  const hasAny = !!start || !!end;
+
+  const payload: CreateGoalDetailDto = {
+    title,
+    content,
+    state,
+    priority,
+    managersId,
+    issuesId,
+    deadline: hasAny
+      ? {
+          ...(start ? { start: formatDateHyphen(start) } : { start: fallback }),
+          ...(end ? { end: formatDateHyphen(end) } : { end: fallback }),
+        }
+      : {
+          // 서버가 null을 허용하지 않아 NPE 발생하므로 유효값으로 채워 보냄
+          start: fallback,
+          end: fallback,
+        },
+  };
+
+  return payload;
+};
+
+// 수정 payload 머지: patch에서 빈 deadline이 들어와도 키 제거
+const mergeUpdatePayload = (
+  base: Omit<UpdateGoalDetailDto, 'deadline'> & { deadline?: UpdateGoalDetailDto['deadline'] },
+  patch: Partial<UpdateGoalDetailDto> | undefined | null
+): UpdateGoalDetailDto => {
+  const merged: UpdateGoalDetailDto = { ...base, ...(patch ?? {}) } as UpdateGoalDetailDto;
+  return stripEmptyDeadline(merged);
+};
+
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
  * (2) view - 조회 모드: 작성 완료 후 조회할 때
@@ -140,8 +203,6 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     if (isSaving) return;
     isSubmittingRequestRef.current = true;
 
-    const [start, end] = selectedDate;
-
     // 화면 상태를 공통 페이로드로 구성
     const basePayload = {
       title,
@@ -152,18 +213,13 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
       issuesId,
     };
     if (mode === 'create') {
-      // 생성 시에는 기존 로직 유지 (규칙 제약 없음)
-      const payload: CreateGoalDetailDto = {
+      // 생성 시 유틸 사용: deadline 키 생략 보장
+      const payload = buildCreatePayload({
         ...basePayload,
-        ...(start || end
-          ? {
-              deadline: {
-                ...(start ? { start: formatDateHyphen(start) } : {}),
-                ...(end ? { end: formatDateHyphen(end) } : {}),
-              },
-            }
-          : {}),
-      };
+        selectedDate,
+      });
+
+      console.log('POST /goals payload =', JSON.parse(JSON.stringify(payload)));
 
       submitGoal(payload, {
         onSuccess: ({ goalId }) => handleToggleMode(goalId),
@@ -173,7 +229,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
       });
     } else if (mode === 'edit') {
       const patch = buildPatchForEditSubmit(selectedDate);
-      const payload = { ...basePayload, ...(patch ?? {}) } as UpdateGoalDetailDto;
+      const payload = mergeUpdatePayload(basePayload, patch);
 
       updateGoal(payload, {
         onSuccess: () => {

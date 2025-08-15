@@ -28,6 +28,8 @@ const createGoal = async (
     return response.data.result;
   } catch (error: any) {
     console.error('목표 작성 실패:', error);
+    console.log('👉 RESPONSE STATUS:', error?.response?.status);
+    console.log('👉 RESPONSE DATA:', error?.response?.data);
     throw error;
   }
 };
