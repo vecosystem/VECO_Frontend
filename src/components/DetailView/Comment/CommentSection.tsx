@@ -13,7 +13,8 @@ const CommentSection = () => {
   const { data: commentList } = useGetCommentList(targetId ?? 0, category ?? 'GOAL');
 
   useEffect(() => {
-    setComments(commentList?.comments ?? []);
+    console.log('commentList', commentList);
+    setComments(commentList?.info ?? []);
   }, [commentList]);
 
   return (
@@ -37,13 +38,14 @@ const CommentSection = () => {
           <>
             {/* 댓글을 순서대로 목록에 추가 */}
             <div className="relative flex flex-col gap-y-[2.4rem] w-full">
-              {comments.map(({ commentId, author, content, createdAt }) => (
+              {comments.map(({ id, profileUrl, name, createdAt, content }) => (
                 <CommentItem
-                  key={commentId}
-                  commentId={commentId}
-                  author={author}
-                  content={content}
+                  key={id}
+                  id={id}
+                  profileUrl={profileUrl}
+                  name={name}
                   createdAt={createdAt}
+                  content={content}
                 />
               ))}
             </div>
