@@ -2,7 +2,6 @@ import { axiosInstance } from '../axios.ts';
 import { useQuery } from '@tanstack/react-query';
 import { queryKey } from '../../constants/queryKey.ts';
 import type { ResponseViewGoalDetailDto, ViewGoalDetailDto } from '../../types/goal.ts';
-import type { UseQueryOptions } from '@tanstack/react-query';
 
 /**
  * 목표 상세 조회 함수
@@ -25,14 +24,10 @@ const getGoalDetail = async (goalId: number): Promise<ViewGoalDetailDto> => {
   }
 };
 
-export const useGetGoalDetail = (
-  goalId: number,
-  options?: UseQueryOptions<ViewGoalDetailDto, Error>
-) => {
-  return useQuery<ViewGoalDetailDto, Error>({
+export const useGetGoalDetail = (goalId: number) => {
+  return useQuery({
     queryKey: [queryKey.GOAL_DETAIL, goalId],
     queryFn: () => getGoalDetail(goalId),
-    enabled: Number.isFinite(goalId),
-    ...options,
+    enabled: Number.isFinite(goalId), // goalId가 정상적인 값이 아닐 경우 쿼리 실행X
   });
 };

@@ -7,26 +7,6 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { serializeEditor } from '../../../../utils/editorStateIO';
 import type { EditorState } from 'lexical';
 
-export const EMPTY_EDITOR_STATE = JSON.stringify({
-  root: {
-    children: [
-      {
-        children: [],
-        direction: null,
-        format: '',
-        indent: 0,
-        type: 'paragraph',
-        version: 1,
-      },
-    ],
-    direction: null,
-    format: '',
-    indent: 0,
-    type: 'root',
-    version: 1,
-  },
-});
-
 export type SubmitHandleRef = {
   getJson: () => string; // 상세페이지에서 '작성 완료' 버튼 눌러서 한번 제출 시 직렬화
   loadJson: (json: string) => void; // 역직렬화
