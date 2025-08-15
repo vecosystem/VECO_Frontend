@@ -1,7 +1,7 @@
 // WorkspaceGoalDetail.tsx
 // 워크스페이스 전체 팀 - 목표 상세페이지
 
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, startTransition } from 'react';
 import WorkspaceDetailHeader from '../../components/DetailView/WorkspaceDetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -165,7 +165,10 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
       };
 
       submitGoal(payload, {
-        onSuccess: ({ goalId }) => handleToggleMode(goalId),
+        onSuccess: ({ goalId }) => {
+          queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', goalId] }); // ★ 여기로 이동
+          startTransition(() => handleToggleMode(goalId));
+        },
         onSettled: () => {
           isSubmittingRequestRef.current = false;
         },
@@ -176,7 +179,10 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
 
       updateGoal(payload, {
         onSuccess: () => {
-          handleToggleMode();
+          if (Number.isFinite(numericGoalId)) {
+            queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', numericGoalId] }); // ★ 여기
+          }
+          startTransition(() => handleToggleMode());
         },
         onSettled: () => {
           isSubmittingRequestRef.current = false;

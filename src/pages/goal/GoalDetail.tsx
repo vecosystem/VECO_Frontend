@@ -1,7 +1,7 @@
 // GoalDetail.tsx
 // 목표 상세페이지
 
-import { useState, useRef } from 'react';
+import { useState, useRef, startTransition } from 'react';
 import DetailHeader from '../../components/DetailView/DetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -165,7 +165,10 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
       };
 
       submitGoal(payload, {
-        onSuccess: ({ goalId }) => handleToggleMode(goalId),
+        onSuccess: ({ goalId }) => {
+          queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', goalId] }); // ★ 여기로 이동
+          startTransition(() => handleToggleMode(goalId));
+        },
         onSettled: () => {
           isSubmittingRequestRef.current = false;
         },
@@ -176,7 +179,10 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
       updateGoal(payload, {
         onSuccess: () => {
-          handleToggleMode();
+          if (Number.isFinite(numericGoalId)) {
+            queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', numericGoalId] }); // ★ 여기
+          }
+          startTransition(() => handleToggleMode());
         },
         onSettled: () => {
           isSubmittingRequestRef.current = false;
