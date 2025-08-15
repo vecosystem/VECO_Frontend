@@ -25,7 +25,10 @@ import { formatDateDot, formatDateHyphen } from '../../utils/formatDate';
 import { useToggleMode } from '../../hooks/useToggleMode';
 import CommentInput from '../../components/DetailView/Comment/CommentInput';
 import { usePostComment } from '../../apis/comment/usePostComment';
-import type { SubmitHandleRef } from '../../components/DetailView/TextEditor/lexical-plugins/SubmitHandlePlugin';
+import {
+  EMPTY_EDITOR_STATE,
+  type SubmitHandleRef,
+} from '../../components/DetailView/TextEditor/lexical-plugins/SubmitHandlePlugin';
 import type { CreateGoalDetailDto, UpdateGoalDetailDto } from '../../types/goal';
 import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail';
 import { useParams } from 'react-router-dom';
@@ -145,7 +148,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     // 화면 상태를 공통 페이로드로 구성
     const basePayload = {
       title,
-      content: editorSubmitRef.current?.getJson() ?? '',
+      content: editorSubmitRef.current?.getJson() ?? EMPTY_EDITOR_STATE,
       state,
       priority,
       managersId,
@@ -155,14 +158,10 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
       // 생성 시에는 기존 로직 유지 (규칙 제약 없음)
       const payload: CreateGoalDetailDto = {
         ...basePayload,
-        ...(start || end
-          ? {
-              deadline: {
-                ...(start ? { start: formatDateHyphen(start) } : {}),
-                ...(end ? { end: formatDateHyphen(end) } : {}),
-              },
-            }
-          : {}),
+        deadline: {
+          ...(start ? { start: formatDateHyphen(start) } : {}),
+          ...(end ? { end: formatDateHyphen(end) } : {}),
+        },
       };
 
       submitGoal(payload, {
