@@ -1,3 +1,5 @@
+import type { CommonResponse } from './common';
+
 export type TeamListResponse = {
   teamId: number;
   teamName: string;
@@ -52,3 +54,9 @@ export type MyProfileImageResponse = {
   memberId: number;
   profileImageUrl: string;
 };
+
+export type InviteMemberResponse = CommonResponse<{
+  name: string;
+  inviteUrl: string;
+  invitePassword: string;
+} | null>;
