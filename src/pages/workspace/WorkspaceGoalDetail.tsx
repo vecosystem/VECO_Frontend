@@ -42,13 +42,15 @@ import { useParams } from 'react-router-dom';
 import { useGetWorkspaceMembers } from '../../apis/setting/useGetWorkspaceMembers';
 import { useGetSimpleIssueList } from '../../apis/issue/useGetSimpleIssueList';
 import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail';
-import { useIsMutating, useQueryClient } from '@tanstack/react-query';
+import { useIsMutating } from '@tanstack/react-query';
 import { mutationKey } from '../../constants/mutationKey';
 import type { CreateGoalDetailDto, UpdateGoalDetailDto } from '../../types/goal';
 import { useGetGoalDetail } from '../../apis/goal/useGetGoalDetail';
 import { useHydrateGoalDetail } from '../../hooks/useHydrateGoalDetail';
 import { useUpdateGoal } from '../../apis/goal/usePatchGoalDetail';
 import { useGoalDeadlinePatch } from '../../hooks/useGoalDeadlinePatch';
+import queryClient from '../../utils/queryClient';
+import { queryKey } from '../../constants/queryKey';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -92,9 +94,6 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
   const canPatch = Number.isFinite(numericGoalId); // PATCH 가능 조건
-
-  // 상세 조회 훅: goalId가 있을 때만 자동 실행됨
-  const queryClient = useQueryClient();
 
   // 단일 선택 라벨
   const selectedStatusLabel = STATUS_LABELS[state];
@@ -166,7 +165,8 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
 
       submitGoal(payload, {
         onSuccess: ({ goalId }) => {
-          queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', goalId] });
+          queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, String(teamId)] });
+          queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, String(teamId)] });
           startTransition(() => handleToggleMode(goalId));
         },
         onSettled: () => {
@@ -180,7 +180,9 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
       updateGoal(payload, {
         onSuccess: () => {
           if (Number.isFinite(numericGoalId)) {
-            queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', numericGoalId] });
+            queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, String(teamId)] });
+            queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, String(teamId)] });
+            queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_DETAIL, numericGoalId] });
           }
           startTransition(() => handleToggleMode());
         },

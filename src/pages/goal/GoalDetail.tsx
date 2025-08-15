@@ -32,7 +32,7 @@ import {
 import type { CreateGoalDetailDto, UpdateGoalDetailDto } from '../../types/goal';
 import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail';
 import { useParams } from 'react-router-dom';
-import { useIsMutating, useQueryClient } from '@tanstack/react-query';
+import { useIsMutating } from '@tanstack/react-query';
 import { mutationKey } from '../../constants/mutationKey';
 import MultiSelectPropertyItem from '../../components/DetailView/MultiSelectPropertyItem';
 import { statusLabelToCode, priorityLabelToCode } from '../../types/detailitem';
@@ -50,6 +50,7 @@ import { useGetGoalDetail } from '../../apis/goal/useGetGoalDetail';
 import { useUpdateGoal } from '../../apis/goal/usePatchGoalDetail';
 import { useGoalDeadlinePatch } from '../../hooks/useGoalDeadlinePatch';
 import { queryKey } from '../../constants/queryKey';
+import queryClient from '../../utils/queryClient';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -93,9 +94,6 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
   const canPatch = Number.isFinite(numericGoalId); // PATCH 가능 조건
-
-  // 상세 조회 훅: goalId가 있을 때만 자동 실행됨
-  const queryClient = useQueryClient();
 
   // 단일 선택 라벨
   const selectedStatusLabel = STATUS_LABELS[state];
