@@ -57,9 +57,6 @@ const IssueHome = () => {
 
   const params = useMemo(
     () => ({
-      // 우선 기본값 설정
-      cursor: '-1',
-      size: 3,
       query: filterToQuery(filter),
     }),
     [filter]
