@@ -153,8 +153,11 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
       state,
       priority,
       managersId,
-      ...(goalId !== null ? { goalId } : {}), // null이면 키 생략
+      ...(goalId !== null && goalId !== undefined && goalId !== -1 ? { goalId } : {}),
     };
+
+    console.log('Request body:', basePayload);
+
     if (mode === 'create') {
       // 생성 시에는 기존 로직 유지 (규칙 제약 없음)
       const payload: CreateIssueDetailDto = {
@@ -178,6 +181,11 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
     } else if (mode === 'edit') {
       const patch = buildPatchForEditSubmit(selectedDate);
       const payload = { ...basePayload, ...(patch ?? {}) } as UpdateIssueDetailDto;
+
+      // 수정 시 goalId가 없으면 생략된 상태로 보냄
+      if (goalId === null || goalId === undefined || goalId === -1) {
+        delete payload.goalId; // goalId가 null, undefined, -1이면 삭제
+      }
 
       updateIssue(payload, {
         onSuccess: () => {
