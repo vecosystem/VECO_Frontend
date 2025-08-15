@@ -14,7 +14,7 @@ import queryClient from '../../utils/queryClient.ts';
  * 목표 수정 (PATCH) 함수
  * - 동일 teamId / 동일 goalId 대상의 상세 내용 반영
  * - pages/goal/GoalDetail.tsx
- * - pages/goal/WorkspaceGoalDetail.tsx
+ * - pages/workspace/WorkspaceGoalDetail.tsx
  */
 const updateGoal = async (
   teamId: number,

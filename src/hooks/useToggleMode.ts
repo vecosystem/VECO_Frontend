@@ -34,14 +34,14 @@ export const useToggleMode = ({ mode, setMode, type, id, isDefaultTeam }: UseTog
       if (!base) return;
 
       const effectiveId = overrideId ?? id;
-      if (effectiveId == null) return; // id 없으면 아무 것도 하지 않음
+      if (!Number.isFinite(effectiveId as number)) return;
 
       if (mode === 'create' || mode === 'edit') {
         setMode('view');
-        navigate(`${base}/${effectiveId}`, { replace: mode === 'create' }); // create 모드일 때만 replace 적용하여 기존 생성 페이지 기록 삭제
+        navigate(`${base}/${String(effectiveId)}`, { replace: mode === 'create' }); // create 모드일 때만 replace 적용하여 기존 생성 페이지 기록 삭제
       } else if (mode === 'view') {
         setMode('edit');
-        navigate(`${base}/${effectiveId}/edit`);
+        navigate(`${base}/${String(effectiveId)}/edit`);
       }
     },
     [getBasePath, mode, id, navigate, setMode]

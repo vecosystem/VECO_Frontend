@@ -7,7 +7,7 @@ import type { ResponseViewGoalDetailDto, ViewGoalDetailDto } from '../../types/g
  * 목표 상세 조회 함수
  * - 목표 상세페이지 조회 모드에서 사용
  * - pages/goal/GoalDetail.tsx
- * - pages/goal/WorkspaceGoalDetail.tsx
+ * - pages/workspace/WorkspaceGoalDetail.tsx
  */
 const getGoalDetail = async (goalId: number): Promise<ViewGoalDetailDto> => {
   try {

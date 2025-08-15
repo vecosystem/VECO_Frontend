@@ -1,7 +1,7 @@
 import IcCheck from '../../assets/icons/check.svg';
 import IcDownArrow from '../../assets/icons/down-arrow.svg';
 import useDropdownRef from '../../hooks/useDropdownRef.ts';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 interface DropdownProps {
   value?: string; // 현재 선택된 값
@@ -21,6 +21,9 @@ const Dropdown = ({
   className,
 }: DropdownProps) => {
   const dropdownRef = useDropdownRef(onClose);
+
+  // 중복 라벨 제거
+  const safeOptions = useMemo(() => Array.from(new Set(options)), [options]);
 
   const handleSelect = useCallback(
     (option: string) => {
@@ -46,9 +49,9 @@ const Dropdown = ({
           <img src={IcDownArrow} alt={defaultValue} />
         </div>
       )}
-      {options.map((option) => (
+      {safeOptions.map((option, idx) => (
         <div
-          key={option}
+          key={`${option}__${idx}`} // 고유 key 보장
           className={`flex py-[0.75rem] px-[1.2rem] ${value === option ? 'bg-gray-200' : ''}`}
           onClick={() => handleSelect(option)}
         >
@@ -56,7 +59,7 @@ const Dropdown = ({
           <img
             className={`opacity-0 ${value === option ? 'opacity-100' : 'opacity-0'}`}
             src={IcCheck}
-            alt={option}
+            alt={`${option} 선택됨`}
           />
         </div>
       ))}
