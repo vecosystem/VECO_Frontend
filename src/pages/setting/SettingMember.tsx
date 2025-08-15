@@ -54,14 +54,7 @@ const SettingMember = () => {
               ))}
         </>
       )}
-      {isModalOpen && (
-        <MemberInviteModal
-          memberName={memberName}
-          url={inviteUrl}
-          password={invitePassword}
-          onClick={() => setIsModalOpen(!isModalOpen)}
-        />
-      )}
+      {isModalOpen && <MemberInviteModal onClick={() => setIsModalOpen(false)} />}
     </div>
   );
 };
