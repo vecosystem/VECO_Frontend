@@ -11,23 +11,28 @@ import type { ResponseViewIssueDetailDto, ViewIssueDetailDto } from '../../types
  */
 const getIssueDetail = async (issueId: number): Promise<ViewIssueDetailDto> => {
   try {
-    const response = await axiosInstance.get<ResponseViewIssueDetailDto>(`/api/issues/${issueId}`);
-
-    if (!response.data.result) return Promise.reject(response);
-    if (response.data?.isSuccess) {
-      console.log('조회 성공:', response.data.result);
+    const { data } = await axiosInstance.get<ResponseViewIssueDetailDto>(`/api/issues/${issueId}`);
+    if (!data.result) return Promise.reject(data);
+    if (data?.isSuccess) {
+      console.log('조회 성공:', data.result);
     }
-    return response.data.result;
+    return data.result;
   } catch (error) {
     console.error('이슈 상세 조회 실패', error);
     throw error;
   }
 };
 
-export const useGetIssueDetail = (issueId: number) => {
-  return useQuery({
+export const useGetIssueDetail = (issueId: number, opts?: { enabled?: boolean }) => {
+  const enabled = (opts?.enabled ?? true) && Number.isFinite(issueId) && issueId > 0;
+
+  return useQuery<ViewIssueDetailDto>({
     queryKey: [queryKey.ISSUE_DETAIL, issueId],
     queryFn: () => getIssueDetail(issueId),
-    enabled: Number.isFinite(issueId),
+    enabled, // ← create 경로 등에서 NaN/0이면 쿼리 미실행
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 404) return false; // 404면 재시도 안함
+      return failureCount < 2;
+    },
   });
 };

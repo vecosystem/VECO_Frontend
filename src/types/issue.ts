@@ -65,7 +65,7 @@ export type CreateIssueDetailDto = {
   priority: string;
   managersId: number[];
   deadline?: Deadline;
-  goalId: number;
+  goalId?: number;
 };
 
 export type CreateIssueResultDto = {
@@ -100,7 +100,7 @@ export type UpdateIssueDetailDto = {
   priority?: string | null;
   managersId?: number[] | null;
   deadline?: Deadline | null;
-  goalId: number | null;
+  goalId?: number | null;
 };
 
 export type UpdateIssueResultDto = {

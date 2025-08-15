@@ -1,24 +1,24 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { buildDeadlinePatch } from '../utils/deadlinePatch';
-import type { UpdateGoalDetailDto } from '../types/goal';
+import type { UpdateIssueDetailDto } from '../types/issue';
 
-type UseGoalDeadlinePatchParams = {
-  goalDetail: any;
+type UseIssueDeadlinePatchParams = {
+  issueDetail: any;
   isViewMode: boolean;
-  canPatch: boolean; // Number.isFinite(goalId) 등
-  mutateUpdate: (payload: UpdateGoalDetailDto, opts?: { onSuccess?: () => void }) => void;
+  canPatch: boolean;
+  mutateUpdate: (payload: UpdateIssueDetailDto, opts?: { onSuccess?: () => void }) => void;
 };
 
 /**
- * - goalDetail의 기존 deadline(start/end)을 기억
+ * - issueDetail의 기존 deadline(start/end)을 기억
  * - 달력 onSelect / edit 제출 시 변경분만 계산해 PATCH 전송
  */
-export function useGoalDeadlinePatch({
-  goalDetail,
+export function useIssueDeadlinePatch({
+  issueDetail,
   isViewMode,
   canPatch,
   mutateUpdate,
-}: UseGoalDeadlinePatchParams) {
+}: UseIssueDeadlinePatchParams) {
   const originalDeadlineRef = useRef<{ start: string | null; end: string | null }>({
     start: null,
     end: null,
@@ -27,15 +27,15 @@ export function useGoalDeadlinePatch({
   // goalDetail 변경 시 원본 저장
   useEffect(() => {
     const prevStart =
-      goalDetail?.deadline?.start && typeof goalDetail.deadline.start === 'string'
-        ? goalDetail.deadline.start
+      issueDetail?.deadline?.start && typeof issueDetail.deadline.start === 'string'
+        ? issueDetail.deadline.start
         : null;
     const prevEnd =
-      goalDetail?.deadline?.end && typeof goalDetail.deadline.end === 'string'
-        ? goalDetail.deadline.end
+      issueDetail?.deadline?.end && typeof issueDetail.deadline.end === 'string'
+        ? issueDetail.deadline.end
         : null;
     originalDeadlineRef.current = { start: prevStart, end: prevEnd };
-  }, [goalDetail]);
+  }, [issueDetail]);
 
   /** view 모드에서 달력 선택 → 즉시 PATCH */
   const handleSelectDateAndPatch = useCallback(
