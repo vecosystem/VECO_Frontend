@@ -1,5 +1,5 @@
 import { axiosInstance } from '../axios.ts';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import {
   type ResponseCreateGoalDetailDto,
   type CreateGoalDetailDto,
@@ -7,6 +7,7 @@ import {
 } from '../../types/goal.ts';
 import { mutationKey } from '../../constants/mutationKey.ts';
 import { queryKey } from '../../constants/queryKey.ts';
+import queryClient from '../../utils/queryClient.ts';
 
 /**
  * 목표 작성 함수
@@ -35,15 +36,13 @@ const createGoal = async (
 };
 
 export const useCreateGoal = (teamId: number) => {
-  const qc = useQueryClient();
-
   return useMutation<CreateGoalResultDto, Error, CreateGoalDetailDto>({
     mutationKey: [mutationKey.GOAL_CREATE, teamId],
     mutationFn: (payload) => createGoal(teamId, payload),
     onSuccess: () => {
       // 목표 작성하여 POST 후 조회되는 데이터 최신화
-      qc.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, teamId] });
-      qc.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, teamId] });
+      queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, teamId] });
+      queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, teamId] });
     },
   });
 };
