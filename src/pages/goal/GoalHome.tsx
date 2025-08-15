@@ -19,6 +19,7 @@ import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkel
 import { mergeGroups } from '../../components/ListView/MergeGroup';
 import ServerError from '../ServerError';
 import { useManagerProfiles } from '../../hooks/useManagerProfiles';
+import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
@@ -32,6 +33,12 @@ const GoalHome = () => {
   const handleClick = () => {
     navigate('detail/create');
   };
+
+  // 팀 정보 불러오기
+  const { data: teamData } = useGetWorkspaceTeams();
+  const currentTeam = useMemo(() => {
+    return teamData?.pages[0].teamList.find((team) => team.teamId === Number(teamId));
+  }, [teamData, teamId]);
 
   const filterToQuery = (filter: ItemFilter) => {
     switch (filter) {
@@ -48,9 +55,6 @@ const GoalHome = () => {
 
   const params = useMemo(
     () => ({
-      // 우선 기본값 설정
-      cursor: '-1',
-      size: 3,
       query: filterToQuery(filter),
     }),
     [filter]
@@ -61,7 +65,7 @@ const GoalHome = () => {
     useGetInfiniteGoalList(teamId ?? '', params);
 
   // 그룹화
-  const goalGroups = data?.pages ?? [];
+  const goalGroups = data?.pages.flatMap((page) => page.result?.data ?? []) ?? [];
   const allGoalsFlat = goalGroups.flatMap((g) => g.goals);
 
   const allGroups: GroupedGoal[] = goalGroups.map((g) => ({
@@ -133,8 +137,7 @@ const GoalHome = () => {
   return (
     <>
       <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
-        {/* 팀 아이콘, 팀명, props로 요소 전달 가능 */}
-        <TeamIcon />
+        <TeamIcon teamName={currentTeam?.teamName} teamImgUrl={currentTeam?.teamImageUrl} />
         <ListViewToolbar
           filter={filter}
           isDeleteMode={isDeleteMode}
@@ -158,14 +161,18 @@ const GoalHome = () => {
             buttonColor="bg-error-400"
             // 삭제 요소 전달
             onClick={() => {
-              console.log('삭제할 ID 리스트:', checkItems);
               handleDeleteItem();
             }}
           />
         )}
         {isEmpty ? (
-          <div className="flex flex-1 items-center justify-center">
-            <div className="font-body-r">목표를 생성하세요</div>
+          <div className="flex flex-1 flex-col items-center justify-center">
+            <div
+              className="font-body-r cursor-pointer underline decoration-1 text-gray-500 [text-underline-position:under]"
+              onClick={handleClick}
+            >
+              목표를 생성하세요
+            </div>
           </div>
         ) : isLoading ? (
           <ListViewItemSkeletonList />

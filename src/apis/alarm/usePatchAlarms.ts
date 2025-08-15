@@ -19,10 +19,7 @@ const patchAlarmItem = async ({ alarmId }: RequestAlarmListDto): Promise<CommonR
 export const usePatchAlarms = () => {
   return useMutation({
     mutationFn: patchAlarmItem,
-    onSuccess(data, variables) {
-      console.log('Alarm patched successfully:', data);
-
-      // TODO : optimistic update 추후 적용
+    onSuccess(_data, variables) {
       queryClient.setQueriesData({ queryKey: [queryKey.NOTI_LIST] }, (oldData: any) => {
         if (!oldData?.result?.groupedList) return oldData;
 

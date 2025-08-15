@@ -14,7 +14,6 @@ const getExternalList = async (
       params: paginationDto,
     });
 
-    console.log('외부 연동 리스트 데이터 불러오기 성공', data);
     return data;
   } catch (error) {
     console.error('Error fetching external list:', error);
@@ -31,9 +30,9 @@ export const useGetExternalList = (teamId: string, params: PaginationDto) => {
 
 export const useGetInfiniteExternalList = (teamId: string, params: PaginationDto) => {
   return useInfiniteQuery({
-    queryKey: [queryKey.EXTERNAL_LIST, teamId, params.query],
+    queryKey: [queryKey.EXTERNAL_LIST, teamId, { ...params }],
     queryFn: ({ pageParam = null }) =>
-      getExternalList({ teamId }, { ...params, cursor: pageParam || undefined, size: 50 }), // 한 번에 불러올 데이터 개수
+      getExternalList({ teamId }, { ...params, cursor: pageParam || undefined, size: 3 }), // 한 번에 불러올 데이터 개수
     initialPageParam: null,
     getNextPageParam: (lastPage: ResponseExternalDto) => {
       if (lastPage.result?.hasNext) {
@@ -41,10 +40,6 @@ export const useGetInfiniteExternalList = (teamId: string, params: PaginationDto
       }
       return undefined;
     },
-    select: (data) => ({
-      pages: data.pages.flatMap((page) => page.result?.data ?? []),
-      pageParams: data.pageParams,
-    }),
     enabled: !!teamId,
   });
 };

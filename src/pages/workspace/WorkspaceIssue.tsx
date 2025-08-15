@@ -1,5 +1,5 @@
 import PlusIcon from '../../assets/icons/plus.svg';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PRIORITY_LABELS, STATUS_LABELS, type ItemFilter } from '../../types/listItem';
 import GroupTypeIcon from '../../components/ListView/GroupTypeIcon';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
@@ -8,16 +8,18 @@ import useCheckItems from '../../hooks/useCheckItems';
 import ListViewToolbar from '../../components/ListView/ListViewToolbar';
 import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import Modal from '../../components/Modal/Modal';
-import {
-  dummyGoalTitleIssueGroups,
-  dummyManagerIssueGroups,
-  dummyPriorityIssueGroups,
-  dummyStatusIssueGroups,
-} from '../../types/testDummy';
-import type { GroupedIssue, IssueFilter } from '../../types/issue';
+import type { GroupedIssue } from '../../types/issue';
 import { getSortedGrouped } from '../../utils/listGroupSortUtils';
-import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useGetInfiniteIssueList } from '../../apis/issue/useGetIssueList';
+import { useDeleteIssues } from '../../apis/issue/useDeleteIssues';
+import { mergeGroups } from '../../components/ListView/MergeGroup';
+import { useInView } from 'react-intersection-observer';
+import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkeletonList';
+import ServerError from '../ServerError';
+import { useManagerProfiles } from '../../hooks/useManagerProfiles';
+import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
+import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자', '목표'] as const;
 
@@ -29,34 +31,75 @@ const WorkspaceIssue = () => {
   const [filter, setFilter] = useState<ItemFilter>('상태');
 
   const handleClick = () => {
-    navigate(':issueId');
+    navigate('detail/create');
   };
+  // 팀 정보 불러오기
+  const { data: teamData } = useGetWorkspaceTeams();
+  const currentTeam = useMemo(() => {
+    return teamData?.pages[0].teamList.find((team) => team.teamId === Number(teamId));
+  }, [teamData, teamId]);
 
-  // filter 변경마다 다른 데이터 선택 -> 추후 새로운 데이터 불러오도록
-  const dimmyIssueGroups = useMemo<IssueFilter[]>(() => {
+  const filterToQuery = (filter: ItemFilter) => {
     switch (filter) {
       case '상태':
-        return dummyStatusIssueGroups;
+        return 'state';
       case '우선순위':
-        return dummyPriorityIssueGroups;
+        return 'priority';
       case '담당자':
-        return dummyManagerIssueGroups;
+        return 'manager';
       case '목표':
-        return dummyGoalTitleIssueGroups;
+        return 'goal';
       default:
-        return [];
+        return '';
     }
-  }, [filter]);
+  };
 
-  const allGoalsFlat = dimmyIssueGroups.flatMap((i) => i.issues);
+  const params = useMemo(
+    () => ({
+      // 우선 기본값 설정
+      cursor: '-1',
+      size: 3,
+      query: filterToQuery(filter),
+    }),
+    [filter]
+  );
 
+  // 데이터 불러오기
+  const { data, isFetchingNextPage, isLoading, isError, hasNextPage, fetchNextPage } =
+    useGetInfiniteIssueList(teamId ?? '', params);
+
+  // 그룹화
+  const issueGroups = data?.pages.flatMap((page) => page.result?.data ?? []) ?? [];
+  const allIssuesFlat = issueGroups.flatMap((i) => i.issues);
+
+  const allGroups: GroupedIssue[] = issueGroups.map((i) => ({
+    key: i.filterName,
+    items: i.issues,
+  }));
+
+  const grouped = mergeGroups(allGroups);
+  const sortedGrouped = getSortedGrouped(filter, grouped);
+  const isEmpty = grouped.every(({ items }) => items.length === 0);
+
+  // 무한스크롤 fetching
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
+
+  // 삭제 관련 상태 및 함수
   const {
     checkedIds: checkItems,
     isAllChecked,
     handleCheck,
     handleSelectAll,
     setCheckedIds,
-  } = useCheckItems(allGoalsFlat, 'id');
+  } = useCheckItems(allIssuesFlat, 'id');
 
   const [isDeleteMode, setIsDeleteMode] = useState(false);
 
@@ -73,26 +116,35 @@ const WorkspaceIssue = () => {
     }
   };
 
+  const { mutate: deleteIssueItem } = useDeleteIssues();
   const handleDeleteItem = () => {
-    // TODO: 실제 삭제 로직 구현
-    setIsDeleteMode(false);
-    setCheckedIds([]);
+    deleteIssueItem(
+      {
+        teamId: teamId ?? '',
+        issueIds: checkItems.map(Number),
+      },
+      {
+        onSuccess() {
+          setIsDeleteMode(false);
+          setCheckedIds([]);
+        },
+      }
+    );
   };
 
-  // 그룹핑
-  const grouped: GroupedIssue[] = dimmyIssueGroups.map((i) => ({
-    key: i.filterName,
-    items: i.issues,
-  }));
+  const managerProfiles = useManagerProfiles(allIssuesFlat);
 
-  const sortedGrouped = getSortedGrouped(filter, grouped);
-  const isEmpty = grouped.every(({ items }) => items.length === 0);
+  if (isError) {
+    return <ServerError error={new Error()} resetErrorBoundary={() => window.location.reload()} />;
+  }
 
   return (
     <>
       <div className="flex flex-1 flex-col gap-[3.2rem] p-[3.2rem]">
-        {/* 워크스페이스 아이콘, 워크스페이스명, props로 요소 전달 가능 */}
-        <WorkspaceIcon />
+        <WorkspaceIcon
+          workspaceName={currentTeam?.teamName}
+          workspaceImgUrl={currentTeam?.teamImageUrl}
+        />
         <ListViewToolbar
           filter={filter}
           isDeleteMode={isDeleteMode}
@@ -116,17 +168,22 @@ const WorkspaceIssue = () => {
             buttonColor="bg-error-400"
             // 삭제 요소 전달
             onClick={() => {
-              console.log('삭제할 ID 리스트:', checkItems);
               handleDeleteItem();
             }}
           />
-        )}{' '}
+        )}
         {isEmpty ? (
-          <div className="flex flex-1 items-center justify-center">
-            <div className="font-body-r">목표를 생성하세요</div>
+          <div className="flex flex-1 flex-col items-center justify-center">
+            <div
+              className="font-body-r cursor-pointer underline decoration-1 text-gray-500 [text-underline-position:under]"
+              onClick={handleClick}
+            >
+              이슈를 생성하세요
+            </div>
           </div>
+        ) : isLoading ? (
+          <ListViewItemSkeletonList />
         ) : (
-          /* 리스트뷰 */
           <div className="flex flex-col gap-[4.8rem]">
             {sortedGrouped.map(({ key, items }) =>
               /* 해당 요소 존재할 때만 생성 */
@@ -139,7 +196,11 @@ const WorkspaceIssue = () => {
                       <GroupTypeIcon
                         filter={filter}
                         typeKey={key}
-                        profileImgUrl={filter === '담당자' ? '' : undefined}
+                        profileImgUrl={
+                          filter === '담당자' && managerProfiles[key]
+                            ? managerProfiles[key]
+                            : undefined
+                        }
                       />
                       {/* 유형명 */}
                       <div>
@@ -168,14 +229,13 @@ const WorkspaceIssue = () => {
                       checked={checkItems.includes(issue.id)}
                       onCheckChange={(checked) => handleCheck(issue.id, checked)}
                       filter={filter}
-                      onItemClick={() =>
-                        navigate(`/workspace/default/team/${teamId}/issue/${issue.id}`)
-                      }
+                      onItemClick={() => navigate(`${issue.id}`)}
                     />
                   ))}
                 </div>
               ) : null
             )}
+            <div ref={ref}>{isFetchingNextPage && <ListViewItemSkeletonList count={3} />}</div>
           </div>
         )}
       </div>
