@@ -49,6 +49,7 @@ import { useHydrateGoalDetail } from '../../hooks/useHydrateGoalDetail';
 import { useGetGoalDetail } from '../../apis/goal/useGetGoalDetail';
 import { useUpdateGoal } from '../../apis/goal/usePatchGoalDetail';
 import { useGoalDeadlinePatch } from '../../hooks/useGoalDeadlinePatch';
+import { queryKey } from '../../constants/queryKey';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -166,7 +167,8 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
 
       submitGoal(payload, {
         onSuccess: ({ goalId }) => {
-          queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', goalId] }); // ★ 여기로 이동
+          queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, String(teamId)] });
+          queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, String(teamId)] });
           startTransition(() => handleToggleMode(goalId));
         },
         onSettled: () => {
@@ -180,7 +182,9 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
       updateGoal(payload, {
         onSuccess: () => {
           if (Number.isFinite(numericGoalId)) {
-            queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', numericGoalId] }); // ★ 여기
+            queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, String(teamId)] });
+            queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, String(teamId)] });
+            queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_DETAIL, numericGoalId] });
           }
           startTransition(() => handleToggleMode());
         },
@@ -197,9 +201,6 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const handleCompletion = () => {
     if (!isCompleted) {
       // create 또는 edit 모드에서 view 모드로 전환하려는 시점
-      if (Number.isFinite(numericGoalId)) {
-        queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', numericGoalId] }); // 동일 goalId에서 view로 들어갈 때도 최신화
-      }
       handleSubmit(); // 저장 성공 시 모드 전환
     } else {
       handleToggleMode(); // 모드 전환
@@ -330,7 +331,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
         <div className="w-[33rem] flex flex-col min-h-max">
           {/* 속성 탭 */}
           <div className="w-full h-full flex flex-col gap-[1.6rem] ">
-            <div className="w-full font-title-sub-r tex-gray-600">속성</div>
+            <div className="w-full font-title-sub-r text-gray-600">속성</div>
             <div>
               {/* (1) 상태 */}
               <div onClick={(e) => e.stopPropagation()}>

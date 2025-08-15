@@ -44,8 +44,8 @@ export const useUpdateGoal = (teamId: number, goalId: number) => {
     mutationFn: (payload) => updateGoal(teamId, goalId, payload),
     onSuccess: () => {
       // 상세/목록/관련 파생 쿼리 최신화
-      qc.invalidateQueries({ queryKey: [queryKey.GOAL_DETAIL, goalId] });
       qc.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, teamId] });
+      qc.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, teamId] });
     },
   });
 };

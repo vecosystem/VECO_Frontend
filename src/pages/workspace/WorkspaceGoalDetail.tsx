@@ -166,7 +166,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
 
       submitGoal(payload, {
         onSuccess: ({ goalId }) => {
-          queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', goalId] }); // ★ 여기로 이동
+          queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', goalId] });
           startTransition(() => handleToggleMode(goalId));
         },
         onSettled: () => {
@@ -180,7 +180,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
       updateGoal(payload, {
         onSuccess: () => {
           if (Number.isFinite(numericGoalId)) {
-            queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', numericGoalId] }); // ★ 여기
+            queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', numericGoalId] });
           }
           startTransition(() => handleToggleMode());
         },
@@ -330,7 +330,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
         <div className="w-[33rem] flex flex-col min-h-max">
           {/* 속성 탭 */}
           <div className="w-full h-full flex flex-col gap-[1.6rem] ">
-            <div className="w-full font-title-sub-r tex-gray-600">속성</div>
+            <div className="w-full font-title-sub-r text-gray-600">속성</div>
             <div>
               {/* (1) 상태 */}
               <div onClick={(e) => e.stopPropagation()}>

@@ -42,8 +42,8 @@ export const useCreateGoal = (teamId: number) => {
     mutationFn: (payload) => createGoal(teamId, payload),
     onSuccess: () => {
       // 목표 작성하여 POST 후 조회되는 데이터 최신화
-      qc.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, teamId] }); // 목표 목록(GOAL_LIST)
-      qc.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, teamId] }); // 다음 생성될 목표 ID명(GOAL_NAME)
+      qc.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, teamId] });
+      qc.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, teamId] });
     },
   });
 };
