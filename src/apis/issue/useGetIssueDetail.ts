@@ -6,8 +6,8 @@ import type { ResponseViewIssueDetailDto, ViewIssueDetailDto } from '../../types
 /**
  * 이슈 상세 조회 함수
  * - 이슈 상세페이지 조회 모드에서 사용
- * - pages/goal/GoalDetail.tsx
- * - pages/workspace/WorkspaceGoalDetail.tsx
+ * - pages/issue/IssueDetail.tsx
+ * - pages/workspace/WorkspaceIssueDetail.tsx
  */
 const getIssueDetail = async (issueId: number): Promise<ViewIssueDetailDto> => {
   try {
