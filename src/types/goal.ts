@@ -66,7 +66,7 @@ export type CreateGoalDetailDto = {
   state: string;
   priority: string;
   managersId: number[];
-  deadline?: { start?: string; end?: string };
+  deadline?: Deadline;
   issuesId: number[];
 };
 
@@ -101,7 +101,7 @@ export type UpdateGoalDetailDto = {
   state?: string | null;
   priority?: string | null;
   managersId?: number[] | null;
-  deadline?: { start?: string; end?: string } | null;
+  deadline?: Deadline | null;
   issuesId?: number[] | null;
 };
 
