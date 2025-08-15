@@ -3,7 +3,7 @@ import CopyToClipboard from '../../../../components/Onboarding/CopyToClipboard.t
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import ModalButton from './ModalButton.tsx';
-import { getInviteMembers } from '../../../../apis/setting/useGetInviteMembers.ts';
+import { useGetInviteMembers } from '../../../../apis/setting/useGetInviteMembers.ts';
 
 interface MemberInviteModalProps {
   onClick: () => void;
@@ -11,26 +11,21 @@ interface MemberInviteModalProps {
 
 const MemberInviteModal = ({ onClick }: MemberInviteModalProps) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const { data: inviteMembers } = useGetInviteMembers();
   const [inviteData, setInviteData] = useState<{
     name: string;
     inviteUrl: string;
     invitePassword: string;
   } | null>(null);
-
   useEffect(() => {
-    const fetchInvite = async () => {
-      try {
-        const data = await getInviteMembers();
-        const inviteData = data.result;
-        console.log(inviteData);
-        setInviteData(inviteData ?? null);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchInvite();
-  }, []);
+    if (inviteMembers?.result) {
+      setInviteData({
+        name: inviteMembers.result.name,
+        inviteUrl: inviteMembers.result.inviteUrl,
+        invitePassword: inviteMembers.result.invitePassword,
+      });
+    }
+  }, [inviteMembers]);
 
   return createPortal(
     <div className={`fixed inset-0 flex items-center justify-center bg-black/66 z-50`}>

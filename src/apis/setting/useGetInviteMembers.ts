@@ -17,7 +17,7 @@ export const getInviteMembers = async (): Promise<InviteMemberResponse> => {
 
 export const useGetInviteMembers = () => {
   return useSuspenseQuery({
-    queryKey: [queryKey.WORKSPACE_MEMBERS],
+    queryKey: [queryKey.INVITE_MEMBER],
     queryFn: getInviteMembers,
   });
 };
