@@ -68,7 +68,7 @@ const WorkspaceGoal = () => {
     useGetInfiniteGoalList(teamId ?? '', params);
 
   // 그룹화
-  const goalGroups = data?.pages ?? [];
+  const goalGroups = data?.pages.flatMap((page) => page.result?.data ?? []) ?? [];
   const allGoalsFlat = goalGroups.flatMap((g) => g.goals);
 
   const allGroups: GroupedGoal[] = goalGroups.map((g) => ({

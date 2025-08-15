@@ -40,10 +40,6 @@ export const useGetInfiniteGoalList = (teamId: string, params: PaginationDto) =>
       }
       return undefined;
     },
-    select: (data) => ({
-      pages: data.pages.flatMap((page) => page.result?.data ?? []),
-      pageParams: data.pageParams,
-    }),
     enabled: !!teamId,
   });
 };

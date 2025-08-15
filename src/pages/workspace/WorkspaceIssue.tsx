@@ -69,7 +69,7 @@ const WorkspaceIssue = () => {
     useGetInfiniteIssueList(teamId ?? '', params);
 
   // 그룹화
-  const issueGroups = data?.pages ?? [];
+  const issueGroups = data?.pages.flatMap((page) => page.result?.data ?? []) ?? [];
   const allIssuesFlat = issueGroups.flatMap((i) => i.issues);
 
   const allGroups: GroupedIssue[] = issueGroups.map((i) => ({

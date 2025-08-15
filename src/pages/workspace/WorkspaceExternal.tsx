@@ -79,7 +79,7 @@ const WorkspaceExternal = () => {
     useGetInfiniteExternalList(teamId ?? '', params);
 
   // 그룹화
-  const externalGroups = data?.pages ?? [];
+  const externalGroups = data?.pages.flatMap((page) => page.result?.data ?? []) ?? [];
   const allExternalsFlat = externalGroups.flatMap((g) => g.externals);
 
   const { data: externalLinks } = useGetExternalLinks(Number(teamId));
