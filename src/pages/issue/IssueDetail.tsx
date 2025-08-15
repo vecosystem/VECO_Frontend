@@ -34,6 +34,12 @@ import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail';
 import { useIsMutating } from '@tanstack/react-query';
 import { mutationKey } from '../../constants/mutationKey';
 import { useParams } from 'react-router-dom';
+import type { PriorityCode, StatusCode } from '../../types/listItem';
+import { useGetWorkspaceMembers } from '../../apis/setting/useGetWorkspaceMembers';
+import { useGetSimpleGoalList } from '../../apis/goal/useGetSimpleGoalList.ts';
+import { useCreateIssue } from '../../apis/issue/usePostCreateIssueDetail.ts';
+import { useGetIssueDetail } from '../../apis/issue/useGetIssueDetail.ts';
+import { useUpdateIssue } from '../../apis/issue/usePatchIssueDetail.ts';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -49,25 +55,40 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
 
   const [title, setTitle] = useState('');
+  const [state, setState] = useState<StatusCode>('NONE');
+  const [priority, setPriority] = useState<PriorityCode>('NONE');
+  const [managersId, setManagersId] = useState<number[]>([]);
+
+  // 일단 임시처리임. 백엔드에서 널값 허용해주는 방향으로 수정해주면 반영
+  const [goalId, setGoalId] = useState<number>(0);
+  // 없을 수 있는 값이면: null 허용
+  // const [goalId, setGoalId] = useState<number | null>(null);
 
   const editorSubmitRef = useRef<SubmitHandleRef | null>(null); // 텍스트에디터 컨텐츠 접근용 플래그
   const isSubmittingRequestRef = useRef(false); // API 제출 중복 요청 가드 플래그
   const teamId = Number(useParams<{ teamId: string }>().teamId);
-  /**
-   * @todo: 나중에 useCreateIssue로 제대로 연결
-   */
-  const { isPending } = useCreateGoal(teamId);
+
+  // issueId를 useParams로부터 가져옴
+  const { issueId: issueIdParam } = useParams<{ issueId: string }>();
+  const numericIssueId = Number(issueIdParam);
+
+  const { data: workspaceMembers } = useGetWorkspaceMembers();
+  const { data: simpleGoals } = useGetSimpleGoalList(teamId); // 팀 목표 간단 조회 (select로 info만 나오도록 되어 있음)
+  const { mutate: submitIssue, isPending: isCreating } = useCreateIssue(teamId);
+  const { data: issueDetail } = useGetIssueDetail(numericIssueId);
+  const { mutate: updateIssue, isPending: isUpdating } = useUpdateIssue(teamId, numericIssueId);
+
   const isCreatingGlobal = useIsMutating({ mutationKey: [mutationKey.ISSUE_CREATE, teamId] }) > 0;
-  const isSaving = isPending || isCreatingGlobal || isSubmittingRequestRef.current;
+  const isSaving = isCreating || isCreatingGlobal || isSubmittingRequestRef.current;
 
   const { isOpen, content } = useDropdownInfo(); // 작성 완료 여부 (view 모드일 때 true)
   const { openDropdown } = useDropdownActions(); // 수정 가능 여부 (create 또는 edit 모드일 때 true)
 
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
+  const canPatch = Number.isFinite(numericIssueId); // PATCH 가능 조건
 
-  // issueId를 useParams로부터 가져옴
-  const { issueId } = useParams<{ issueId: string }>();
+  // 여기까지 작성했음
 
   const handleToggleMode = useToggleMode({
     mode,
