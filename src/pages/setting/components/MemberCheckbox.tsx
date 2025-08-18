@@ -9,7 +9,7 @@ interface MemberCheckboxProps {
 const MemberCheckbox = (props: MemberCheckboxProps) => {
   return (
     <div
-      className={`flex items-center gap-x-[0.8rem]`}
+      className={`flex items-start gap-x-[0.8rem]`}
       onClick={() => props.onSelect(!props.checked)}
     >
       <div className={`p-[0.4rem]`}>
@@ -25,7 +25,11 @@ const MemberCheckbox = (props: MemberCheckboxProps) => {
           />
         )}
       </div>
-      <span className={`font-small-b text-gray-400`}>{props.name}</span>
+      <span
+        className={`font-small-b truncate ${props.checked ? 'text-gray-600' : 'text-gray-400'}`}
+      >
+        {props.name}
+      </span>
     </div>
   );
 };
