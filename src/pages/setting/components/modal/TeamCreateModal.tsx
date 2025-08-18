@@ -41,14 +41,22 @@ const TeamCreateModal = (props: TeamCreateModalProps) => {
             <h2 className={`text-gray-600 font-title-sub-b`}>팀원 초대</h2>
             <img src={IcX} alt={'닫기'} onClick={props.onClick} />
           </div>
-          <input
-            className={`text-start w-full border border-gray-300 px-[1.2rem] py-[0.7rem]
-          font-body-r text-gray-400 placeholder:text-gray-400 rounded-[0.6rem] focus:outline-none`}
-            type={'text'}
-            placeholder={'팀 이름을 입력하세요'}
-            value={teamName}
-            onChange={(e) => setTeamName(e.target.value)}
-          />
+          <div className={`flex flex-col`}>
+            <input
+              className={`text-start w-full border px-[1.2rem] py-[0.7rem]
+          font-body-r text-gray-400 placeholder:text-gray-400 rounded-[0.6rem] focus:outline-none 
+          ${!isNameValid && teamName ? 'border-error-400' : 'border-gray-300'}`}
+              type={'text'}
+              placeholder={'팀 이름을 입력하세요'}
+              value={teamName}
+              onChange={(e) => setTeamName(e.target.value)}
+            />
+            {!isNameValid && teamName && (
+              <span className="text-error-400 font-xsmall-r mt-[0.6rem]">
+                팀 이름은 4~10자, 한글/영문/띄어쓰기로 입력해주세요.
+              </span>
+            )}
+          </div>
           <p className={`font-body-r mt-[0.8rem]`}>팀원 추가</p>
         </section>
 

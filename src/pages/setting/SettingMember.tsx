@@ -35,6 +35,7 @@ const SettingMember = () => {
               .slice(1)
               .map((member, index) => (
                 <MemberItem
+                  className={`py-[1.2rem]`}
                   key={index}
                   profileImageUrl={member.profileImageUrl}
                   name={member.name}
