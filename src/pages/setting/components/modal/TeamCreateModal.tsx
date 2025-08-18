@@ -44,7 +44,7 @@ const TeamCreateModal = (props: TeamCreateModalProps) => {
           <div className={`flex flex-col`}>
             <input
               className={`text-start w-full border px-[1.2rem] py-[0.7rem]
-          font-body-r text-gray-400 placeholder:text-gray-400 rounded-[0.6rem] focus:outline-none 
+          font-body-r text-gray-600 placeholder:text-gray-400 rounded-[0.6rem] focus:outline-none 
           ${!isNameValid && teamName ? 'border-error-400' : 'border-gray-300'}`}
               type={'text'}
               placeholder={'팀 이름을 입력하세요'}
