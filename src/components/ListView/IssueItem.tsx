@@ -44,13 +44,15 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
     onCheckChange,
     name,
     title,
-    goalTitle = '없음',
+    goal,
     deadline = { start: '', end: '' },
     managers = { cnt: 0, info: [] },
     filter,
   } = {
     ...props,
   };
+
+  const goalTitle = goal?.title || '없음';
 
   const displayFields = getFilter(filter);
 
