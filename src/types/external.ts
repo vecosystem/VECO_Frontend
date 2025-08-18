@@ -3,8 +3,8 @@ import type { CommonResponse, CursorBasedResponse } from './common';
 import type { Goal } from './issue';
 
 export type Deadline = {
-  start: string;
-  end: string;
+  start?: string;
+  end?: string;
 };
 
 export type ManagerInfo = {
@@ -55,8 +55,8 @@ export type CreateExternalDetailDto = {
   priority: string;
   managersId: number[];
   deadline?: Deadline;
-  extServiceType: string;
-  goalId?: number; // TODO: 이거 필수 요소 아닌 채로도 가능한지 확인
+  extServiceType?: string;
+  goalId?: number;
 };
 
 export type CreateExternalResultDto = {
@@ -66,7 +66,7 @@ export type CreateExternalResultDto = {
 
 export type ResponseCreateExternalDetatilDto = CommonResponse<CreateExternalResultDto>;
 
-// 외부 이슈 조회
+// 외부 이슈 상세 조회
 export type ViewExternalDetailDto = {
   id: number;
   name: string;
@@ -74,13 +74,11 @@ export type ViewExternalDetailDto = {
   content: string;
   priority: string;
   state: string;
-  startDate?: string | null; // TODO: 빼야 할 듯
-  endDate?: string | null; // TODO: 빼야 할 듯
   goalId?: Pick<Goal, 'id'>; // TODO: 데이터 구조 통일해달라고 하기
   goalTitle?: Pick<Goal, 'title'>; // TODO: 데이터 구조 통일해달라고 하기
-  extServiceType: string;
+  extServiceType?: string;
   managers: Manager;
-  deadlines: Deadline; // TODO: 이름 통일해달라고 하기
+  deadline: Deadline;
   comments: ResponseCommentListDto;
 };
 

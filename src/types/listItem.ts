@@ -33,6 +33,11 @@ export const EXTERNAL_LABELS: Record<ExternalCode, string> = {
   SLACK: 'Slack',
 };
 
+// 라벨→코드 역매핑
+export const LABEL_TO_EXTERNAL_CODE: Record<string, ExternalCode> = Object.fromEntries(
+  EXTERNAL_CODES.map((code) => [EXTERNAL_LABELS[code], code])
+) as Record<string, ExternalCode>;
+
 // 리스트
 export const STATUS_LIST: readonly StatusCode[] = STATUS_CODES;
 export const PRIORITY_LIST: readonly PriorityCode[] = PRIORITY_CODES;
