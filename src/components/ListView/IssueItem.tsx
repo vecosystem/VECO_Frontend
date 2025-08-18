@@ -44,13 +44,15 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
     onCheckChange,
     name,
     title,
-    goalTitle = '없음',
+    goal,
     deadline = { start: '', end: '' },
     managers = { cnt: 0, info: [] },
     filter,
   } = {
     ...props,
   };
+
+  const goalTitle = goal?.title || '없음';
 
   const displayFields = getFilter(filter);
 
@@ -123,9 +125,13 @@ export const IssueItem = (props: Partial<IssueItemProps>) => {
         {displayFields.includes('goal') && goalTitle && (
           <div className="flex gap-[0.8rem] items-center">
             {/* 목표 아이콘 */}
-            <img src={goalIcon} alt="date" className="w-[2.4rem] h-[2.4rem]" />
+            <img src={goalIcon} alt="goal" className="w-[2.4rem] h-[2.4rem]" />
             {/* 목표명 */}
-            <div className="truncate min-w-full">{goalTitle}</div>
+            <div
+              className={goal?.id === -1 || goalTitle === '목표 없음' ? '' : 'truncate min-w-full'}
+            >
+              {goalTitle}
+            </div>
           </div>
         )}
 
