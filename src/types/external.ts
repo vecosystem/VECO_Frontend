@@ -99,7 +99,7 @@ export type UpdateExternalDetailDto = {
 };
 
 export type UpdateExternalResultDto = {
-  issueId: number;
+  externalId: number;
   updatedAt: string; // LocalDateTime
 };
 
