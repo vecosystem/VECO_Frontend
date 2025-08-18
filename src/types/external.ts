@@ -84,7 +84,7 @@ export type ViewExternalDetailDto = {
   comments: ResponseCommentListDto;
 };
 
-export type ResponseViewIssueDetailDto = CommonResponse<ViewExternalDetailDto>;
+export type ResponseViewExternalDetailDto = CommonResponse<ViewExternalDetailDto>;
 
 // 외부 이슈 수정
 export type UpdateExternalDetailDto = {
@@ -103,4 +103,4 @@ export type UpdateExternalResultDto = {
   updatedAt: string; // LocalDateTime
 };
 
-export type ResponseUpdateIssueDetailDto = CommonResponse<UpdateExternalResultDto>;
+export type ResponseUpdateExternalDetailDto = CommonResponse<UpdateExternalResultDto>;
