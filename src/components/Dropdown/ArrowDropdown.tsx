@@ -37,12 +37,17 @@ const ArrowDropdown = ({
     <div
       ref={dropdownRef}
       onClick={(e) => e.stopPropagation()}
-      style={{ boxShadow: '0px 4px 12px 0px rgba(0, 0, 0, 0.15)' }}
+      style={{
+        boxShadow: '0px 4px 12px 0px rgba(0, 0, 0, 0.15)',
+        maxHeight: 'calc(2.9rem * 5 + 4.9rem)',
+        overflowY: 'auto',
+      }}
       className={`absolute z-30 top-0 left-0 flex flex-col w-[27.4rem]
       border border-gray-400 bg-white rounded-[0.4rem] ${className ?? ''}`}
     >
       <div
-        className={`flex border-b border-gray-200 justify-between items-center py-[0.4rem] ps-[1.2rem] pe-[0.8rem]`}
+        className={`flex border-b border-gray-200 rounded-[0.4rem] justify-between 
+        items-center py-[0.4rem] ps-[1.2rem] pe-[0.8rem]`}
       >
         <span className={`font-xsmall-r text-gray-600 me-[0.4rem]`}>{defaultValue}</span>
         <img src={IcDownArrow} alt={defaultValue} />
