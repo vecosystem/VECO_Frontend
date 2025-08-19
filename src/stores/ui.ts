@@ -4,6 +4,7 @@ import { immer } from 'zustand/middleware/immer';
 
 interface UIState {
   sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
   toggleSidebar: () => void;
 
   dropdownOpen: Record<string, boolean>;
@@ -15,6 +16,10 @@ export const useUIStore = create<UIState>()(
   persist(
     immer((set) => ({
       sidebarOpen: true,
+      setSidebarOpen: (open) =>
+        set((s) => {
+          s.sidebarOpen = open;
+        }),
       toggleSidebar: () =>
         set((s) => {
           s.sidebarOpen = !s.sidebarOpen;

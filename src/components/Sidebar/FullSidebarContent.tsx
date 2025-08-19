@@ -113,7 +113,11 @@ const FullSidebarContent = ({
 
         <div className="flex flex-col items-start self-stretch">
           {/* 첫 번째 드롭다운: 워크스페이스 기본 팀 */}
-          <DropdownMenu dropdownId="ws-default-team" headerTitle="워크스페이스 기본 팀" initialOpen={true}>
+          <DropdownMenu
+            dropdownId="ws-default-team"
+            headerTitle="워크스페이스 기본 팀"
+            initialOpen={true}
+          >
             <div className="flex flex-col">
               {isLoading ? null : (
                 <DropdownMenu
@@ -169,9 +173,11 @@ const FullSidebarContent = ({
           <DropdownMenu dropdownId="my-teams" headerTitle="나의 팀" initialOpen={true}>
             {/* Team 드롭다운 (내부 드롭다운) */}
             {isLoading ? null : myTeams.length === 0 ? (
-              <div className="text-gray-400 font-xsmall-r px-[3rem] pb-[1.6rem]">
-                등록된 팀이 없습니다.
-              </div>
+              <button type="button" onClick={() => navigate('/workspace/setting/team-list')}>
+                <div className="text-gray-400 font-xsmall-r px-[3rem] pb-[1.6rem] cursor-pointer underline underline-offset-[0.3rem]">
+                  팀 생성하기
+                </div>
+              </button>
             ) : (
               <>
                 <SortableDropdownList
