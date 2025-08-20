@@ -1,6 +1,7 @@
 import { useGetWorkspaceProfile } from '../../apis/setting/useGetWorkspaceProfile.ts';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../Loading.tsx';
 
 const WorkspaceComplete = () => {
   const { data } = useGetWorkspaceProfile();
@@ -14,7 +15,11 @@ const WorkspaceComplete = () => {
       });
     }
   }, [teamId]);
-  return <div />;
+  return (
+    <div className="min-w-max min-h-screen flex flex-col items-center justify-center">
+      <Loading />;
+    </div>
+  );
 };
 
 export default WorkspaceComplete;
