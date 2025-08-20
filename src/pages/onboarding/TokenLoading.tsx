@@ -6,6 +6,7 @@ import { postReIssueAccessToken } from '../../apis/auth';
 import { getWorkspaceProfile } from '../../apis/setting/useGetWorkspaceProfile';
 import { LOCAL_STORAGE_KEY } from '../../constants/key';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import Loading from '../Loading';
 
 const TokenLoading = () => {
   const { setItem } = useLocalStorage(LOCAL_STORAGE_KEY.accessToken);
@@ -43,7 +44,7 @@ const TokenLoading = () => {
     init();
   }, [setItem, navigate]);
 
-  return <h3 className="font-title-sub-r text-gray-600">로딩중입니다.</h3>;
+  return <Loading />;
 };
 
 export default TokenLoading;
