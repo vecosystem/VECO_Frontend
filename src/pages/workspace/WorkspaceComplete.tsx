@@ -1,7 +1,7 @@
 import { useGetWorkspaceProfile } from '../../apis/setting/useGetWorkspaceProfile.ts';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoadingSpinner from '../LoadingSpinner.tsx';
+import LoadingSpinner from '../../components/LoadingSpinner.tsx';
 
 const WorkspaceComplete = () => {
   const { data } = useGetWorkspaceProfile();

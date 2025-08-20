@@ -6,7 +6,7 @@ import { postReIssueAccessToken } from '../../apis/auth';
 import { getWorkspaceProfile } from '../../apis/setting/useGetWorkspaceProfile';
 import { LOCAL_STORAGE_KEY } from '../../constants/key';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import LoadingSpinner from '../LoadingSpinner';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const TokenLoading = () => {
   const { setItem } = useLocalStorage(LOCAL_STORAGE_KEY.accessToken);

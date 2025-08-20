@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Suspense } from 'react';
-import LoadingSpinner from '../pages/LoadingSpinner.tsx';
+import LoadingSpinner from '../components/LoadingSpinner.tsx';
 import ServerError from '../pages/ServerError.tsx';
 
 const PublicLayout = () => {

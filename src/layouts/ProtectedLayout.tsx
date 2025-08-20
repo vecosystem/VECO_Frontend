@@ -4,7 +4,7 @@ import SettingSidebar from '../components/Sidebar/SettingSidebar';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import LoadingSpinner from '../pages/LoadingSpinner.tsx';
+import LoadingSpinner from '../components/LoadingSpinner.tsx';
 import ServerError from '../pages/ServerError.tsx';
 import { LOCAL_STORAGE_KEY } from '../constants/key.ts';
 import { useLocalStorage } from '../hooks/useLocalStorage.ts';
