@@ -20,6 +20,7 @@ import ServerError from '../ServerError';
 import { useManagerProfiles } from '../../hooks/useManagerProfiles';
 import WorkspaceIcon from '../../components/ListView/WorkspaceIcon';
 import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams';
+import { filterToQuery } from '../../utils/filterToQuery';
 
 const FILTER_OPTIONS: ItemFilter[] = ['상태', '우선순위', '담당자'] as const;
 
@@ -39,19 +40,6 @@ const WorkspaceGoal = () => {
   const currentTeam = useMemo(() => {
     return teamData?.pages[0].teamList.find((team) => team.teamId === Number(teamId));
   }, [teamData, teamId]);
-
-  const filterToQuery = (filter: ItemFilter) => {
-    switch (filter) {
-      case '상태':
-        return 'state';
-      case '우선순위':
-        return 'priority';
-      case '담당자':
-        return 'manager';
-      default:
-        return '';
-    }
-  };
 
   const params = useMemo(
     () => ({
