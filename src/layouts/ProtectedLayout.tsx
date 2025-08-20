@@ -10,6 +10,7 @@ import { LOCAL_STORAGE_KEY } from '../constants/key.ts';
 import { useLocalStorage } from '../hooks/useLocalStorage.ts';
 import { useUIStore } from '../stores/ui.ts';
 import { SIDEBAR_WIDTH } from '../constants/sidebar';
+import { useAutoCloseSidebar } from '../hooks/useAutoCloseSidebar';
 
 const ProtectedLayout = () => {
   const location = useLocation();
@@ -19,6 +20,8 @@ const ProtectedLayout = () => {
   const { getItem: getInviteUrl } = useLocalStorage(LOCAL_STORAGE_KEY.inviteUrl);
   const isLoggedIn = !!getAccessToken() && !!getInviteUrl();
   const { sidebarOpen } = useUIStore();
+
+  useAutoCloseSidebar();
 
   if (!isLoggedIn) {
     return <Navigate to="/onboarding" replace />;
