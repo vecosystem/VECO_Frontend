@@ -4,7 +4,7 @@ import SettingSidebar from '../components/Sidebar/SettingSidebar';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import Loading from '../pages/Loading.tsx';
+import LoadingSpinner from '../pages/LoadingSpinner.tsx';
 import ServerError from '../pages/ServerError.tsx';
 import { LOCAL_STORAGE_KEY } from '../constants/key.ts';
 import { useLocalStorage } from '../hooks/useLocalStorage.ts';
@@ -31,7 +31,7 @@ const ProtectedLayout = () => {
     <QueryErrorResetBoundary>
       {({ reset }) => (
         <ErrorBoundary onReset={reset} FallbackComponent={ServerError}>
-          <Suspense fallback={<Loading />}>
+          <Suspense fallback={<LoadingSpinner />}>
             <div className="flex h-screen">
               <aside
                 className="fixed top-0 left-0 h-screen overflow-auto sidebar-scroll transition-all duration-300 ease-in-out"

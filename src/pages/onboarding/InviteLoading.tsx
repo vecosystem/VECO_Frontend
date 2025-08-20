@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { LOCAL_STORAGE_KEY } from '../../constants/key';
-import Loading from '../Loading';
+import LoadingSpinner from '../LoadingSpinner';
 
 const InviteLoading = () => {
   const { workspaceName } = useParams(); // URL 파라미터 추출
@@ -31,7 +31,7 @@ const InviteLoading = () => {
 
   return (
     <div className="min-w-max min-h-screen flex flex-col items-center justify-center">
-      <Loading />;
+      <LoadingSpinner />;
     </div>
   );
 };
