@@ -18,7 +18,7 @@ const SettingWorkspaceProfile = () => {
               <button className="w-[4.2rem] h-[4.2rem] flex items-center justify-center">
                 <img
                   src={workspaceData?.workspaceImageUrl || vecocirclenavy}
-                  className="w-full h-full"
+                  className="w-full h-full rounded-full object-cover"
                   alt="프로필 사진"
                 />
               </button>
