@@ -17,9 +17,10 @@ const getIssueName = async (teamId: number): Promise<string> => {
   }
 };
 
-export const useGetIssueName = (teamId: number) => {
+export const useGetIssueName = (teamId: number, opts?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: [queryKey.ISSUE_NAME, teamId],
     queryFn: () => getIssueName(teamId),
+    enabled: (opts?.enabled ?? true) && Number.isFinite(teamId) && teamId > 0,
   });
 };

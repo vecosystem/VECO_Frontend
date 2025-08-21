@@ -17,9 +17,10 @@ const getExternalName = async (teamId: number): Promise<string> => {
   }
 };
 
-export const useGetExternalName = (teamId: number) => {
+export const useGetExternalName = (teamId: number, opts?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: [queryKey.EXTERNAL_NAME, teamId],
     queryFn: () => getExternalName(teamId),
+    enabled: (opts?.enabled ?? true) && Number.isFinite(teamId) && teamId > 0,
   });
 };
