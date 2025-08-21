@@ -22,12 +22,20 @@ const SidebarItem = ({
         type="button"
         className="flex grow items-center gap-[0.8rem] cursor-pointer"
       >
-        <span className="w-[2.4rem] h-[2.4rem] shrink-0 aspect-square">
+        <span className="w-[2.4rem] h-[2.4rem] shrink-0">
           <span className="block group-hover:hidden">
-            <img src={defaultIcon} alt="defaultIcon" />
+            <img
+              src={defaultIcon}
+              alt="defaultIcon"
+              className="w-full h-full rounded-full object-cover"
+            />
           </span>
           <span className="hidden group-hover:block">
-            <img src={hoverIcon} alt="hoverIcon" />
+            <img
+              src={hoverIcon}
+              alt="hoverIcon"
+              className="w-full h-full rounded-full object-cover"
+            />
           </span>
         </span>
         <span className="font-small-r text-gray-600 letter-spacing-[0.028rem] group-hover:text-primary-blue group-hover:font-bold">
