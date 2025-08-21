@@ -1,5 +1,5 @@
 import WorkspaceIcon from '../ListView/WorkspaceIcon';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGetGoalName } from '../../apis/goal/useGetGoalName.ts';
 import { useGetIssueName } from '../../apis/issue/useGetIssueName.ts';
 import { useGetExternalName } from '../../apis/external/useGetExternalName.ts';
@@ -13,6 +13,7 @@ interface WorkspaceDetailHeaderProps {
 }
 
 const WorkspaceDetailHeader = ({ type, defaultTitle, title }: WorkspaceDetailHeaderProps) => {
+  const navigate = useNavigate();
   const teamId = Number(useParams<{ teamId: string }>().teamId);
   const { data: detailId } =
     type === 'goal'
@@ -33,6 +34,7 @@ const WorkspaceDetailHeader = ({ type, defaultTitle, title }: WorkspaceDetailHea
       <WorkspaceIcon
         workspaceName={currentTeam?.teamName}
         workspaceImgUrl={currentTeam?.teamImageUrl}
+        onClick={() => navigate(`/workspace/default/team/${currentTeam?.teamId}/${type}`)}
       />
       <div className="flex gap-[1.6rem] items-center overflow-hidden">
         {/* 상세페이지 ID */}
