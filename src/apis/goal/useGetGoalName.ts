@@ -17,9 +17,10 @@ const getGoalName = async (teamId: number): Promise<string> => {
   }
 };
 
-export const useGetGoalName = (teamId: number) => {
+export const useGetGoalName = (teamId: number, opts?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: [queryKey.GOAL_NAME, teamId],
     queryFn: () => getGoalName(teamId),
+    enabled: (opts?.enabled ?? true) && Number.isFinite(teamId) && teamId > 0,
   });
 };
