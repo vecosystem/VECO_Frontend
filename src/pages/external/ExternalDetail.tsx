@@ -1,7 +1,7 @@
 // ExternalDetail.tsx
 // 외부 상세페이지
 
-import { useState, useRef, useMemo, startTransition } from 'react';
+import { useState, useRef, useMemo, startTransition, useEffect } from 'react';
 import DetailHeader from '../../components/DetailView/DetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -99,8 +99,13 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
     teamId,
     numericExternalId
   );
-  const { data: githubRepo } = useGetGithubRepository(teamId);
-  const { data: githubInstall } = useGetGithubInstallationId(teamId);
+  const needGithubMeta = extServiceType === 'GITHUB';
+  const { data: githubRepo, isError: isRepoError } = useGetGithubRepository(teamId, {
+    enabled: needGithubMeta,
+  });
+  const { data: githubInstall, isError: isInstallError } = useGetGithubInstallationId(teamId, {
+    enabled: needGithubMeta,
+  });
 
   const isCreatingGlobal =
     useIsMutating({ mutationKey: [mutationKey.EXTERNAL_CREATE, teamId] }) > 0;
@@ -112,6 +117,23 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
   const canPatch = Number.isFinite(numericExternalId); // PATCH 가능 조건
+
+  // 깃허브 연동 외부이슈일 경우 POST 요청시 필요한 owner, repo, installationId 데이터
+  const githubPayload = useMemo(() => {
+    const owner = githubRepo?.owner?.login;
+    const repo = githubRepo?.name;
+    const installationId = githubInstall?.installationId;
+    return { owner, repo, installationId };
+  }, [githubRepo, githubInstall]);
+
+  // 설치가 안 되어 있거나 리다이렉트로 막히는 경우 → 온보딩으로 이동
+  useEffect(() => {
+    if (!needGithubMeta) return;
+    if (isRepoError || isInstallError) {
+      // 서버가 API 호출에 대해 302로 온보딩을 주는 구조라면, 프론트는 네비게이션으로 처리
+      window.location.href = 'https://web.vecoservice.shop/onboarding';
+    }
+  }, [needGithubMeta, isRepoError, isInstallError]);
 
   const { data: linkedTools } = useGetExternalLinks(teamId);
   const linkedToolsList = linkedTools
@@ -138,14 +160,6 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
     return managersId.map((id) => idToName.get(id)).filter((v): v is string => !!v);
   }, [managersId, workspaceMembers]);
   const [managersShowNoneLabel] = useState(false);
-
-  // 깃허브 연동 외부이슈일 경우 POST 요청시 필요한 owner, repo, installationId 데이터
-  const githubPayload = useMemo(() => {
-    const owner = githubRepo?.owner?.login;
-    const repo = githubRepo?.name;
-    const installationId = githubInstall?.installationId;
-    return { owner, repo, installationId };
-  }, [githubRepo, githubInstall]);
 
   // deadline('기한' 속성) patch 훅
   const { handleSelectDateAndPatch, buildPatchForEditSubmit } = useExternalDeadlinePatch({
@@ -201,7 +215,9 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
             repo,
             installationId,
           });
-          alert('GitHub 연동 정보가 부족합니다. 팀의 GitHub 레포지토리와 설치 ID를 확인해 주세요.');
+          // 안내 후 온보딩으로
+          alert('GitHub 연동이 필요합니다. 온보딩 페이지로 이동합니다.');
+          window.location.href = 'https://web.vecoservice.shop/onboarding';
           return;
         }
       }
@@ -212,9 +228,9 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
         // GitHub일 때만 추가
         ...(extServiceType === 'GITHUB'
           ? {
-              owner: githubPayload.owner!, // GetGithubRepositoryResponse.owner.login
-              repo: githubPayload.repo!, // GetGithubRepositoryResponse.name
-              installationId: githubPayload.installationId!, // GetGithubInstallationIdResponse.installationId
+              owner: githubPayload.owner!,
+              repo: githubPayload.repo!,
+              installationId: githubPayload.installationId!,
             }
           : {}),
         deadline: {

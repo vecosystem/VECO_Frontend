@@ -32,9 +32,10 @@ const getGithubRepository = async (teamId: number): Promise<GetGithubRepositoryR
   }
 };
 
-export const useGetGithubRepository = (teamId: number) => {
+export const useGetGithubRepository = (teamId: number, opts?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: [queryKey.GITHUB_REPOSITORIES, teamId],
     queryFn: () => getGithubRepository(teamId),
+    enabled: opts?.enabled ?? true,
   });
 };

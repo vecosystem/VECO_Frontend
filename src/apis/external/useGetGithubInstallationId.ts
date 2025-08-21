@@ -24,9 +24,10 @@ const getGithubInstallationId = async (
   }
 };
 
-export const useGetGithubInstallationId = (teamId: number) => {
+export const useGetGithubInstallationId = (teamId: number, opts?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: [queryKey.GITHUB_INSTALLATION_ID, teamId],
     queryFn: () => getGithubInstallationId(teamId),
+    enabled: opts?.enabled ?? true,
   });
 };
