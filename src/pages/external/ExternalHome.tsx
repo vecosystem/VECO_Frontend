@@ -27,6 +27,7 @@ import ListViewItemSkeletonList from '../../components/ListView/ListViewItemSkel
 import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts';
 import { useManagerProfiles } from '../../hooks/useManagerProfiles.ts';
 import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams.ts';
+import { filterToQuery } from '../../utils/filterToQuery.ts';
 
 const FILTER_OPTIONS = ['상태', '우선순위', '담당자', '목표', '외부'] as const;
 
@@ -46,23 +47,6 @@ const ExternalHome = () => {
   const currentTeam = useMemo(() => {
     return teamData?.pages[0].teamList.find((team) => team.teamId === Number(teamId));
   }, [teamData, teamId]);
-
-  const filterToQuery = (filter: ItemFilter) => {
-    switch (filter) {
-      case '상태':
-        return 'STATE';
-      case '우선순위':
-        return 'PRIORITY';
-      case '담당자':
-        return 'ASSIGNEE';
-      case '목표':
-        return 'GOAL';
-      case '외부':
-        return 'EXT_TYPE';
-      default:
-        return '';
-    }
-  };
 
   const params = useMemo(
     () => ({
