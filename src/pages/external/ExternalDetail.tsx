@@ -57,6 +57,8 @@ import type { CreateExternalDetailDto, UpdateExternalDetailDto } from '../../typ
 import queryClient from '../../utils/queryClient.ts';
 import { queryKey } from '../../constants/queryKey.ts';
 import { useHydrateExternalDetail } from '../../hooks/useHydrateExternalDetail.ts';
+import { useGetGithubRepository } from '../../apis/external/useGetGithubRepository.ts';
+import { useGetGithubInstallationId } from '../../apis/external/useGetGithubInstallationId.ts';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -97,6 +99,8 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
     teamId,
     numericExternalId
   );
+  const { data: githubRepo } = useGetGithubRepository(teamId);
+  const { data: githubInstall } = useGetGithubInstallationId(teamId);
 
   const isCreatingGlobal =
     useIsMutating({ mutationKey: [mutationKey.EXTERNAL_CREATE, teamId] }) > 0;
@@ -134,6 +138,14 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
     return managersId.map((id) => idToName.get(id)).filter((v): v is string => !!v);
   }, [managersId, workspaceMembers]);
   const [managersShowNoneLabel] = useState(false);
+
+  // 깃허브 연동 외부이슈일 경우 POST 요청시 필요한 owner, repo, installationId 데이터
+  const githubPayload = useMemo(() => {
+    const owner = githubRepo?.owner?.login;
+    const repo = githubRepo?.name;
+    const installationId = githubInstall?.installationId;
+    return { owner, repo, installationId };
+  }, [githubRepo, githubInstall]);
 
   // deadline('기한' 속성) patch 훅
   const { handleSelectDateAndPatch, buildPatchForEditSubmit } = useExternalDeadlinePatch({
@@ -179,9 +191,32 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
     console.log('Request body:', basePayload);
 
     if (mode === 'create') {
+      // GitHub 선택 시 필수값 검증
+      if (extServiceType === 'GITHUB') {
+        const { owner, repo, installationId } = githubPayload;
+        if (!owner || !repo || !installationId) {
+          isSubmittingRequestRef.current = false;
+          console.error('GitHub 연동 누락: owner/repo/installationId 필요', {
+            owner,
+            repo,
+            installationId,
+          });
+          alert('GitHub 연동 정보가 부족합니다. 팀의 GitHub 레포지토리와 설치 ID를 확인해 주세요.');
+          return;
+        }
+      }
+
       // 생성 시에는 기존 로직 유지 (규칙 제약 없음)
       const payload: CreateExternalDetailDto = {
         ...basePayload,
+        // GitHub일 때만 추가
+        ...(extServiceType === 'GITHUB'
+          ? {
+              owner: githubPayload.owner!, // GetGithubRepositoryResponse.owner.login
+              repo: githubPayload.repo!, // GetGithubRepositoryResponse.name
+              installationId: githubPayload.installationId!, // GetGithubInstallationIdResponse.installationId
+            }
+          : {}),
         deadline: {
           ...(start ? { start: formatDateHyphen(start) } : {}),
           ...(end ? { end: formatDateHyphen(end) } : {}),
@@ -210,9 +245,13 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
 
       updateExternal(payload, {
         onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: [queryKey.EXTERNAL_DETAIL, numericExternalId],
-          });
+          if (Number.isFinite(numericExternalId)) {
+            queryClient.invalidateQueries({ queryKey: [queryKey.EXTERNAL_LIST, String(teamId)] });
+            queryClient.invalidateQueries({ queryKey: [queryKey.EXTERNAL_NAME, String(teamId)] });
+            queryClient.invalidateQueries({
+              queryKey: [queryKey.EXTERNAL_DETAIL, numericExternalId],
+            });
+          }
           startTransition(() => handleToggleMode());
         },
         onSettled: () => (isSubmittingRequestRef.current = false),
@@ -255,11 +294,12 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
     [simpleGoals]
   );
 
-  const goalIconMap = useMemo<Record<string, string>>(() => {
-    const map: Record<string, string> = { 목표: IcGoal }; // '목표' 기본값도 포함
-    for (const label of goalOptions) map[label] = IcGoal;
-    return map;
-  }, [goalOptions]);
+  const goalIconMap = new Proxy(
+    {},
+    {
+      get: () => IcGoal,
+    }
+  ) as Record<string, string>;
 
   // 해당 teamId에 속한 멤버만 필터
   const teamMembers = useMemo(
@@ -298,7 +338,7 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
   const externalIconMap = {
     외부: IcExt,
     Slack: IcExt,
-    Github: IcExt,
+    GitHub: IcExt,
   };
 
   useHydrateExternalDetail({
