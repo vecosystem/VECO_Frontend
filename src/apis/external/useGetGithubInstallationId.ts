@@ -9,7 +9,7 @@ interface GetGithubInstallationIdResponse {
 }
 
 // 깃허브 설치 ID 조회
-const getGithubInstallationId = async (
+export const getGithubInstallationId = async (
   teamId: number
 ): Promise<GetGithubInstallationIdResponse> => {
   try {

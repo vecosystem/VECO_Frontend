@@ -19,7 +19,7 @@ interface GetGithubRepositoryResponse {
 }
 
 // 깃허브 레포지토리 조회
-const getGithubRepository = async (teamId: number): Promise<GetGithubRepositoryResponse> => {
+export const getGithubRepository = async (teamId: number): Promise<GetGithubRepositoryResponse> => {
   try {
     const response = await axiosInstance.get<CommonResponse<GetGithubRepositoryResponse>>(
       `/api/teams/${teamId}/github/repositories`

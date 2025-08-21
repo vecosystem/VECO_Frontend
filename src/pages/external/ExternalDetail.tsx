@@ -1,7 +1,7 @@
 // ExternalDetail.tsx
 // 외부 상세페이지
 
-import { useState, useRef, useMemo, startTransition, useEffect } from 'react';
+import { useState, useRef, useMemo, startTransition } from 'react';
 import DetailHeader from '../../components/DetailView/DetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -57,8 +57,14 @@ import type { CreateExternalDetailDto, UpdateExternalDetailDto } from '../../typ
 import queryClient from '../../utils/queryClient.ts';
 import { queryKey } from '../../constants/queryKey.ts';
 import { useHydrateExternalDetail } from '../../hooks/useHydrateExternalDetail.ts';
-import { useGetGithubRepository } from '../../apis/external/useGetGithubRepository.ts';
-import { useGetGithubInstallationId } from '../../apis/external/useGetGithubInstallationId.ts';
+import {
+  getGithubRepository,
+  useGetGithubRepository,
+} from '../../apis/external/useGetGithubRepository.ts';
+import {
+  getGithubInstallationId,
+  useGetGithubInstallationId,
+} from '../../apis/external/useGetGithubInstallationId.ts';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -100,10 +106,10 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
     numericExternalId
   );
   const needGithubMeta = extServiceType === 'GITHUB';
-  const { data: githubRepo, isError: isRepoError } = useGetGithubRepository(teamId, {
+  const { data: githubRepo, isLoading: repoLoading } = useGetGithubRepository(teamId, {
     enabled: needGithubMeta,
   });
-  const { data: githubInstall, isError: isInstallError } = useGetGithubInstallationId(teamId, {
+  const { data: githubInstall, isLoading: installLoading } = useGetGithubInstallationId(teamId, {
     enabled: needGithubMeta,
   });
 
@@ -118,22 +124,23 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
   const canPatch = Number.isFinite(numericExternalId); // PATCH 가능 조건
 
+  const repoObj = useMemo(
+    () => (Array.isArray(githubRepo) ? githubRepo[0] : githubRepo),
+    [githubRepo]
+  );
+
   // 깃허브 연동 외부이슈일 경우 POST 요청시 필요한 owner, repo, installationId 데이터
   const githubPayload = useMemo(() => {
-    const owner = githubRepo?.owner?.login;
-    const repo = githubRepo?.name;
+    const owner = repoObj?.owner?.login;
+    const repo = repoObj?.name;
     const installationId = githubInstall?.installationId;
     return { owner, repo, installationId };
-  }, [githubRepo, githubInstall]);
+  }, [repoObj, githubInstall]);
 
-  // 설치가 안 되어 있거나 리다이렉트로 막히는 경우 → 온보딩으로 이동
-  useEffect(() => {
-    if (!needGithubMeta) return;
-    if (isRepoError || isInstallError) {
-      // 서버가 API 호출에 대해 302로 온보딩을 주는 구조라면, 프론트는 네비게이션으로 처리
-      window.location.href = 'https://web.vecoservice.shop/onboarding';
-    }
-  }, [needGithubMeta, isRepoError, isInstallError]);
+  const isGithubLoading = needGithubMeta && (repoLoading || installLoading);
+  const isGithubReady =
+    !needGithubMeta ||
+    (!!githubPayload.owner && !!githubPayload.repo && !!githubPayload.installationId);
 
   const { data: linkedTools } = useGetExternalLinks(teamId);
   const linkedToolsList = linkedTools
@@ -205,8 +212,20 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
     console.log('Request body:', basePayload);
 
     if (mode === 'create') {
-      // GitHub 선택 시 필수값 검증
+      // 1) GitHub 선택 시 필수값 검증
       if (extServiceType === 'GITHUB') {
+        if (repoLoading || installLoading) {
+          isSubmittingRequestRef.current = false;
+          alert('GitHub 정보를 불러오는 중입니다. 잠시만요!');
+          return;
+        }
+        // 2) 값이 준비되지 않았으면 중단
+        if (!isGithubReady) {
+          isSubmittingRequestRef.current = false;
+          console.error('GitHub 연동 누락:', githubPayload);
+          alert('GitHub 연동 정보가 부족합니다. 설치/온보딩을 먼저 완료해 주세요.');
+          return;
+        }
         const { owner, repo, installationId } = githubPayload;
         if (!owner || !repo || !installationId) {
           isSubmittingRequestRef.current = false;
@@ -215,10 +234,6 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
             repo,
             installationId,
           });
-          // 안내 후 온보딩으로
-          alert('GitHub 연동이 필요합니다. 온보딩 페이지로 이동합니다.');
-          window.location.href = 'https://web.vecoservice.shop/onboarding';
-          return;
         }
       }
 
@@ -565,6 +580,16 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
                   onSelect={(label) => {
                     const code = LABEL_TO_EXTERNAL_CODE[label];
                     setExtServiceType(code ?? null);
+                    if (code === 'GITHUB') {
+                      queryClient.prefetchQuery({
+                        queryKey: [queryKey.GITHUB_REPOSITORIES, teamId],
+                        queryFn: () => getGithubRepository(teamId),
+                      });
+                      queryClient.prefetchQuery({
+                        queryKey: [queryKey.GITHUB_INSTALLATION_ID, teamId],
+                        queryFn: () => getGithubInstallationId(teamId),
+                      });
+                    }
                   }}
                 />
               </div>
@@ -575,7 +600,7 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
           <CompletionButton
             isTitleFilled={title.trim().length > 0}
             isCompleted={isCompleted}
-            isSaving={isSaving}
+            isSaving={isSaving || isGithubLoading}
             onToggle={handleCompletion}
           />
         </div>
