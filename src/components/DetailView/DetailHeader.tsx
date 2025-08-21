@@ -2,7 +2,8 @@ import TeamIcon from '../ListView/TeamIcon';
 import { useGetGoalName } from '../../apis/goal/useGetGoalName.ts';
 import { useGetExternalName } from '../../apis/external/useGetExternalName.ts';
 import { useGetIssueName } from '../../apis/issue/useGetIssueName.ts';
-import { useParams } from 'react-router-dom';
+import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams.ts';
+import { useMemo } from 'react';
 
 interface DetailHeaderProps {
   type: 'goal' | 'issue' | 'external';
@@ -19,10 +20,19 @@ const DetailHeader = ({ type, defaultTitle, title }: DetailHeaderProps) => {
         ? useGetIssueName(teamId)
         : useGetExternalName(teamId);
 
+  // 팀 정보 불러오기
+  const { data: teamData } = useGetWorkspaceTeams();
+  const currentTeam = useMemo(() => {
+    return teamData?.pages[0].teamList.find((team) => team.teamId === Number(teamId));
+  }, [teamData, teamId]);
+
   return (
     <div className="flex gap-[3.2rem] flex-nowrap">
       {/* 팀 아이콘, 팀명, props로 요소 전달 가능 */}
-      <TeamIcon />
+      <TeamIcon
+        teamName={currentTeam?.teamName}
+        teamImgUrl={currentTeam?.teamImageUrl}
+      />
       <div className="flex gap-[1.6rem] items-center overflow-hidden">
         {/* 상세페이지 ID */}
         <div className="flex whitespace-nowrap font-body-b text-gray-600">{detailId}</div>
