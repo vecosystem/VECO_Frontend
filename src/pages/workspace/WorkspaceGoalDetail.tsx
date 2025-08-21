@@ -53,6 +53,7 @@ import queryClient from '../../utils/queryClient';
 import { queryKey } from '../../constants/queryKey';
 import { useModalActions, useModalInfo } from '../../hooks/useModal';
 import Modal from '../../components/Modal/Modal';
+import { useGetGoalName } from '../../apis/goal/useGetGoalName';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -102,6 +103,15 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
   const canPatch = Number.isFinite(numericGoalId); // PATCH 가능 조건
   const blocker = useBlocker(isEditable); // 편집하고 있는 상황에 화면 이동을 블로킹
+
+  // 생성 모드에서만 "다음 생성될 이름"을 조회
+  const isCreate = mode === 'create';
+  const { data: nextGeneratedName } = useGetGoalName(teamId, {
+    enabled: isCreate,
+  });
+
+  // 헤더표시용 이름: 생성 모드면 nextGeneratedName, 그 외엔 조회 데이터의 name
+  const headerDetailName = isCreate ? nextGeneratedName : goalDetail?.name;
 
   // 단일 선택 라벨
   const selectedStatusLabel = STATUS_LABELS[state];
@@ -251,9 +261,6 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
   const handleCompletion = () => {
     if (!isCompleted) {
       // create 또는 edit 모드에서 view 모드로 전환하려는 시점
-      if (Number.isFinite(numericGoalId)) {
-        queryClient.invalidateQueries({ queryKey: ['GOAL_DETAIL', numericGoalId] }); // 동일 goalId에서 view로 들어갈 때도 최신화
-      }
       handleSubmit(); // 저장 성공 시 모드 전환
     } else {
       handleToggleMode(); // 모드 전환
@@ -345,7 +352,12 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
   return (
     <div className="flex flex-1 flex-col min-h-max gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem] overflow-x-auto basic-scroll">
       {/* 상세페이지 헤더 */}
-      <WorkspaceDetailHeader type={'goal'} defaultTitle="목표를 생성하세요" title={title} />
+      <WorkspaceDetailHeader
+        type={'goal'}
+        defaultTitle="목표를 생성하세요"
+        title={title}
+        detailId={headerDetailName}
+      />
 
       {/* 상세페이지 메인 */}
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full min-w-max min-h-max">
