@@ -9,6 +9,8 @@ import {
   type ReactNode,
 } from 'react';
 
+type ToastProviderProps = { children: ReactNode };
+
 export const MAX_VISIBLE = 3; // 한번에 쌓아서 보여줄 수 있는 최대 토스트 개수
 export const DEFAULT_DURATION = 2000; // 자동 닫힘까지 걸리는 시간(ms)
 
@@ -39,7 +41,7 @@ export const useToast = () => {
   return ctx;
 };
 
-const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ToastProvider = ({ children }: ToastProviderProps) => {
   const [visible, setVisible] = useState<ToastItem[]>([]);
   const [, setQueue] = useState<ToastItem[]>([]);
   const idRef = useRef(0);
@@ -180,5 +182,3 @@ const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   return <ToastContext.Provider value={ctx}>{children}</ToastContext.Provider>;
 };
-
-export default ToastProvider;
