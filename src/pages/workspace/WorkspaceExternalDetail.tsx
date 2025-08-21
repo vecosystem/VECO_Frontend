@@ -1,7 +1,7 @@
 // WorkspaceExternalDetail.tsx
 // 워크스페이스 전체 팀 - 외부 상세페이지
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo, startTransition } from 'react';
 import WorkspaceDetailHeader from '../../components/DetailView/WorkspaceDetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -20,23 +20,51 @@ import IcGoal from '../../assets/icons/goal.svg';
 import IcExt from '../../assets/icons/external.svg';
 
 import { getStatusColor } from '../../utils/listItemUtils';
-import { statusLabelToCode } from '../../types/detailitem.ts';
+import { priorityLabelToCode, statusLabelToCode } from '../../types/detailitem.ts';
 import CommentSection from '../../components/DetailView/Comment/CommentSection';
 import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
-import { formatDateDot } from '../../utils/formatDate';
+import { formatDateDot, formatDateHyphen } from '../../utils/formatDate';
 import { useToggleMode } from '../../hooks/useToggleMode';
 import { useParams } from 'react-router-dom';
-import { useGetExternalSimpleIssue } from '../../apis/external/useGetExternalSimplelssue.ts';
 import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts';
 
 import { usePostComment } from '../../apis/comment/usePostComment';
 import CommentInput from '../../components/DetailView/Comment/CommentInput';
 import MultiSelectPropertyItem from '../../components/DetailView/MultiSelectPropertyItem.tsx';
-import type { SubmitHandleRef } from '../../components/DetailView/TextEditor/lexical-plugins/SubmitHandlePlugin.tsx';
-import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail.ts';
+import {
+  EMPTY_EDITOR_STATE,
+  type SubmitHandleRef,
+} from '../../components/DetailView/TextEditor/lexical-plugins/SubmitHandlePlugin.tsx';
 import { useIsMutating } from '@tanstack/react-query';
 import { mutationKey } from '../../constants/mutationKey.ts';
+import {
+  EXTERNAL_LABELS,
+  LABEL_TO_EXTERNAL_CODE,
+  PRIORITY_LABELS,
+  STATUS_LABELS,
+  type ExternalCode,
+  type PriorityCode,
+  type StatusCode,
+} from '../../types/listItem.ts';
+import { useGetWorkspaceMembers } from '../../apis/setting/useGetWorkspaceMembers.ts';
+import { useGetSimpleGoalList } from '../../apis/goal/useGetSimpleGoalList.ts.ts';
+import { useCreateExternal } from '../../apis/external/usePostCreateExternalDetail.ts';
+import { useGetExternalDetail } from '../../apis/external/useGetExternalDetail.ts';
+import { useUpdateExternal } from '../../apis/external/usePatchExternalDetail.ts';
+import {
+  getGithubRepository,
+  useGetGithubRepository,
+} from '../../apis/external/useGetGithubRepository.ts';
+import {
+  getGithubInstallationId,
+  useGetGithubInstallationId,
+} from '../../apis/external/useGetGithubInstallationId.ts';
+import { useExternalDeadlinePatch } from '../../hooks/useExternalDeadlinePatch.ts';
+import type { CreateExternalDetailDto, UpdateExternalDetailDto } from '../../types/external.ts';
+import queryClient from '../../utils/queryClient.ts';
+import { queryKey } from '../../constants/queryKey.ts';
+import { useHydrateExternalDetail } from '../../hooks/useHydrateExternalDetail.ts';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -52,46 +80,227 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
   const [selectedDate, setSelectedDate] = useState<[Date | null, Date | null]>([null, null]); // '기한' 속성의 달력 드롭다운: 시작일, 종료일 2개를 저장
 
   const [title, setTitle] = useState('');
+  const [state, setState] = useState<StatusCode>('NONE');
+  const [priority, setPriority] = useState<PriorityCode>('NONE');
+  const [managersId, setManagersId] = useState<number[]>([]);
+  const [extServiceType, setExtServiceType] = useState<ExternalCode | null>(null);
+
+  const [goalId, setGoalId] = useState<number | null>(null); // null 허용
 
   const editorSubmitRef = useRef<SubmitHandleRef | null>(null); // 텍스트에디터 컨텐츠 접근용 플래그
   const isSubmittingRequestRef = useRef(false); // API 제출 중복 요청 가드 플래그
   const teamId = Number(useParams<{ teamId: string }>().teamId);
-  /**
-   * @todo: 나중에 useCreateExt로 제대로 연결
-   */
-  const { isPending } = useCreateGoal(teamId);
+
+  // extId를 useParams로부터 가져옴
+  const { extId: extIdParam } = useParams<{ extId: string }>();
+  const numericExternalId = Number(extIdParam);
+
+  const { data: workspaceMembers } = useGetWorkspaceMembers();
+  const { data: simpleGoals } = useGetSimpleGoalList(teamId); // 팀 목표 간단 조회 (select로 info만 나오도록 되어 있음)
+  const { mutate: submitExternal, isPending: isCreating } = useCreateExternal(teamId);
+  const { data: externalDetail } = useGetExternalDetail(teamId, numericExternalId, {
+    enabled: true,
+  });
+  const { mutate: updateExternal, isPending: isUpdating } = useUpdateExternal(
+    teamId,
+    numericExternalId
+  );
+  const needGithubMeta = extServiceType === 'GITHUB';
+  const { data: githubRepo, isLoading: repoLoading } = useGetGithubRepository(teamId, {
+    enabled: needGithubMeta,
+  });
+  const { data: githubInstall, isLoading: installLoading } = useGetGithubInstallationId(teamId, {
+    enabled: needGithubMeta,
+  });
+
   const isCreatingGlobal =
     useIsMutating({ mutationKey: [mutationKey.EXTERNAL_CREATE, teamId] }) > 0;
-  const isSaving = isPending || isCreatingGlobal || isSubmittingRequestRef.current;
+  const isSaving = isCreating || isUpdating || isCreatingGlobal || isSubmittingRequestRef.current;
 
-  const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
-  const { openDropdown } = useDropdownActions();
+  const { isOpen, content } = useDropdownInfo(); // 작성 완료 여부 (view 모드일 때 true)
+  const { openDropdown } = useDropdownActions(); // 수정 가능 여부 (create 또는 edit 모드일 때 true)
 
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
+  const canPatch = Number.isFinite(numericExternalId); // PATCH 가능 조건
 
-  const { data: externalIssues } = useGetExternalSimpleIssue(teamId);
-  const issues = externalIssues?.info.map((issue) => issue.title) || [];
+  const repoObj = useMemo(
+    () => (Array.isArray(githubRepo) ? githubRepo[0] : githubRepo),
+    [githubRepo]
+  );
+
+  // 깃허브 연동 외부이슈일 경우 POST 요청시 필요한 owner, repo, installationId 데이터
+  const githubPayload = useMemo(() => {
+    const owner = repoObj?.owner?.login;
+    const repo = repoObj?.name;
+    const installationId = githubInstall?.installationId;
+    return { owner, repo, installationId };
+  }, [repoObj, githubInstall]);
+
+  const isGithubLoading = needGithubMeta && (repoLoading || installLoading);
+  const isGithubReady =
+    !needGithubMeta ||
+    (!!githubPayload.owner && !!githubPayload.repo && !!githubPayload.installationId);
 
   const { data: linkedTools } = useGetExternalLinks(teamId);
   const linkedToolsList = linkedTools
-    ? Object.entries(linkedTools)
-        .filter(([, value]) => value)
-        .map(([key]) =>
-          key === 'linkedWithGithub' ? 'Github' : key === 'linkedWithSlack' ? 'Slack' : key
-        )
+    ? [
+        ...(linkedTools.linkedWithGithub ? [EXTERNAL_LABELS.GITHUB] : []),
+        ...(linkedTools.linkedWithSlack ? [EXTERNAL_LABELS.SLACK] : []),
+      ]
     : [];
 
-  // extId를 useParams로부터 가져옴
-  const { extId } = useParams<{ extId: string }>();
+  // 단일 선택 라벨
+  const selectedStatusLabel = STATUS_LABELS[state];
+  const selectedPriorityLabel = PRIORITY_LABELS[priority];
+  const selectedExternalLabel = extServiceType ? EXTERNAL_LABELS[extServiceType] : '외부';
+
+  const selectedGoalLabel = useMemo(() => {
+    const match = (simpleGoals ?? []).find((g) => g.id === goalId);
+    return match?.title ?? '목표'; // 데이터 없거나 매칭 실패 시 기본 라벨
+  }, [simpleGoals, goalId]);
+
+  // 다중 선택 라벨
+  const selectedManagerLabels = useMemo(() => {
+    if (!workspaceMembers) return [];
+    const idToName = new Map(workspaceMembers.map((m) => [m.memberId, m.name] as const));
+    return managersId.map((id) => idToName.get(id)).filter((v): v is string => !!v);
+  }, [managersId, workspaceMembers]);
+  const [managersShowNoneLabel] = useState(false);
+
+  // deadline('기한' 속성) patch 훅
+  const { handleSelectDateAndPatch, buildPatchForEditSubmit } = useExternalDeadlinePatch({
+    externalDetail,
+    isViewMode: isCompleted,
+    canPatch,
+    mutateUpdate: updateExternal,
+  });
 
   const handleToggleMode = useToggleMode({
     mode,
     setMode,
     type: 'ext',
-    id: Number(extId),
+    id: Number(extIdParam),
     isDefaultTeam: true,
   });
+
+  // handleSubmit: Lexical 에디터 내용을 JSON 문자열로 직렬화 후 API로 전송하는 함수
+  const handleSubmit = () => {
+    if (editorSubmitRef.current) {
+      // ref를 통해 직렬화된 에디터 내용 가져오기
+      const serialized = editorSubmitRef.current?.getJson() ?? '';
+      const byteLength = new TextEncoder().encode(serialized).length;
+      console.log('Serialized JSON byte length:', byteLength);
+    }
+
+    if (isSaving) return;
+    isSubmittingRequestRef.current = true;
+
+    const [start, end] = selectedDate;
+
+    // 화면 상태를 공통 페이로드로 구성
+    const basePayload = {
+      title,
+      content: editorSubmitRef.current?.getJson() ?? EMPTY_EDITOR_STATE,
+      state,
+      priority,
+      managersId,
+      ...(goalId !== null && goalId !== undefined && goalId !== -1 ? { goalId } : {}),
+      ...(extServiceType ? { extServiceType } : {}),
+    };
+
+    console.log('Request body:', basePayload);
+
+    if (mode === 'create') {
+      // 1) GitHub 선택 시 필수값 검증
+      if (extServiceType === 'GITHUB') {
+        if (repoLoading || installLoading) {
+          isSubmittingRequestRef.current = false;
+          alert('GitHub 정보를 불러오는 중입니다. 잠시만요!');
+          return;
+        }
+        // 2) 값이 준비되지 않았으면 중단
+        if (!isGithubReady) {
+          isSubmittingRequestRef.current = false;
+          console.error('GitHub 연동 누락:', githubPayload);
+          alert('GitHub 연동 정보가 부족합니다. 설치/온보딩을 먼저 완료해 주세요.');
+          return;
+        }
+        const { owner, repo, installationId } = githubPayload;
+        if (!owner || !repo || !installationId) {
+          isSubmittingRequestRef.current = false;
+          console.error('GitHub 연동 누락: owner/repo/installationId 필요', {
+            owner,
+            repo,
+            installationId,
+          });
+        }
+      }
+
+      // 생성 시에는 기존 로직 유지 (규칙 제약 없음)
+      const payload: CreateExternalDetailDto = {
+        ...basePayload,
+        // GitHub일 때만 추가
+        ...(extServiceType === 'GITHUB'
+          ? {
+              owner: githubPayload.owner!,
+              repo: githubPayload.repo!,
+              installationId: githubPayload.installationId!,
+            }
+          : {}),
+        deadline: {
+          ...(start ? { start: formatDateHyphen(start) } : {}),
+          ...(end ? { end: formatDateHyphen(end) } : {}),
+        },
+      };
+
+      submitExternal(payload, {
+        onSuccess: ({ externalId }) => {
+          queryClient.invalidateQueries({ queryKey: [queryKey.EXTERNAL_LIST, String(teamId)] });
+          queryClient.invalidateQueries({ queryKey: [queryKey.EXTERNAL_NAME, String(teamId)] });
+          startTransition(() => handleToggleMode(externalId));
+        },
+        onSettled: () => {
+          isSubmittingRequestRef.current = false;
+        },
+      });
+    } else if (mode === 'edit') {
+      const patch = buildPatchForEditSubmit(selectedDate);
+      const { extServiceType: _omit, ...rest } = basePayload;
+      const payload = { ...rest, ...(patch ?? {}) } as UpdateExternalDetailDto;
+
+      // 수정 시 goalId가 없으면 생략된 상태로 보냄
+      if (goalId === null || goalId === undefined || goalId === -1) {
+        delete (payload as any).goalId; // goalId가 null, undefined, -1이면 삭제
+      }
+
+      updateExternal(payload, {
+        onSuccess: () => {
+          if (Number.isFinite(numericExternalId)) {
+            queryClient.invalidateQueries({ queryKey: [queryKey.EXTERNAL_LIST, String(teamId)] });
+            queryClient.invalidateQueries({ queryKey: [queryKey.EXTERNAL_NAME, String(teamId)] });
+            queryClient.invalidateQueries({
+              queryKey: [queryKey.EXTERNAL_DETAIL, numericExternalId],
+            });
+          }
+          startTransition(() => handleToggleMode());
+        },
+        onSettled: () => (isSubmittingRequestRef.current = false),
+      });
+    }
+  };
+
+  // handleCompletion - 하단 작성 완료<-수정하기 버튼 클릭 시 실행
+  // - create/edit → view: API 저장 후 모드 전환
+  // - view → edit: API 호출 없이 모드 전환
+  const handleCompletion = () => {
+    if (!isCompleted) {
+      // create 또는 edit 모드에서 view 모드로 전환하려는 시점
+      handleSubmit(); // 저장 성공 시 모드 전환
+    } else {
+      handleToggleMode(); // 모드 전환
+    }
+  };
 
   // '기한' 속성의 텍스트(시작일, 종료일) 결정하는 함수
   const getDisplayText = () => {
@@ -111,31 +320,73 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
     긴급: pr4,
   };
 
-  // '담당자' 속성 아이콘 매핑 (나중에 API로부터 받아온 데이터로 대체 예정)
-  const managerIconMap = {
-    담당자: IcProfile,
-    없음: IcProfile,
-    전채운: IcProfile,
-    염주원: IcProfile,
-    박유민: IcProfile,
-    이가을: IcProfile,
-    김선화: IcProfile,
-    박진주: IcProfile,
-  };
+  const goalOptions = useMemo(
+    () => ['없음', ...(simpleGoals ?? []).map((g) => g.title)],
+    [simpleGoals]
+  );
 
-  const goalIconMap = {
-    목표: IcGoal,
-    없음: IcGoal,
-    '백호를 사용해서 다른 사람들과 협업해보기': IcGoal,
-    '기획 및 요구사항 분석': IcGoal,
-  };
+  const goalIconMap = new Proxy(
+    {},
+    {
+      get: () => IcGoal,
+    }
+  ) as Record<string, string>;
 
+  // 해당 teamId에 속한 멤버만 필터
+  const teamMembers = useMemo(
+    () => (workspaceMembers ?? []).filter((m) => m.teams?.some((t) => t.teamId === teamId)),
+    [workspaceMembers, teamId]
+  );
+
+  // '담당자' 항목의 옵션: ['없음', ...팀 멤버 이름들]
+  const managerOptions = useMemo(() => ['없음', ...teamMembers.map((m) => m.name)], [teamMembers]);
+
+  // 멤버 이름 → 멤버 id 매핑 (선택 결과를 id 배열로 변환용)
+  const nameToId = useMemo(
+    () => Object.fromEntries(teamMembers.map((m) => [m.name, m.memberId] as const)),
+    [teamMembers]
+  );
+
+  // '담당자' 아이콘 매핑: 이름 → 프로필 URL(없으면 기본 아이콘), '담당자'/'없음' 기본 아이콘 포함
+  const managerIconMap = useMemo<Record<string, string>>(() => {
+    const base: Record<string, string> = {
+      담당자: IcProfile,
+      없음: IcProfile,
+    };
+    for (const m of teamMembers) {
+      base[m.name] = m.profileImageUrl || IcProfile;
+    }
+    return base;
+  }, [teamMembers]);
+
+  // title -> id 역매핑
+  const goalTitleToId = useMemo(() => {
+    const info = simpleGoals ?? [];
+    return new Map(info.map((g) => [g.title, g.id] as const));
+  }, [simpleGoals]);
+
+  // 외부 툴 아이콘 매핑
   const externalIconMap = {
     외부: IcExt,
     Slack: IcExt,
-    Notion: IcExt,
-    Github: IcExt,
+    GitHub: IcExt,
   };
+
+  useHydrateExternalDetail({
+    externalDetail,
+    externalId: numericExternalId,
+    editorRef: editorSubmitRef,
+    workspaceMembers,
+    simpleGoals, // 단일 목표 라벨/매핑용 간단 목록
+    nameToId, // 멤버 이름 -> id 매핑
+    setTitle,
+    setState,
+    setPriority,
+    setSelectedDate,
+    setManagersId,
+    setGoalId,
+    setExtServiceType,
+  });
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const shouldScrollRef = useRef(false);
@@ -154,12 +405,18 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
       {/* 상세페이지 메인 */}
       <div className="flex px-[3.2rem] gap-[8.8rem] w-full min-h-max">
         {/* 상세페이지 좌측 영역 - 제목 & 상세설명 & 댓글 */}
-        <div className="flex flex-col gap-[3.2rem] w-[calc(100%-33rem)] min-h-max">
+        <div className="flex flex-col flex-1 gap-[3.2rem] w-[calc(100%-33rem)] min-h-max">
           {/* 상세페이지 제목 */}
           <DetailTitle
             defaultTitle="제목을 작성해보세요"
             title={title}
-            setTitle={setTitle}
+            setTitle={(v) => {
+              setTitle(v);
+              // view 모드에서 즉시 PATCH
+              if (isCompleted && Number.isFinite(numericExternalId)) {
+                updateExternal({ title: v });
+              }
+            }}
             isEditable={isEditable}
           />
 
@@ -193,6 +450,14 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
                     const code = statusLabelToCode[label] ?? 'NONE';
                     return getStatusColor(code);
                   }}
+                  onSelect={(label) => {
+                    const next = statusLabelToCode[label] ?? 'NONE';
+                    setState(next);
+                    if (isCompleted && Number.isFinite(numericExternalId)) {
+                      updateExternal({ state: next });
+                    }
+                  }}
+                  selected={selectedStatusLabel}
                 />
               </div>
 
@@ -202,6 +467,14 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
                   defaultValue="우선순위"
                   options={['없음', '긴급', '높음', '중간', '낮음']}
                   iconMap={priorityIconMap}
+                  onSelect={(label) => {
+                    const next = priorityLabelToCode[label] ?? 'NONE';
+                    setPriority(next);
+                    if (isCompleted && Number.isFinite(numericExternalId)) {
+                      updateExternal({ priority: next });
+                    }
+                  }}
+                  selected={selectedPriorityLabel}
                 />
               </div>
 
@@ -209,8 +482,37 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
               <div onClick={(e) => e.stopPropagation()}>
                 <MultiSelectPropertyItem
                   defaultValue="담당자"
-                  options={['없음', '전채운', '염주원', '박유민', '이가을', '김선화', '박진주']}
+                  options={managerOptions}
                   iconMap={managerIconMap}
+                  onChange={(labels) => {
+                    // 1) '없음'만 선택된 경우만 비우기
+                    if (labels.length === 1 && labels[0] === '없음') {
+                      setManagersId([]);
+                      if (isCompleted && Number.isFinite(numericExternalId)) {
+                        updateExternal({ managersId: [] });
+                      }
+                      return;
+                    }
+
+                    // 2) '없음'이 다른 값과 섞여 오면 제거
+                    const cleaned = labels.filter((l) => l !== '없음');
+
+                    const ids = cleaned
+                      .map((label) => nameToId[label])
+                      .filter((v): v is number => typeof v === 'number');
+
+                    setManagersId(ids);
+                    if (isCompleted && Number.isFinite(numericExternalId)) {
+                      updateExternal({ managersId: ids });
+                    }
+                  }}
+                  selected={
+                    managersId.length === 0
+                      ? managersShowNoneLabel
+                        ? ['없음']
+                        : [] // 비어있지만 '없음'을 선택했으면 '없음'을 내려줌
+                      : selectedManagerLabels
+                  }
                 />
               </div>
 
@@ -231,7 +533,10 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
                   {isOpen && content?.name === 'date' && (
                     <CalendarDropdown
                       selectedDate={selectedDate}
-                      onSelect={(date) => setSelectedDate(date)}
+                      onSelect={(date) => {
+                        setSelectedDate(date);
+                        handleSelectDateAndPatch(date); // view 모드 시 즉시 PATCH
+                      }}
                     />
                   )}
                 </div>
@@ -239,7 +544,30 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
 
               {/* (5) 목표 */}
               <div onClick={(e) => e.stopPropagation()}>
-                <PropertyItem defaultValue="목표" options={issues} iconMap={goalIconMap} />
+                <PropertyItem
+                  defaultValue="목표"
+                  options={goalOptions}
+                  iconMap={goalIconMap} // 어떤 옵션이든 IcGoal
+                  selected={selectedGoalLabel} // ← 현재 선택 라벨
+                  onSelect={(label) => {
+                    // '없음' 대응 (백엔드가 null 허용 전이라면 0으로)
+                    if (label === '없음') {
+                      setGoalId(null);
+                      if (isCompleted && Number.isFinite(numericExternalId)) {
+                      }
+                      return;
+                    }
+
+                    // title -> id 매핑
+                    const id = goalTitleToId.get(label);
+                    if (typeof id === 'number') {
+                      setGoalId(id);
+                      if (isCompleted && Number.isFinite(numericExternalId)) {
+                        updateExternal({ goalId: id });
+                      }
+                    }
+                  }}
+                />
               </div>
 
               {/* (6) 외부 */}
@@ -248,6 +576,21 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
                   defaultValue="외부"
                   options={linkedToolsList}
                   iconMap={externalIconMap}
+                  selected={selectedExternalLabel}
+                  onSelect={(label) => {
+                    const code = LABEL_TO_EXTERNAL_CODE[label];
+                    setExtServiceType(code ?? null);
+                    if (code === 'GITHUB') {
+                      queryClient.prefetchQuery({
+                        queryKey: [queryKey.GITHUB_REPOSITORIES, teamId],
+                        queryFn: () => getGithubRepository(teamId),
+                      });
+                      queryClient.prefetchQuery({
+                        queryKey: [queryKey.GITHUB_INSTALLATION_ID, teamId],
+                        queryFn: () => getGithubInstallationId(teamId),
+                      });
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -257,8 +600,8 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
           <CompletionButton
             isTitleFilled={title.trim().length > 0}
             isCompleted={isCompleted}
-            isSaving={isSaving}
-            onToggle={handleToggleMode}
+            isSaving={isSaving || isGithubLoading}
+            onToggle={handleCompletion}
           />
         </div>
       </div>
