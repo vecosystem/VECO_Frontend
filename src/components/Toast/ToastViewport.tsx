@@ -6,7 +6,7 @@ const ToastViewport = () => {
 
   return createPortal(
     <div
-      className="fixed bottom-[5.8rem] right-[4.8rem] z-30 pointer-events-none"
+      className="flex flex-col gap-[1rem] fixed bottom-[5rem] right-[6.4rem] w-[36rem] z-30 pointer-events-none"
       role="status" // 상태메시지용
       aria-live="polite" // 텍스트 업데이트 시 대기 후 스크린리더가 읽음
       aria-atomic="true" // 메시지 전체를 한 번에 읽게 함
@@ -14,7 +14,7 @@ const ToastViewport = () => {
       {visible.map((t) => (
         <div
           key={t.id}
-          className="flex flex-col pointer-events-auto p-[2.4rem] rounded-lg border border-gray-300 bg-gray-200"
+          className="flex flex-col gap-[1.6rem] pointer-events-auto p-[2.4rem] rounded-lg border border-gray-300 bg-gray-200"
           onMouseDown={(e) => {
             e.stopPropagation();
           }}
