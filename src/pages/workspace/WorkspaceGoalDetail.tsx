@@ -96,6 +96,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
   const { isOpen: isModalOpen, content: modalContent } = useModalInfo();
   const confirmedRef = useRef(false);
   const prevOpenRef = useRef(false);
+  const suppressLeaveConfirmRef = useRef(false);
 
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
@@ -131,8 +132,16 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
 
   // 라우팅이 막히면 모달 오픈
   useEffect(() => {
-    if (blocker.state === 'blocked' && !isModalOpen) {
-      openModal({ name: 'leaveConfirm' });
+    if (blocker.state === 'blocked') {
+      if (suppressLeaveConfirmRef.current) {
+        // 내부 모드전환/내부 네비게이션: 모달 없이 바로 진행
+        suppressLeaveConfirmRef.current = false;
+        blocker.proceed();
+        return;
+      }
+      if (!isModalOpen) {
+        openModal({ name: 'leaveConfirm' });
+      }
     }
   }, [blocker.state, isModalOpen, openModal]);
 
@@ -208,6 +217,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
         onSuccess: ({ goalId }) => {
           queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_LIST, String(teamId)] });
           queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, String(teamId)] });
+          suppressLeaveConfirmRef.current = true; // 내부 전환이므로 leaveConfirm 모달 억제
           startTransition(() => handleToggleMode(goalId));
         },
         onSettled: () => {
@@ -225,6 +235,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
             queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_NAME, String(teamId)] });
             queryClient.invalidateQueries({ queryKey: [queryKey.GOAL_DETAIL, numericGoalId] });
           }
+          suppressLeaveConfirmRef.current = true; // 내부 전환이므로 leaveConfirm 모달 억제
           startTransition(() => handleToggleMode());
         },
         onSettled: () => {

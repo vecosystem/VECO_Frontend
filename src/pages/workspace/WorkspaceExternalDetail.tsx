@@ -126,6 +126,7 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
   const { isOpen: isModalOpen, content: modalContent } = useModalInfo();
   const confirmedRef = useRef(false);
   const prevOpenRef = useRef(false);
+  const suppressLeaveConfirmRef = useRef(false);
 
   const { showToast } = useToast(); // 우측 하단 토스트
   const canChangeExternal = mode === 'create'; // 외부 항목 편집 가능 여부 (create 모드일 때만 가능)
@@ -190,8 +191,16 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
 
   // 라우팅이 막히면 모달 오픈
   useEffect(() => {
-    if (blocker.state === 'blocked' && !isModalOpen) {
-      openModal({ name: 'leaveConfirm' });
+    if (blocker.state === 'blocked') {
+      if (suppressLeaveConfirmRef.current) {
+        // 내부 모드전환/내부 네비게이션: 모달 없이 바로 진행
+        suppressLeaveConfirmRef.current = false;
+        blocker.proceed();
+        return;
+      }
+      if (!isModalOpen) {
+        openModal({ name: 'leaveConfirm' });
+      }
     }
   }, [blocker.state, isModalOpen, openModal]);
 
@@ -322,6 +331,7 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
         onSuccess: ({ externalId }) => {
           queryClient.invalidateQueries({ queryKey: [queryKey.EXTERNAL_LIST, String(teamId)] });
           queryClient.invalidateQueries({ queryKey: [queryKey.EXTERNAL_NAME, String(teamId)] });
+          suppressLeaveConfirmRef.current = true; // 내부 전환이므로 leaveConfirm 모달 억제
           startTransition(() => handleToggleMode(externalId));
         },
         onSettled: () => {
@@ -347,6 +357,7 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
               queryKey: [queryKey.EXTERNAL_DETAIL, numericExternalId],
             });
           }
+          suppressLeaveConfirmRef.current = true; // 내부 전환이므로 leaveConfirm 모달 억제
           startTransition(() => handleToggleMode());
         },
         onSettled: () => (isSubmittingRequestRef.current = false),
