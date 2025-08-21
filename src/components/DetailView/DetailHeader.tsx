@@ -2,6 +2,7 @@ import TeamIcon from '../ListView/TeamIcon';
 import { useGetGoalName } from '../../apis/goal/useGetGoalName.ts';
 import { useGetExternalName } from '../../apis/external/useGetExternalName.ts';
 import { useGetIssueName } from '../../apis/issue/useGetIssueName.ts';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams.ts';
 import { useMemo } from 'react';
 
@@ -12,6 +13,7 @@ interface DetailHeaderProps {
 }
 
 const DetailHeader = ({ type, defaultTitle, title }: DetailHeaderProps) => {
+  const navigate = useNavigate();
   const teamId = Number(useParams<{ teamId: string }>().teamId);
   const { data: detailId } =
     type === 'goal'
@@ -32,6 +34,7 @@ const DetailHeader = ({ type, defaultTitle, title }: DetailHeaderProps) => {
       <TeamIcon
         teamName={currentTeam?.teamName}
         teamImgUrl={currentTeam?.teamImageUrl}
+        onClick={() => navigate(`/workspace/team/${currentTeam?.teamId}/${type}`)}
       />
       <div className="flex gap-[1.6rem] items-center overflow-hidden">
         {/* 상세페이지 ID */}
