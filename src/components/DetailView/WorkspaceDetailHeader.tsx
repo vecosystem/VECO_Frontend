@@ -1,8 +1,10 @@
 import WorkspaceIcon from '../ListView/WorkspaceIcon';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGetGoalName } from '../../apis/goal/useGetGoalName.ts';
 import { useGetIssueName } from '../../apis/issue/useGetIssueName.ts';
 import { useGetExternalName } from '../../apis/external/useGetExternalName.ts';
+import { useGetWorkspaceTeams } from '../../apis/setting/useGetWorkspaceTeams.ts';
+import { useMemo } from 'react';
 
 interface WorkspaceDetailHeaderProps {
   type: 'goal' | 'issue' | 'external';
@@ -11,6 +13,7 @@ interface WorkspaceDetailHeaderProps {
 }
 
 const WorkspaceDetailHeader = ({ type, defaultTitle, title }: WorkspaceDetailHeaderProps) => {
+  const navigate = useNavigate();
   const teamId = Number(useParams<{ teamId: string }>().teamId);
   const { data: detailId } =
     type === 'goal'
@@ -19,10 +22,20 @@ const WorkspaceDetailHeader = ({ type, defaultTitle, title }: WorkspaceDetailHea
         ? useGetIssueName(teamId)
         : useGetExternalName(teamId);
 
+  // 팀 정보 불러오기
+  const { data: teamData } = useGetWorkspaceTeams();
+  const currentTeam = useMemo(() => {
+    return teamData?.pages[0].teamList.find((team) => team.teamId === Number(teamId));
+  }, [teamData, teamId]);
+
   return (
     <div className="flex gap-[3.2rem] flex-nowrap">
       {/* 워크스페이스 아이콘, 워크스페이스명, props로 요소 전달 가능 */}
-      <WorkspaceIcon />
+      <WorkspaceIcon
+        workspaceName={currentTeam?.teamName}
+        workspaceImgUrl={currentTeam?.teamImageUrl}
+        onClick={() => navigate(`/workspace/default/team/${currentTeam?.teamId}/${type}`)}
+      />
       <div className="flex gap-[1.6rem] items-center overflow-hidden">
         {/* 상세페이지 ID */}
         <div className="flex whitespace-nowrap font-body-b text-gray-600">{detailId}</div>
