@@ -65,6 +65,7 @@ import {
   getGithubInstallationId,
   useGetGithubInstallationId,
 } from '../../apis/external/useGetGithubInstallationId.ts';
+import { useToast } from '../../components/Toast/ToastProvider.tsx';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -119,6 +120,8 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
 
   const { isOpen, content } = useDropdownInfo(); // 작성 완료 여부 (view 모드일 때 true)
   const { openDropdown } = useDropdownActions(); // 수정 가능 여부 (create 또는 edit 모드일 때 true)
+  const { showToast } = useToast(); // 우측 하단 토스트
+  const canChangeExternal = mode === 'create'; // 외부 항목 편집 가능 여부 (create 모드일 때만 가능)
 
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
@@ -212,18 +215,31 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
     console.log('Request body:', basePayload);
 
     if (mode === 'create') {
-      // 1) GitHub 선택 시 필수값 검증
+      // 1) 외부 툴 선택이 안 되었을 때
+      if (!extServiceType) {
+        isSubmittingRequestRef.current = false;
+        showToast({
+          contents: '반드시 외부 툴을 설정해야 합니다.',
+          key: 'extRequired', // 중복 합치기
+        });
+        return; // 생성 중단
+      }
+
+      // 2) GitHub 선택 시 필수값 검증
       if (extServiceType === 'GITHUB') {
         if (repoLoading || installLoading) {
           isSubmittingRequestRef.current = false;
-          alert('GitHub 정보를 불러오는 중입니다. 잠시만요!');
+          showToast({ contents: 'GitHub 정보를 불러오는 중입니다.', key: 'githubLoading' });
           return;
         }
-        // 2) 값이 준비되지 않았으면 중단
+        // 3) 값이 준비되지 않았으면 중단
         if (!isGithubReady) {
           isSubmittingRequestRef.current = false;
           console.error('GitHub 연동 누락:', githubPayload);
-          alert('GitHub 연동 정보가 부족합니다. 설치/온보딩을 먼저 완료해 주세요.');
+          showToast({
+            contents: 'GitHub 연동 정보가 부족합니다. 설치/온보딩을 먼저 완료해 주세요.',
+            key: 'githubMissing',
+          });
           return;
         }
         const { owner, repo, installationId } = githubPayload;
@@ -234,6 +250,11 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
             repo,
             installationId,
           });
+          showToast({
+            contents: 'GitHub 연동 정보가 부족합니다. 설치/온보딩을 먼저 완료해 주세요.',
+            key: 'githubMissing',
+          });
+          return;
         }
       }
 
@@ -290,12 +311,16 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
     }
   };
 
-  // handleCompletion - 하단 작성 완료<-수정하기 버튼 클릭 시 실행
-  // - create/edit → view: API 저장 후 모드 전환
-  // - view → edit: API 호출 없이 모드 전환
+  // handleCompletion - 하단 작성 완료<->수정하기 버튼 클릭 시 실행
+  // - create/edit -> view: API 저장 후 모드 전환
+  // - view -> edit: API 호출 없이 모드 전환
   const handleCompletion = () => {
     if (!isCompleted) {
       // create 또는 edit 모드에서 view 모드로 전환하려는 시점
+      if (mode === 'create' && !extServiceType) {
+        showToast({ contents: '반드시 외부 툴을 설정해야 합니다.', key: 'extRequired' });
+        return;
+      }
       handleSubmit(); // 저장 성공 시 모드 전환
     } else {
       handleToggleMode(); // 모드 전환
@@ -571,13 +596,14 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
               </div>
 
               {/* (6) 외부 */}
-              <div onClick={(e) => e.stopPropagation()}>
+              <div onClick={(e) => e.stopPropagation()} className="relative">
                 <PropertyItem
                   defaultValue="외부"
                   options={linkedToolsList}
                   iconMap={externalIconMap}
                   selected={selectedExternalLabel}
                   onSelect={(label) => {
+                    if (!canChangeExternal) return; // 가드
                     const code = LABEL_TO_EXTERNAL_CODE[label];
                     setExtServiceType(code ?? null);
                     if (code === 'GITHUB') {
@@ -592,6 +618,24 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
                     }
                   }}
                 />
+
+                {/* view / edit 모드에서는 클릭 완전 차단 */}
+                {!canChangeExternal && (
+                  <div
+                    className="absolute inset-0 z-10"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      showToast({
+                        contents: '외부 툴은 생성 시 한 번만 설정 가능합니다.',
+                        key: 'extLocked',
+                      });
+                    }}
+                    role="button"
+                    aria-label="외부 툴은 생성 시 한 번만 설정 가능합니다."
+                  />
+                )}
               </div>
             </div>
           </div>
