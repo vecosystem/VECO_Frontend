@@ -1,7 +1,7 @@
 // WorkspaceGoalDetail.tsx
 // 워크스페이스 전체 팀 - 목표 상세페이지
 
-import { useState, useRef, useMemo, startTransition } from 'react';
+import { useState, useRef, useMemo, startTransition, useEffect } from 'react';
 import WorkspaceDetailHeader from '../../components/DetailView/WorkspaceDetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -38,7 +38,7 @@ import {
   EMPTY_EDITOR_STATE,
   type SubmitHandleRef,
 } from '../../components/DetailView/TextEditor/lexical-plugins/SubmitHandlePlugin';
-import { useParams } from 'react-router-dom';
+import { useBlocker, useParams } from 'react-router-dom';
 import { useGetWorkspaceMembers } from '../../apis/setting/useGetWorkspaceMembers';
 import { useGetSimpleIssueList } from '../../apis/issue/useGetSimpleIssueList';
 import { useCreateGoal } from '../../apis/goal/usePostCreateGoalDetail';
@@ -51,6 +51,8 @@ import { useUpdateGoal } from '../../apis/goal/usePatchGoalDetail';
 import { useGoalDeadlinePatch } from '../../hooks/useGoalDeadlinePatch';
 import queryClient from '../../utils/queryClient';
 import { queryKey } from '../../constants/queryKey';
+import { useModalActions, useModalInfo } from '../../hooks/useModal';
+import Modal from '../../components/Modal/Modal';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -88,12 +90,17 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
   const isCreatingGlobal = useIsMutating({ mutationKey: [mutationKey.GOAL_CREATE, teamId] }) > 0;
   const isSaving = isCreating || isUpdating || isCreatingGlobal || isSubmittingRequestRef.current;
 
-  const { isOpen, content } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
+  const { isOpen: isDropdownOpen, content: dropdownContent } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
   const { openDropdown } = useDropdownActions();
+  const { openModal, closeModal } = useModalActions();
+  const { isOpen: isModalOpen, content: modalContent } = useModalInfo();
+  const confirmedRef = useRef(false);
+  const prevOpenRef = useRef(false);
 
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
   const canPatch = Number.isFinite(numericGoalId); // PATCH 가능 조건
+  const blocker = useBlocker(isEditable); // 편집하고 있는 상황에 화면 이동을 블로킹
 
   // 단일 선택 라벨
   const selectedStatusLabel = STATUS_LABELS[state];
@@ -112,6 +119,40 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
   }, [issuesId, simpleIssues]);
   const [managersShowNoneLabel] = useState(false);
   const [issuesShowNoneLabel, setIssuesShowNoneLabel] = useState(false);
+
+  useEffect(() => {
+    if (!isEditable) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [isEditable]);
+
+  // 라우팅이 막히면 모달 오픈
+  useEffect(() => {
+    if (blocker.state === 'blocked' && !isModalOpen) {
+      openModal({ name: 'leaveConfirm' });
+    }
+  }, [blocker.state, isModalOpen, openModal]);
+
+  // 모달이 닫힐 때: 확인 누른 게 아니면 reset()
+  useEffect(() => {
+    if (prevOpenRef.current && !isModalOpen) {
+      if (blocker.state === 'blocked' && !confirmedRef.current) {
+        blocker.reset();
+      }
+      confirmedRef.current = false;
+    }
+    prevOpenRef.current = isModalOpen;
+  }, [isModalOpen, blocker.state]);
+
+  // 다른 화면으로 나갈 때 남아있던 모달이 따라오지 않도록 정리
+  useEffect(() => {
+    return () => {
+      closeModal();
+    };
+  }, [closeModal]);
 
   // deadline('기한' 속성) patch 훅
   const { handleSelectDateAndPatch, buildPatchForEditSubmit } = useGoalDeadlinePatch({
@@ -423,7 +464,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
                   {/* '기한' 항목명 - 날짜 설정하면 반영됨 */}
                   <span className={`font-body-r text-gray-600`}>{getDisplayText()}</span>
                   {/* 달력 드롭다운 오픈 */}
-                  {isOpen && content?.name === 'date' && (
+                  {isDropdownOpen && dropdownContent?.name === 'date' && (
                     <CalendarDropdown
                       selectedDate={selectedDate}
                       onSelect={(date) => {
@@ -443,6 +484,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
                   onChange={(labels) => {
                     if (labels.includes('없음')) {
                       setIssuesId([]);
+                      setIssuesShowNoneLabel(true);
                       if (isCompleted && Number.isFinite(numericGoalId)) {
                         updateGoal({ issuesId: [] });
                       }
@@ -479,6 +521,29 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
         </div>
       </div>
       <div ref={bottomRef} className="scroll-mb-[6.4rem]" />
+
+      {isModalOpen && modalContent?.name === 'leaveConfirm' && blocker?.state === 'blocked' && (
+        <Modal
+          title="알림"
+          subtitle={
+            <>
+              작성을 그만두시겠습니까?
+              <br />
+              작성중인 내용은 저장되지 않습니다.
+            </>
+          }
+          buttonText="확인"
+          buttonColor="bg-primary-blue"
+          onClick={() => {
+            confirmedRef.current = true; // 확인 눌렀음 표시
+            closeModal();
+            setTimeout(() => {
+              // 2) 다음 틱에 이동(레이스 방지)
+              blocker.proceed();
+            }, 0);
+          }}
+        />
+      )}
     </div>
   );
 };

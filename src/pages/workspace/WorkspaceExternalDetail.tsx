@@ -1,7 +1,7 @@
 // WorkspaceExternalDetail.tsx
 // 워크스페이스 전체 팀 - 외부 상세페이지
 
-import { useState, useRef, useMemo, startTransition } from 'react';
+import { useState, useRef, useMemo, startTransition, useEffect } from 'react';
 import WorkspaceDetailHeader from '../../components/DetailView/WorkspaceDetailHeader';
 import PropertyItem from '../../components/DetailView/PropertyItem';
 import DetailTitle from '../../components/DetailView/DetailTitle';
@@ -26,7 +26,7 @@ import CalendarDropdown from '../../components/Calendar/CalendarDropdown';
 import { useDropdownActions, useDropdownInfo } from '../../hooks/useDropdown';
 import { formatDateDot, formatDateHyphen } from '../../utils/formatDate';
 import { useToggleMode } from '../../hooks/useToggleMode';
-import { useParams } from 'react-router-dom';
+import { useBlocker, useParams } from 'react-router-dom';
 import { useGetExternalLinks } from '../../apis/external/useGetExternalLinks.ts';
 
 import { usePostComment } from '../../apis/comment/usePostComment';
@@ -65,6 +65,9 @@ import type { CreateExternalDetailDto, UpdateExternalDetailDto } from '../../typ
 import queryClient from '../../utils/queryClient.ts';
 import { queryKey } from '../../constants/queryKey.ts';
 import { useHydrateExternalDetail } from '../../hooks/useHydrateExternalDetail.ts';
+import { useModalActions, useModalInfo } from '../../hooks/useModal.ts';
+import { useToast } from '../../components/Toast/ToastProvider.tsx';
+import Modal from '../../components/Modal/Modal.tsx';
 
 /** 상세페이지 모드 구분
  * (1) create - 생성 모드: 처음에 생성하여 작성 완료하기 전
@@ -117,12 +120,20 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
     useIsMutating({ mutationKey: [mutationKey.EXTERNAL_CREATE, teamId] }) > 0;
   const isSaving = isCreating || isUpdating || isCreatingGlobal || isSubmittingRequestRef.current;
 
-  const { isOpen, content } = useDropdownInfo(); // 작성 완료 여부 (view 모드일 때 true)
-  const { openDropdown } = useDropdownActions(); // 수정 가능 여부 (create 또는 edit 모드일 때 true)
+  const { isOpen: isDropdownOpen, content: dropdownContent } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
+  const { openDropdown } = useDropdownActions();
+  const { openModal, closeModal } = useModalActions();
+  const { isOpen: isModalOpen, content: modalContent } = useModalInfo();
+  const confirmedRef = useRef(false);
+  const prevOpenRef = useRef(false);
+
+  const { showToast } = useToast(); // 우측 하단 토스트
+  const canChangeExternal = mode === 'create'; // 외부 항목 편집 가능 여부 (create 모드일 때만 가능)
 
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
   const canPatch = Number.isFinite(numericExternalId); // PATCH 가능 조건
+  const blocker = useBlocker(isEditable); // 편집하고 있는 상황에 화면 이동을 블로킹
 
   const repoObj = useMemo(
     () => (Array.isArray(githubRepo) ? githubRepo[0] : githubRepo),
@@ -168,6 +179,40 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
   }, [managersId, workspaceMembers]);
   const [managersShowNoneLabel] = useState(false);
 
+  useEffect(() => {
+    if (!isEditable) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [isEditable]);
+
+  // 라우팅이 막히면 모달 오픈
+  useEffect(() => {
+    if (blocker.state === 'blocked' && !isModalOpen) {
+      openModal({ name: 'leaveConfirm' });
+    }
+  }, [blocker.state, isModalOpen, openModal]);
+
+  // 모달이 닫힐 때: 확인 누른 게 아니면 reset()
+  useEffect(() => {
+    if (prevOpenRef.current && !isModalOpen) {
+      if (blocker.state === 'blocked' && !confirmedRef.current) {
+        blocker.reset();
+      }
+      confirmedRef.current = false;
+    }
+    prevOpenRef.current = isModalOpen;
+  }, [isModalOpen, blocker.state]);
+
+  // 다른 화면으로 나갈 때 남아있던 모달이 따라오지 않도록 정리
+  useEffect(() => {
+    return () => {
+      closeModal();
+    };
+  }, [closeModal]);
+
   // deadline('기한' 속성) patch 훅
   const { handleSelectDateAndPatch, buildPatchForEditSubmit } = useExternalDeadlinePatch({
     externalDetail,
@@ -212,18 +257,32 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
     console.log('Request body:', basePayload);
 
     if (mode === 'create') {
-      // 1) GitHub 선택 시 필수값 검증
+      // 1) 외부 툴 선택이 안 되었을 때
+      if (!extServiceType) {
+        isSubmittingRequestRef.current = false;
+        showToast({
+          contents: '반드시 외부 툴을 설정해야 합니다.',
+          key: 'extRequired', // 중복 합치기
+        });
+        return; // 생성 중단
+      }
+
+      // 2) GitHub 선택 시 필수값 검증
       if (extServiceType === 'GITHUB') {
         if (repoLoading || installLoading) {
           isSubmittingRequestRef.current = false;
-          alert('GitHub 정보를 불러오는 중입니다. 잠시만요!');
+          showToast({ contents: 'GitHub 정보를 불러오는 중입니다.', key: 'githubLoading' });
           return;
         }
-        // 2) 값이 준비되지 않았으면 중단
+
+        // 3) 값이 준비되지 않았으면 중단
         if (!isGithubReady) {
           isSubmittingRequestRef.current = false;
           console.error('GitHub 연동 누락:', githubPayload);
-          alert('GitHub 연동 정보가 부족합니다. 설치/온보딩을 먼저 완료해 주세요.');
+          showToast({
+            contents: 'GitHub 연동 정보가 부족합니다. 설치/온보딩을 먼저 완료해 주세요.',
+            key: 'githubMissing',
+          });
           return;
         }
         const { owner, repo, installationId } = githubPayload;
@@ -234,6 +293,11 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
             repo,
             installationId,
           });
+          showToast({
+            contents: 'GitHub 연동 정보가 부족합니다. 설치/온보딩을 먼저 완료해 주세요.',
+            key: 'githubMissing',
+          });
+          return;
         }
       }
 
@@ -296,6 +360,10 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
   const handleCompletion = () => {
     if (!isCompleted) {
       // create 또는 edit 모드에서 view 모드로 전환하려는 시점
+      if (mode === 'create' && !extServiceType) {
+        showToast({ contents: '반드시 외부 툴을 설정해야 합니다.', key: 'extRequired' });
+        return;
+      }
       handleSubmit(); // 저장 성공 시 모드 전환
     } else {
       handleToggleMode(); // 모드 전환
@@ -530,7 +598,7 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
                   {/* '기한' 항목명 - 날짜 설정하면 반영됨 */}
                   <span className={`font-body-r text-gray-600`}>{getDisplayText()}</span>
                   {/* 달력 드롭다운 오픈 */}
-                  {isOpen && content?.name === 'date' && (
+                  {isDropdownOpen && dropdownContent?.name === 'date' && (
                     <CalendarDropdown
                       selectedDate={selectedDate}
                       onSelect={(date) => {
@@ -571,13 +639,14 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
               </div>
 
               {/* (6) 외부 */}
-              <div onClick={(e) => e.stopPropagation()}>
+              <div onClick={(e) => e.stopPropagation()} className="relative">
                 <PropertyItem
                   defaultValue="외부"
                   options={linkedToolsList}
                   iconMap={externalIconMap}
                   selected={selectedExternalLabel}
                   onSelect={(label) => {
+                    if (!canChangeExternal) return; // 가드
                     const code = LABEL_TO_EXTERNAL_CODE[label];
                     setExtServiceType(code ?? null);
                     if (code === 'GITHUB') {
@@ -592,6 +661,24 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
                     }
                   }}
                 />
+
+                {/* view / edit 모드에서는 클릭 완전 차단 */}
+                {!canChangeExternal && (
+                  <div
+                    className="absolute inset-0 z-10"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      showToast({
+                        contents: '외부 툴은 생성 시 한 번만 설정 가능합니다.',
+                        key: 'extLocked',
+                      });
+                    }}
+                    role="button"
+                    aria-label="외부 툴은 생성 시 한 번만 설정 가능합니다."
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -606,6 +693,29 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
         </div>
       </div>
       <div ref={bottomRef} className="scroll-mb-[6.4rem]" />
+
+      {isModalOpen && modalContent?.name === 'leaveConfirm' && blocker?.state === 'blocked' && (
+        <Modal
+          title="알림"
+          subtitle={
+            <>
+              작성을 그만두시겠습니까?
+              <br />
+              작성중인 내용은 저장되지 않습니다.
+            </>
+          }
+          buttonText="확인"
+          buttonColor="bg-primary-blue"
+          onClick={() => {
+            confirmedRef.current = true; // 확인 눌렀음 표시
+            closeModal();
+            setTimeout(() => {
+              // 2) 다음 틱에 이동(레이스 방지)
+              blocker.proceed();
+            }, 0);
+          }}
+        />
+      )}
     </div>
   );
 };

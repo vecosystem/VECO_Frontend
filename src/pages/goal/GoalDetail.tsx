@@ -100,7 +100,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   const isCompleted = mode === 'view'; // 작성 완료 여부 (view 모드일 때 true)
   const isEditable = mode === 'create' || mode === 'edit'; // 수정 가능 여부 (create 또는 edit 모드일 때 true)
   const canPatch = Number.isFinite(numericGoalId); // PATCH 가능 조건
-  const blocker = useBlocker(isEditable);
+  const blocker = useBlocker(isEditable); // 편집하고 있는 상황에 화면 이동을 블로킹
 
   // 단일 선택 라벨
   const selectedStatusLabel = STATUS_LABELS[state];
@@ -259,7 +259,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     우선순위: pr3,
     없음: pr0,
     낮음: pr1,
-    보통: pr2,
+    중간: pr2,
     높음: pr3,
     긴급: pr4,
   };
@@ -395,7 +395,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
               <div onClick={(e) => e.stopPropagation()}>
                 <PropertyItem
                   defaultValue="우선순위"
-                  options={['없음', '긴급', '높음', '보통', '낮음']}
+                  options={['없음', '긴급', '높음', '중간', '낮음']}
                   iconMap={priorityIconMap}
                   onSelect={(label) => {
                     const next = priorityLabelToCode[label] ?? 'NONE';
