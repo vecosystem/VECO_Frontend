@@ -1,41 +1,41 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { buildDeadlinePatch } from '../utils/deadlinePatch';
-import type { UpdateIssueDetailDto } from '../types/issue';
+import type { UpdateExternalDetailDto } from '../types/external';
 
-type UseIssueDeadlinePatchParams = {
-  issueDetail: any;
+type UseExternalDeadlinePatchParams = {
+  externalDetail: any;
   isViewMode: boolean;
   canPatch: boolean;
-  mutateUpdate: (payload: UpdateIssueDetailDto, opts?: { onSuccess?: () => void }) => void;
+  mutateUpdate: (payload: UpdateExternalDetailDto, opts?: { onSuccess?: () => void }) => void;
 };
 
 /**
- * - issueDetail의 기존 deadline(start/end)을 기억
+ * - externalDetail의 기존 deadline(start/end)을 기억
  * - 달력 onSelect / edit 제출 시 변경분만 계산해 PATCH 전송
  */
-export function useIssueDeadlinePatch({
-  issueDetail,
+export function useExternalDeadlinePatch({
+  externalDetail,
   isViewMode,
   canPatch,
   mutateUpdate,
-}: UseIssueDeadlinePatchParams) {
+}: UseExternalDeadlinePatchParams) {
   const originalDeadlineRef = useRef<{ start: string | null; end: string | null }>({
     start: null,
     end: null,
   });
 
-  // issueDetail 변경 시 원본 저장
+  // externalDetail 변경 시 원본 저장
   useEffect(() => {
     const prevStart =
-      issueDetail?.deadline?.start && typeof issueDetail.deadline.start === 'string'
-        ? issueDetail.deadline.start
+      externalDetail?.deadline?.start && typeof externalDetail.deadline.start === 'string'
+        ? externalDetail.deadline.start
         : null;
     const prevEnd =
-      issueDetail?.deadline?.end && typeof issueDetail.deadline.end === 'string'
-        ? issueDetail.deadline.end
+      externalDetail?.deadline?.end && typeof externalDetail.deadline.end === 'string'
+        ? externalDetail.deadline.end
         : null;
     originalDeadlineRef.current = { start: prevStart, end: prevEnd };
-  }, [issueDetail]);
+  }, [externalDetail]);
 
   /** view 모드에서 달력 선택 → 즉시 PATCH */
   const handleSelectDateAndPatch = useCallback(

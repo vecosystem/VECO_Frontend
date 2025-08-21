@@ -1,8 +1,10 @@
-import type { CursorBasedResponse } from './common';
+import type { ResponseCommentListDto } from './comment';
+import type { CommonResponse, CursorBasedResponse } from './common';
+import type { Goal } from './issue';
 
 export type Deadline = {
-  start: string;
-  end: string;
+  start?: string;
+  end?: string;
 };
 
 export type ManagerInfo = {
@@ -41,3 +43,62 @@ export type RequestExternalListDto = {
 };
 
 export type ResponseExternalDto = CursorBasedResponse<ExternalFilter[]>;
+
+// 외부 이슈 생성
+export type CreateExternalDetailDto = {
+  owner?: string;
+  repo?: string;
+  installationId?: number;
+  title: string;
+  content: string;
+  state: string;
+  priority: string;
+  managersId: number[];
+  deadline?: Deadline;
+  extServiceType?: string;
+  goalId?: number;
+};
+
+export type CreateExternalResultDto = {
+  externalId: number;
+  createdAt: string;
+};
+
+export type ResponseCreateExternalDetatilDto = CommonResponse<CreateExternalResultDto>;
+
+// 외부 이슈 상세 조회
+export type ViewExternalDetailDto = {
+  id: number;
+  name: string;
+  title: string;
+  content: string;
+  priority: string;
+  state: string;
+  goalId?: Pick<Goal, 'id'>; // TODO: 데이터 구조 통일해달라고 하기
+  goalTitle?: Pick<Goal, 'title'>; // TODO: 데이터 구조 통일해달라고 하기
+  extServiceType?: string;
+  managers: Manager;
+  deadline: Deadline;
+  comments: ResponseCommentListDto;
+};
+
+export type ResponseViewExternalDetailDto = CommonResponse<ViewExternalDetailDto>;
+
+// 외부 이슈 수정
+export type UpdateExternalDetailDto = {
+  // 변경사항이 없는 속성은 Null값 가능, 키 생략(undef)도 가능
+  title?: string | null;
+  content?: string | null;
+  state?: string | null;
+  priority?: string | null;
+  managersId?: number[] | null;
+  deadline?: Deadline | null;
+  goalId?: number | null;
+};
+
+export type UpdateExternalResultDto = {
+  externalId: number;
+  updatedAt: string; // LocalDateTime
+};
+
+export type ResponseUpdateExternalDetailDto = CommonResponse<UpdateExternalResultDto>;

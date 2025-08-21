@@ -9,7 +9,7 @@ interface GetGithubInstallationIdResponse {
 }
 
 // 깃허브 설치 ID 조회
-const getGithubInstallationId = async (
+export const getGithubInstallationId = async (
   teamId: number
 ): Promise<GetGithubInstallationIdResponse> => {
   try {
@@ -24,9 +24,10 @@ const getGithubInstallationId = async (
   }
 };
 
-export const useGetGithubInstallationId = (teamId: number) => {
+export const useGetGithubInstallationId = (teamId: number, opts?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: [queryKey.GITHUB_INSTALLATION_ID, teamId],
     queryFn: () => getGithubInstallationId(teamId),
+    enabled: opts?.enabled ?? true,
   });
 };
