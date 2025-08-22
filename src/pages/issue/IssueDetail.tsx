@@ -121,18 +121,13 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
   const selectedStatusLabel = STATUS_LABELS[state];
   const selectedPriorityLabel = PRIORITY_LABELS[priority];
 
-  const selectedGoalLabel = useMemo(() => {
-    const match = (simpleGoals ?? []).find((g) => g.id === goalId);
-    return match?.title ?? '목표'; // 데이터 없거나 매칭 실패 시 기본 라벨
-  }, [simpleGoals, goalId]);
-
   // 다중 선택 라벨
   const selectedManagerLabels = useMemo(() => {
     if (!workspaceMembers) return [];
     const idToName = new Map(workspaceMembers.map((m) => [m.memberId, m.name] as const));
     return managersId.map((id) => idToName.get(id)).filter((v): v is string => !!v);
   }, [managersId, workspaceMembers]);
-  const [managersShowNoneLabel] = useState(false);
+  const [managersShowNoneLabel, setManagersShowNoneLabel] = useState(false);
 
   useEffect(() => {
     if (!isEditable) return;
@@ -290,7 +285,7 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
     우선순위: pr3,
     없음: pr0,
     낮음: pr1,
-    중간: pr2,
+    보통: pr2,
     높음: pr3,
     긴급: pr4,
   };
@@ -329,16 +324,40 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
     return base;
   }, [teamMembers]);
 
-  const goalOptions = useMemo(
-    () => ['없음', ...(simpleGoals ?? []).map((g) => g.title)],
-    [simpleGoals]
+  const goals = simpleGoals ?? [];
+
+  // 1) 제목별 개수 집계
+  const goalTitleCount = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const g of goals) m.set(g.title, (m.get(g.title) ?? 0) + 1);
+    return m;
+  }, [goals]);
+
+  // 2) 표시용 라벨 구성 (중복이면 #id suffix)
+  const goalItems = useMemo(
+    () =>
+      goals.map((g) => {
+        const duplicated = (goalTitleCount.get(g.title) ?? 0) > 1;
+        const label = duplicated ? `${g.title} (#${g.id})` : g.title;
+        return { id: g.id, label };
+      }),
+    [goals, goalTitleCount]
   );
 
-  // title -> id 역매핑
-  const goalTitleToId = useMemo(() => {
-    const info = simpleGoals ?? [];
-    return new Map(info.map((g) => [g.title, g.id] as const));
-  }, [simpleGoals]);
+  // 3) 드롭다운 옵션 배열
+  const goalOptions = useMemo(() => ['없음', ...goalItems.map((o) => o.label)], [goalItems]);
+
+  // 4) 라벨 → id 역매핑
+  const goalLabelToId = useMemo(
+    () => new Map(goalItems.map((o) => [o.label, o.id] as const)),
+    [goalItems]
+  );
+
+  const selectedGoalLabel = useMemo(() => {
+    if (goalId == null) return '목표';
+    const item = goalItems.find((o) => o.id === goalId);
+    return item?.label ?? '목표';
+  }, [goalId, goalItems]);
 
   useHydrateIssueDetail({
     issueDetail,
@@ -437,7 +456,7 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
               <div onClick={(e) => e.stopPropagation()}>
                 <PropertyItem
                   defaultValue="우선순위"
-                  options={['없음', '긴급', '높음', '중간', '낮음']}
+                  options={['없음', '긴급', '높음', '보통', '낮음']}
                   iconMap={priorityIconMap}
                   onSelect={(label) => {
                     const next = priorityLabelToCode[label] ?? 'NONE';
@@ -460,6 +479,7 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
                     // 1) '없음'만 선택된 경우만 비우기
                     if (labels.length === 1 && labels[0] === '없음') {
                       setManagersId([]);
+                      setManagersShowNoneLabel(true);
                       if (isCompleted && Number.isFinite(numericIssueId)) {
                         updateIssue({ managersId: [] });
                       }
@@ -525,13 +545,11 @@ const IssueDetail = ({ initialMode }: IssueDetailProps) => {
                     // '없음' 대응 (백엔드가 null 허용 전이라면 0으로)
                     if (label === '없음') {
                       setGoalId(null);
-                      if (isCompleted && Number.isFinite(numericIssueId)) {
-                      }
                       return;
                     }
 
-                    // title -> id 매핑
-                    const id = goalTitleToId.get(label);
+                    // label -> id 매핑
+                    const id = goalLabelToId.get(label);
                     if (typeof id === 'number') {
                       setGoalId(id);
                       if (isCompleted && Number.isFinite(numericIssueId)) {

@@ -188,7 +188,7 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
     const idToName = new Map(workspaceMembers.map((m) => [m.memberId, m.name] as const));
     return managersId.map((id) => idToName.get(id)).filter((v): v is string => !!v);
   }, [managersId, workspaceMembers]);
-  const [managersShowNoneLabel] = useState(false);
+  const [managersShowNoneLabel, setManagersShowNoneLabel] = useState(false);
 
   useEffect(() => {
     if (!isEditable) return;
@@ -403,7 +403,7 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
     우선순위: pr3,
     없음: pr0,
     낮음: pr1,
-    중간: pr2,
+    보통: pr2,
     높음: pr3,
     긴급: pr4,
   };
@@ -558,7 +558,7 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
               <div onClick={(e) => e.stopPropagation()}>
                 <PropertyItem
                   defaultValue="우선순위"
-                  options={['없음', '긴급', '높음', '중간', '낮음']}
+                  options={['없음', '긴급', '높음', '보통', '낮음']}
                   iconMap={priorityIconMap}
                   onSelect={(label) => {
                     const next = priorityLabelToCode[label] ?? 'NONE';
@@ -581,6 +581,7 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
                     // 1) '없음'만 선택된 경우만 비우기
                     if (labels.length === 1 && labels[0] === '없음') {
                       setManagersId([]);
+                      setManagersShowNoneLabel(true);
                       if (isCompleted && Number.isFinite(numericExternalId)) {
                         updateExternal({ managersId: [] });
                       }
