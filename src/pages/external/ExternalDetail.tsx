@@ -403,7 +403,7 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
     우선순위: pr3,
     없음: pr0,
     낮음: pr1,
-    중간: pr2,
+    보통: pr2,
     높음: pr3,
     긴급: pr4,
   };
@@ -558,7 +558,7 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
               <div onClick={(e) => e.stopPropagation()}>
                 <PropertyItem
                   defaultValue="우선순위"
-                  options={['없음', '긴급', '높음', '중간', '낮음']}
+                  options={['없음', '긴급', '높음', '보통', '낮음']}
                   iconMap={priorityIconMap}
                   onSelect={(label) => {
                     const next = priorityLabelToCode[label] ?? 'NONE';
