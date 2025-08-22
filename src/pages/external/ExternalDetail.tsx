@@ -102,9 +102,13 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
   const { data: workspaceMembers } = useGetWorkspaceMembers();
   const { data: simpleGoals } = useGetSimpleGoalList(teamId); // 팀 목표 간단 조회 (select로 info만 나오도록 되어 있음)
   const { mutate: submitExternal, isPending: isCreating } = useCreateExternal(teamId);
-  const { data: externalDetail } = useGetExternalDetail(teamId, numericExternalId, {
-    enabled: true,
-  });
+  const { data: externalDetail, isPending: isDetailLoading } = useGetExternalDetail(
+    teamId,
+    numericExternalId,
+    {
+      enabled: true,
+    }
+  );
   const { mutate: updateExternal, isPending: isUpdating } = useUpdateExternal(
     teamId,
     numericExternalId
@@ -119,7 +123,12 @@ const ExternalDetail = ({ initialMode }: ExternalDetailProps) => {
 
   const isCreatingGlobal =
     useIsMutating({ mutationKey: [mutationKey.EXTERNAL_CREATE, teamId] }) > 0;
-  const isSaving = isCreating || isUpdating || isCreatingGlobal || isSubmittingRequestRef.current;
+  const isSaving =
+    isCreating ||
+    isDetailLoading ||
+    isUpdating ||
+    isCreatingGlobal ||
+    isSubmittingRequestRef.current;
 
   const { isOpen: isDropdownOpen, content: dropdownContent } = useDropdownInfo(); // 현재 드롭다운의 열림 여부와 내용 가져옴
   const { openDropdown } = useDropdownActions();
