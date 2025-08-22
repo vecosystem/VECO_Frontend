@@ -121,11 +121,6 @@ const WorkspaceIssueDetail = ({ initialMode }: WorkspaceIssueDetailProps) => {
   const selectedStatusLabel = STATUS_LABELS[state];
   const selectedPriorityLabel = PRIORITY_LABELS[priority];
 
-  const selectedGoalLabel = useMemo(() => {
-    const match = (simpleGoals ?? []).find((g) => g.id === goalId);
-    return match?.title ?? '목표'; // 데이터 없거나 매칭 실패 시 기본 라벨
-  }, [simpleGoals, goalId]);
-
   // 다중 선택 라벨
   const selectedManagerLabels = useMemo(() => {
     if (!workspaceMembers) return [];
@@ -329,16 +324,40 @@ const WorkspaceIssueDetail = ({ initialMode }: WorkspaceIssueDetailProps) => {
     return base;
   }, [teamMembers]);
 
-  const goalOptions = useMemo(
-    () => ['없음', ...(simpleGoals ?? []).map((g) => g.title)],
-    [simpleGoals]
+  const goals = simpleGoals ?? [];
+
+  // 1) 제목별 개수 집계
+  const goalTitleCount = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const g of goals) m.set(g.title, (m.get(g.title) ?? 0) + 1);
+    return m;
+  }, [goals]);
+
+  // 2) 표시용 라벨 구성 (중복이면 #id suffix)
+  const goalItems = useMemo(
+    () =>
+      goals.map((g) => {
+        const duplicated = (goalTitleCount.get(g.title) ?? 0) > 1;
+        const label = duplicated ? `${g.title} (#${g.id})` : g.title;
+        return { id: g.id, label };
+      }),
+    [goals, goalTitleCount]
   );
 
-  // title -> id 역매핑
-  const goalTitleToId = useMemo(() => {
-    const info = simpleGoals ?? [];
-    return new Map(info.map((g) => [g.title, g.id] as const));
-  }, [simpleGoals]);
+  // 3) 드롭다운 옵션 배열
+  const goalOptions = useMemo(() => ['없음', ...goalItems.map((o) => o.label)], [goalItems]);
+
+  // 4) 라벨 → id 역매핑
+  const goalLabelToId = useMemo(
+    () => new Map(goalItems.map((o) => [o.label, o.id] as const)),
+    [goalItems]
+  );
+
+  const selectedGoalLabel = useMemo(() => {
+    if (goalId == null) return '목표';
+    const item = goalItems.find((o) => o.id === goalId);
+    return item?.label ?? '목표';
+  }, [goalId, goalItems]);
 
   useHydrateIssueDetail({
     issueDetail,
@@ -526,13 +545,11 @@ const WorkspaceIssueDetail = ({ initialMode }: WorkspaceIssueDetailProps) => {
                     // '없음' 대응 (백엔드가 null 허용 전이라면 0으로)
                     if (label === '없음') {
                       setGoalId(null);
-                      if (isCompleted && Number.isFinite(numericIssueId)) {
-                      }
                       return;
                     }
 
-                    // title -> id 매핑
-                    const id = goalTitleToId.get(label);
+                    // label -> id 매핑
+                    const id = goalLabelToId.get(label);
                     if (typeof id === 'number') {
                       setGoalId(id);
                       if (isCompleted && Number.isFinite(numericIssueId)) {
