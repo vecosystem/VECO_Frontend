@@ -340,14 +340,14 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
   };
 
   return (
-    <div className="flex flex-1 flex-col min-h-max gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem]">
+    <div className="flex flex-1 flex-col min-h-max gap-[5.7rem] w-full px-[3.2rem] pt-[3.2rem] overflow-x-auto basic-scroll">
       {/* 상세페이지 헤더 */}
       <DetailHeader type={'goal'} defaultTitle="목표를 생성하세요" title={title} />
 
       {/* 상세페이지 메인 */}
-      <div className="flex px-[3.2rem] gap-[8.8rem] w-full min-h-max">
+      <div className="flex px-[3.2rem] gap-[8.8rem] w-full min-w-max min-h-max">
         {/* 상세페이지 좌측 영역 - 제목 & 상세설명 & 댓글 */}
-        <div className="flex flex-col flex-1 gap-[3.2rem] w-[calc(100%-33rem)] min-h-max">
+        <div className="flex flex-col flex-1 gap-[3.2rem] w-[calc(100%-33rem)] min-w-[40rem] min-h-max">
           {/* 상세페이지 제목 */}
           <DetailTitle
             defaultTitle="목표를 생성하세요"
@@ -378,7 +378,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
         </div>
 
         {/* 상세페이지 우측 영역 - 속성 탭 & 하단의 작성 완료 버튼 */}
-        <div className="w-[33rem] flex flex-col min-h-max">
+        <div className="min-w-[33rem] flex flex-col min-h-max">
           {/* 속성 탭 */}
           <div className="w-full h-full flex flex-col gap-[1.6rem] ">
             <div className="w-full font-title-sub-r text-gray-600">속성</div>
