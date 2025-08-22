@@ -6,11 +6,17 @@ import CommentItem from './CommentItem';
 import { useGetCommentList } from '../../../apis/comment/useGetCommentList';
 import type { Comment } from '../../../types/comment';
 import { useCommentTarget } from './hooks/useCommentTarget';
+import LoadingSpinner from '../../LoadingSpinner';
 
 const CommentSection = () => {
   const [comments, setComments] = useState<Comment[]>([]); // comments라는 상태를 배열로 관리
   const { category, targetId } = useCommentTarget();
-  const { data: commentList } = useGetCommentList(targetId ?? 0, category ?? 'GOAL');
+  const {
+    data: commentList,
+    isLoading,
+    isPending,
+    isError,
+  } = useGetCommentList(targetId ?? 0, category ?? 'GOAL');
 
   useEffect(() => {
     console.log('commentList', commentList);
@@ -28,7 +34,15 @@ const CommentSection = () => {
 
       <div className="flex flex-col flex-1 w-full min-h-max gap-[1.6rem]">
         {/* 댓글 목록 */}
-        {comments.length === 0 ? (
+        {isLoading || isPending ? (
+          <div className="flex items-center justify-center w-full">
+            <LoadingSpinner />
+          </div>
+        ) : isError ? (
+          <div className="flex items-center justify-center w-full">
+            <div className="font-body-r text-gray-600">댓글을 조회할 수 없습니다.</div>
+          </div>
+        ) : comments.length === 0 ? (
           // 댓글 개수가 0개일 때: 댓글 목록의 초기 문구를 띄우도록
           <div className="flex items-center justify-center w-full">
             <div className="font-body-r text-gray-600">댓글을 작성하세요.</div>
