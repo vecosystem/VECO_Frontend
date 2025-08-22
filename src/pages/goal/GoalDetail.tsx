@@ -128,7 +128,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
     const idToTitle = new Map((simpleIssues ?? []).map((i) => [i.id, i.title] as const));
     return issuesId.map((id) => idToTitle.get(id)).filter((v): v is string => !!v);
   }, [issuesId, simpleIssues]);
-  const [managersShowNoneLabel] = useState(false);
+  const [managersShowNoneLabel, setManagersShowNoneLabel] = useState(false);
   const [issuesShowNoneLabel, setIssuesShowNoneLabel] = useState(false);
 
   useEffect(() => {
@@ -443,6 +443,7 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                     // 1) '없음'만 선택된 경우만 비우기
                     if (labels.length === 1 && labels[0] === '없음') {
                       setManagersId([]);
+                      setManagersShowNoneLabel(true);
                       if (isCompleted && Number.isFinite(numericGoalId)) {
                         updateGoal({ managersId: [] });
                       }
@@ -469,101 +470,102 @@ const GoalDetail = ({ initialMode }: GoalDetailProps) => {
                       : selectedManagerLabels
                   }
                 />
-              </div>
-              {/* (4) 기한 */}
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openDropdown({ name: 'date' });
-                }}
-                className="flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200 cursor-pointer"
-              >
-                {/* '기한' 속성 아이콘 */}
-                <img src={IcCalendar} alt="date" />
-                <div className="relative">
-                  {/* '기한' 항목명 - 날짜 설정하면 반영됨 */}
-                  <span className={`font-body-r text-gray-600`}>{getDisplayText()}</span>
-                  {/* 달력 드롭다운 오픈 */}
-                  {isDropdownOpen && dropdownContent?.name === 'date' && (
-                    <CalendarDropdown
-                      selectedDate={selectedDate}
-                      onSelect={(date) => {
-                        setSelectedDate(date);
-                        handleSelectDateAndPatch(date); // view 모드 시 즉시 PATCH
-                      }}
-                    />
-                  )}
+
+                {/* (4) 기한 */}
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openDropdown({ name: 'date' });
+                  }}
+                  className="flex w-full h-[3.2rem] px-[0.5rem] rounded-md items-center gap-[0.8rem] mb-[1.6rem] whitespace-nowrap hover:bg-gray-200 cursor-pointer"
+                >
+                  {/* '기한' 속성 아이콘 */}
+                  <img src={IcCalendar} alt="date" />
+                  <div className="relative">
+                    {/* '기한' 항목명 - 날짜 설정하면 반영됨 */}
+                    <span className={`font-body-r text-gray-600`}>{getDisplayText()}</span>
+                    {/* 달력 드롭다운 오픈 */}
+                    {isDropdownOpen && dropdownContent?.name === 'date' && (
+                      <CalendarDropdown
+                        selectedDate={selectedDate}
+                        onSelect={(date) => {
+                          setSelectedDate(date);
+                          handleSelectDateAndPatch(date); // view 모드 시 즉시 PATCH
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* (5) 이슈 */}
+                <div onClick={(e) => e.stopPropagation()}>
+                  <MultiSelectPropertyItem
+                    defaultValue="이슈"
+                    options={issueOptions}
+                    onChange={(labels) => {
+                      if (labels.includes('없음')) {
+                        setIssuesId([]);
+                        setIssuesShowNoneLabel(true);
+                        if (isCompleted && Number.isFinite(numericGoalId)) {
+                          updateGoal({ issuesId: [] });
+                        }
+                        return;
+                      }
+                      const ids = labels
+                        .map((label) => issueTitleToId[label])
+                        .filter((v): v is number => typeof v === 'number');
+                      setIssuesId(ids);
+                      setIssuesShowNoneLabel(false);
+                      if (isCompleted && Number.isFinite(numericGoalId)) {
+                        updateGoal({ issuesId: ids });
+                      }
+                    }}
+                    selected={
+                      issuesId.length === 0
+                        ? issuesShowNoneLabel
+                          ? ['없음']
+                          : []
+                        : selectedIssueLabels
+                    }
+                  />
                 </div>
               </div>
-
-              {/* (5) 이슈 */}
-              <div onClick={(e) => e.stopPropagation()}>
-                <MultiSelectPropertyItem
-                  defaultValue="이슈"
-                  options={issueOptions}
-                  onChange={(labels) => {
-                    if (labels.includes('없음')) {
-                      setIssuesId([]);
-                      setIssuesShowNoneLabel(true);
-                      if (isCompleted && Number.isFinite(numericGoalId)) {
-                        updateGoal({ issuesId: [] });
-                      }
-                      return;
-                    }
-                    const ids = labels
-                      .map((label) => issueTitleToId[label])
-                      .filter((v): v is number => typeof v === 'number');
-                    setIssuesId(ids);
-                    setIssuesShowNoneLabel(false);
-                    if (isCompleted && Number.isFinite(numericGoalId)) {
-                      updateGoal({ issuesId: ids });
-                    }
-                  }}
-                  selected={
-                    issuesId.length === 0
-                      ? issuesShowNoneLabel
-                        ? ['없음']
-                        : []
-                      : selectedIssueLabels
-                  }
-                />
-              </div>
             </div>
+
+            {/* 작성 완료 버튼 : 상세페이지 mode 전환을 관리 */}
+            <CompletionButton
+              isTitleFilled={title.trim().length > 0}
+              isCompleted={isCompleted}
+              isSaving={isSaving}
+              onToggle={handleCompletion}
+            />
           </div>
-
-          {/* 작성 완료 버튼 : 상세페이지 mode 전환을 관리 */}
-          <CompletionButton
-            isTitleFilled={title.trim().length > 0}
-            isCompleted={isCompleted}
-            isSaving={isSaving}
-            onToggle={handleCompletion}
-          />
         </div>
-      </div>
-      <div ref={bottomRef} className="scroll-mb-[6.4rem]" />
+        <div ref={bottomRef} className="scroll-mb-[6.4rem]" />
 
-      {isModalOpen && modalContent?.name === 'leaveConfirm' && blocker?.state === 'blocked' && (
-        <Modal
-          title="알림"
-          subtitle={
-            <>
-              작성을 그만두시겠습니까?
-              <br />
-              작성중인 내용은 저장되지 않습니다.
-            </>
-          }
-          buttonText="확인"
-          buttonColor="bg-primary-blue"
-          onClick={() => {
-            confirmedRef.current = true; // 확인 눌렀음 표시
-            closeModal();
-            setTimeout(() => {
-              // 2) 다음 틱에 이동(레이스 방지)
-              blocker.proceed();
-            }, 0);
-          }}
-        />
-      )}
+        {isModalOpen && modalContent?.name === 'leaveConfirm' && blocker?.state === 'blocked' && (
+          <Modal
+            title="알림"
+            subtitle={
+              <>
+                작성을 그만두시겠습니까?
+                <br />
+                작성중인 내용은 저장되지 않습니다.
+              </>
+            }
+            buttonText="확인"
+            buttonColor="bg-primary-blue"
+            onClick={() => {
+              confirmedRef.current = true; // 확인 눌렀음 표시
+              closeModal();
+              setTimeout(() => {
+                // 2) 다음 틱에 이동(레이스 방지)
+                blocker.proceed();
+              }, 0);
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 };

@@ -188,7 +188,7 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
     const idToName = new Map(workspaceMembers.map((m) => [m.memberId, m.name] as const));
     return managersId.map((id) => idToName.get(id)).filter((v): v is string => !!v);
   }, [managersId, workspaceMembers]);
-  const [managersShowNoneLabel] = useState(false);
+  const [managersShowNoneLabel, setManagersShowNoneLabel] = useState(false);
 
   useEffect(() => {
     if (!isEditable) return;
@@ -582,6 +582,7 @@ const WorkspaceExternalDetail = ({ initialMode }: WorkspaceExternalDetailProps) 
                     // 1) '없음'만 선택된 경우만 비우기
                     if (labels.length === 1 && labels[0] === '없음') {
                       setManagersId([]);
+                      setManagersShowNoneLabel(true);
                       if (isCompleted && Number.isFinite(numericExternalId)) {
                         updateExternal({ managersId: [] });
                       }

@@ -128,7 +128,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
     const idToTitle = new Map((simpleIssues ?? []).map((i) => [i.id, i.title] as const));
     return issuesId.map((id) => idToTitle.get(id)).filter((v): v is string => !!v);
   }, [issuesId, simpleIssues]);
-  const [managersShowNoneLabel] = useState(false);
+  const [managersShowNoneLabel, setManagersShowNoneLabel] = useState(false);
   const [issuesShowNoneLabel, setIssuesShowNoneLabel] = useState(false);
 
   useEffect(() => {
@@ -445,6 +445,7 @@ const WorkspaceGoalDetail = ({ initialMode }: WorkspaceGoalDetailProps) => {
                     // 1) '없음'만 선택된 경우만 비우기
                     if (labels.length === 1 && labels[0] === '없음') {
                       setManagersId([]);
+                      setManagersShowNoneLabel(true);
                       if (isCompleted && Number.isFinite(numericGoalId)) {
                         updateGoal({ managersId: [] });
                       }
