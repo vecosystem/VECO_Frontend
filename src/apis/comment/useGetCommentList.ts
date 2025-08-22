@@ -23,9 +23,14 @@ export const getCommentList = async (
   }
 };
 
-export const useGetCommentList = (targetId: number, category: CategoryType) => {
+export const useGetCommentList = (
+  targetId: number,
+  category: CategoryType,
+  enabled: boolean = true
+) => {
   return useQuery({
     queryKey: [queryKey.COMMENT_LIST, { targetId, category }],
     queryFn: () => getCommentList(targetId, category),
+    enabled,
   });
 };

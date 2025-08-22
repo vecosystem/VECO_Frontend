@@ -10,13 +10,13 @@ import LoadingSpinner from '../../LoadingSpinner';
 
 const CommentSection = () => {
   const [comments, setComments] = useState<Comment[]>([]); // comments라는 상태를 배열로 관리
-  const { category, targetId } = useCommentTarget();
+  const { category, targetId, enabled } = useCommentTarget();
   const {
     data: commentList,
     isLoading,
     isPending,
     isError,
-  } = useGetCommentList(targetId ?? 0, category ?? 'GOAL');
+  } = useGetCommentList(targetId ?? 0, category ?? 'GOAL', enabled);
 
   useEffect(() => {
     console.log('commentList', commentList);
