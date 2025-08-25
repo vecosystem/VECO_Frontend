@@ -1,4 +1,3 @@
-// src/utils/validateInviteUrl.ts
 export const validateInviteUrl = (url?: string | null): boolean => {
   if (!url) return false;
   try {
