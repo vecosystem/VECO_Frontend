@@ -1,5 +1,3 @@
-// src/pages/onboarding/TokenLoading.tsx
-// accessToken 저장 및 워크스페이스 조회하는 리다이렉트 페이지
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postReIssueAccessToken } from '../../apis/auth';

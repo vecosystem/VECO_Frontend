@@ -1,5 +1,3 @@
-// src/pages/onboarding/InviteLoading.tsx
-// 초대 받은 사용자를 위한 리다이렉트 페이지
 import { useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
@@ -7,9 +5,9 @@ import { LOCAL_STORAGE_KEY } from '../../constants/key';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 const InviteLoading = () => {
-  const { workspaceName } = useParams(); // URL 파라미터 추출
-  const [searchParams] = useSearchParams(); // URL query parameter
-  const token = searchParams.get('token'); // token 값 추출
+  const { workspaceName } = useParams();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
 
   const navigate = useNavigate();
   const { setItem: setWorkspaceName } = useLocalStorage(LOCAL_STORAGE_KEY.workspaceName);

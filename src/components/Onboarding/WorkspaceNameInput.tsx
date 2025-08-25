@@ -12,7 +12,6 @@ interface WorkspaceNameInputProps {
   setIsLocked: (v: boolean) => void;
 }
 
-// 워크스페이스 이름 입력 및 URL 생성 컴포넌트
 const WorkspaceNameInput = ({
   workspaceName,
   workspaceUrl,
@@ -25,10 +24,8 @@ const WorkspaceNameInput = ({
   const { mutateAsync: createUrl, isPending } = usePostCreateWorkspaceUrl();
 
   const handleCheck = async () => {
-    // 1) 중복 회피: 요청 진행 중이거나, 이미 URL이 있거나, 잠겨 있으면 종료
     if (isPending || workspaceUrl || isLocked) return;
 
-    // 2) 유효성 검증 실패 시 에러 표시 & 값 초기화
     const validationError = validateWorkspaceName(workspaceName);
     if (validationError) {
       setError(validationError);
@@ -37,11 +34,9 @@ const WorkspaceNameInput = ({
       return;
     }
 
-    // 3) 단일 실행: URL 생성 API 호출
     const res = await createUrl({ workspaceName });
     const url = res.result?.workspaceUrl ?? '';
 
-    // 4) 성공 처리: 값 고정 + 잠금
     setError('');
     setWorkspaceName(workspaceName);
     setWorkspaceUrl(url);
@@ -50,14 +45,12 @@ const WorkspaceNameInput = ({
 
   return (
     <div className="w-full flex flex-col items-center gap-[4.6rem] relative">
-      {/* 워크스페이스 이름 입력창 */}
       <div className="relative w-full h-[6.2rem]">
         <div
           className={`flex items-center justify-between h-full w-full rounded-[0.5rem] px-[2rem] ${
             error ? 'border border-error-400' : 'bg-gray-200'
           }`}
         >
-          {/* 워크스페이스 이름 입력 필드 */}
           <input
             type="text"
             placeholder="워크스페이스 이름"
@@ -68,8 +61,6 @@ const WorkspaceNameInput = ({
               workspaceUrl && !error ? 'text-gray-600' : 'text-gray-400'
             }`}
           />
-
-          {/* 오른쪽 체크 버튼 */}
           <button
             type="button"
             onClick={handleCheck}
@@ -80,7 +71,6 @@ const WorkspaceNameInput = ({
           </button>
         </div>
 
-        {/* 에러 메시지 (입력창 아래에 고정, 조건부 빨간색) */}
         {error ? (
           <p
             className="absolute mt-[1rem] font-xsmall-r text-error-400"
@@ -94,7 +84,6 @@ const WorkspaceNameInput = ({
         )}
       </div>
 
-      {/* 워크스페이스 URL 표시 (readOnly) */}
       <input
         type="text"
         placeholder="워크스페이스 URL"

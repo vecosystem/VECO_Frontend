@@ -16,7 +16,7 @@ export const postReIssueAccessToken = async (): Promise<string> => {
 };
 
 /**
- * Google OAuth2 로그인 URL로 리다이렉트
+ * Google OAuth2 로그인 요청 함수
  * - components/Onboarding/SocialLoginButton.tsx
  */
 export const redirectToGoogleLogin = () => {
@@ -36,7 +36,7 @@ export const redirectToGoogleLogin = () => {
 };
 
 /**
- * Kakao OAuth2 로그인 URL로 리다이렉트
+ * Kakao OAuth2 로그인 요청 함수
  * - components/Onboarding/SocialLoginButton.tsx
  */
 export const redirectToKakaoLogin = () => {
