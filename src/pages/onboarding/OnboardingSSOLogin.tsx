@@ -15,12 +15,10 @@ const OnboardingSSOLogin = () => {
       </div>
       <div
         className="flex flex-col cursor-pointer"
-        onClick={() =>
-          window.open(
-            'https://pretty-tumbleweed-40b.notion.site/2442d37cca1180959688e0343ab6bd96',
-            '_self'
-          )
-        }
+        onClick={() => {
+          window.location.href =
+            'https://pretty-tumbleweed-40b.notion.site/2442d37cca1180959688e0343ab6bd96';
+        }}
       >
         <p className="font-body-r text-gray-400">이용약관 & 데이터 처리 동의</p>
         <hr className="bg-gray-400 h-[0.1rem] border-none shrink-0" />
