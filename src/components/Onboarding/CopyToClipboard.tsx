@@ -36,7 +36,7 @@ const CopyToClipboard = ({ inputRef }: CopyToClipboardProps) => {
   return (
     <button
       onClick={handleCopy}
-      className="flex relative w-[4rem] h-[3.6rem] rounded-[0.6rem] bg-primary-blue items-center justify-center"
+      className="flex relative w-[4rem] h-[3.6rem] rounded-[0.6rem] bg-primary-blue items-center justify-center cursor-pointer"
       aria-label="클립보드에 복사"
     >
       <img src={copy} alt="Copy" className="w-[1.6rem] h-[1.6rem]" />

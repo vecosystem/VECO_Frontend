@@ -8,7 +8,7 @@ interface ModalButtonProps {
 const ModalButton = (props: ModalButtonProps) => {
   return (
     <button
-      className={`py-[0.8rem] disabled:bg-gray-300 bg-primary-blue font-small-b text-gray-200 rounded-[0.6rem] ${props.className}`}
+      className={`py-[0.8rem] disabled:bg-gray-300 bg-primary-blue font-small-b text-gray-200 rounded-[0.6rem] cursor-pointer ${props.className}`}
       onClick={props.onClick}
       disabled={props.disabled}
     >
