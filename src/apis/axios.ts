@@ -47,7 +47,7 @@ axiosInstance.interceptors.response.use(
 
       if (originalRequest.url?.includes('/api/token/reissue')) {
         const { removeItem } = useLocalStorage(LOCAL_STORAGE_KEY.accessToken);
-        removeItem(); // accessToken 삭제
+        removeItem();
         window.location.href = '/onboarding';
         return Promise.reject(error);
       }
