@@ -88,10 +88,14 @@ git merge develop
 | 🍀 김선화 | [데모데이 트러블슈팅](https://velog.io/@sunhwaa/UMC-01)                                                                                                                  |
 | 🍒 박유민 | [Onboarding & 토큰 이슈 해결기](https://velog.io/@waldls/VECO-9zb3jefr)                                                                                                 |
 | 💎 박진주 | [DOM 업데이트와 댓글 스크롤 타이밍 문제 해결기](https://icems0428.tistory.com/25)                                                                                             |
-| 🎀 염주원 | [트러블슈팅 모음](https://velog.io/@hijuwon/%EB%B0%B1%ED%98%B8-Veco-%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85-%EB%AA%A8%EC%9D%8C) |
+| 🎀 염주원 | [개발 중 발생한 HTTP 에러 핸들링 개선 과정](https://velog.io/@hijuwon/%EA%B0%9C%EB%B0%9C-%EC%A4%91-%EB%B0%9C%EC%83%9D%ED%95%9C-http-%EC%97%90%EB%9F%AC-%ED%95%B8%EB%93%A4%EB%A7%81-%EA%B0%9C%EC%84%A0-%EA%B3%BC%EC%A0%95) |
 | 🍁 이가을 | [다른 도메인 간 쿠키 이슈 해결기](https://velog.io/@gaeulzzang/다른-도메인-간-쿠키-이슈-해결기)                                                              |
 
-<br/>
-<br/>
-
 ---
+
+## 🗂️ 기타
+
+🔗 [Project Kanban Board](https://github.com/orgs/vecosystem/projects/9/views/6)
+
+<br>
+<br>
