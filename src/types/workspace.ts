@@ -1,9 +1,9 @@
 import type { CommonResponse } from './common';
 
 // 워크스페이스 생성
-export interface CreateWorkspaceRequest {
+export type CreateWorkspaceRequest = {
   workspaceName: string;
-}
+};
 
 export type CreateWorkspaceResponse = CommonResponse<{
   workspaceId: number;
@@ -16,19 +16,19 @@ export type CreateWorkspaceResponse = CommonResponse<{
 }>;
 
 // 워크스페이스 URL 생성
-export interface CreateWorkspaceUrlRequest {
+export type CreateWorkspaceUrlRequest = {
   workspaceName: string;
-}
+};
 
 export type CreateWorkspaceUrlResponse = CommonResponse<{
   workspaceUrl: string;
 }>;
 
 // 워크스페이스 참여
-export interface JoinWorkspaceRequest {
+export type JoinWorkspaceRequest = {
   token: string;
   password: string;
-}
+};
 
 export type JoinWorkspaceResponse = CommonResponse<{
   workspaceId: number;
